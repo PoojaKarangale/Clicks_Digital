@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "693260952324",
+    "firebase_url": "https://clicksdigital-ad067.firebaseio.com",
+    "project_id": "clicksdigital-ad067",
+    "storage_bucket": "clicksdigital-ad067.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693260952324:android:fb5c0db8a77d33e9622651",
+        "android_client_info": {
+          "package_name": "com.pakhi.clicksdigital"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693260952324-aloajidieqsj6ldv42vltvgbklb13l1h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakhi.clicksdigital",
+            "certificate_hash": "34f6592296e1d29f3f306eed434890e6ebc385b4"
+          }
+        },
+        {
+          "client_id": "693260952324-ijd90h8l8taeoa55vn2b630s8iouh9rp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL0p4rxH5Nl8YYT8EWdpQu66U9xF_TCKs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "693260952324-ijd90h8l8taeoa55vn2b630s8iouh9rp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
