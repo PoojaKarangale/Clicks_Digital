@@ -118,7 +118,7 @@ public class PhoneVerify extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Intent resIntent = new Intent(PhoneVerify.this, SetProfileActivity.class);
-                            resIntent.putExtra("number",number);
+                            resIntent.putExtra("PhoneNumber",number);
                             resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(resIntent);
                             finish();

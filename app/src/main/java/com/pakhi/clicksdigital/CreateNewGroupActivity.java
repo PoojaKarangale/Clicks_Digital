@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -59,14 +60,15 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_group);
 
-        user_type = getIntent().getStringExtra("user_type");
+        //user_type = getIntent().getStringExtra("user_type");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        user_type=pref.getString("user_type","user");
         //user_type = "admin";
         profile_img = findViewById(R.id.profile_img);
         done_btn = findViewById(R.id.done_btn);
         display_name = findViewById(R.id.display_name);
         description = findViewById(R.id.description);
         send_request_btn = findViewById(R.id.send_request_btn);
-
 
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(CreateNewGroupActivity.this);
@@ -81,7 +83,6 @@ public class CreateNewGroupActivity extends AppCompatActivity {
             send_request_btn.setVisibility(View.INVISIBLE);
             done_btn.setVisibility(View.VISIBLE);
         }
-
 
         profile_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +124,6 @@ public class CreateNewGroupActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void sendRequestToCreateGroup(final String groupName, final String description_str) {
@@ -131,9 +131,6 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group_requests");
         final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String group_request_id = reference.push().getKey();
                 HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -146,14 +143,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
                 reference.child(group_request_id).setValue(hashMap);
                 goToActivity();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //showToast("check your internet connection ");
-                showToast(databaseError.getMessage().toString());
-            }
-        });
     }
 
     private void goToActivity() {
@@ -166,21 +156,13 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     private void updateGroupInfo(final String groupName, final String description_str) {
         final String userid = firebaseAuth.getCurrentUser().getUid();
 
-        Log.d("CreateNewGroupActivity",userid+" userid----------------------------");
-
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Groups");
-        Log.d("CreateNewGroupActivity",reference+" reference----------------------------");
         final String groupid = reference.push().getKey();
-        Log.d("CreateNewGroupActivity",groupid+" groupid----------------------------");
 
         final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
         final SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm:ss");
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                Log.d("CreateNewGroupActivity",groupid+"---groupid-------------------------");
+                //Log.d("CreateNewGroupActivity",groupid+"---groupid-------------------------");
 
                 HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -193,15 +175,6 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                 hashMap.put("image_url", picImageUri.toString());
 
                 reference.child(groupid).setValue(hashMap);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //showToast("check your internet connection ");
-                showToast(databaseError.getMessage().toString());
-            }
-        });
-
 
     }
 
