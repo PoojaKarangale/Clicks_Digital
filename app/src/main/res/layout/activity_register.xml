@@ -10,9 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center">
 
-        >
         <View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,20 +23,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:background="@color/white" />
-    </LinearLayout>
 
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
-        >
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:shadowColor="@color/grey"
             android:shadowDx="2"
             android:shadowDy="2"
@@ -72,8 +69,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="10dp"
-                android:gravity="center"
-                >
+                android:gravity="center">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -86,18 +82,18 @@
                         android:layout_centerHorizontal="true"
                         android:layout_margin="10dp"
                         android:src="@mipmap/wdc_icon_foreground" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
+
                   <com.hbb20.CountryCodePicker
                         android:id="@+id/ccp"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        app:ccp_defaultNameCode="IND"
-                        />
+                        app:ccp_defaultNameCode="IND" />
 
                     <EditText
                         android:id="@+id/mobileNo_reg"
@@ -105,8 +101,8 @@
                         android:layout_height="wrap_content"
                         android:hint="Mobile number"
                         android:inputType="phone"
-                        android:layout_toEndOf="@+id/ccp"
-                        />
+                        android:layout_toEndOf="@+id/ccp" />
+
                 </RelativeLayout>
 
                 <Button

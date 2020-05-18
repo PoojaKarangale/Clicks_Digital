@@ -15,7 +15,7 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme">
+        android:theme="@style/MyMaterialTheme.Base">
         <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".CreateNewGroupActivity" />
         <activity android:name=".JoinGroupActivity">
