@@ -12,11 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;
 
@@ -58,7 +55,8 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             @Override
             public void onClick(View v) {
                 //holder.status_of_request.setVisibility(View.VISIBLE);
-                sentRequestToJoinGroup(group.getGroup_name(),firebaseUser.getUid());
+                holder.itemView.setEnabled(false);
+                sentRequestToJoinGroup(group.getGroup_name(), firebaseUser.getUid());
                 if (sentRequestFlag) {
                     holder.status_of_request.setVisibility(View.VISIBLE);
                 }
@@ -69,31 +67,19 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     private void sentRequestToJoinGroup(final String displayName, final String uid) {
         //final String userid = firebaseUser.getUid();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_requests");
+        //LocalDateTime obj = LocalDateTime.now(DD/MM/YYYY);
         final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String group_request_id = reference.push().getKey();
-                HashMap<String, Object> hashMap = new HashMap<>();
+        String group_request_id = reference.push().getKey();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("group_name", displayName);
+        hashMap.put("group_request_id", group_request_id);
+        hashMap.put("date", sdf_date.format(new Date()));
+        hashMap.put("requesting_user", uid);
+        hashMap.put("request_status", "pending");
 
-                hashMap.put("group_name", displayName);
-                hashMap.put("group_request_id", group_request_id);
-                hashMap.put("date", sdf_date.format(new Date()));
-                hashMap.put("requesting_user", uid);
-                hashMap.put("request_status", "pending");
-
-                reference.child(group_request_id).setValue(hashMap);
-                //goToActivity();
-                sentRequestFlag = true;
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //showToast("check your internet connection ");
-                //showToast(databaseError.getMessage().toString());
-            }
-        });
+        reference.child(group_request_id).setValue(hashMap);
+        sentRequestFlag = true;
     }
 
     @Override
