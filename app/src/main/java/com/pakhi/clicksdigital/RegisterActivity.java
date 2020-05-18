@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
         verify = findViewById(R.id.verify);
         ccp = findViewById(R.id.ccp);
 
-        //number="+918380952992";
+
         verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
