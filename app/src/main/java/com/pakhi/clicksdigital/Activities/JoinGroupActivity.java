@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital;
+package com.pakhi.clicksdigital.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
 import com.pakhi.clicksdigital.Model.GroupChat;
+import com.pakhi.clicksdigital.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class JoinGroupActivity extends AppCompatActivity {
         home_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(JoinGroupActivity.this,StartActivity.class));
+                startActivity(new Intent(JoinGroupActivity.this, StartActivity.class));
                 finish();
             }
         });

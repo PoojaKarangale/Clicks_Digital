@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital;
+package com.pakhi.clicksdigital.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -36,16 +37,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Upload;
-
-import java.util.HashMap;
+import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.R;
 
 public class SetProfileActivity extends AppCompatActivity {
-   String userid;
 
     final static int PICK_PDF_CODE = 2342;
     private static final String TAG = "ProfileActivity";
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
+    String userid;
     Uri picImageUri;
     FirebaseAuth firebaseAuth;
     String number;
@@ -67,13 +68,23 @@ public class SetProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
 
-       // userid = firebaseAuth.getCurrentUser().getUid();
-
         number = getIntent().getStringExtra("PhoneNumber");
-       //number = "+9180079 97748";
-        if (number.equals("+9180079 97748")) {
+        get_working = findViewById(R.id.working);
+        get_experiences = findViewById(R.id.experiences);
+        get_speaker_experience = findViewById(R.id.speaker_experience);
+        get_offer_to_community = findViewById(R.id.offer_to_community);
+        get_expectations_from_us = findViewById(R.id.expectations_from_us);
+        get_facebook_link = findViewById(R.id.facebook_link);
+        get_insta_link = findViewById(R.id.insta_link);
+        get_twiter_link = findViewById(R.id.twiter_link);
+
+
+         if(number.equals("+9180079 97748")) {
             user_type = "admin";
-        } else user_type = "user";
+         }else {
+             user_type = "user";
+         }
+
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
@@ -81,7 +92,6 @@ public class SetProfileActivity extends AppCompatActivity {
         editor.commit();
 
 
-        // number = "+918007997748";
         firebaseAuth = FirebaseAuth.getInstance();
         profile_img = findViewById(R.id.profile_img);
         full_name = findViewById(R.id.full_name);
@@ -123,17 +133,7 @@ public class SetProfileActivity extends AppCompatActivity {
             }
         });
 
-        get_working = findViewById(R.id.working);
-        get_experiences = findViewById(R.id.experiences);
-        get_speaker_experience = findViewById(R.id.speaker_experience);
-        get_offer_to_community = findViewById(R.id.offer_to_community);
-        get_expectations_from_us = findViewById(R.id.expectations_from_us);
-        get_facebook_link = findViewById(R.id.facebook_link);
-        get_insta_link = findViewById(R.id.insta_link);
-        get_twiter_link = findViewById(R.id.twiter_link);
-
         mStorageReference = FirebaseStorage.getInstance().getReference();
-       // mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(userid).child(Constants.FILES_PATH);
         choose_certificate = findViewById(R.id.btn_cerification_choose);
         cerifications = findViewById(R.id.cerifications);
         set_cetificate_name = findViewById(R.id.cerifications);
@@ -142,7 +142,7 @@ public class SetProfileActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String str_name_of_file = cerifications.getText().toString().trim();
+                        String str_name_of_file = set_cetificate_name.getText().toString().trim();
                         if (str_name_of_file.equals(""))
                             showToast("Please enter name for your file first");
                         else
@@ -157,6 +157,7 @@ public class SetProfileActivity extends AppCompatActivity {
     private void getPDF() {
         //for greater than lolipop versions we need the permissions asked on runtime
         //so if the permission is not available user will go to the screen to allow storage permission
+        Toast.makeText(this, "Allow all the required permissions for this app", Toast.LENGTH_SHORT).show();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -175,24 +176,30 @@ public class SetProfileActivity extends AppCompatActivity {
 
     private void uploadFile(Uri data) {
         userid = firebaseAuth.getCurrentUser().getUid();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(userid).child(Constants.FILES_PATH);
+        final String str_name_of_file = cerifications.getText().toString();
 
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(userid).child(Constants.FILES_PATH);
+        Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
         progressDialog.show();
-        StorageReference sRef = mStorageReference.child(Constants.USER_MEDIA_PATH).child(userid).child("Files/" + System.currentTimeMillis() + ".pdf");
+        StorageReference sRef = mStorageReference.child(Constants.USER_MEDIA_PATH).child(userid).child("Files/" + str_name_of_file + " " + System.currentTimeMillis() + ".pdf");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                    String url = "";
                     @SuppressWarnings("VisibleForTests")
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        //progressBar.setVisibility(View.GONE);
                         progressDialog.dismiss();
-                        //textViewStatus.setText("File Uploaded Successfully");
-                        String str_name_of_file = cerifications.getText().toString();
-                        //if(str_name_of_file)
-                        Upload upload = new Upload(str_name_of_file, taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
-                        mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(upload);
-                        set_cetificate_name.setVisibility(View.VISIBLE);
-                        set_cetificate_name.setText(str_name_of_file + " file uploaded successfully");
+                        taskSnapshot.getMetadata().getReference().getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                url = String.valueOf(uri);
+                                mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(url);
+                                set_cetificate_name.setVisibility(View.VISIBLE);
+                                set_cetificate_name.setText(str_name_of_file + " uploaded successfully");
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -231,50 +238,27 @@ public class SetProfileActivity extends AppCompatActivity {
 
         twiter_link = get_twiter_link.getText().toString();
 
-
-
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
+                speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-
-        hashMap.put(Constants.USER_NAME, full_name_str);
-        hashMap.put(Constants.USER_EMAIL, email_str);
-        hashMap.put(Constants.USER_BIO, bio_str);
-        hashMap.put(Constants.MO_NUMBER, number);
-        hashMap.put(Constants.WEBLINK, weblink_str);
-        hashMap.put(Constants.GENDER, gender);
-        hashMap.put(Constants.USER_TYPE, user_type);
-
-        hashMap.put("work_profession", working);
-        hashMap.put("experiences", experiences);
-        hashMap.put("speaker_experience", speaker_experience);
-        hashMap.put("expectations_from_us", expectations_from_us);
-        hashMap.put("offer_to_community", offer_to_community);
-        hashMap.put("facebook_link", facebook_link);
-        hashMap.put("insta_link", insta_link);
-        hashMap.put("twiter_link", twiter_link);
-
-        reference.child(userid).setValue(hashMap);
+        reference.child(userid).setValue(user);
     }
 
     private void createUserProfile() {
         String uid = firebaseAuth.getCurrentUser().getUid();
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(uid).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
-
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                 imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-
                         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(uri)
                                 .build();
-
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         user.updateProfile(profileUpdate)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -290,7 +274,6 @@ public class SetProfileActivity extends AppCompatActivity {
                                     }
                                 });
                     }
-
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -355,6 +338,7 @@ public class SetProfileActivity extends AppCompatActivity {
         } else {
             showToast("Nothing is selected");
         }
+
         if (requestCode == PICK_PDF_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             //if a file is selected
             if (data.getData() != null) {
