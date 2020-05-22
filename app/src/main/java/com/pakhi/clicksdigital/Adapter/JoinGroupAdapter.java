@@ -29,6 +29,13 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     private List<GroupChat> groups;
     private FirebaseUser firebaseUser;
     private boolean sentRequestFlag = false;
+    String in_current_user_groups;
+
+    public JoinGroupAdapter(Context mcontext, List<GroupChat> groups, String in_current_user_groups) {
+        this.mcontext = mcontext;
+        this.groups = groups;
+        this.in_current_user_groups = in_current_user_groups;
+    }
 
     public JoinGroupAdapter(Context mcontext, List<GroupChat> groups) {
         this.mcontext = mcontext;
@@ -56,7 +63,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             public void onClick(View v) {
                 //holder.status_of_request.setVisibility(View.VISIBLE);
                 holder.itemView.setEnabled(false);
-                sentRequestToJoinGroup(group.getGroup_name(), firebaseUser.getUid());
+                sentRequestToJoinGroup(group.getGroupid(),group.getGroup_name(), firebaseUser.getUid());
                 if (sentRequestFlag) {
                     holder.status_of_request.setVisibility(View.VISIBLE);
                 }
@@ -64,7 +71,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         });
     }
 
-    private void sentRequestToJoinGroup(final String displayName, final String uid) {
+    private void sentRequestToJoinGroup(String group_id,final String displayName, final String uid) {
         //final String userid = firebaseUser.getUid();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_requests");
         //LocalDateTime obj = LocalDateTime.now(DD/MM/YYYY);
@@ -72,8 +79,9 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
         String group_request_id = reference.push().getKey();
         HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("request_is", group_request_id);
         hashMap.put("group_name", displayName);
-        hashMap.put("group_request_id", group_request_id);
+        hashMap.put("group_id", group_id);
         hashMap.put("date", sdf_date.format(new Date()));
         hashMap.put("requesting_user", uid);
         hashMap.put("request_status", "pending");
@@ -98,6 +106,9 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             image_profile = itemView.findViewById(R.id.image_profile);
             img_info = itemView.findViewById(R.id.img_info);
             status_of_request = itemView.findViewById(R.id.status_of_request);
+
+            img_info.setVisibility(View.VISIBLE);
+            status_of_request.setVisibility(View.VISIBLE);
         }
     }
 }

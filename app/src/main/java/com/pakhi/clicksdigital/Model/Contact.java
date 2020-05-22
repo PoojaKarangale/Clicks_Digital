@@ -10,6 +10,10 @@ public class Contact implements Serializable {
     private String phone;
     private String notificationKey;
     private String image;
+    private String bio;
+
+    private Boolean selected = false;
+
 
     public String getImage() {
         return image;
@@ -27,9 +31,7 @@ public class Contact implements Serializable {
         this.bio = bio;
     }
 
-    private String bio;
 
-    private Boolean selected = false;
 
     public Contact(String uid){
         this.uid = uid;

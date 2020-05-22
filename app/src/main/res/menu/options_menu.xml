@@ -4,6 +4,12 @@
         android:id="@+id/find_friends"
         android:title="Find Friends"/>
     <item
+        android:id="@+id/group_request"
+        android:title="group create request"/>
+    <item
+        android:id="@+id/user_request"
+        android:title="user request"/>
+    <item
         android:id="@+id/settings"
         android:title="Settings"/>
     <item

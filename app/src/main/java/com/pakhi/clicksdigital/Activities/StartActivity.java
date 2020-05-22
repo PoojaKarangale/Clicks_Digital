@@ -182,6 +182,14 @@ public class StartActivity extends AppCompatActivity {
             mAuth.signOut();
             SendUserToRegisterActivity();
         }
+        if (item.getItemId() == R.id.user_request)
+        {
+            SendUserToUserRequestActivity();
+        }
+        if (item.getItemId() == R.id.group_request)
+        {
+            //SendUserToGroupRequestActivity();
+        }
         if (item.getItemId() == R.id.settings)
         {
             //SendUserToSettingsActivity();
@@ -193,6 +201,10 @@ public class StartActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void SendUserToUserRequestActivity() {
+        startActivity(new Intent(StartActivity.this,UserRequestActivity.class));
     }
 
     private void SendUserToRegisterActivity() {
@@ -213,7 +225,7 @@ public class StartActivity extends AppCompatActivity {
         {
             updateUserStatus("online");
 
-            VerifyUserExistance();
+            //VerifyUserExistance();
         }
     }
 
@@ -242,7 +254,7 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-
+/*
     private void VerifyUserExistance()
     {
         String currentUserID = mAuth.getCurrentUser().getUid();
@@ -268,6 +280,8 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
+
+ */
     private void SendUserToSetProfileActivity() {
         startActivity(new Intent(StartActivity.this,SetProfileActivity.class));
     }
