@@ -18,6 +18,7 @@ import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +59,10 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         holder.status_of_request.setText(group.getStatus());
         //Glide.with(mcontext).load(group.getImageUrl()).into(holder.image_profile);
 
+        if (sentRequestFlag) {
+            holder.itemView.setEnabled(false);
+            holder.status_of_request.setVisibility(View.VISIBLE);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,15 +79,22 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     private void sentRequestToJoinGroup(String group_id,final String displayName, final String uid) {
         //final String userid = firebaseUser.getUid();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_requests");
-        //LocalDateTime obj = LocalDateTime.now(DD/MM/YYYY);
-        final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
+
+        String saveCurrentTime, saveCurrentDate;
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
 
         String group_request_id = reference.push().getKey();
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("request_is", group_request_id);
+        hashMap.put("request_id", group_request_id);
         hashMap.put("group_name", displayName);
         hashMap.put("group_id", group_id);
-        hashMap.put("date", sdf_date.format(new Date()));
+        hashMap.put("date", saveCurrentDate);
         hashMap.put("requesting_user", uid);
         hashMap.put("request_status", "pending");
 

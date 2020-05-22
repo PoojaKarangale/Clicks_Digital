@@ -68,14 +68,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:orientation="horizontal">
+        android:layout_marginLeft="5dp"
+        android:orientation="horizontal"
+        android:layout_toEndOf="@+id/name_layout"
+        >
 
         <Button
             android:id="@+id/request_accept_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:text="Accept"
-            android:textSize="16sp"
+            android:textSize="10sp"
             android:textAllCaps="false"
             android:background="@android:color/holo_green_light"
             android:visibility="invisible"
@@ -87,7 +90,7 @@
             android:layout_height="30dp"
             android:text="Cancel"
             android:layout_marginStart="10dp"
-            android:textSize="16sp"
+            android:textSize="10sp"
             android:textAllCaps="false"
             android:background="@android:color/holo_red_dark"
             android:textColor="@android:color/background_light"
@@ -117,16 +120,4 @@
         android:visibility="invisible"
         />
 
-    <!--  <Button
-          android:layout_width="wrap_content"
-          android:layout_height="30dp"
-          android:background="@drawable/button_background_border"
-          android:id="@+id/btn_follow"
-          android:padding="5dp"
-          android:textColor="@color/colorPrimary"
-          android:layout_alignParentEnd="true"
-          android:layout_centerVertical="true"
-          android:visibility="gone"
-          />
-          -->
 </RelativeLayout>

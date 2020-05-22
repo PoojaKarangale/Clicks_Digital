@@ -53,7 +53,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final UserRequestAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final UserRequestAdapter.ViewHolder holder, final int position) {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final User_request userRequest = userRequests.get(position);
@@ -93,7 +93,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.child("User_requests").child(userRequest.getRequest_id()).removeValue();
+                deleteUserRequest(userRequest.getRequest_id(),position);
             }
         });
 
@@ -101,24 +101,22 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             @Override
             public void onClick(View v) {
                 addUserToGroup(groupId,userId);
+                deleteUserRequest(userRequest.getRequest_id(),position);
             }
         });
     }
 
-    private void addUserToGroup(String groupId, String userId) {
-        //databaseReference.child("Groups").child(groupId).child("Users").child(userId).setValue(" ");
-        databaseReference.child("Groups").child(groupId).child("Users").child(userId).setValue(" ").addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(mcontext.getApplicationContext(),"user added to group",Toast.LENGTH_SHORT).show();
+    private void deleteUserRequest(String request_id,int position) {
+        userRequests.remove(position);
+        databaseReference.child("User_requests").child(request_id).removeValue();
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(mcontext.getApplicationContext(),e.getMessage()+"try again after sometimes",Toast.LENGTH_SHORT).show();
-            }
-        });
+    }
+
+    private void addUserToGroup(String groupId, String userId) {
+        databaseReference.child("Groups").child(groupId).child("Users").child(userId).setValue(" ");
+        databaseReference.child("Users").child(userId).child("groups").child(groupId).setValue(" ");
+        //databaseReference.child("User_requests").child("request_status").setValue("accepted");
+
     }
 
 
