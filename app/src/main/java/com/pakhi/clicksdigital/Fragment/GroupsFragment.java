@@ -13,7 +13,6 @@ import com.pakhi.clicksdigital.R;
 
 public class GroupsFragment extends Fragment {
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
