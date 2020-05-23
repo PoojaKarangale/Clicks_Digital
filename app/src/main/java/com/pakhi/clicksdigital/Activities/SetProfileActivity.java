@@ -69,6 +69,7 @@ public class SetProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_profile);
 
         number = getIntent().getStringExtra("PhoneNumber");
+        number="+9180079 97748";
         get_working = findViewById(R.id.working);
         get_experiences = findViewById(R.id.experiences);
         get_speaker_experience = findViewById(R.id.speaker_experience);
