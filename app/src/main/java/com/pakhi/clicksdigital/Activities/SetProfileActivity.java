@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital;
+package com.pakhi.clicksdigital.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -36,6 +36,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Upload;
+import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.R;
 
 import java.util.HashMap;
 
@@ -67,7 +69,16 @@ public class SetProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
 
-       // userid = firebaseAuth.getCurrentUser().getUid();
+        number = getIntent().getStringExtra("PhoneNumber");
+       // number="+9180079 97748";
+        get_working = findViewById(R.id.working);
+        get_experiences = findViewById(R.id.experiences);
+        get_speaker_experience = findViewById(R.id.speaker_experience);
+        get_offer_to_community = findViewById(R.id.offer_to_community);
+        get_expectations_from_us = findViewById(R.id.expectations_from_us);
+        get_facebook_link = findViewById(R.id.facebook_link);
+        get_insta_link = findViewById(R.id.insta_link);
+        get_twiter_link = findViewById(R.id.twiter_link);
 
         number = getIntent().getStringExtra("PhoneNumber");
        //number = "+9180079 97748";
@@ -234,6 +245,10 @@ public class SetProfileActivity extends AppCompatActivity {
 
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+
+        String number_without_special_char=number.replace(" ","");
+        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number_without_special_char, offer_to_community,
+                speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working);
 
         HashMap<String, Object> hashMap = new HashMap<>();
 

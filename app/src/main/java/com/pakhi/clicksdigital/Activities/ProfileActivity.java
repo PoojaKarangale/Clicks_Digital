@@ -1,8 +1,10 @@
-package com.pakhi.clicksdigital;
+package com.pakhi.clicksdigital.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.pakhi.clicksdigital.R;
 
 public class ProfileActivity extends AppCompatActivity {
 

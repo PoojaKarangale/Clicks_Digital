@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital;
+package com.pakhi.clicksdigital.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.pakhi.clicksdigital.R;
 
 import java.util.concurrent.TimeUnit;
 

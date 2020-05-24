@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital;
+package com.pakhi.clicksdigital.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -29,14 +28,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.StartActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -147,7 +145,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 
     private void goToActivity() {
-        Intent homeActivity = new Intent(getApplicationContext(), StartActivity.class);
+        Intent homeActivity = new Intent(getApplicationContext(), com.pakhi.clicksdigital.StartActivity.class);
         progressDialog.dismiss();
         startActivity(homeActivity);
         finish();
