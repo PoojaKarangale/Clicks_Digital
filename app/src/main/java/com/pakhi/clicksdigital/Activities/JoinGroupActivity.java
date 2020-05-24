@@ -66,7 +66,7 @@ public class JoinGroupActivity extends AppCompatActivity {
         home_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(JoinGroupActivity.this, com.pakhi.clicksdigital.StartActivity.class));
+                startActivity(new Intent(JoinGroupActivity.this, StartActivity.class));
                 finish();
             }
         });
