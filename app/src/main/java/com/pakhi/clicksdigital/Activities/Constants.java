@@ -2,6 +2,7 @@ package com.pakhi.clicksdigital.Activities;
 
 public class Constants {
 
+   // public static final String USER_NAME = ;
     final static int PICK_PDF_CODE = 2342;
     final static String SHARED_PREF = "MyPref";
     final static String USER_MEDIA_PATH = "User_Media";
@@ -9,7 +10,7 @@ public class Constants {
     final static String PHOTOS = "Photos";
     final static String PROFILE_IMAGE = "ProfileImage";
 
-    final static String USER_NAME = "user_name";
+   public final static String USER_NAME = "user_name";
     final static String USER_EMAIL = "user_email";
     final static String USER_BIO = "user_bio";
     final static String MO_NUMBER = "number";

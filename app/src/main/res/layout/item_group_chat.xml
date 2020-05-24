@@ -63,7 +63,6 @@
         android:layout_margin="2dp"
         android:textAlignment="textStart"
         android:textSize="16sp"
-        android:layout_below="@+id/name_layout"
         android:layout_toEndOf="@+id/image_profile"
         android:visibility="invisible"
         />
