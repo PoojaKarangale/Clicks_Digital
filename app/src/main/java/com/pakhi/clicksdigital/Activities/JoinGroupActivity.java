@@ -22,7 +22,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
 import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.StartActivity;
 
 import java.util.ArrayList;
 import java.util.List;

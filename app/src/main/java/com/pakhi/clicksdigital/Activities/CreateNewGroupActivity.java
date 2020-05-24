@@ -34,7 +34,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.StartActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -145,7 +144,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 
     private void goToActivity() {
-        Intent homeActivity = new Intent(getApplicationContext(), com.pakhi.clicksdigital.StartActivity.class);
+        Intent homeActivity = new Intent(getApplicationContext(), StartActivity.class);
         progressDialog.dismiss();
         startActivity(homeActivity);
         finish();

@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hbb20.CountryCodePicker;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.StartActivity;
 
 public class RegisterActivity extends AppCompatActivity {
     private String number;
