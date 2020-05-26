@@ -21,8 +21,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PhoneVerify extends AppCompatActivity {
@@ -152,7 +160,6 @@ public class PhoneVerify extends AppCompatActivity {
                             resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(resIntent);
                             finish();
-
                         } else {
                             loading_bar.setVisibility(View.VISIBLE);
                             resend_otp.setVisibility(View.VISIBLE);
@@ -162,6 +169,5 @@ public class PhoneVerify extends AppCompatActivity {
                     }
                 });
     }
-
 
 }
