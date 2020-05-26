@@ -74,8 +74,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.receiverMessageText.setVisibility(View.GONE);
         messageViewHolder.receiverProfileImage.setVisibility(View.GONE);
         messageViewHolder.senderMessageText.setVisibility(View.GONE);
-        messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
-        messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
+       // messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
+       // messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
 
 
         if (fromMessageType.equals("text")) {
@@ -112,8 +112,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_messsage_text);
             receiverMessageText = (TextView) itemView.findViewById(R.id.receiver_message_text);
             receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
-            messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image_view);
-            messageSenderPicture = itemView.findViewById(R.id.message_sender_image_view);
+           // messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image_view);
+           // messageSenderPicture = itemView.findViewById(R.id.message_sender_image_view);
         }
     }
 

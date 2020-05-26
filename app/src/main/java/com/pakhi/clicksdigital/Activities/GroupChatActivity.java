@@ -61,7 +61,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private ImageButton SendMessageButton;
     private EditText userMessageInput;
     private ScrollView mScrollView;
-    private TextView displayTextMessages, displayTextMessagesForCurrentUser;
+    private TextView displayTextMessages;
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, GroupNameRef, GroupMessageKeyRef, databaseReference, GroupIdRef;
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, CurrentGroupId;
@@ -76,7 +76,6 @@ public class GroupChatActivity extends AppCompatActivity {
 
         Toast.makeText(GroupChatActivity.this, currentGroupName, Toast.LENGTH_SHORT).show();
 
-
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -85,12 +84,10 @@ public class GroupChatActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         groupChatRefForCurrentGroup = FirebaseDatabase.getInstance().getReference("GroupChat").child(CurrentGroupId);
 
-
         InitializeFields();
         mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
 
         GetUserInfo();
-
 
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +108,6 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     protected void onStart() {
@@ -158,13 +154,12 @@ public class GroupChatActivity extends AppCompatActivity {
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_button);
         userMessageInput = (EditText) findViewById(R.id.input_group_message);
         displayTextMessages = (TextView) findViewById(R.id.group_chat_text_display_for_others);
-        displayTextMessagesForCurrentUser = (TextView) findViewById(R.id.group_chat_text_display_for_current_user);
+        //displayTextMessagesForCurrentUser = (TextView) findViewById(R.id.group_chat_text_display_for_current_user);
         mScrollView = (ScrollView) findViewById(R.id.my_scroll_view);
         layout = findViewById(R.id.layout_for_text_msg);
         attach_file_btn = findViewById(R.id.attach_file_btn);
 
     }
-
 
     private void GetUserInfo() {
         UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
@@ -192,9 +187,9 @@ public class GroupChatActivity extends AppCompatActivity {
             SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
             currentDate = currentDateFormat.format(calForDate.getTime());
 
-            Calendar calForTime = Calendar.getInstance();
+            //Calendar calForTime = Calendar.getInstance();
             SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
-            currentTime = currentTimeFormat.format(calForTime.getTime());
+            currentTime = currentTimeFormat.format(calForDate.getTime());
 
             HashMap<String, Object> groupMessageKey = new HashMap<>();
 
@@ -211,7 +206,6 @@ public class GroupChatActivity extends AppCompatActivity {
             GroupMessageKeyRef.updateChildren(messageInfoMap);
         }
     }
-
 
     private void DisplayMessages(DataSnapshot dataSnapshot) {
         Iterator iterator = dataSnapshot.getChildren().iterator();
@@ -231,10 +225,12 @@ public class GroupChatActivity extends AppCompatActivity {
                 //displayTextMessages.setTextColor(Color.BLUE);
                 textView.setTextColor(Color.BLUE);
                 lp2.gravity = Gravity.RIGHT;
+                textView.setBackgroundResource(R.drawable.sender_messages_layout);
             } else {
                 //displayTextMessages.setTextColor(Color.BLACK);
                 textView.setTextColor(Color.BLACK);
                 lp2.gravity = Gravity.LEFT;
+                textView.setBackgroundResource(R.drawable.receiver_messages_layout);
             }
             //displayTextMessages.setLayoutParams(lp2);
             textView.setBackgroundResource(R.drawable.back_edit_text);
