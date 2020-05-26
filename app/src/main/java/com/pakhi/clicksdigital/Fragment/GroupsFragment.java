@@ -18,7 +18,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.GroupChatActivity;
 import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
 import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;

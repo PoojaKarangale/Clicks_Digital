@@ -15,6 +15,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.badge.BadgeDrawable;
@@ -47,6 +50,8 @@ public class StartActivity extends AppCompatActivity {
     private ChatsFragment chatsFragment;
     private HomeFragment homeFragment;
 
+    private ImageView profile;
+
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
@@ -58,6 +63,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         mAuth = FirebaseAuth.getInstance();
+        profile = findViewById(R.id.profile_activity);
         currentUser = mAuth.getCurrentUser();
         currentUserID = mAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
@@ -97,6 +103,13 @@ public class StartActivity extends AppCompatActivity {
         BadgeDrawable badgeDrawable = tabLayout.getTabAt(0).getOrCreateBadge();
         badgeDrawable.setVisible(true);
         badgeDrawable.setNumber(10);
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(StartActivity.this, ProfileActivity.class));
+            }
+        });
 
 
     }

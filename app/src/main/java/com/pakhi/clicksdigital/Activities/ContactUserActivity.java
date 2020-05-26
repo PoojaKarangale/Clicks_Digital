@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital;
+package com.pakhi.clicksdigital.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.Constants;
 import com.pakhi.clicksdigital.Adapter.ContactUserAdapter;
 import com.pakhi.clicksdigital.Model.Contact;
+import com.pakhi.clicksdigital.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
