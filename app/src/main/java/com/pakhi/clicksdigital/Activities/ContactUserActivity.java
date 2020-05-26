@@ -37,7 +37,6 @@ public class ContactUserActivity extends AppCompatActivity {
     SharedPreferences pref;
     private RecyclerView recyclerView;
     private ContactUserAdapter contactUserAdapter;
-    private List<Contact> contacts_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +52,6 @@ public class ContactUserActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //contacts_user = new ArrayList<>();
-
         contactUserAdapter = new ContactUserAdapter(this, userList);
         recyclerView.setAdapter(contactUserAdapter);
 
@@ -65,7 +62,6 @@ public class ContactUserActivity extends AppCompatActivity {
 
     private void getContactList() {
 
-        //String ISOPrefix = getCountryISO();
         //String ISOPrefix = pref.getString("country_ISO","+91");
         String ISOPrefix = "+91";
 
@@ -90,50 +86,9 @@ public class ContactUserActivity extends AppCompatActivity {
 
     private void getUserDetails(Contact mContact) {
         DatabaseReference mUserDB = FirebaseDatabase.getInstance().getReference().child("Users");
-        Query query = mUserDB.orderByChild("number").equalTo(mContact.getPhone());
-        Log.d("ContactUser", "--------query-------------------------------" + mContact.getPhone());
+        Query query = mUserDB.orderByChild("number").equalTo(mContact.getNumber());
+        Log.d("ContactUser", "--------query-------------------------------" + mContact.getNumber());
 
-        /*
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    Log.d("ContactUser","-------dataSnap------------------------------------"+dataSnapshot.toString());
-                    String  phone = "",
-                            name = "";
-                    for(DataSnapshot childSnapshot : dataSnapshot.getChildren()){
-
-                        Log.d("ContactUser","----------childSnap-----------------------------"+childSnapshot.getValue());
-
-                        if(childSnapshot.child("number").getValue()!=null)
-                            phone = childSnapshot.child("number").getValue().toString();
-                        if(childSnapshot.child(Constants.USER_NAME).getValue()!=null)
-                            name = childSnapshot.child(Constants.USER_NAME).getValue().toString();
-
-                        Contact mUser = new Contact(childSnapshot.getKey(), name, phone);
-                            for(Contact mContactIterator : contactList){
-                                Log.d("ContactUser","----**************----"+mContactIterator.getPhone()+" == "+mUser.getPhone());
-                                if(mContactIterator.getPhone().equals(mUser.getPhone())){
-                                    mUser.setName(mContactIterator.getName());
-                                    userList.add(mUser);
-                                }
-                            }
-
-                        //userList.add(mUser);
-                        contactUserAdapter.notifyDataSetChanged();
-                        return;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-        */
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -146,35 +101,11 @@ public class ContactUserActivity extends AppCompatActivity {
                         if(snapshot.child(Constants.USER_NAME).getValue()!=null){
                             phone=snapshot.child(Constants.USER_NAME).getValue().toString();
                         }
-                        Contact contact=new Contact(name,phone);
+                        Contact contact=new Contact(snapshot.getKey(),name,phone);
                         userList.add(contact);
-                        contactUserAdapter.notifyDataSetChanged();
+                        //contactUserAdapter.notifyDataSetChanged();
                     }
                 }
-                //contactUserAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-   /*
-        mUserDB.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    User mUser = childSnapshot.getValue(User.class);
-                    Contact mUserContact = new Contact(childSnapshot.getKey(), mUser.getUser_name(), mUser.getNumber());
-                    for (Contact mContactIterator : contactList) {
-                        //Log.d("ContactUser","----**************----"+mContactIterator.getPhone()+" == "+mUserContact.getPhone());
-                        if (mUserContact.getPhone().equals(mContactIterator.getPhone())) {
-                            userList.add(mUserContact);
-                        }
-                    }
-                }
-
                 contactUserAdapter.notifyDataSetChanged();
             }
 
@@ -183,7 +114,7 @@ public class ContactUserActivity extends AppCompatActivity {
 
             }
         });
-*/
+
 
     }
 

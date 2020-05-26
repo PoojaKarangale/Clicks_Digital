@@ -2,7 +2,6 @@ package com.pakhi.clicksdigital.Activities;
 
 public class Constants {
 
-
     public static final String SHARED_PREF = "MyPref";
     public static final String USER_NAME = "user_name";
     final static int PICK_PDF_CODE = 2342;
