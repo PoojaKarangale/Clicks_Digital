@@ -1,18 +1,19 @@
 package com.pakhi.clicksdigital.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.view.View;
-import android.widget.Button;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,41 +22,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.Constants;
 import com.pakhi.clicksdigital.Adapter.ContactUserAdapter;
 import com.pakhi.clicksdigital.Model.Contact;
+import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import android.content.ContentResolver;
-import android.content.pm.PackageManager;
-import android.widget.Toast;
 
 public class ContactUserActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private ContactUserAdapter contactUserAdapter;
-    private List<Contact> contacts_user;
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     ArrayList<Contact> userList, contactList;
     SharedPreferences pref;
+    private RecyclerView recyclerView;
+    private ContactUserAdapter contactUserAdapter;
 
-    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_user);
 
-         pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
+        pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
 
-        contactList= new ArrayList<>();
-        userList= new ArrayList<>();
+        contactList = new ArrayList<>();
+        userList = new ArrayList<>();
 
         recyclerView = findViewById(R.id.recycler_contact_user);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        //contacts_user = new ArrayList<>();
 
         contactUserAdapter = new ContactUserAdapter(this, userList);
         recyclerView.setAdapter(contactUserAdapter);
@@ -65,14 +60,13 @@ public class ContactUserActivity extends AppCompatActivity {
 
     }
 
-    private void getContactList(){
+    private void getContactList() {
 
-        //String ISOPrefix = getCountryISO();
         //String ISOPrefix = pref.getString("country_ISO","+91");
         String ISOPrefix = "+91";
 
         Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        while(phones.moveToNext()){
+        while (phones.moveToNext()) {
             String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
@@ -81,7 +75,7 @@ public class ContactUserActivity extends AppCompatActivity {
             phone = phone.replace("(", "");
             phone = phone.replace(")", "");
 
-            if(!String.valueOf(phone.charAt(0)).equals("+"))
+            if (!String.valueOf(phone.charAt(0)).equals("+"))
                 phone = ISOPrefix + phone;
 
             Contact mContact = new Contact("", name, phone);
@@ -92,41 +86,36 @@ public class ContactUserActivity extends AppCompatActivity {
 
     private void getUserDetails(Contact mContact) {
         DatabaseReference mUserDB = FirebaseDatabase.getInstance().getReference().child("Users");
-        Query query = mUserDB.orderByChild("phone").equalTo(mContact.getPhone());
+        Query query = mUserDB.orderByChild("number").equalTo(mContact.getNumber());
+        Log.d("ContactUser", "--------query-------------------------------" + mContact.getNumber());
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    String  phone = "",
-                            name = "";
-                    for(DataSnapshot childSnapshot : dataSnapshot.getChildren()){
-                        if(childSnapshot.child("number").getValue()!=null)
-                            phone = childSnapshot.child("number").getValue().toString();
-                        if(childSnapshot.child(Constants.USER_NAME).getValue()!=null)
-                            name = childSnapshot.child(Constants.USER_NAME).getValue().toString();
-
-
-                        Contact mUser = new Contact(childSnapshot.getKey(), name, phone);
-                        if (name.equals(phone))
-                            for(Contact mContactIterator : contactList){
-                                if(mContactIterator.getPhone().equals(mUser.getPhone())){
-                                    mUser.setName(mContactIterator.getName());
-                                }
-                            }
-
-                        userList.add(mUser);
-                        contactUserAdapter.notifyDataSetChanged();
-                        return;
+                    String phone="",name="";
+                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        if(snapshot.child("number").getValue()!=null){
+                            phone=snapshot.child("number").getValue().toString().replace(" ","");
+                        }
+                        if(snapshot.child(Constants.USER_NAME).getValue()!=null){
+                            phone=snapshot.child(Constants.USER_NAME).getValue().toString();
+                        }
+                        Contact contact=new Contact(snapshot.getKey(),name,phone);
+                        userList.add(contact);
+                        //contactUserAdapter.notifyDataSetChanged();
                     }
                 }
+                contactUserAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
         });
+
+
     }
 
     private void showContacts() {
@@ -140,7 +129,7 @@ public class ContactUserActivity extends AppCompatActivity {
         }
     }
 
-    private void createChat(){
+    private void createChat() {
         String key = FirebaseDatabase.getInstance().getReference().child("Chat").push().getKey();
         DatabaseReference chatInfoDb = FirebaseDatabase.getInstance().getReference().child("Chat").child(key).child("info");
         DatabaseReference userDb = FirebaseDatabase.getInstance().getReference().child("user");
@@ -150,15 +139,15 @@ public class ContactUserActivity extends AppCompatActivity {
         newChatMap.put("Users/" + FirebaseAuth.getInstance().getUid(), true);
 
         Boolean validChat = false;
-        for(Contact mUser : userList){
-            if(mUser.getSelected()){
+        for (Contact mUser : userList) {
+            if (mUser.getSelected()) {
                 validChat = true;
                 newChatMap.put("Users/" + mUser.getUid(), true);
                 userDb.child(mUser.getUid()).child("chat").child(key).setValue(true);
             }
         }
 
-        if(validChat){
+        if (validChat) {
             chatInfoDb.updateChildren(newChatMap);
             userDb.child(FirebaseAuth.getInstance().getUid()).child("chat").child(key).setValue(true);
         }
@@ -172,7 +161,7 @@ public class ContactUserActivity extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
                 showContacts();
-               // getContactList();
+                // getContactList();
             } else {
                 Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
             }

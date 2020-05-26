@@ -14,6 +14,10 @@ public class Contact implements Serializable {
 
     private Boolean selected = false;
 
+    public Contact(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
 
     public String getImage() {
         return image;
