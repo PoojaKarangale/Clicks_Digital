@@ -6,17 +6,46 @@ public class Contact implements Serializable {
 
 
     private String  uid;
-    private String name;
-    private String phone;
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    private String user_name;
+    private String number;
     private String notificationKey;
     private String image;
     private String bio;
 
     private Boolean selected = false;
 
-    public Contact(String name, String phone) {
-        this.name = name;
-        this.phone = phone;
+    public Contact() {
+    }
+
+    public Contact(String name, String number) {
+        this.user_name = user_name;
+        this.number = number;
+    }
+
+    public Contact(String uid, String user_name, String image, String bio) {
+        this.uid = uid;
+        this.user_name = user_name;
+        this.image = image;
+        this.bio = bio;
+    }
+
+
+    public Contact(String uid){
+        this.uid = uid;
+    }
+    public Contact(String uid, String user_name, String number){
+        this.uid = uid;
+        this.user_name = user_name;
+        this.number = number;
     }
 
     public String getImage() {
@@ -37,23 +66,11 @@ public class Contact implements Serializable {
 
 
 
-    public Contact(String uid){
-        this.uid = uid;
-    }
-    public Contact(String uid, String name, String phone){
-        this.uid = uid;
-        this.name = name;
-        this.phone = phone;
-    }
-
     public String getUid() {
         return uid;
     }
-    public String getPhone() {
-        return phone;
-    }
-    public String getName() {
-        return name;
+    public String getNumber() {
+        return number;
     }
     public String getNotificationKey() {
         return notificationKey;
@@ -62,9 +79,6 @@ public class Contact implements Serializable {
         return selected;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
     public void setNotificationKey(String notificationKey) {
         this.notificationKey = notificationKey;
     }

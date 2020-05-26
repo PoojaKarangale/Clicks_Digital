@@ -36,6 +36,7 @@ import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -51,6 +52,9 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     private FloatingActionButton done_btn;
     private ProgressDialog progressDialog;
     private Button send_request_btn;
+    String saveCurrentTime, saveCurrentDate;
+    SimpleDateFormat currentTime,currentDate;
+    Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,13 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         user_type=pref.getString("user_type","user");
         //user_type = "admin";
+
+
+
+         currentDate = new SimpleDateFormat("MMM dd, yyyy");
+         currentTime = new SimpleDateFormat("hh:mm a");
+
+
         profile_img = findViewById(R.id.profile_img);
         done_btn = findViewById(R.id.done_btn);
         display_name = findViewById(R.id.display_name);
@@ -126,7 +137,11 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     private void sendRequestToCreateGroup(final String groupName, final String description_str) {
         final String userid = firebaseAuth.getCurrentUser().getUid();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group_requests");
-        final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
+       // final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
+
+        calendar = Calendar.getInstance();
+        saveCurrentDate = currentDate.format(calendar.getTime());
+        saveCurrentTime = currentTime.format(calendar.getTime());
 
                 String group_request_id = reference.push().getKey();
                 HashMap<String, Object> hashMap = new HashMap<>();
@@ -134,7 +149,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                 hashMap.put("group_name", groupName);
                 hashMap.put("description", description_str);
                 hashMap.put("group_request_id", group_request_id);
-                hashMap.put("date", sdf_date.format(new Date()));
+                hashMap.put("date", saveCurrentDate);
                 hashMap.put("requesting_user", userid);
                 hashMap.put("request_status", "pending");
 
@@ -156,10 +171,9 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Groups");
         final String groupid = reference.push().getKey();
 
-        final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
-        final SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm:ss");
-
-                //Log.d("CreateNewGroupActivity",groupid+"---groupid-------------------------");
+        calendar = Calendar.getInstance();
+        saveCurrentDate = currentDate.format(calendar.getTime());
+        saveCurrentTime = currentTime.format(calendar.getTime());
 
                 HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -167,8 +181,8 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                 hashMap.put("description", description_str);
                 hashMap.put("groupid", groupid);
                 hashMap.put("uid_creater", userid);
-                hashMap.put("date", sdf_date.format(new Date()));
-                hashMap.put("time", sdf_time.format(new Date()));
+                hashMap.put("date", saveCurrentDate);
+                hashMap.put("time", saveCurrentTime);
                 hashMap.put("image_url", picImageUri.toString());
 
                 reference.child(groupid).setValue(hashMap);
@@ -234,24 +248,11 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                                         showToast("new group created");
                                         updateUI();
                                     }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                    }
                                 });
                     }
 
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
                 });
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
             }
         });
     }

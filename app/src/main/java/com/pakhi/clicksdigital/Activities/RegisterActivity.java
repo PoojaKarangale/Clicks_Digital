@@ -50,6 +50,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+    //talk about this
     @Override
     protected void onStart() {
         super.onStart();

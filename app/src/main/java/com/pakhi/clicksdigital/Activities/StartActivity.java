@@ -200,6 +200,7 @@ public class StartActivity extends AppCompatActivity {
             //SendUserToSettingsActivity();
             startActivity(new Intent(this, ContactUserActivity.class));
         }
+
         if (item.getItemId() == R.id.settings)
         {
             //SendUserToSettingsActivity();
@@ -214,7 +215,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void SendUserToUserRequestActivity() {
-        //startActivity(new Intent(StartActivity.this,UserRequestActivity.class));
+
+        startActivity(new Intent(StartActivity.this,UserRequestActivity.class));
     }
 
     private void SendUserToRegisterActivity() {
@@ -235,7 +237,8 @@ public class StartActivity extends AppCompatActivity {
         {
             updateUserStatus("online");
 
-            VerifyUserExistance();
+
+            //VerifyUserExistance();
         }
     }
 
@@ -265,6 +268,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
+/*
     private void VerifyUserExistance()
     {
         String currentUserID = mAuth.getCurrentUser().getUid();
@@ -274,6 +278,7 @@ public class StartActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 if ((dataSnapshot.child(Constants.USER_NAME).exists()))
+
                 {
                     Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                 }
@@ -292,6 +297,7 @@ public class StartActivity extends AppCompatActivity {
 
 
 
+ */
     private void SendUserToSetProfileActivity() {
         startActivity(new Intent(StartActivity.this,SetProfileActivity.class));
     }
