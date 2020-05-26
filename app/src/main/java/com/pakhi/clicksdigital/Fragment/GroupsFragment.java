@@ -1,16 +1,13 @@
 package com.pakhi.clicksdigital.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -23,35 +20,32 @@ import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 
 public class GroupsFragment extends Fragment {
     private View groupFragmentView;
-   // private ListView list_view;
-   // private ArrayAdapter<String> arrayAdapter;
-   // private ArrayList<String> list_of_groups = new ArrayList<>();
+    // private ListView list_view;
+    // private ArrayAdapter<String> arrayAdapter;
+    // private ArrayList<String> list_of_groups = new ArrayList<>();
     private JoinGroupAdapter groupAdapter;
     private List<GroupChat> groups;
     private FloatingActionButton fab_create_group;
     private RecyclerView recyclerView;
     private DatabaseReference GroupRef;
+
     public GroupsFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
 
 
-
-        groupFragmentView= inflater.inflate(R.layout.fragment_groups, container, false);
+        groupFragmentView = inflater.inflate(R.layout.fragment_groups, container, false);
 
         GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
 
@@ -67,38 +61,23 @@ public class GroupsFragment extends Fragment {
 
         groups = new ArrayList<>();
 
-        groupAdapter = new JoinGroupAdapter(getContext(), groups,"users_group");
+        groupAdapter = new JoinGroupAdapter(getContext(), groups, "users_group");
         recyclerView.setAdapter(groupAdapter);
 
         RetrieveAndDisplayGroups();
 
-/*
-        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
-            {
-                String currentGroupName = adapterView.getItemAtPosition(position).toString();
-
-                Intent groupChatIntent = new Intent(getContext(), GroupChatActivity.class);
-                groupChatIntent.putExtra("groupName" , currentGroupName);
-                startActivity(groupChatIntent);
-            }
-        });
-
- */
-return groupFragmentView;
+        return groupFragmentView;
     }
 
 
-    private void RetrieveAndDisplayGroups()
-    {
+    private void RetrieveAndDisplayGroups() {
         GroupRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                GroupChat group = snapshot.getValue(GroupChat.class);
-                groups.add(group);
-            }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    GroupChat group = snapshot.getValue(GroupChat.class);
+                    groups.add(group);
+                }
                 groupAdapter.notifyDataSetChanged();
             }
 

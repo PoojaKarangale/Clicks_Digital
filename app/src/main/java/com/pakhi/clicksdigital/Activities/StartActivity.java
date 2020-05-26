@@ -203,6 +203,17 @@ public class StartActivity extends AppCompatActivity {
         {
             //SendUserToGroupRequestActivity();
         }
+        if (item.getItemId() == R.id.join_new_groups)
+        {
+            //SendUserToGroupRequestActivity();
+            startActivity(new Intent(this, JoinGroupActivity.class));
+        }
+        if (item.getItemId() == R.id.contact_users)
+        {
+            //SendUserToSettingsActivity();
+            startActivity(new Intent(this, ContactUserActivity.class));
+        }
+
         if (item.getItemId() == R.id.settings)
         {
             //SendUserToSettingsActivity();
@@ -217,6 +228,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void SendUserToUserRequestActivity() {
+
         startActivity(new Intent(StartActivity.this,UserRequestActivity.class));
     }
 
@@ -237,6 +249,7 @@ public class StartActivity extends AppCompatActivity {
         else
         {
             updateUserStatus("online");
+
 
             //VerifyUserExistance();
         }
@@ -267,6 +280,7 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+
 /*
     private void VerifyUserExistance()
     {
@@ -276,7 +290,8 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                if ((dataSnapshot.child("name").exists()))
+                if ((dataSnapshot.child(Constants.USER_NAME).exists()))
+
                 {
                     Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                 }
@@ -292,6 +307,7 @@ public class StartActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
  */

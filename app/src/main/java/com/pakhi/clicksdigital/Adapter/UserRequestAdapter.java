@@ -8,14 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -69,6 +65,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
                 user_name[0] = dataSnapshot.getValue(String.class);
                 holder.displayName.setText(user_name[0]);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -93,20 +90,20 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteUserRequest(userRequest.getRequest_id(),position);
+                deleteUserRequest(userRequest.getRequest_id(), position);
             }
         });
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUserToGroup(groupId,userId);
-                deleteUserRequest(userRequest.getRequest_id(),position);
+                addUserToGroup(groupId, userId);
+                deleteUserRequest(userRequest.getRequest_id(), position);
             }
         });
     }
 
-    private void deleteUserRequest(String request_id,int position) {
+    private void deleteUserRequest(String request_id, int position) {
         userRequests.remove(position);
         databaseReference.child("User_requests").child(request_id).removeValue();
 

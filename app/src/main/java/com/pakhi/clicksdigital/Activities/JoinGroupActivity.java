@@ -74,7 +74,7 @@ public class JoinGroupActivity extends AppCompatActivity {
         close_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(JoinGroupActivity.this,StartActivity.class));
+                startActivity(new Intent(JoinGroupActivity.this, StartActivity.class));
                 finish();
             }
         });
