@@ -4,11 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical"
-    tools:context=".Activities.SetProfileActivity">
+    tools:context=".Activities.EditProfile">
+
+    <ProgressBar
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:id="@+id/progressBar"
+        android:visibility="invisible"
+        android:indeterminateTint="#FF3300"
+        android:layout_centerInParent="true"/>
 
     <RelativeLayout
         android:id="@+id/layout_view"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

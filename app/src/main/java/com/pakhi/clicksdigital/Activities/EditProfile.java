@@ -1,5 +1,10 @@
 package com.pakhi.clicksdigital.Activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -11,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -21,11 +27,6 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,18 +43,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class SetProfileActivity extends AppCompatActivity {
+public class EditProfile extends AppCompatActivity {
 
     final static int PICK_PDF_CODE = 2342;
     private static final String TAG = "ProfileActivity";
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
     String userid;
-    Uri picImageUri = null;
+    Uri picImageUri;
     FirebaseAuth firebaseAuth;
     String number;
 
@@ -66,15 +65,21 @@ public class SetProfileActivity extends AppCompatActivity {
     private Button choose_certificate;
     private EditText cerifications;
     private TextView set_cetificate_name;
+    DatabaseReference databaseReference;
+    User user;
     private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, get_facebook_link, get_insta_link, get_twiter_link;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_profile);
+        setContentView(R.layout.activity_edit_profile);
 
-        number = getIntent().getStringExtra("PhoneNumber");
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("userdata");
 
+        number = user.getNumber();
+        user_type = user.getUser_type();
         get_working = findViewById(R.id.working);
         get_experiences = findViewById(R.id.experiences);
         get_speaker_experience = findViewById(R.id.speaker_experience);
@@ -83,30 +88,6 @@ public class SetProfileActivity extends AppCompatActivity {
         get_facebook_link = findViewById(R.id.facebook_link);
         get_insta_link = findViewById(R.id.insta_link);
         get_twiter_link = findViewById(R.id.twiter_link);
-
-        number = getIntent().getStringExtra("PhoneNumber");
-
-        get_working = findViewById(R.id.working);
-        get_experiences = findViewById(R.id.experiences);
-        get_speaker_experience = findViewById(R.id.speaker_experience);
-        get_offer_to_community = findViewById(R.id.offer_to_community);
-        get_expectations_from_us = findViewById(R.id.expectations_from_us);
-        get_facebook_link = findViewById(R.id.facebook_link);
-        get_insta_link = findViewById(R.id.insta_link);
-        get_twiter_link = findViewById(R.id.twiter_link);
-
-
-        if (number.equals("+9180079 97748")) {
-            user_type = "admin";
-        } else {
-            user_type = "user";
-        }
-
-
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString("user_type", user_type);
-        editor.commit();
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -116,7 +97,7 @@ public class SetProfileActivity extends AppCompatActivity {
         weblink = findViewById(R.id.weblink);
         bio = findViewById(R.id.bio);
         done_btn = findViewById(R.id.done_btn);
-        progressDialog = new ProgressDialog(SetProfileActivity.this);
+        progressDialog = new ProgressDialog(EditProfile.this);
         progressDialog.setMessage("Loading...");
 
         profile_img.setOnClickListener(new View.OnClickListener() {
@@ -138,20 +119,13 @@ public class SetProfileActivity extends AppCompatActivity {
                 email_str = email.getText().toString().trim();
                 bio_str = bio.getText().toString().trim();
                 weblink_str = weblink.getText().toString().trim();
-
-                if(TextUtils.isEmpty(full_name_str)) {
-                    showToast("full name cannot be empty");
-                }else if (TextUtils.isEmpty(email_str)) {
-                    showToast("email cannot be empty");
-                }else if(picImageUri == null){
-                    showToast("Select you profile picture");
-                }else{
-                    progressDialog.show();
-                    uploadData(full_name_str, email_str, bio_str, weblink_str);
-                    createUserProfile();
-                }
+                progressDialog.show();
+                uploadData(full_name_str, email_str, bio_str, weblink_str);
+                createUserProfile();
             }
         });
+
+        loadData();
 
         mStorageReference = FirebaseStorage.getInstance().getReference();
         choose_certificate = findViewById(R.id.btn_cerification_choose);
@@ -170,6 +144,30 @@ public class SetProfileActivity extends AppCompatActivity {
                     }
                 }
         );
+
+
+
+    }
+
+    private void loadData() {
+        Picasso.get()
+                .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                .resize(120, 120)
+                .into(profile_img);
+
+        full_name.setText(user.getUser_name());
+        email.setText(user.getUser_email());
+        weblink.setText(user.getWeblink());
+        bio.setText(user.getUser_bio());
+        get_expectations_from_us.setText(user.getExpectations_from_us());
+        get_experiences.setText(user.getExperiences());
+        get_facebook_link.setText(user.getFacebook_link());
+        get_working.setText(user.getWork_profession());
+        get_speaker_experience.setText(user.getSpeaker_experience());
+        get_offer_to_community.setText(user.getOffer_to_community());
+        get_insta_link.setText(user.getInsta_link());
+        get_twiter_link.setText(user.getTwiter_link());
+
     }
 
     private void getPDF() {
@@ -204,7 +202,6 @@ public class SetProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
                     String url = "";
-
                     @SuppressWarnings("VisibleForTests")
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -258,11 +255,8 @@ public class SetProfileActivity extends AppCompatActivity {
         twiter_link = get_twiter_link.getText().toString();
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-
-        String number_without_special_char = number.replace(" ", "");
-        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number_without_special_char, offer_to_community,
+        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
                 speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working);
-
 
         reference.child(userid).child("details").setValue(user);
     }
@@ -270,58 +264,62 @@ public class SetProfileActivity extends AppCompatActivity {
     private void createUserProfile() {
         String uid = firebaseAuth.getCurrentUser().getUid();
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(uid).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
-        final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Constants.USER_MEDIA_PATH).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
+        if(picImageUri != null){
+            final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Constants.USER_MEDIA_PATH).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
+            imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            mDatabaseReference.child("dp").setValue(String.valueOf(uri));
+                            UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                    .setPhotoUri(uri)
+                                    .build();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            user.updateProfile(profileUpdate)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            showToast("Details Updated");
+                                            updateUI();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                        }
+                                    });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
 
-        imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        mDatabaseReference.child("dp").setValue(String.valueOf(uri));
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                .setPhotoUri(uri)
-                                .build();
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        user.updateProfile(profileUpdate)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        showToast("Welcome to Digital Clicks");
-                                        updateUI();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                    }
-                                });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+        }else{
+            updateUI();
+        }
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
     }
 
     private void updateUI() {
-        Intent homeActivity = new Intent(getApplicationContext(), JoinGroupActivity.class);
+        Intent homeActivity = new Intent(getApplicationContext(), ProfileActivity.class);
         progressDialog.dismiss();
         startActivity(homeActivity);
         finish();
     }
 
     private void showToast(String s) {
-        Toast.makeText(SetProfileActivity.this, s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(EditProfile.this, s, Toast.LENGTH_SHORT).show();
     }
 
     private void openGallery() {
@@ -334,11 +332,11 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void checkAndRequestForPermissions() {
-        if (ContextCompat.checkSelfPermission(SetProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(SetProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(EditProfile.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(EditProfile.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 showToast("Please accept for required permission");
             } else {
-                ActivityCompat.requestPermissions(SetProfileActivity.this,
+                ActivityCompat.requestPermissions(EditProfile.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         PReqCode
                 );
@@ -388,12 +386,5 @@ public class SetProfileActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
-    }
 }
+
