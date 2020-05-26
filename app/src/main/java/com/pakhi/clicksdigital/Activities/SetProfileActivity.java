@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -41,7 +40,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.pakhi.clicksdigital.Model.Upload;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 
@@ -76,6 +74,18 @@ public class SetProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_profile);
 
         number = getIntent().getStringExtra("PhoneNumber");
+
+        get_working = findViewById(R.id.working);
+        get_experiences = findViewById(R.id.experiences);
+        get_speaker_experience = findViewById(R.id.speaker_experience);
+        get_offer_to_community = findViewById(R.id.offer_to_community);
+        get_expectations_from_us = findViewById(R.id.expectations_from_us);
+        get_facebook_link = findViewById(R.id.facebook_link);
+        get_insta_link = findViewById(R.id.insta_link);
+        get_twiter_link = findViewById(R.id.twiter_link);
+
+        number = getIntent().getStringExtra("PhoneNumber");
+
         get_working = findViewById(R.id.working);
         get_experiences = findViewById(R.id.experiences);
         get_speaker_experience = findViewById(R.id.speaker_experience);
@@ -86,11 +96,11 @@ public class SetProfileActivity extends AppCompatActivity {
         get_twiter_link = findViewById(R.id.twiter_link);
 
 
-         if(number.equals("+9180079 97748")) {
+        if (number.equals("+9180079 97748")) {
             user_type = "admin";
-         }else {
-             user_type = "user";
-         }
+        } else {
+            user_type = "user";
+        }
 
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
@@ -194,20 +204,21 @@ public class SetProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
                     String url = "";
+
                     @SuppressWarnings("VisibleForTests")
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         progressDialog.dismiss();
                         taskSnapshot.getMetadata().getReference().getDownloadUrl()
                                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                url = String.valueOf(uri);
-                                mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(url);
-                                set_cetificate_name.setVisibility(View.VISIBLE);
-                                set_cetificate_name.setText(str_name_of_file + " uploaded successfully");
-                            }
-                        });
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        url = String.valueOf(uri);
+                                        mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(url);
+                                        set_cetificate_name.setVisibility(View.VISIBLE);
+                                        set_cetificate_name.setText(str_name_of_file + " uploaded successfully");
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -247,8 +258,11 @@ public class SetProfileActivity extends AppCompatActivity {
         twiter_link = get_twiter_link.getText().toString();
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
+
+        String number_without_special_char = number.replace(" ", "");
+        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number_without_special_char, offer_to_community,
                 speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working);
+
 
         reference.child(userid).child("details").setValue(user);
     }

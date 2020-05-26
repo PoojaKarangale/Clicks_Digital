@@ -1,5 +1,7 @@
 package com.pakhi.clicksdigital.Model;
 
+import java.util.HashMap;
+
 public class GroupChat {
 
     String group_name;
@@ -13,11 +15,22 @@ public class GroupChat {
     String status;
     String requesting_userid;
 
+
+    HashMap<String,String> Users;
+
     //here status is joined or requested
     //info is created at date time and created by group description
 
 
     public GroupChat() {
+    }
+
+    public HashMap<String, String> getUsers() {
+        return Users;
+    }
+
+    public void setUsers(HashMap<String, String> users) {
+        Users = users;
     }
 
     public String getGroup_name() {

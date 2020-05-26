@@ -10,6 +10,13 @@
         android:id="@+id/user_request"
         android:title="user request"/>
     <item
+        android:id="@+id/join_new_groups"
+        android:title="join new groups"/>
+    <item
+        android:id="@+id/contact_users"
+        android:title="contact users"/>
+    <item
+
         android:id="@+id/settings"
         android:title="Settings"/>
     <item

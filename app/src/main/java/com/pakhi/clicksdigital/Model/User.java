@@ -1,5 +1,4 @@
 package com.pakhi.clicksdigital.Model;
-
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
@@ -7,6 +6,8 @@ public class User implements Serializable {
 
     private String expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
             speaker_experience, twiter_link, user_bio, user_email, user_name, user_type, weblink, work_profession;
+
+    HashMap<String,Object> groups;
 
     public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession) {
         this.expectations_from_us = expectations_from_us;
