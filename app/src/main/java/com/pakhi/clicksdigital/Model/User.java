@@ -8,7 +8,44 @@ public class User implements Serializable {
     private String expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
             speaker_experience, twiter_link, user_bio, user_email, user_name, user_type, weblink, work_profession;
 
+
+
+    String image_url;
+
     HashMap<String,Object> groups;
+
+    public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession, String image_url) {
+        this.expectations_from_us = expectations_from_us;
+        this.experiences = experiences;
+        this.facebook_link = facebook_link;
+        this.gender = gender;
+        this.insta_link = insta_link;
+        this.number = number;
+        this.offer_to_community = offer_to_community;
+        this.speaker_experience = speaker_experience;
+        this.twiter_link = twiter_link;
+        this.user_bio = user_bio;
+        this.user_email = user_email;
+        this.user_name = user_name;
+        this.user_type = user_type;
+        this.weblink = weblink;
+        this.work_profession = work_profession;
+        this.image_url = image_url;
+    }
+
+    public User(HashMap<String, Object> groups) {
+        this.groups = groups;
+    }
+
+    public User() {
+    }
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
 
     public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession) {
         this.expectations_from_us = expectations_from_us;
@@ -26,9 +63,6 @@ public class User implements Serializable {
         this.user_type = user_type;
         this.weblink = weblink;
         this.work_profession = work_profession;
-    }
-
-    public User() {
     }
 
     public String getExpectations_from_us() {

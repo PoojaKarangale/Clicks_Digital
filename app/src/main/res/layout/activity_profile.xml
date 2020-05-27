@@ -271,20 +271,62 @@
                     android:src="@drawable/twitter_link"/>
 
             </LinearLayout>
-
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="30dp"
+                >
             <Button
                 android:id="@+id/edit_profile"
                 android:layout_width="160dp"
                 android:layout_height="45dp"
-                android:layout_marginTop="40dp"
+                android:background="@drawable/button_bg"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                android:layout_gravity="center_horizontal"
+                android:text="Edit Profile"
+                android:visibility="invisible"
+                />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    >
+
+            <Button
+                android:id="@+id/accept_msg_request"
+                android:layout_width="160dp"
+                android:layout_height="45dp"
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/button_bg"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textAllCaps="false"
                 android:layout_gravity="center_horizontal"
-                android:text="Edit Profile" />
-
+                android:text="Send Message Request"
+                android:visibility="invisible"
+                />
+                <Button
+                    android:id="@+id/decline_msg_request"
+                    android:layout_width="160dp"
+                    android:layout_height="45dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/button_bg"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Send Message Request"
+                    android:visibility="invisible"
+                    />
+</LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
     </ScrollView>

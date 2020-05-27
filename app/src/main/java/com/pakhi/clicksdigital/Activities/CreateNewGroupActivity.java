@@ -56,6 +56,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     SimpleDateFormat currentTime,currentDate;
     Calendar calendar;
     boolean isProfileSelected=false;
+    DatabaseReference RootRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         send_request_btn = findViewById(R.id.send_request_btn);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        RootRef=FirebaseDatabase.getInstance().getReference();
         progressDialog = new ProgressDialog(CreateNewGroupActivity.this);
         progressDialog.setMessage("Loading...");
 
@@ -278,4 +280,30 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUserStatus("online");
+    }
+
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        RootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("userState")
+                .updateChildren(onlineStateMap);
+
+    }
 }

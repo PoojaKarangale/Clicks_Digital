@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,32 +21,35 @@ import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.Model.User_request;
 import com.pakhi.clicksdigital.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class UserRequestActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private UserRequestAdapter userRequestAdapter;
     private List<User_request> user_requests;
-   // ArrayList<Contact> userList, contactList;
     SharedPreferences pref;
+    DatabaseReference RootRef;
+    FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_request);
 
+        RootRef=FirebaseDatabase.getInstance().getReference();
+        firebaseAuth=FirebaseAuth.getInstance();
         user_requests= new ArrayList<>();
-        //userList= new ArrayList<>();
 
         recyclerView = findViewById(R.id.recycler_requesting_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //contacts_user = new ArrayList<>();
-
         userRequestAdapter = new UserRequestAdapter(getApplicationContext(), user_requests);
         recyclerView.setAdapter(userRequestAdapter);
-
 
         showRequestingUsers();
 
@@ -69,5 +73,32 @@ public class UserRequestActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUserStatus("online");
+    }
+
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        RootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("userState")
+                .updateChildren(onlineStateMap);
+
     }
 }

@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.MessageAdapter;
 import com.pakhi.clicksdigital.Model.Messages;
+import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private Toolbar ChatToolBar;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRef;
+    private DatabaseReference RootRef,databaseReference;
 
     private ImageButton SendMessageButton, SendFilesButton;
     private EditText MessageInputText;
@@ -58,31 +59,40 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private RecyclerView userMessagesList;
 
-
     private String saveCurrentTime, saveCurrentDate;
-
+User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-
         mAuth = FirebaseAuth.getInstance();
         messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
-
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
-        messageReceiverName = getIntent().getExtras().get("visit_user_name").toString();
-      //  messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(messageReceiverID);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(User.class);
+                messageReceiverName=user.getUser_name();
+                Picasso.get()
+                        .load(user.getImage_url())
+                        .resize(120, 120)
+                        .into(userImage);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         IntializeControllers();
 
-
         userName.setText(messageReceiverName);
-      //  Picasso.get().load(messageReceiverImage).placeholder(R.drawable.profile_image).into(userImage);
-
 
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,13 +102,10 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
         DisplayLastSeen();
     }
 
-
-    private void IntializeControllers()
-    {
+    private void IntializeControllers() {
         ChatToolBar =  findViewById(R.id.chat_toolbar);
         setSupportActionBar(ChatToolBar);
 
@@ -134,8 +141,7 @@ public class ChatActivity extends AppCompatActivity {
         saveCurrentTime = currentTime.format(calendar.getTime());
     }
 
-    private void DisplayLastSeen()
-    {
+    private void DisplayLastSeen() {
         RootRef.child("Users").child(messageReceiverID)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -169,12 +175,10 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
-
-
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
+        updateUserStatus("online");
 
         RootRef.child("Messages").child(messageSenderID).child(messageReceiverID)
                 .addChildEventListener(new ChildEventListener() {
@@ -212,10 +216,7 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
-
-
-    private void SendMessage()
-    {
+    private void SendMessage() {
         String messageText = MessageInputText.getText().toString();
 
         if (TextUtils.isEmpty(messageText))
@@ -263,4 +264,24 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        RootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("userState")
+                .updateChildren(onlineStateMap);
+
+    }
 }

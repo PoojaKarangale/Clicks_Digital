@@ -22,16 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PhoneVerify extends AppCompatActivity {
@@ -43,6 +35,49 @@ public class PhoneVerify extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken token;
     private ProgressBar loading_bar;
     private TextView verify_number;
+    //the callback to detect the verification status
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            //Getting the code sent by SMS
+            String code = phoneAuthCredential.getSmsCode();
+            //sometime the code is not detected automatically
+            //in this case the code will be null
+            //so user has to manually enter the code
+
+            if (code != null) {
+                Toast.makeText(PhoneVerify.this, "Phone verified automatically", Toast.LENGTH_SHORT).show();
+                get_code.setText(code);
+                //verifying the code
+                verifyVerificationCode(code);
+            } else {
+                get_code.setVisibility(View.INVISIBLE);
+                Toast.makeText(PhoneVerify.this, "Phone verified automatically", Toast.LENGTH_SHORT).show();
+                signInWithCredential(phoneAuthCredential);
+            }
+        }
+
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            loading_bar.setVisibility(View.VISIBLE);
+            btn_verify.setVisibility(View.INVISIBLE);
+            resend_otp.setVisibility(View.VISIBLE);
+            Toast.makeText(PhoneVerify.this, "Please check your INTERNET connection and click RESEND OTP\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            Log.e("this", "code sent");
+            //storing the verification id that is sent to the user
+            btn_verify.setVisibility(View.VISIBLE);
+            loading_bar.setVisibility(View.INVISIBLE);
+            resend_otp.setVisibility(View.VISIBLE);
+            Toast.makeText(PhoneVerify.this, "Code Sent", Toast.LENGTH_SHORT).show();
+            verificationCode = s;
+            token = forceResendingToken;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +92,14 @@ public class PhoneVerify extends AppCompatActivity {
         resend_otp = findViewById(R.id.resend_otp);
 
         number = getIntent().getStringExtra("PhoneNumber");
-        String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]","");
+        String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]", "");
 
-        Log.d("phoneVerify"," ----------------------"+phoneNumberWithoutSpecialChar+"----------"+number);
+        Log.d("phoneVerify", " ----------------------" + phoneNumberWithoutSpecialChar + "----------" + number);
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
-       final SharedPreferences.Editor editor = pref.edit();
-       //number=pref.getString("PhoneNumber","");
-        editor.putString("PhoneNumber",phoneNumberWithoutSpecialChar);
-editor.commit();
+        final SharedPreferences.Editor editor = pref.edit();
+        //number=pref.getString("PhoneNumber","");
+        editor.putString("PhoneNumber", phoneNumberWithoutSpecialChar);
+        editor.commit();
 
         verify_number.setText("Verify " + number);
         sendVerificationCode(number);
@@ -105,50 +140,6 @@ editor.commit();
                 mCallbacks);
     }
 
-    //the callback to detect the verification status
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            //Getting the code sent by SMS
-            String code = phoneAuthCredential.getSmsCode();
-            //sometime the code is not detected automatically
-            //in this case the code will be null
-            //so user has to manually enter the code
-
-            if (code != null) {
-                Toast.makeText(PhoneVerify.this, "Phone verified automatically", Toast.LENGTH_SHORT).show();
-                get_code.setText(code);
-                //verifying the code
-                verifyVerificationCode(code);
-            }else{
-                get_code.setVisibility(View.INVISIBLE);
-                Toast.makeText(PhoneVerify.this, "Phone verified automatically", Toast.LENGTH_SHORT).show();
-                signInWithCredential(phoneAuthCredential);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            loading_bar.setVisibility(View.VISIBLE);
-            btn_verify.setVisibility(View.INVISIBLE);
-            resend_otp.setVisibility(View.VISIBLE);
-            Toast.makeText(PhoneVerify.this, "Please check your INTERNET connection and click RESEND OTP\n" + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            Log.e("this", "code sent");
-            //storing the verification id that is sent to the user
-            btn_verify.setVisibility(View.VISIBLE);
-            loading_bar.setVisibility(View.INVISIBLE);
-            resend_otp.setVisibility(View.VISIBLE);
-            Toast.makeText(PhoneVerify.this, "Code Sent", Toast.LENGTH_SHORT).show();
-            verificationCode = s;
-            token = forceResendingToken;
-        }
-    };
-
     private void verifyVerificationCode(String code) {
         //creating the credential
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, code);
@@ -166,7 +157,7 @@ editor.commit();
                             btn_verify.setVisibility(View.INVISIBLE);
                             resend_otp.setVisibility(View.INVISIBLE);
                             Intent resIntent = new Intent(PhoneVerify.this, SetProfileActivity.class);
-                            resIntent.putExtra("PhoneNumber",number);
+                            resIntent.putExtra("PhoneNumber", number);
                             resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(resIntent);
                             finish();

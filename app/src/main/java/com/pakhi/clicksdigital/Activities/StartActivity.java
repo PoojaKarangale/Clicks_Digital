@@ -114,10 +114,12 @@ public class StartActivity extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(StartActivity.this, ProfileActivity.class));
+                Intent profileIntent=new Intent(StartActivity.this, ProfileActivity.class);
+                profileIntent.putExtra("visit_user_id",currentUserID);
+
+                startActivity(profileIntent);
             }
         });
-
 
     }
 
@@ -152,13 +154,6 @@ public class StartActivity extends AppCompatActivity {
             return fragmentTitle.get(position);
         }
     }
-/*
-    public void signOut(View view) {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(StartActivity.this,RegisterActivity.class));
-    }
-
- */
 
     @Override
     public void onBackPressed() {
@@ -179,10 +174,8 @@ public class StartActivity extends AppCompatActivity {
                 .show();
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
         getMenuInflater().inflate(R.menu.options_menu, menu);
@@ -190,10 +183,8 @@ public class StartActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.logout)
@@ -228,10 +219,15 @@ public class StartActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.find_friends)
         {
-           // SendUserToFindFriendsActivity();
+           SendUserToFindFriendsActivity();
         }
 
         return true;
+    }
+
+    private void SendUserToFindFriendsActivity() {
+
+        startActivity(new Intent(StartActivity.this,FindFriendsActivity.class));
     }
 
     private void SendUserToUserRequestActivity() {
@@ -273,7 +269,6 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onDestroy()
     {
@@ -289,7 +284,7 @@ public class StartActivity extends AppCompatActivity {
     {
         String currentUserID = mAuth.getCurrentUser().getUid();
 
-        RootRef.child("Users").child(currentUserID).child("details").addValueEventListener(new ValueEventListener() {
+        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
@@ -316,8 +311,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
-    private void updateUserStatus(String state)
-    {
+    private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
         Calendar calendar = Calendar.getInstance();

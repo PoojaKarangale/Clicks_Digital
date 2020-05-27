@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,7 @@ public class ChatsFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
-        ChatsRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUserID);
+        ChatsRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUserID);
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         chatsList = (RecyclerView) PrivateChatsView.findViewById(R.id.recycler_chats);
@@ -64,7 +65,6 @@ public class ChatsFragment extends Fragment {
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(ChatsRef, User.class)
                         .build();
-
 
         FirebaseRecyclerAdapter<User, ChatsViewHolder> adapter =
                 new FirebaseRecyclerAdapter<User, ChatsViewHolder>(options) {
@@ -84,7 +84,7 @@ public class ChatsFragment extends Fragment {
                                     }
 
                                     final String retName = dataSnapshot.child("user_name").getValue().toString();
-                                    final String retStatus = dataSnapshot.child("bio").getValue().toString();
+                                    final String retStatus = dataSnapshot.child("user_bio").getValue().toString();
 
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText(retStatus);
@@ -95,7 +95,8 @@ public class ChatsFragment extends Fragment {
                                         String time = dataSnapshot.child("userState").child("time").getValue().toString();
 
                                         if (state.equals("online")) {
-                                            holder.userStatus.setText("online");
+                                           // holder.userStatus.setText("online");
+                                            holder.online_status.setVisibility(View.VISIBLE);
                                         } else if (state.equals("offline")) {
                                             holder.userStatus.setText("Last Seen: " + date + " " + time);
                                         }
@@ -109,7 +110,7 @@ public class ChatsFragment extends Fragment {
                                             Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra("visit_user_id", usersIDs);
                                             chatIntent.putExtra("visit_user_name", retName);
-                                          //  chatIntent.putExtra("visit_image", retImage[0]);
+                                            //  chatIntent.putExtra("visit_image", retImage[0]);
                                             startActivity(chatIntent);
                                         }
                                     });
@@ -138,13 +139,15 @@ public class ChatsFragment extends Fragment {
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {
         CircleImageView profileImage;
         TextView userStatus, userName;
-
+        ImageView online_status;
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             profileImage = itemView.findViewById(R.id.image_profile);
             userStatus = itemView.findViewById(R.id.user_status);
+            online_status = itemView.findViewById(R.id.user_online_status);
+
             userName = itemView.findViewById(R.id.display_name);
             userStatus.setVisibility(View.VISIBLE);
         }

@@ -27,7 +27,9 @@ import com.pakhi.clicksdigital.Model.Contact;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +39,8 @@ public class ContactUserActivity extends AppCompatActivity {
     SharedPreferences pref;
     private RecyclerView recyclerView;
     private ContactUserAdapter contactUserAdapter;
-
+DatabaseReference RootRef;
+FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +57,8 @@ public class ContactUserActivity extends AppCompatActivity {
 
         contactUserAdapter = new ContactUserAdapter(this, userList);
         recyclerView.setAdapter(contactUserAdapter);
-
-
+        RootRef=FirebaseDatabase.getInstance().getReference();
+firebaseAuth=FirebaseAuth.getInstance();
         showContacts();
 
     }
@@ -172,4 +175,29 @@ public class ContactUserActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUserStatus("online");
+    }
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        RootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("userState")
+                .updateChildren(onlineStateMap);
+
+    }
 }

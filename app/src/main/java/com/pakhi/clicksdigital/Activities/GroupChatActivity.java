@@ -56,7 +56,7 @@ public class GroupChatActivity extends AppCompatActivity {
     DatabaseReference groupChatRefForCurrentGroup;
     ImageView attach_file_btn;
     LinearLayout layout;
-    Uri imageUriGalary, imageUriCamera,docUri;
+    Uri imageUriGalary, imageUriCamera, docUri;
     private Toolbar mToolbar;
     private ImageButton SendMessageButton;
     private EditText userMessageInput;
@@ -112,7 +112,7 @@ public class GroupChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        updateUserStatus("online");
         groupChatRefForCurrentGroup.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -145,7 +145,6 @@ public class GroupChatActivity extends AppCompatActivity {
         });
     }
 
-
     private void InitializeFields() {
         mToolbar = (Toolbar) findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
@@ -162,20 +161,20 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void GetUserInfo() {
-        UsersRef.child(currentUserID).child("details").addValueEventListener(new ValueEventListener() {
+        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     currentUserName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
     }
-
 
     private void SaveMessageInfoToDatabase() {
         String message = userMessageInput.getText().toString();
@@ -234,9 +233,9 @@ public class GroupChatActivity extends AppCompatActivity {
                 textView.setBackgroundResource(R.drawable.receiver_messages_layout);
 
             }
-            textView.setPadding(10,10,10,10);
+            textView.setPadding(10, 10, 10, 10);
             //displayTextMessages.setLayoutParams(lp2);
-         //   textView.setBackgroundResource(R.drawable.back_edit_text);
+            //   textView.setBackgroundResource(R.drawable.back_edit_text);
             textView.setLayoutParams(lp2);
             textView.setText(chatName + " :\n" + chatMessage + "\n\n");
             layout.addView(textView);
@@ -255,7 +254,6 @@ public class GroupChatActivity extends AppCompatActivity {
         });
         popup.show();
     }
-
 
     private boolean menuItemClicked(MenuItem item) {
         if (item.getItemId() == R.id.galary_pic_menu) {
@@ -429,17 +427,16 @@ public class GroupChatActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        logMessage("--------------"+requestCode+"==="+CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE+"    --- "+resultCode+"===="+RESULT_OK );
-        if (resultCode == RESULT_OK  ) {
+        logMessage("--------------" + requestCode + "===" + CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE + "    --- " + resultCode + "====" + RESULT_OK);
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     imageUriGalary = result.getUri();
-                    logMessage("image ---------"+imageUriGalary.toString());
+                    logMessage("image ---------" + imageUriGalary.toString());
                     break;
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -448,11 +445,11 @@ public class GroupChatActivity extends AppCompatActivity {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                     String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), imageBitmap, "Title", null);
                     imageUriCamera = Uri.parse(path);
-                    logMessage("camera ---------"+imageUriCamera.toString());
+                    logMessage("camera ---------" + imageUriCamera.toString());
                     break;
                 case PICK_PDF_CODE:
-                        docUri=data.getData();
-                        logMessage("doc ---------"+docUri.toString());
+                    docUri = data.getData();
+                    logMessage("doc ---------" + docUri.toString());
                     break;
             }
         } else {
@@ -461,10 +458,33 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void logMessage(String s) {
-        Log.d("Testing Developer mode ",s);
+        Log.d("Testing Developer mode ", s);
 
     }
+
     private void showToast(String s) {
         Toast.makeText(GroupChatActivity.this, s, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        UsersRef.child(mAuth.getCurrentUser().getUid()).child("userState")
+                .updateChildren(onlineStateMap);
+
     }
 }
