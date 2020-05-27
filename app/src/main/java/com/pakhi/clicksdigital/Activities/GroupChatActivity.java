@@ -162,7 +162,7 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void GetUserInfo() {
-        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+        UsersRef.child(currentUserID).child("details").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -226,14 +226,17 @@ public class GroupChatActivity extends AppCompatActivity {
                 textView.setTextColor(Color.BLUE);
                 lp2.gravity = Gravity.RIGHT;
                 textView.setBackgroundResource(R.drawable.sender_messages_layout);
+
             } else {
                 //displayTextMessages.setTextColor(Color.BLACK);
                 textView.setTextColor(Color.BLACK);
                 lp2.gravity = Gravity.LEFT;
                 textView.setBackgroundResource(R.drawable.receiver_messages_layout);
+
             }
+            textView.setPadding(10,10,10,10);
             //displayTextMessages.setLayoutParams(lp2);
-            textView.setBackgroundResource(R.drawable.back_edit_text);
+         //   textView.setBackgroundResource(R.drawable.back_edit_text);
             textView.setLayoutParams(lp2);
             textView.setText(chatName + " :\n" + chatMessage + "\n\n");
             layout.addView(textView);

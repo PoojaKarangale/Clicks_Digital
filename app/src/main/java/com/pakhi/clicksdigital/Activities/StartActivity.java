@@ -65,8 +65,15 @@ public class StartActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         profile = findViewById(R.id.profile_activity);
         currentUser = mAuth.getCurrentUser();
-        currentUserID = mAuth.getCurrentUser().getUid();
+
         RootRef = FirebaseDatabase.getInstance().getReference();
+
+
+        if (!(currentUser == null))
+        {
+            currentUserID = mAuth.getCurrentUser().getUid();
+        }
+
 
         eventsFragment = new EventsFragment();
         groupsFragment = new GroupsFragment();
@@ -78,8 +85,8 @@ public class StartActivity extends AppCompatActivity {
 
         toolbar=findViewById(R.id.toolbar_start);
         setSupportActionBar(toolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //assert getSupportActionBar() != null;
+       // getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager=findViewById(R.id.viewPager);
@@ -249,9 +256,7 @@ public class StartActivity extends AppCompatActivity {
         else
         {
             updateUserStatus("online");
-
-
-            //VerifyUserExistance();
+            VerifyUserExistance();
         }
     }
 
@@ -280,20 +285,18 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-
-/*
     private void VerifyUserExistance()
     {
         String currentUserID = mAuth.getCurrentUser().getUid();
 
-        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+        RootRef.child("Users").child(currentUserID).child("details").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 if ((dataSnapshot.child(Constants.USER_NAME).exists()))
 
                 {
-                    Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -308,9 +311,6 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
-
-
- */
     private void SendUserToSetProfileActivity() {
         startActivity(new Intent(StartActivity.this,SetProfileActivity.class));
     }

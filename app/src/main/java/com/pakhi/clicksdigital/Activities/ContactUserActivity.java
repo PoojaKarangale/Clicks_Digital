@@ -102,11 +102,15 @@ public class ContactUserActivity extends AppCompatActivity {
                             phone=snapshot.child(Constants.USER_NAME).getValue().toString();
                         }
                         Contact contact=new Contact(snapshot.getKey(),name,phone);
+
+                        Log.d("ContactUser", "--------query----------" + snapshot.toString()+" ----"+contact.getUser_name());
                         userList.add(contact);
-                        //contactUserAdapter.notifyDataSetChanged();
+
+                        Log.d("ContactUser", "------userList size------" + userList.size());
+                        contactUserAdapter.notifyDataSetChanged();
                     }
                 }
-                contactUserAdapter.notifyDataSetChanged();
+               // contactUserAdapter.notifyDataSetChanged();
             }
 
             @Override

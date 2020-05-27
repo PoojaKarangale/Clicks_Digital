@@ -53,6 +53,7 @@ public class JoinGroupActivity extends AppCompatActivity {
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         user_type = pref.getString("user_type", "user");
+
         if (user_type.equals("user")) {
             close_post.setVisibility(View.INVISIBLE);
             home_btn.setVisibility(View.VISIBLE);
@@ -116,11 +117,15 @@ public class JoinGroupActivity extends AppCompatActivity {
 
     private void addNewGroup() {
 
+        Intent createGroupActivity = new Intent(getApplicationContext(), CreateNewGroupActivity.class);
+        //createGroupActivity.putExtra("user_type", user_type[0]);
+        startActivity(createGroupActivity);
+
+
+/*
         String uid = firebaseUser.getUid();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
         DatabaseReference userReference = databaseReference.child("Users").child(uid).child("user_type");
-
 
         final String[] user_type = new String[1];
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -138,5 +143,6 @@ public class JoinGroupActivity extends AppCompatActivity {
             }
         });
 
+ */
     }
 }

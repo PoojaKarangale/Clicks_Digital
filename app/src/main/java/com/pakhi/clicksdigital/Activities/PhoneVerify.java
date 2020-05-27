@@ -1,6 +1,7 @@
 package com.pakhi.clicksdigital.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +57,15 @@ public class PhoneVerify extends AppCompatActivity {
         resend_otp = findViewById(R.id.resend_otp);
 
         number = getIntent().getStringExtra("PhoneNumber");
+        String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]","");
+
+        Log.d("phoneVerify"," ----------------------"+phoneNumberWithoutSpecialChar+"----------"+number);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
+       final SharedPreferences.Editor editor = pref.edit();
+       //number=pref.getString("PhoneNumber","");
+        editor.putString("PhoneNumber",phoneNumberWithoutSpecialChar);
+editor.commit();
+
         verify_number.setText("Verify " + number);
         sendVerificationCode(number);
 

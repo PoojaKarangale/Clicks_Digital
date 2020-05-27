@@ -1,6 +1,7 @@
 package com.pakhi.clicksdigital.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,9 +25,13 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         mobileNo_reg = (EditText) findViewById(R.id.mobileNo_reg);
         verify = findViewById(R.id.verify);
         ccp = findViewById(R.id.ccp);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
+        final SharedPreferences.Editor editor = pref.edit();
 
 
         verify.setOnClickListener(new View.OnClickListener() {
@@ -34,13 +39,19 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ccp.registerCarrierNumberEditText(mobileNo_reg);
                 String num=mobileNo_reg.getText().toString().trim();
+
                 number = ccp.getDefaultCountryCodeWithPlus()+""+num;
+
+               // editor.putString("PhoneNumber", number);
+              //  editor.commit();
+
                 Log.d("RegisterActivity",number+"----------------------------");
                 if(TextUtils.isEmpty(num)){
                     mobileNo_reg.setFocusable(true);
                     mobileNo_reg.setError("mobile number is required");
                    // return;
                 }else{
+
                     Intent i = new Intent(RegisterActivity.this, PhoneVerify.class);
                     i.putExtra("PhoneNumber", number);
                     startActivity(i);

@@ -16,9 +16,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,9 +41,6 @@ import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SetProfileActivity extends AppCompatActivity {
 
     final static int PICK_PDF_CODE = 2342;
@@ -58,7 +53,7 @@ public class SetProfileActivity extends AppCompatActivity {
     String number;
 
     StorageReference mStorageReference;
-    DatabaseReference mDatabaseReference;
+    DatabaseReference mDatabaseReference, RootRef;
     private ImageView profile_img, done_btn;
     private EditText full_name, email, weblink, bio;
     private ProgressDialog progressDialog;
@@ -73,43 +68,34 @@ public class SetProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
 
-        number = getIntent().getStringExtra("PhoneNumber");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        //  number = getIntent().getStringExtra("PhoneNumber");
+        number = pref.getString("PhoneNumber", "");
 
-        get_working = findViewById(R.id.working);
-        get_experiences = findViewById(R.id.experiences);
-        get_speaker_experience = findViewById(R.id.speaker_experience);
-        get_offer_to_community = findViewById(R.id.offer_to_community);
-        get_expectations_from_us = findViewById(R.id.expectations_from_us);
-        get_facebook_link = findViewById(R.id.facebook_link);
-        get_insta_link = findViewById(R.id.insta_link);
-        get_twiter_link = findViewById(R.id.twiter_link);
-
-        number = getIntent().getStringExtra("PhoneNumber");
-
-        get_working = findViewById(R.id.working);
-        get_experiences = findViewById(R.id.experiences);
-        get_speaker_experience = findViewById(R.id.speaker_experience);
-        get_offer_to_community = findViewById(R.id.offer_to_community);
-        get_expectations_from_us = findViewById(R.id.expectations_from_us);
-        get_facebook_link = findViewById(R.id.facebook_link);
-        get_insta_link = findViewById(R.id.insta_link);
-        get_twiter_link = findViewById(R.id.twiter_link);
-
-
-        if (number.equals("+9180079 97748")) {
+        if (number.equals("+918007997748")) {
             user_type = "admin";
         } else {
             user_type = "user";
         }
 
-
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
         editor.putString("user_type", user_type);
         editor.commit();
 
+        get_working = findViewById(R.id.working);
+        get_experiences = findViewById(R.id.experiences);
+        get_speaker_experience = findViewById(R.id.speaker_experience);
+        get_offer_to_community = findViewById(R.id.offer_to_community);
+        get_expectations_from_us = findViewById(R.id.expectations_from_us);
+        get_facebook_link = findViewById(R.id.facebook_link);
+        get_insta_link = findViewById(R.id.insta_link);
+        get_twiter_link = findViewById(R.id.twiter_link);
+
+
+
 
         firebaseAuth = FirebaseAuth.getInstance();
+        RootRef = FirebaseDatabase.getInstance().getReference();
         profile_img = findViewById(R.id.profile_img);
         full_name = findViewById(R.id.full_name);
         email = findViewById(R.id.email);
@@ -139,13 +125,13 @@ public class SetProfileActivity extends AppCompatActivity {
                 bio_str = bio.getText().toString().trim();
                 weblink_str = weblink.getText().toString().trim();
 
-                if(TextUtils.isEmpty(full_name_str)) {
+                if (TextUtils.isEmpty(full_name_str)) {
                     showToast("full name cannot be empty");
-                }else if (TextUtils.isEmpty(email_str)) {
+                } else if (TextUtils.isEmpty(email_str)) {
                     showToast("email cannot be empty");
-                }else if(picImageUri == null){
+                } else if (picImageUri == null) {
                     showToast("Select you profile picture");
-                }else{
+                } else {
                     progressDialog.show();
                     uploadData(full_name_str, email_str, bio_str, weblink_str);
                     createUserProfile();
@@ -170,6 +156,37 @@ public class SetProfileActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        VerifyUserExistance();
+    }
+
+    private void VerifyUserExistance() {
+        String currentUserID = firebaseAuth.getCurrentUser().getUid();
+
+        RootRef.child("Users").child(currentUserID).child("details").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
+                    //Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+                    sendUserToStartActivity();
+                } else {
+                    //SendUserToSetProfileActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void sendUserToStartActivity() {
+        startActivity(new Intent(SetProfileActivity.this, StartActivity.class));
     }
 
     private void getPDF() {
@@ -259,8 +276,8 @@ public class SetProfileActivity extends AppCompatActivity {
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
-        String number_without_special_char = number.replace(" ", "");
-        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number_without_special_char, offer_to_community,
+
+        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
                 speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working);
 
 
@@ -280,10 +297,13 @@ public class SetProfileActivity extends AppCompatActivity {
                 imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        mDatabaseReference.child("dp").setValue(String.valueOf(uri));
+
+                        mDatabaseReference.setValue(String.valueOf(uri));
+
                         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(uri)
                                 .build();
+
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         user.updateProfile(profileUpdate)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -342,6 +362,7 @@ public class SetProfileActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         PReqCode
                 );
+                openGallery();
             }
         } else {
             openGallery();

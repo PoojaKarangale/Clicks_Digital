@@ -1,5 +1,6 @@
 package com.pakhi.clicksdigital.Model;
 import java.io.Serializable;
+import java.util.HashMap;
 
 @SuppressWarnings("serial")
 public class User implements Serializable {
