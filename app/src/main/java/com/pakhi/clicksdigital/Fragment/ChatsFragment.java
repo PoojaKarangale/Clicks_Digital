@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.ChatActivity;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -77,9 +78,9 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    if (dataSnapshot.hasChild("image")) {
-                                        //retImage[0] = dataSnapshot.child("image").getValue().toString();
-                                        // Picasso.get().load(retImage[0]).into(holder.profileImage);
+                                    if (dataSnapshot.hasChild("image_url")) {
+                                        retImage[0] = dataSnapshot.child("image_url").getValue().toString();
+                                        Picasso.get().load(retImage[0]).into(holder.profileImage);
                                         // after adding image uri to users database
                                     }
 

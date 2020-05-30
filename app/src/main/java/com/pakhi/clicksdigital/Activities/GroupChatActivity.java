@@ -39,6 +39,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.R;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
@@ -54,7 +55,7 @@ public class GroupChatActivity extends AppCompatActivity {
     static int REQUEST_CODE = 1;
 
     DatabaseReference groupChatRefForCurrentGroup;
-    ImageView attach_file_btn;
+    ImageView attach_file_btn, image_profile;
     LinearLayout layout;
     Uri imageUriGalary, imageUriCamera, docUri;
     private Toolbar mToolbar;
@@ -86,6 +87,23 @@ public class GroupChatActivity extends AppCompatActivity {
 
         InitializeFields();
         mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        GroupIdRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChild("image_url")) {
+                        String image_url = dataSnapshot.child("image_url").getValue().toString();
+                        Picasso.get().load(image_url).into(image_profile);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         GetUserInfo();
 
@@ -146,17 +164,18 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void InitializeFields() {
-        mToolbar = (Toolbar) findViewById(R.id.group_chat_bar_layout);
+        mToolbar = findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(currentGroupName);
 
-        SendMessageButton = (ImageButton) findViewById(R.id.send_message_button);
-        userMessageInput = (EditText) findViewById(R.id.input_group_message);
-        displayTextMessages = (TextView) findViewById(R.id.group_chat_text_display_for_others);
+        SendMessageButton = findViewById(R.id.send_message_button);
+        userMessageInput = findViewById(R.id.input_group_message);
+        displayTextMessages = findViewById(R.id.group_chat_text_display_for_others);
         //displayTextMessagesForCurrentUser = (TextView) findViewById(R.id.group_chat_text_display_for_current_user);
-        mScrollView = (ScrollView) findViewById(R.id.my_scroll_view);
+        mScrollView = findViewById(R.id.my_scroll_view);
         layout = findViewById(R.id.layout_for_text_msg);
         attach_file_btn = findViewById(R.id.attach_file_btn);
+        image_profile = findViewById(R.id.image_profile);
 
     }
 
@@ -220,25 +239,46 @@ public class GroupChatActivity extends AppCompatActivity {
 
             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp2.weight = 7.0f;
+
+       /*     LayoutInflater layoutInflator = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View v = layoutInflator.inflate(R.layout.custom_messages_layout, null);
+            TextView textView1, textView2; //= (TextView) v.findViewById(R.id.a_text_view);
+            textView.setText("your text");
+            textView1 = (TextView) v.findViewById(R.id.receiver_message_text);
+            textView2 = (TextView) v.findViewById(R.id.sender_messsage_text);
+
+
+        */
             if (chat_userID.equals(currentUserID)) {
-                //displayTextMessages.setTextColor(Color.BLUE);
                 textView.setTextColor(Color.BLUE);
                 lp2.gravity = Gravity.RIGHT;
                 textView.setBackgroundResource(R.drawable.sender_messages_layout);
+             /*   textView1.setVisibility(View.INVISIBLE);
+                textView2.setVisibility(View.VISIBLE);
+                textView2.setText(chatName + " :\n" + chatMessage + "\n\n");
 
+              */
             } else {
-                //displayTextMessages.setTextColor(Color.BLACK);
                 textView.setTextColor(Color.BLACK);
                 lp2.gravity = Gravity.LEFT;
                 textView.setBackgroundResource(R.drawable.receiver_messages_layout);
 
+           /*     textView1.setVisibility(View.VISIBLE);
+                textView2.setVisibility(View.INVISIBLE);
+                textView1.setText(chatName + " :\n" + chatMessage + "\n\n");
+
+            */
             }
-            textView.setPadding(10, 10, 10, 10);
-            //displayTextMessages.setLayoutParams(lp2);
-            //   textView.setBackgroundResource(R.drawable.back_edit_text);
+            textView.setPadding(10, 10, 10, 0);
+            lp2.setMargins(10, 0, 10, 10);
             textView.setLayoutParams(lp2);
             textView.setText(chatName + " :\n" + chatMessage + "\n\n");
             layout.addView(textView);
+
+/*
+            ViewGroup insertPoint = (ViewGroup) findViewById(R.id.layout_for_text_msg);
+            insertPoint.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+ */
             mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
         }
 

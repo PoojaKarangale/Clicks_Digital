@@ -25,7 +25,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-
     private List<Messages> userMessagesList;
     private FirebaseAuth mAuth;
     private DatabaseReference usersRef;
@@ -77,11 +76,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
        // messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
        // messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
 
-
         if (fromMessageType.equals("text")) {
             if (fromUserID.equals(messageSenderId)) {
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
-
                 messageViewHolder.senderMessageText.setBackgroundResource(R.drawable.sender_messages_layout);
                 messageViewHolder.senderMessageText.setTextColor(Color.BLACK);
                 messageViewHolder.senderMessageText.setText(messages.getMessage() + "\n \n" + messages.getTime() + " - " + messages.getDate());
@@ -93,6 +90,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 messageViewHolder.receiverMessageText.setText(messages.getMessage() + "\n \n" + messages.getTime() + " - " + messages.getDate());
             }
         }
+        else if(fromMessageType.equals("photo")){
+
+        }
+        else if(fromMessageType.equals("pdf")){
+
+        }
+
     }
 
     @Override

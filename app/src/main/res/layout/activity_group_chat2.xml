@@ -42,8 +42,10 @@
         android:layout_below="@+id/bar"
         android:layout_above="@+id/myLinearLayout"
         android:layout_alignParentStart="true"
-        tools:ignore="MissingConstraints">
-
+        tools:ignore="MissingConstraints"
+        android:paddingBottom="20dp"
+        android:layout_marginBottom="10dp"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

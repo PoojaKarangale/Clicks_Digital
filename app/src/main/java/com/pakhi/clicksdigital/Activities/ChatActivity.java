@@ -127,10 +127,10 @@ User user;
 
         messageAdapter = new MessageAdapter(messagesList);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
+       // userMessagesList.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
-
 
         Calendar calendar = Calendar.getInstance();
 
@@ -282,6 +282,5 @@ User user;
 
         RootRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("userState")
                 .updateChildren(onlineStateMap);
-
     }
 }
