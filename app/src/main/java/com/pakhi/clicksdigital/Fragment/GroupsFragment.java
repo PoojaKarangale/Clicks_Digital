@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Activities.CreateNewGroupActivity;
 import com.pakhi.clicksdigital.Activities.RegisterActivity;
 import com.pakhi.clicksdigital.Activities.SetProfileActivity;
 import com.pakhi.clicksdigital.Activities.StartActivity;
@@ -70,6 +71,13 @@ public class GroupsFragment extends Fragment {
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, list_of_groups);
         list_view.setAdapter(arrayAdapter);
 */
+        fab_create_group= groupFragmentView.findViewById(R.id.fab_create_group);
+        fab_create_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), CreateNewGroupActivity.class));
+            }
+        });
 
         recyclerView = groupFragmentView.findViewById(R.id.recycler_groups);
         recyclerView.setHasFixedSize(true);
