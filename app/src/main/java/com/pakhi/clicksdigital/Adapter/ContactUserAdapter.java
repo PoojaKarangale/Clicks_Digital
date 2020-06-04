@@ -74,7 +74,6 @@ public class ContactUserAdapter extends RecyclerView.Adapter<ContactUserAdapter.
             mPhone = view.findViewById(R.id.number);
             mLayout = view.findViewById(R.id.main_layout);
             mPhone.setVisibility(View.VISIBLE);
-
         }
     }
 }

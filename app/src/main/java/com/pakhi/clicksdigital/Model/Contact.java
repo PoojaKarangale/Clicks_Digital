@@ -20,10 +20,20 @@ public class Contact implements Serializable {
     private String notificationKey;
     private String image;
     private String bio;
+    private String request_type;
 
     private Boolean selected = false;
 
     public Contact() {
+    }
+
+    public Contact(String uid, String user_name, String number, String image, String bio, String request_type) {
+        this.uid = uid;
+        this.user_name = user_name;
+        this.number = number;
+        this.image = image;
+        this.bio = bio;
+        this.request_type = request_type;
     }
 
     public Contact(String name, String number) {

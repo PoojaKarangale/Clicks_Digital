@@ -1,14 +1,5 @@
 package com.pakhi.clicksdigital.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,8 +8,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
@@ -56,6 +54,7 @@ public class StartActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private String currentUserID;
+
     //private ProfileFragment profileFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +68,7 @@ public class StartActivity extends AppCompatActivity {
         RootRef = FirebaseDatabase.getInstance().getReference();
 
 
-        if (!(currentUser == null))
-        {
+        if (!(currentUser == null)) {
             currentUserID = mAuth.getCurrentUser().getUid();
         }
 
@@ -81,21 +79,21 @@ public class StartActivity extends AppCompatActivity {
         chatsFragment = new ChatsFragment();
         //profileFragment = new ProfileFragment();
 
-        tabLayout=findViewById(R.id.tab_layout);
+        tabLayout = findViewById(R.id.tab_layout);
 
-        toolbar=findViewById(R.id.toolbar_start);
+        toolbar = findViewById(R.id.toolbar_start);
         setSupportActionBar(toolbar);
         //assert getSupportActionBar() != null;
-       // getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager=findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),0);
-        viewPagerAdapter.addFragment(homeFragment,"Home");
-        viewPagerAdapter.addFragment(groupsFragment,"Groups");
-        viewPagerAdapter.addFragment(chatsFragment,"Chat");
-        viewPagerAdapter.addFragment(eventsFragment,"Events");
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
+        viewPagerAdapter.addFragment(homeFragment, "Home");
+        viewPagerAdapter.addFragment(groupsFragment, "Groups");
+        viewPagerAdapter.addFragment(chatsFragment, "Chat");
+        viewPagerAdapter.addFragment(eventsFragment, "Events");
         //viewPagerAdapter.addFragment(profileFragment,"Profile");
 
 
@@ -114,45 +112,13 @@ public class StartActivity extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent=new Intent(StartActivity.this, ProfileActivity.class);
-                profileIntent.putExtra("visit_user_id",currentUserID);
+                Intent profileIntent = new Intent(StartActivity.this, ProfileActivity.class);
+                profileIntent.putExtra("visit_user_id", currentUserID);
 
                 startActivity(profileIntent);
             }
         });
 
-    }
-
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
-
-        List<Fragment> fragments=new ArrayList<>();
-        List<String> fragmentTitle = new ArrayList<>();
-
-        public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
-        }
-
-        public void addFragment(Fragment fragment,String title){
-            fragments.add(fragment);
-            fragmentTitle.add(title);
-        }
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitle.get(position);
-        }
     }
 
     @Override
@@ -163,8 +129,7 @@ public class StartActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Closing Activity")
                 .setMessage("Are you sure you want to close this activity?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -187,114 +152,99 @@ public class StartActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
 
-        if (item.getItemId() == R.id.logout)
-        {
+        if (item.getItemId() == R.id.logout) {
             updateUserStatus("offline");
             mAuth.signOut();
             SendUserToRegisterActivity();
         }
-        if (item.getItemId() == R.id.user_request)
-        {
+        if (item.getItemId() == R.id.user_request) {
             SendUserToUserRequestActivity();
         }
-        if (item.getItemId() == R.id.group_request)
-        {
+        if (item.getItemId() == R.id.group_request) {
             //SendUserToGroupRequestActivity();
         }
-        if (item.getItemId() == R.id.join_new_groups)
-        {
+        if (item.getItemId() == R.id.join_new_groups) {
             //SendUserToGroupRequestActivity();
             startActivity(new Intent(this, JoinGroupActivity.class));
         }
-        if (item.getItemId() == R.id.contact_users)
-        {
+        if (item.getItemId() == R.id.contact_users) {
             //SendUserToSettingsActivity();
             startActivity(new Intent(this, ContactUserActivity.class));
         }
 
-        if (item.getItemId() == R.id.settings)
-        {
+        if (item.getItemId() == R.id.settings) {
             //SendUserToSettingsActivity();
         }
 
-        if (item.getItemId() == R.id.find_friends)
-        {
-           SendUserToFindFriendsActivity();
+        if (item.getItemId() == R.id.find_friends) {
+            SendUserToFindFriendsActivity();
+        }
+        if (item.getItemId() == R.id.connection_request) {
+            SendUserToConnectionRequestActivity();
         }
 
         return true;
     }
 
+    private void SendUserToConnectionRequestActivity() {
+
+        startActivity(new Intent(StartActivity.this, ConnectionRequests.class));
+    }
+
     private void SendUserToFindFriendsActivity() {
 
-        startActivity(new Intent(StartActivity.this,FindFriendsActivity.class));
+        startActivity(new Intent(StartActivity.this, FindFriendsActivity.class));
     }
 
     private void SendUserToUserRequestActivity() {
 
-        startActivity(new Intent(StartActivity.this,UserRequestActivity.class));
+        startActivity(new Intent(StartActivity.this, UserRequestActivity.class));
     }
 
     private void SendUserToRegisterActivity() {
 
-        startActivity(new Intent(StartActivity.this,RegisterActivity.class));
+        startActivity(new Intent(StartActivity.this, RegisterActivity.class));
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
 
-        if (currentUser == null)
-        {
-            SendUserToRegisterActivity();
-        }
-        else
-        {
+        if (currentUser == null) {
+            // SendUserToRegisterActivity();
+        } else {
             updateUserStatus("online");
-            VerifyUserExistance();
+            //VerifyUserExistance();
         }
     }
 
-
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
 
-        if (currentUser != null)
-        {
+        if (currentUser != null) {
             updateUserStatus("offline");
         }
     }
-
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
 
-        if (currentUser != null)
-        {
+        if (currentUser != null) {
             updateUserStatus("offline");
         }
     }
 
-    private void VerifyUserExistance()
-    {
+    private void VerifyUserExistance() {
         String currentUserID = mAuth.getCurrentUser().getUid();
 
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if ((dataSnapshot.child(Constants.USER_NAME).exists()))
-
-                {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
                     //Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     SendUserToSetProfileActivity();
                 }
             }
@@ -307,9 +257,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void SendUserToSetProfileActivity() {
-        startActivity(new Intent(StartActivity.this,SetProfileActivity.class));
+        startActivity(new Intent(StartActivity.this, SetProfileActivity.class));
     }
-
 
     private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
@@ -330,6 +279,39 @@ public class StartActivity extends AppCompatActivity {
         RootRef.child("Users").child(currentUserID).child("userState")
                 .updateChildren(onlineStateMap);
 
+    }
+
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
+        List<Fragment> fragments = new ArrayList<>();
+        List<String> fragmentTitle = new ArrayList<>();
+
+        public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragments.add(fragment);
+            fragmentTitle.add(title);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitle.get(position);
+        }
     }
 
 }

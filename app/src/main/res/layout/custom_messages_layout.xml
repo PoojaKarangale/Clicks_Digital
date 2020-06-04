@@ -4,14 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/message_profile_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:src="@drawable/profile_image"
-        android:visibility="invisible"
+        android:layout_marginTop="10dp"
         />
 
     <TextView
@@ -30,14 +28,15 @@
         android:gravity="bottom"
         />
 
-<!--
+
     <ImageView
         android:id="@+id/message_sender_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:layout_alignParentEnd="true"
         android:layout_margin="5dp"
         android:scaleType="centerCrop"
+
         />
 
     <ImageView
@@ -47,9 +46,9 @@
         android:layout_alignParentStart="true"
         android:layout_margin="5dp"
         android:scaleType="centerCrop"
+        android:visibility="invisible"
         />
 
--->
     <TextView
         android:id="@+id/sender_messsage_text"
         android:layout_width="wrap_content"

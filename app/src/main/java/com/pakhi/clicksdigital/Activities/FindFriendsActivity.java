@@ -52,12 +52,13 @@ public class FindFriendsActivity extends AppCompatActivity {
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setTitle("Find Friends");
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-updateUserStatus("online");
+        updateUserStatus("online");
         FirebaseRecyclerOptions<User> options =
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(UsersRef, User.class)
@@ -108,25 +109,6 @@ updateUserStatus("online");
         adapter.startListening();
     }
 
-    public static class FindFriendViewHolder extends RecyclerView.ViewHolder {
-        TextView userName, userStatus;
-        CircleImageView profile_image;
-        ImageView chat_with_friend;
-
-        public FindFriendViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            userName = itemView.findViewById(R.id.display_name);
-            userStatus = itemView.findViewById(R.id.user_status);
-            chat_with_friend = itemView.findViewById(R.id.chat_with_friend);
-
-            chat_with_friend.setVisibility(View.VISIBLE);
-            userName.setTextColor(Color.BLACK);
-            profile_image = itemView.findViewById(R.id.image_profile);
-            userStatus.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
@@ -146,5 +128,24 @@ updateUserStatus("online");
         UsersRef.child(mAuth.getCurrentUser().getUid()).child("userState")
                 .updateChildren(onlineStateMap);
 
+    }
+
+    public static class FindFriendViewHolder extends RecyclerView.ViewHolder {
+        TextView userName, userStatus;
+        CircleImageView profile_image;
+        ImageView chat_with_friend;
+
+        public FindFriendViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            userName = itemView.findViewById(R.id.display_name);
+            userStatus = itemView.findViewById(R.id.user_status);
+            chat_with_friend = itemView.findViewById(R.id.chat_with_friend);
+
+            chat_with_friend.setVisibility(View.VISIBLE);
+            userName.setTextColor(Color.BLACK);
+            profile_image = itemView.findViewById(R.id.image_profile);
+            userStatus.setVisibility(View.VISIBLE);
+        }
     }
 }

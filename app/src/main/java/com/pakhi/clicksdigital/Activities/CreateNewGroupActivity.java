@@ -242,20 +242,9 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
 
                         picImageUri=uri;
+                        showToast("new group created");
+                        updateUI();
 
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                .setPhotoUri(uri)
-                                .build();
-
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        user.updateProfile(profileUpdate)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        showToast("new group created");
-                                        updateUI();
-                                    }
-                                });
                     }
 
                 });

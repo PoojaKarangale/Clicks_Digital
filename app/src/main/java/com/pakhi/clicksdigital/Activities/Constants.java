@@ -9,6 +9,7 @@ public class Constants {
     final static String FILES_PATH = "Files";
     final static String PHOTOS = "Photos";
     final static String PROFILE_IMAGE = "ProfileImage";
+    final static String IMAGE_URL = "image_url";
 
     public final static String USER_NAME = "user_name";
     public final static String USER_EMAIL = "user_email";

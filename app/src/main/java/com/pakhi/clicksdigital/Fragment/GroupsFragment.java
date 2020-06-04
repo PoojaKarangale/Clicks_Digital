@@ -97,7 +97,7 @@ public class GroupsFragment extends Fragment {
     {
         super.onStart();
 
-        if (firebaseAuth.getCurrentUser() == null)
+     /*   if (firebaseAuth.getCurrentUser() == null)
         {
             SendUserToRegisterActivity();
         }
@@ -105,6 +105,8 @@ public class GroupsFragment extends Fragment {
         {
 
         }
+
+      */
     }
 
     private void SendUserToRegisterActivity() {

@@ -114,22 +114,14 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfileActivity.this, SetProfileActivity.class);
                 intent.putExtra("userdata", user);
                 startActivity(intent);
-                // startActivity(new Intent(ProfileActivity.this,SetProfileActivity.class));
             }
         });
 
-        // mAuth = FirebaseAuth.getInstance();
 
-        SendMessageRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent chatActivity = new Intent(ProfileActivity.this, ChatActivity.class);
-                chatActivity.putExtra("visit_user_id", user_id);
-                startActivity(chatActivity);
-            }
-        });
+        initializeMsgRequestFields();
 
-        //ManageChatRequests();
+        ManageChatRequests();
+
     }
 
     private void loadData() {
@@ -291,7 +283,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-
     private void initializeMsgRequestFields() {
 
         ChatRequestRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
@@ -378,8 +369,6 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             SendMessageRequestButton.setVisibility(View.INVISIBLE);
         }
-
-
     }
 
     private void RemoveSpecificContact() {
