@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Activities.GroupChatActivity;
 import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;
@@ -74,6 +75,16 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
 
         Log.d("joinGroupAdapter", "----------" + group.getGroup_name());
+
+        holder.image_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                fullScreenIntent.putExtra("image_url_string",group.getImage_url());
+                v.getContext().startActivity(fullScreenIntent);
+            }
+        });
+
 
       /*  if (sentRequestFlag) {
             holder.itemView.setEnabled(false);

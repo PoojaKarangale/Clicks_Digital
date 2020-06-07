@@ -12,7 +12,15 @@ public class User implements Serializable {
 
     String image_url;
 
-    HashMap<String,Object> groups;
+    HashMap<String,Object> groups,userState;
+
+    public void setGroups(HashMap<String, Object> groups) {
+        this.groups = groups;
+    }
+
+    public void setUserState(HashMap<String, Object> userState) {
+        this.userState = userState;
+    }
 
     public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession, String image_url) {
         this.expectations_from_us = expectations_from_us;

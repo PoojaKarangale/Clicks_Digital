@@ -71,6 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int PICK_PDF_CODE = 2342;
     static int REQUEST_CODE = 1;
+    static final int REQUESTCODE = 12;
     private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
     private TextView userName, userLastSeen;
     private CircleImageView userImage;
@@ -115,6 +116,7 @@ public class ChatActivity extends AppCompatActivity {
 
         IntializeControllers();
 
+
         userName.setText(messageReceiverName);
 
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -158,12 +160,11 @@ public class ChatActivity extends AppCompatActivity {
         userImage = (CircleImageView) findViewById(R.id.custom_profile_image);
 
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_btn);
-        //SendFilesButton = (ImageButton) findViewById(R.id.send_files_btn);
         MessageInputText = (EditText) findViewById(R.id.input_message);
 
         messageAdapter = new MessageAdapter(messagesList);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
-        // userMessagesList.setHasFixedSize(true);
+
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
@@ -347,8 +348,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
       */
-
-        //creating an intent for file chooser
         Intent intent = new Intent();
         intent.setType("application/pdf");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -411,7 +410,6 @@ public class ChatActivity extends AppCompatActivity {
                         },
                         REQUEST_CODE
                 );
-
             }
         } else {
             //when those permissions are already granted
@@ -454,9 +452,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         } else {}
       */
-        CropImage.activity().setAspectRatio(1, 1)
+       /* CropImage.activity().setAspectRatio(1, 1)
                 .start(ChatActivity.this);
 
+
+        */
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, REQUESTCODE);
     }
 
     void openCamera() {
@@ -471,9 +473,15 @@ public class ChatActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+               /* case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     imageUriGalary = result.getUri();
+                    uploadImage(imageUriGalary);
+                    break;
+
+                */
+                case REQUESTCODE :
+                    imageUriGalary=data.getData();
                     uploadImage(imageUriGalary);
                     break;
                 case REQUEST_IMAGE_CAPTURE:
@@ -488,6 +496,9 @@ public class ChatActivity extends AppCompatActivity {
                 case PICK_PDF_CODE:
                     docUri = data.getData();
                     break;
+                default:
+                    Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
+
             }
         } else {
             showToast("something gone wrong");

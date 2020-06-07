@@ -23,13 +23,24 @@
                 android:layout_centerVertical="true"
                 android:src="@mipmap/ic_launcher" />
 
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/group_chat_bar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_toEndOf="@+id/image_profile">
 
+
             </androidx.appcompat.widget.Toolbar>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/group_members"
+                android:src="@drawable/people"
+                android:layout_margin="8dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                />
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

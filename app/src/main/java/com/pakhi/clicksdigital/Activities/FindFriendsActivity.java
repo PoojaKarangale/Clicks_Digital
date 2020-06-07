@@ -76,6 +76,16 @@ public class FindFriendsActivity extends AppCompatActivity {
                                 .resize(120, 120)
                                 .into(holder.profile_image);
 
+                        holder.profile_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                fullScreenIntent.putExtra("image_url_string",model.getImage_url());
+                                v.getContext().startActivity(fullScreenIntent);
+                            }
+                        });
+
+
                         holder.chat_with_friend.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

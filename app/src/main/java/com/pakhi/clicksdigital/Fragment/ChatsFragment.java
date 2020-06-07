@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.ChatActivity;
+import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -121,6 +122,15 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
+                            }
+                        });
+
+                        holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                fullScreenIntent.putExtra("image_url_string",retImage[0]);
+                                v.getContext().startActivity(fullScreenIntent);
                             }
                         });
                     }

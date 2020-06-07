@@ -20,8 +20,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.Constants;
+import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Model.User_request;
 import com.pakhi.clicksdigital.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -59,11 +61,18 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         final String group_name;
         final String[] user_name = new String[1];
         userId = userRequest.getRequesting_user();
-        databaseReference.child("Users").child(userId).child(Constants.USER_NAME).addListenerForSingleValueEvent(new ValueEventListener() {
+        final String image[]=new String[1];
+
+        databaseReference.child("Users").child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user_name[0] = dataSnapshot.getValue(String.class);
+
+                user_name[0]=dataSnapshot.child(Constants.USER_NAME).getValue().toString();
                 holder.displayName.setText(user_name[0]);
+                if (dataSnapshot.hasChild("image_url")) {
+                    image[0] = dataSnapshot.child("image_url").getValue().toString();
+                    Picasso.get().load(image[0]).placeholder(R.drawable.profile_image).into(holder.image_profile);
+                }
             }
 
             @Override
@@ -71,6 +80,16 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
             }
         });
+        holder.image_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                fullScreenIntent.putExtra("image_url_string",image[0]);
+                v.getContext().startActivity(fullScreenIntent);
+            }
+        });
+
+
         groupId = userRequest.getGroup_id();
         group_name = userRequest.getGroup_name();
         holder.group_name.setText(group_name);

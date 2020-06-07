@@ -31,8 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +44,6 @@ import com.pakhi.clicksdigital.Adapter.MessageAdapter;
 import com.pakhi.clicksdigital.Model.Messages;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -59,11 +56,13 @@ public class GroupChatActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int PICK_PDF_CODE = 2342;
+    static final int REQUESTCODE = 12;
     static int REQUEST_CODE = 1;
     private final List<Messages> messagesList = new ArrayList<>();
     DatabaseReference groupChatRefForCurrentGroup;
     ImageView attach_file_btn, image_profile;
     Uri imageUriGalary, imageUriCamera, docUri;
+    ImageView group_members;
     private Toolbar mToolbar;
     private ImageButton SendMessageButton;
     private EditText userMessageInput;
@@ -93,15 +92,14 @@ public class GroupChatActivity extends AppCompatActivity {
         groupChatRefForCurrentGroup = FirebaseDatabase.getInstance().getReference("GroupChat").child(CurrentGroupId);
 
         InitializeFields();
-
+        final String[] image_url = new String[1];
         GroupIdRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     if (dataSnapshot.hasChild("image_url")) {
-                        String image_url = dataSnapshot.child("image_url").getValue().toString();
-                        Picasso.get().load(image_url).into(image_profile);
-
+                         image_url[0] = dataSnapshot.child("image_url").getValue().toString();
+                        Picasso.get().load(image_url[0]).into(image_profile);
                     }
                 }
             }
@@ -135,6 +133,18 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 requestForPremission();
                 popupMenuSettigns();
+            }
+        });
+
+        group_members.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent groupMembersIntent= new Intent(GroupChatActivity.this, GroupMembersActivity.class);
+                groupMembersIntent.putExtra("group_id",CurrentGroupId);
+                groupMembersIntent.putExtra("image_url",image_url[0]);
+                groupMembersIntent.putExtra("group_name",currentGroupName);
+
+                startActivity(groupMembersIntent);
             }
         });
     }
@@ -193,6 +203,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         attach_file_btn = findViewById(R.id.attach_file_btn);
         image_profile = findViewById(R.id.image_profile);
+        group_members = findViewById(R.id.group_members);
 
         messageAdapter = new MessageAdapter(messagesList);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
@@ -200,7 +211,6 @@ public class GroupChatActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
-
 
     }
 
@@ -403,9 +413,13 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         } else {}
       */
-        CropImage.activity().setAspectRatio(1, 1)
+
+      /*  CropImage.activity().setAspectRatio(1, 1)
                 .start(GroupChatActivity.this);
 
+       */
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, REQUESTCODE);
     }
 
     void openCamera() {
@@ -420,9 +434,15 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+             /*   case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     imageUriGalary = result.getUri();
+                    uploadImage(imageUriGalary);
+                    break;
+
+              */
+                case REQUESTCODE:
+                    imageUriGalary = data.getData();
                     uploadImage(imageUriGalary);
                     break;
                 case REQUEST_IMAGE_CAPTURE:
@@ -450,7 +470,7 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference = FirebaseStorage.getInstance().getReference().child("GroupChat").child(CurrentGroupId).child(Constants.PHOTOS);
+        StorageReference sReference = FirebaseStorage.getInstance().getReference().child("Group_photos").child(CurrentGroupId).child("photos");
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
