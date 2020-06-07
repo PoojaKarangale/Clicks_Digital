@@ -97,6 +97,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                fullScreenIntent.putExtra("image_url_string", user.getImage_url());
+                v.getContext().startActivity(fullScreenIntent);
+            }
+        });
 
         SendMessageRequestButton = findViewById(R.id.accept_msg_request);
         DeclineMessageRequestButton = findViewById(R.id.decline_msg_request);

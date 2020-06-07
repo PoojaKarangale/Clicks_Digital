@@ -66,7 +66,7 @@ public class ConnectionRequests extends AppCompatActivity {
                     protected void onBindViewHolder(@NonNull final RequestsViewHolder holder, int position, @NonNull Contact model) {
 
                         final String list_user_id = getRef(position).getKey();
-                       holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent profileIntent = new Intent(ConnectionRequests.this, ProfileActivity.class);
@@ -83,16 +83,24 @@ public class ConnectionRequests extends AppCompatActivity {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
                                     String type = dataSnapshot.getValue().toString();
-
+                                    final String[] requestProfileImage = new String[1];
                                     if (type.equals("received")) {
                                         UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.hasChild(Constants.IMAGE_URL)) {
-                                                    final String requestProfileImage = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
-
-                                                    Picasso.get().load(requestProfileImage).into(holder.profileImage);
+                                                    requestProfileImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                                                    Picasso.get().load(requestProfileImage[0]).into(holder.profileImage);
                                                 }
+
+                                                holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                                        fullScreenIntent.putExtra("image_url_string", requestProfileImage[0]);
+                                                        v.getContext().startActivity(fullScreenIntent);
+                                                    }
+                                                });
 
                                                 final String requestUserName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
                                                 final String requestUserStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();

@@ -41,6 +41,7 @@ import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -312,7 +313,8 @@ public class SetProfileActivity extends AppCompatActivity {
         reference.child(userid).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                updateUI();
+                progressDialog.dismiss();
+                updateUI(userid);
             }
         });
     }
@@ -341,7 +343,6 @@ public class SetProfileActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         showToast("Profile updated");
-                                        //updateUI();
                                         uploadData(full_name_str, email_str, bio_str, weblink_str);
                                     }
                                 });
@@ -352,10 +353,34 @@ public class SetProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUI() {
-        Intent homeActivity = new Intent(getApplicationContext(), JoinGroupActivity.class);
-        progressDialog.dismiss();
-        startActivity(homeActivity);
+    private void updateUI(final String userid) {
+
+        RootRef.child("Users").child(userid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if ((dataSnapshot.child("groups").exists())) {
+                    SendUserToSetProfileActivity(userid);
+                } else {
+                    sendUserToJoinGroupActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void SendUserToSetProfileActivity(String userid) {
+        Intent profileIntent = new Intent(SetProfileActivity.this, ProfileActivity.class);
+        profileIntent.putExtra("visit_user_id", userid);
+        startActivity(profileIntent);
+    }
+
+    private void sendUserToJoinGroupActivity() {
+        Intent joinGroupActivityIntent = new Intent(getApplicationContext(), JoinGroupActivity.class);
+        startActivity(joinGroupActivityIntent);
         finish();
     }
 
@@ -368,8 +393,13 @@ public class SetProfileActivity extends AppCompatActivity {
       /*  Intent galIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galIntent.setType("image/*");
        */
-        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+     /*   Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, REQUESTCODE);
+
+      */
+        CropImage.activity().setAspectRatio(1, 1)
+                .start(SetProfileActivity.this);
+
     }
 
     private void checkAndRequestForPermissions() {
@@ -397,19 +427,21 @@ public class SetProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUESTCODE && data != null) {
-            picImageUri = data.getData();
-            profile_img.setImageURI(picImageUri);
-        } else {
-            showToast("Nothing is selected");
-        }
 
-        if (requestCode == PICK_PDF_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            //if a file is selected
-            if (data.getData() != null) {
-                uploadFile(data.getData());
-            } else {
-                Toast.makeText(this, "No file chosen", Toast.LENGTH_SHORT).show();
+        if(resultCode == RESULT_OK){
+            switch (requestCode){
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    picImageUri = result.getUri();
+                    profile_img.setImageURI(picImageUri);
+                    break;
+                case PICK_PDF_CODE:
+                    if (data.getData() != null) {
+                        uploadFile(data.getData());
+                    }
+                    break;
+                default: Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
+
             }
         }
     }

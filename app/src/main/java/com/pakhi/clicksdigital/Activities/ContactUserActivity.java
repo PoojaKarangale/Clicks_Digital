@@ -50,7 +50,7 @@ public class ContactUserActivity extends AppCompatActivity {
     DatabaseReference RootRef;
     FirebaseAuth firebaseAuth;
     private RecyclerView recyclerView;
-    private ContactUserAdapter contactUserAdapter;
+   private ContactUserAdapter contactUserAdapter;
    ////
 
     private RecyclerView myContactsList;
@@ -227,6 +227,8 @@ public class ContactUserActivity extends AppCompatActivity {
                 protected void onBindViewHolder(@NonNull final ContactsViewHolder holder, int position, @NonNull Contact model)
                 {
                     final String userIDs = getRef(position).getKey();
+                    final String[] userImage = new String[1];
+
 
                     UsersRef.child(userIDs).addValueEventListener(new ValueEventListener() {
                         @Override
@@ -242,6 +244,7 @@ public class ContactUserActivity extends AppCompatActivity {
                                         startActivity(chatActivity);
                                     }
                                 });
+
 
                                 if (dataSnapshot.child("userState").hasChild("state"))
                                 {
@@ -263,15 +266,15 @@ public class ContactUserActivity extends AppCompatActivity {
                                     holder.onlineIcon.setVisibility(View.INVISIBLE);
                                 }
 
-                                if (dataSnapshot.hasChild(Constants.PROFILE_IMAGE))
+                                if (dataSnapshot.hasChild(Constants.IMAGE_URL))
                                 {
-                                    String userImage = dataSnapshot.child(Constants.PROFILE_IMAGE).getValue().toString();
+                                    userImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
                                     String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
                                     String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
 
                                     holder.userName.setText(profileName);
                                     holder.userStatus.setText(profileStatus);
-                                    Picasso.get().load(userImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
+                                    Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
                                 }
                                 else
                                 {
@@ -281,6 +284,17 @@ public class ContactUserActivity extends AppCompatActivity {
                                     holder.userName.setText(profileName);
                                     holder.userStatus.setText(profileStatus);
                                 }
+
+                                holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                        fullScreenIntent.putExtra("image_url_string", userImage[0]);
+                                        v.getContext().startActivity(fullScreenIntent);
+                                    }
+                                });
+
+
                             }
                         }
 
