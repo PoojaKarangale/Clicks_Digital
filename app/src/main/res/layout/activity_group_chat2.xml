@@ -11,121 +11,77 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_profile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_launcher" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/image_profile"
-            android:src="@mipmap/ic_launcher"
-            android:layout_centerVertical="true"
-            />
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/group_chat_bar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_toEndOf="@+id/image_profile"
-            >
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/group_chat_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_toEndOf="@+id/image_profile">
 
-        </androidx.appcompat.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/my_scroll_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bar"
+        android:layout_height="match_parent"
         android:layout_above="@+id/myLinearLayout"
-        android:layout_alignParentStart="true"
-        tools:ignore="MissingConstraints">
+        android:layout_below="@+id/bar"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bar">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/private_messages_list_of_users"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/layout_for_text_msg"
-            android:orientation="vertical"
-            android:padding="10dp"
-            >
+            android:layout_marginBottom="6dp">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/group_chat_text_display_for_others"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textAllCaps="false"
-                android:textSize="20sp"
-                android:textColor="@android:color/background_dark"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="60dp"
-                android:layout_alignParentLeft="true"
-                />
-
-            <TextView
-                android:id="@+id/group_chat_text_display_for_current_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textAllCaps="false"
-                android:textSize="20sp"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="60dp"
-                android:layout_alignParentRight="true"
-                />
-
-        </LinearLayout>
-
-    </ScrollView>
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/myLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/input_group_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="write your message here..."
-            android:padding="8dp"
-            android:background="@drawable/back_edit_text"
             android:layout_toLeftOf="@+id/attach_file_btn"
-            />
+            android:background="@drawable/back_edit_text"
+            android:hint="write your message here..."
+            android:padding="8dp" />
 
         <ImageView
+            android:id="@+id/attach_file_btn"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/attach_file_btn"
             android:layout_toLeftOf="@+id/send_message_button"
-            android:src="@drawable/attach"/>
+            android:src="@drawable/attach" />
 
         <ImageButton
             android:id="@+id/send_message_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/send_message"
-            />
+            android:src="@drawable/send_message" />
 
     </RelativeLayout>
 

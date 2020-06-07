@@ -23,13 +23,17 @@ import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
 import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class JoinGroupActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     String user_type;
     ImageView close_post, home_btn;
+    DatabaseReference UsersRef;
     private FloatingActionButton fab_create_group;
     private RecyclerView recyclerView;
     private JoinGroupAdapter groupAdapter;
@@ -53,6 +57,7 @@ public class JoinGroupActivity extends AppCompatActivity {
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         user_type = pref.getString("user_type", "user");
+
         if (user_type.equals("user")) {
             close_post.setVisibility(View.INVISIBLE);
             home_btn.setVisibility(View.VISIBLE);
@@ -80,7 +85,7 @@ public class JoinGroupActivity extends AppCompatActivity {
         });
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         recyclerView = findViewById(R.id.recycler_groups);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -116,11 +121,15 @@ public class JoinGroupActivity extends AppCompatActivity {
 
     private void addNewGroup() {
 
+        Intent createGroupActivity = new Intent(getApplicationContext(), CreateNewGroupActivity.class);
+        //createGroupActivity.putExtra("user_type", user_type[0]);
+        startActivity(createGroupActivity);
+
+
+/*
         String uid = firebaseUser.getUid();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
         DatabaseReference userReference = databaseReference.child("Users").child(uid).child("user_type");
-
 
         final String[] user_type = new String[1];
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -137,6 +146,34 @@ public class JoinGroupActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
+ */
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUserStatus("online");
+    }
+
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        UsersRef.child(firebaseUser.getUid()).child("userState")
+                .updateChildren(onlineStateMap);
 
     }
 }

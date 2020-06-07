@@ -14,7 +14,10 @@
         android:title="join new groups"/>
     <item
         android:id="@+id/contact_users"
-        android:title="contact users"/>
+        android:title="contacts"/>
+    <item
+        android:id="@+id/connection_request"
+        android:title="Connection Requests "/>
     <item
 
         android:id="@+id/settings"

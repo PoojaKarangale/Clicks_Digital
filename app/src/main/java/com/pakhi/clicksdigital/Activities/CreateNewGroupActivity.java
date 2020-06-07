@@ -55,6 +55,8 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     String saveCurrentTime, saveCurrentDate;
     SimpleDateFormat currentTime,currentDate;
     Calendar calendar;
+    boolean isProfileSelected=false;
+    DatabaseReference RootRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +64,12 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_group);
 
         //user_type = getIntent().getStringExtra("user_type");
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0);
         user_type=pref.getString("user_type","user");
         //user_type = "admin";
 
-
-
          currentDate = new SimpleDateFormat("MMM dd, yyyy");
          currentTime = new SimpleDateFormat("hh:mm a");
-
 
         profile_img = findViewById(R.id.profile_img);
         done_btn = findViewById(R.id.done_btn);
@@ -79,6 +78,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         send_request_btn = findViewById(R.id.send_request_btn);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        RootRef=FirebaseDatabase.getInstance().getReference();
         progressDialog = new ProgressDialog(CreateNewGroupActivity.this);
         progressDialog.setMessage("Loading...");
 
@@ -112,8 +112,9 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                     showToast("Group name cannot be empty");
                 } else {
                     progressDialog.show();
-                    updateGroupInfo(groupName, description_str);
                     createGroup();
+                    updateGroupInfo(groupName, description_str);
+
                 }
             }
         });
@@ -183,7 +184,11 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                 hashMap.put("uid_creater", userid);
                 hashMap.put("date", saveCurrentDate);
                 hashMap.put("time", saveCurrentTime);
+
+                if(isProfileSelected)
                 hashMap.put("image_url", picImageUri.toString());
+                else
+                    hashMap.put("image_url", "default_profile");
 
                 reference.child(groupid).setValue(hashMap);
 
@@ -236,19 +241,10 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
 
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                .setPhotoUri(uri)
-                                .build();
+                        picImageUri=uri;
+                        showToast("new group created");
+                        updateUI();
 
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        user.updateProfile(profileUpdate)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        showToast("new group created");
-                                        updateUI();
-                                    }
-                                });
                     }
 
                 });
@@ -267,9 +263,36 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUESTCODE && data != null) {
             picImageUri = data.getData();
             profile_img.setImageURI(picImageUri);
+            isProfileSelected = true;
         } else {
             showToast("Nothing is selected");
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateUserStatus("online");
+    }
+
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        RootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("userState")
+                .updateChildren(onlineStateMap);
+
+    }
 }

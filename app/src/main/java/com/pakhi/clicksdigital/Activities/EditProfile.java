@@ -258,7 +258,7 @@ public class EditProfile extends AppCompatActivity {
         User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
                 speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working);
 
-        reference.child(userid).child("details").setValue(user);
+        reference.child(userid).setValue(user);
     }
 
     private void createUserProfile() {

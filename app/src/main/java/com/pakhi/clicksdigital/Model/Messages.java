@@ -18,6 +18,15 @@ public class Messages {
         this.name = name;
     }
 
+    public Messages(String from, String message, String type, String messageID, String time, String date) {
+        this.from = from;
+        this.message = message;
+        this.type = type;
+        this.messageID = messageID;
+        this.time = time;
+        this.date = date;
+    }
+
     public String getFrom() {
         return from;
     }

@@ -2,6 +2,8 @@ package com.pakhi.clicksdigital.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,22 +20,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.pakhi.clicksdigital.Activities.GroupChatActivity;
 import com.pakhi.clicksdigital.Model.GroupChat;
 import com.pakhi.clicksdigital.R;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder> {
+    String in_current_user_groups = "";
     private Context mcontext;
     private List<GroupChat> groups;
     private FirebaseUser firebaseUser;
     private boolean sentRequestFlag = false;
-    String in_current_user_groups="";
-
 
 
     public JoinGroupAdapter(Context mcontext, List<GroupChat> groups, String in_current_user_groups) {
@@ -47,7 +48,6 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         this.mcontext = mcontext;
         this.groups = groups;
     }
-
 
 
     @NonNull
@@ -65,36 +65,46 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         final GroupChat group = groups.get(position);
         holder.displayName.setText(group.getGroup_name());
         holder.status_of_request.setText(group.getStatus());
-        //Glide.with(mcontext).load(group.getImageUrl()).into(holder.image_profile);
+        holder.displayName.setTextColor(Color.BLACK);
+        //.with(mcontext).load(group.getImageUrl()).into(holder.image_profile);
+        Picasso.get()
+                .load(group.getImage_url()).placeholder(R.drawable.profile_image)
+                .resize(120, 120)
+                .into(holder.image_profile);
 
-        if (sentRequestFlag) {
+
+        Log.d("joinGroupAdapter", "----------" + group.getGroup_name());
+
+      /*  if (sentRequestFlag) {
             holder.itemView.setEnabled(false);
             holder.status_of_request.setVisibility(View.VISIBLE);
         }
+
+       */
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(in_current_user_groups.equals("users_group")) {
-                    Intent groupChatActivity=new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
-                    groupChatActivity.putExtra("groupName",group.getGroup_name());
-                    groupChatActivity.putExtra("groupId",group.getGroupid());
-                   mcontext.startActivity(groupChatActivity);
+                if (in_current_user_groups.equals("users_group")) {
+                    Intent groupChatActivity = new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
+                    groupChatActivity.putExtra("groupName", group.getGroup_name());
+                    groupChatActivity.putExtra("groupId", group.getGroupid());
+                    mcontext.startActivity(groupChatActivity);
 
-                }else {
-                //    sentRequestToJoinGroup(group.getGroupid(), group.getGroup_name(), firebaseUser.getUid());
-
-                //holder.status_of_request.setVisibility(View.VISIBLE);
-                holder.itemView.setEnabled(false);
-                sentRequestToJoinGroup(group.getGroupid(),group.getGroup_name(), firebaseUser.getUid());
-                if (sentRequestFlag) {
-                    holder.status_of_request.setVisibility(View.VISIBLE);
+                } else {
+                    //    sentRequestToJoinGroup(group.getGroupid(), group.getGroup_name(), firebaseUser.getUid());
+                    //holder.status_of_request.setVisibility(View.VISIBLE);
+                    holder.itemView.setEnabled(false);
+                    sentRequestToJoinGroup(group.getGroupid(), group.getGroup_name(), firebaseUser.getUid());
+                    if (sentRequestFlag) {
+                        holder.status_of_request.setVisibility(View.VISIBLE);
+                    }
                 }
             }
-        }
-    });
+        });
     }
-    private void sentRequestToJoinGroup(String group_id,final String displayName, final String uid) {
+
+    private void sentRequestToJoinGroup(String group_id, final String displayName, final String uid) {
         //final String userid = firebaseUser.getUid();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_requests");
 
@@ -137,14 +147,13 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             img_info = itemView.findViewById(R.id.img_info);
             status_of_request = itemView.findViewById(R.id.status_of_request);
 
-
-            if(!in_current_user_groups.equals("users_group")){
-                img_info.setVisibility(View.VISIBLE);
-                status_of_request.setVisibility(View.VISIBLE);
-            }
-
             img_info.setVisibility(View.VISIBLE);
             status_of_request.setVisibility(View.VISIBLE);
+
+            if (!in_current_user_groups.equals("users_group")) {
+                img_info.setVisibility(View.INVISIBLE);
+                status_of_request.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }
