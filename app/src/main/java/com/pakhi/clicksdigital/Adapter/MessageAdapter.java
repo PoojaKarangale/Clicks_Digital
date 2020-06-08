@@ -2,7 +2,6 @@ package com.pakhi.clicksdigital.Adapter;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
 import android.util.Log;
@@ -10,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,25 +92,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 v.getContext().startActivity(fullScreenIntent);
             }
         });
-        messageViewHolder.receiverMessageText.setVisibility(View.GONE);
+        messageViewHolder.receiverlayout.setVisibility(View.GONE);
         messageViewHolder.receiverProfileImage.setVisibility(View.GONE);
-        messageViewHolder.senderMessageText.setVisibility(View.GONE);
+        messageViewHolder.senderlayout.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
         messageViewHolder.download_image_receiver.setVisibility(View.GONE);
 
         if (fromMessageType.equals("text")) {
             if (fromUserID.equals(messageSenderId)) {
-                messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
-                messageViewHolder.senderMessageText.setBackgroundResource(R.drawable.sender_messages_layout);
-                messageViewHolder.senderMessageText.setTextColor(Color.BLACK);
-                messageViewHolder.senderMessageText.setText(messages.getMessage() + "\n \n" + messages.getTime() + " - " + messages.getDate());
+                messageViewHolder.senderlayout.setVisibility(View.VISIBLE);
+                messageViewHolder.senderDate.setText(messages.getTime() + " - " + messages.getDate());
+                messageViewHolder.senderMessageText.setText(messages.getMessage());
             } else {
                 messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
-                messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
-                messageViewHolder.receiverMessageText.setBackgroundResource(R.drawable.receiver_messages_layout);
-                messageViewHolder.receiverMessageText.setTextColor(Color.BLACK);
-                messageViewHolder.receiverMessageText.setText(messages.getMessage() + "\n \n" + messages.getTime() + " - " + messages.getDate());
+                messageViewHolder.receiverlayout.setVisibility(View.VISIBLE);
+                messageViewHolder.receiverDate.setText(messages.getTime() + " - " + messages.getDate());
+                messageViewHolder.receiverMessageText.setText(messages.getMessage());
             }
         } else if (fromMessageType.equals("image")) {
             if (fromUserID.equals(messageSenderId)) {
@@ -156,7 +154,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             public void onClick(View v) {
 
                 saveImage(v, messageViewHolder);
-               // messageViewHolder.download_image_receiver.setVisibility(View.GONE);
+                // messageViewHolder.download_image_receiver.setVisibility(View.GONE);
                 /*
                 if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
                     if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
@@ -202,13 +200,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView senderMessageText, receiverMessageText;
+        public TextView senderMessageText, receiverMessageText, senderDate, receiverDate;
         public CircleImageView receiverProfileImage;
         public ImageView messageSenderPicture, messageReceiverPicture, download_image_receiver;
+        LinearLayout receiverlayout, senderlayout;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            receiverlayout = itemView.findViewById(R.id.receiver_message_layout);
+            senderlayout = itemView.findViewById(R.id.sender_message_layout);
+            senderDate = itemView.findViewById(R.id.sender_messsage_date_time);
+            receiverDate = itemView.findViewById(R.id.receiver_message_date_time);
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_messsage_text);
             receiverMessageText = (TextView) itemView.findViewById(R.id.receiver_message_text);
             receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);

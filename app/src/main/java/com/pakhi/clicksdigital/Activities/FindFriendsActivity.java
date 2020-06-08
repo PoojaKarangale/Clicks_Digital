@@ -79,7 +79,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                fullScreenIntent.putExtra("image_url_string",model.getImage_url());
+                                fullScreenIntent.putExtra("image_url_string", model.getImage_url());
                                 v.getContext().startActivity(fullScreenIntent);
                             }
                         });

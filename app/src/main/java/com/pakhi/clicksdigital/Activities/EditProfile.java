@@ -1,43 +1,35 @@
 package com.pakhi.clicksdigital.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,6 +50,8 @@ public class EditProfile extends AppCompatActivity {
 
     StorageReference mStorageReference;
     DatabaseReference mDatabaseReference;
+    DatabaseReference databaseReference;
+    User user;
     private ImageView profile_img, done_btn;
     private EditText full_name, email, weblink, bio;
     private ProgressDialog progressDialog;
@@ -65,8 +59,6 @@ public class EditProfile extends AppCompatActivity {
     private Button choose_certificate;
     private EditText cerifications;
     private TextView set_cetificate_name;
-    DatabaseReference databaseReference;
-    User user;
     private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, get_facebook_link, get_insta_link, get_twiter_link;
 
 
@@ -146,7 +138,6 @@ public class EditProfile extends AppCompatActivity {
         );
 
 
-
     }
 
     private void loadData() {
@@ -202,6 +193,7 @@ public class EditProfile extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
                     String url = "";
+
                     @SuppressWarnings("VisibleForTests")
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -265,7 +257,7 @@ public class EditProfile extends AppCompatActivity {
         String uid = firebaseAuth.getCurrentUser().getUid();
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(uid).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
 
-        if(picImageUri != null){
+        if (picImageUri != null) {
             final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
             mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Constants.USER_MEDIA_PATH).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
             imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -305,7 +297,7 @@ public class EditProfile extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                 }
             });
-        }else{
+        } else {
             updateUI();
         }
 

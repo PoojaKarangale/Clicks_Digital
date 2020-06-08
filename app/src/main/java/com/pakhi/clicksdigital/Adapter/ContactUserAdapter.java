@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.pakhi.clicksdigital.Activities.ChatActivity;
-import com.pakhi.clicksdigital.Activities.ContactUserActivity;
 import com.pakhi.clicksdigital.Model.Contact;
 import com.pakhi.clicksdigital.R;
 
@@ -47,9 +46,9 @@ public class ContactUserAdapter extends RecyclerView.Adapter<ContactUserAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uid=userList.get(position).getUid();
+                String uid = userList.get(position).getUid();
                 Intent chatActivityIntent = new Intent(mcontext, ChatActivity.class);
-                chatActivityIntent.putExtra("user_id",uid);
+                chatActivityIntent.putExtra("user_id", uid);
 
                 chatActivityIntent.putExtra("visit_user_id", uid);
                 chatActivityIntent.putExtra("visit_user_name", userList.get(position).getUser_name());

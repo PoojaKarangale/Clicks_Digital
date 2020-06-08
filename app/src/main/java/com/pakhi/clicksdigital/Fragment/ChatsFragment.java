@@ -97,7 +97,7 @@ public class ChatsFragment extends Fragment {
                                         String time = dataSnapshot.child("userState").child("time").getValue().toString();
 
                                         if (state.equals("online")) {
-                                           // holder.userStatus.setText("online");
+                                            // holder.userStatus.setText("online");
                                             holder.online_status.setVisibility(View.VISIBLE);
                                         } else if (state.equals("offline")) {
                                             holder.userStatus.setText("Last Seen: " + date + " " + time);
@@ -129,7 +129,7 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                fullScreenIntent.putExtra("image_url_string",retImage[0]);
+                                fullScreenIntent.putExtra("image_url_string", retImage[0]);
                                 v.getContext().startActivity(fullScreenIntent);
                             }
                         });

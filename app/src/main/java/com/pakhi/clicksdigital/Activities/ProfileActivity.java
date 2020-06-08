@@ -49,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String receiverUserID, senderUserID, Current_State;
     private CircleImageView userProfileImage;
     private TextView userProfileName, userProfileStatus;
-    private Button SendMessageRequestButton, DeclineMessageRequestButton, make_admin;
+    private Button SendMessageRequestButton, DeclineMessageRequestButton, make_admin,removeAdmin;
     private DatabaseReference UserRef, ChatRequestRef, ContactsRef, NotificationRef;
 
     @Override
@@ -70,6 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         edit_profile = findViewById(R.id.edit_profile);
         make_admin = findViewById(R.id.make_admin);
+        removeAdmin = findViewById(R.id.remove_admin);
 
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -87,8 +88,11 @@ public class ProfileActivity extends AppCompatActivity {
                         .load(user.getImage_url())
                         .resize(120, 120)
                         .into(profile_image);
-                if (user.getUser_type().equals("admin"))
+                if (user.getUser_type().equals("admin")) {
                     isProfileUserIsAdmin = true;
+
+                }
+
                 Toast.makeText(ProfileActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
                 loadData();
             }
@@ -123,6 +127,9 @@ public class ProfileActivity extends AppCompatActivity {
                                 // make him admin btn set visible
                                 make_admin.setVisibility(View.VISIBLE);
                             }
+                            if (isVisterIsAdmin && isProfileUserIsAdmin) {
+                                removeAdmin.setVisibility(View.VISIBLE);
+                            }
                             Log.d("ProfileActMAKEADMIN",user_type+" ---------- "+isVisterIsAdmin);
                         }
                     }
@@ -142,13 +149,6 @@ public class ProfileActivity extends AppCompatActivity {
             SendMessageRequestButton.setVisibility(View.INVISIBLE);
             edit_profile.setVisibility(View.VISIBLE);
         } else {
-            //if visiter (current user) is admin
-           /* if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
-                // make him admin btn set visible
-                make_admin.setVisibility(View.VISIBLE);
-            }
-
-            */
             SendMessageRequestButton.setVisibility(View.VISIBLE);
             edit_profile.setVisibility(View.INVISIBLE);
         }
@@ -160,7 +160,6 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         initializeMsgRequestFields();
 
@@ -577,10 +576,25 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void makeAdmin(View view) {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user_id);
         databaseReference.child("user_type").setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                make_admin.setVisibility(View.GONE);
+                removeAdmin.setVisibility(View.VISIBLE);
                 Toast.makeText(ProfileActivity.this,user.getUser_name()+" is admin now",Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    public void removeAdmin(View view) {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user_id);
+        databaseReference.child("user_type").setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                make_admin.setVisibility(View.VISIBLE);
+                removeAdmin.setVisibility(View.GONE);
+                Toast.makeText(ProfileActivity.this,user.getUser_name()+" is no longer admin now",Toast.LENGTH_SHORT);
             }
         });
     }

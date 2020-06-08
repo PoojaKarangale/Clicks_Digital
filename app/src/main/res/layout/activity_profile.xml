@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,19 +11,19 @@
         android:id="@+id/tv_user_name_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
         android:fontFamily="@font/lato"
         android:text="User Name"
         android:textColor="#000000"
-        android:textSize="26sp"/>
+        android:textSize="26sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -39,8 +38,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="40dp"
             android:orientation="vertical">
 
             <TextView
@@ -51,7 +50,7 @@
                 android:fontFamily="@font/lato"
                 android:text="0"
                 android:textColor="#000000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -60,15 +59,15 @@
                 android:fontFamily="@font/lato"
                 android:text="Posts"
                 android:textColor="#000000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -79,7 +78,7 @@
                 android:fontFamily="@font/lato"
                 android:text="0"
                 android:textColor="#000000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,15 +87,15 @@
                 android:fontFamily="@font/lato"
                 android:text="Groups"
                 android:textColor="#000000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -107,7 +106,7 @@
                 android:fontFamily="@font/lato"
                 android:text="0"
                 android:textColor="#000000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -116,7 +115,7 @@
                 android:fontFamily="@font/lato"
                 android:text="Friends"
                 android:textColor="#000000"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -131,8 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:orientation="vertical">
 
             <Button
@@ -144,13 +143,30 @@
                 android:layout_marginBottom="-20dp"
                 android:background="@drawable/back_round_button"
                 android:backgroundTint="@color/colorPrimary"
+                android:onClick="makeAdmin"
                 android:text="make admin"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/remove_admin"
+                android:layout_width="63dp"
+                android:layout_height="28dp"
+                android:layout_gravity="right"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="-20dp"
+                android:background="@drawable/back_round_button"
+                android:backgroundTint="@color/colorPrimary"
+                android:onClick="removeAdmin"
+                android:text="remove admin"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
                 android:visibility="gone"
-                android:onClick="makeAdmin"
                 />
+
             <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
@@ -158,18 +174,18 @@
                 android:fontFamily="@font/lato"
                 android:text="Gaurav Kumar"
                 android:textColor="#272727"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_gender"
-                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:fontFamily="@font/lato"
                 android:text="Male"
                 android:textAllCaps="false"
                 android:textColor="#272727"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_profession"
@@ -180,18 +196,18 @@
                 android:text="Android Developer"
                 android:textAllCaps="false"
                 android:textColor="#272727"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_user_bio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato"
                 android:layout_marginTop="5dp"
+                android:fontFamily="@font/lato"
                 android:text="alsdklaskdjf asdlfkasdf lkj\nakjsdlkf"
                 android:textAllCaps="false"
                 android:textColor="#272727"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_speaker_experience"
@@ -202,7 +218,7 @@
                 android:text="Speaker Experience"
                 android:textAllCaps="false"
                 android:textColor="#272727"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_experiences"
@@ -213,138 +229,142 @@
                 android:text="Experiences"
                 android:textAllCaps="false"
                 android:textColor="#272727"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
 
             <LinearLayout
+                android:id="@+id/certification_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:id="@+id/certification_layout"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/certi_1"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/doc_icon"/>
+                    android:src="@drawable/doc_icon" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_user_email"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/email_icon"/>
+                    android:src="@drawable/email_icon" />
 
                 <ImageView
-                    android:layout_marginStart="10dp"
                     android:id="@+id/iv_user_number"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/phone_link"/>
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/phone_link" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/iv_user_linkedin"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/linkedin_link"/>
+                    android:src="@drawable/linkedin_link" />
 
                 <ImageView
-                    android:layout_marginStart="10dp"
                     android:id="@+id/iv_user_facebook"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/fb_icon"/>
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/fb_icon" />
 
                 <ImageView
-                    android:layout_marginStart="10dp"
                     android:id="@+id/iv_user_instagram"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/insta_link"/>
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/insta_link" />
 
                 <ImageView
-                    android:layout_marginStart="10dp"
                     android:id="@+id/iv_user_twitter"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/twitter_link"/>
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/twitter_link" />
 
             </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-               android:layout_gravity="center"
+                android:layout_gravity="center"
                 android:layout_marginTop="40dp"
-                android:layout_marginBottom="30dp"
-                >
-            <Button
-                android:id="@+id/edit_profile"
-                android:layout_width="160dp"
-                android:layout_height="45dp"
-                android:background="@drawable/button_bg"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textAllCaps="false"
-                android:layout_gravity="center_horizontal"
-                android:text="Edit Profile"
-                android:visibility="invisible"
-                />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:gravity="center"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
-    >
+                android:layout_marginBottom="30dp">
 
-            <Button
-                android:id="@+id/accept_msg_request"
-                android:layout_width="160dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/button_bg"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textAllCaps="false"
-                android:layout_gravity="center_horizontal"
-                android:text="Send Message Request"
-                android:visibility="gone"
-                />
                 <Button
-                    android:id="@+id/decline_msg_request"
+                    android:id="@+id/edit_profile"
                     android:layout_width="160dp"
                     android:layout_height="45dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_gravity="center_horizontal"
                     android:background="@drawable/button_bg"
+                    android:text="Edit Profile"
+                    android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
-                    android:textAllCaps="false"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Send Message Request"
-                    android:visibility="gone"
-                    />
-</LinearLayout>
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edit_profile"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/accept_msg_request"
+                        android:layout_width="160dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/button_bg"
+                        android:text="Send Message Request"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/decline_msg_request"
+                        android:layout_width="160dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/button_bg"
+                        android:text="Send Message Request"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
             </RelativeLayout>
+
         </LinearLayout>
 
     </ScrollView>

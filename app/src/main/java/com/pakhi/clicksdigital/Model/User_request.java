@@ -1,7 +1,7 @@
 package com.pakhi.clicksdigital.Model;
 
 public class User_request {
-    String group_name,group_id,date,requesting_user,request_status;
+    String group_name, group_id, date, requesting_user, request_status;
     String request_id;
 
     public User_request() {
@@ -39,8 +39,6 @@ public class User_request {
     public void setGroup_name(String group_name) {
         this.group_name = group_name;
     }
-
-
 
 
     public String getDate() {
