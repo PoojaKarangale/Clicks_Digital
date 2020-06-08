@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,14 +43,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactUserActivity extends AppCompatActivity {
     //// fields for previous contact list
-   private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     ArrayList<Contact> userList, contactList;
     SharedPreferences pref;
     DatabaseReference RootRef;
     FirebaseAuth firebaseAuth;
     private RecyclerView recyclerView;
-   private ContactUserAdapter contactUserAdapter;
-   ////
+    private ContactUserAdapter contactUserAdapter;
+    ////
 
     private RecyclerView myContactsList;
 
@@ -215,129 +214,98 @@ public class ContactUserActivity extends AppCompatActivity {
         updateUserStatus("online");
 
 
-            FirebaseRecyclerOptions options =
-                    new FirebaseRecyclerOptions.Builder<Contact>()
-                            .setQuery(ContacsRef, Contact.class)
-                            .build();
+        FirebaseRecyclerOptions options =
+                new FirebaseRecyclerOptions.Builder<Contact>()
+                        .setQuery(ContacsRef, Contact.class)
+                        .build();
 
 
-            final FirebaseRecyclerAdapter<Contact, ContactsViewHolder> adapter
-                    = new FirebaseRecyclerAdapter<Contact, ContactsViewHolder>(options) {
-                @Override
-                protected void onBindViewHolder(@NonNull final ContactsViewHolder holder, int position, @NonNull Contact model)
-                {
-                    final String userIDs = getRef(position).getKey();
-                    final String[] userImage = new String[1];
+        final FirebaseRecyclerAdapter<Contact, ContactsViewHolder> adapter
+                = new FirebaseRecyclerAdapter<Contact, ContactsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull final ContactsViewHolder holder, int position, @NonNull Contact model) {
+                final String userIDs = getRef(position).getKey();
+                final String[] userImage = new String[1];
 
 
-                    UsersRef.child(userIDs).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot)
-                        {
-                            if (dataSnapshot.exists())
-                            {
-                                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent chatActivity = new Intent(ContactUserActivity.this, ChatActivity.class);
-                                        chatActivity.putExtra("visit_user_id", userIDs);
-                                        startActivity(chatActivity);
-                                    }
-                                });
-
-
-                                if (dataSnapshot.child("userState").hasChild("state"))
-                                {
-                                    String state = dataSnapshot.child("userState").child("state").getValue().toString();
-                                    String date = dataSnapshot.child("userState").child("date").getValue().toString();
-                                    String time = dataSnapshot.child("userState").child("time").getValue().toString();
-
-                                    if (state.equals("online"))
-                                    {
-                                        holder.onlineIcon.setVisibility(View.VISIBLE);
-                                    }
-                                    else if (state.equals("offline"))
-                                    {
-                                        holder.onlineIcon.setVisibility(View.INVISIBLE);
-                                    }
+                UsersRef.child(userIDs).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent chatActivity = new Intent(ContactUserActivity.this, ChatActivity.class);
+                                    chatActivity.putExtra("visit_user_id", userIDs);
+                                    startActivity(chatActivity);
                                 }
-                                else
-                                {
+                            });
+
+
+                            if (dataSnapshot.child("userState").hasChild("state")) {
+                                String state = dataSnapshot.child("userState").child("state").getValue().toString();
+                                String date = dataSnapshot.child("userState").child("date").getValue().toString();
+                                String time = dataSnapshot.child("userState").child("time").getValue().toString();
+
+                                if (state.equals("online")) {
+                                    holder.onlineIcon.setVisibility(View.VISIBLE);
+                                } else if (state.equals("offline")) {
                                     holder.onlineIcon.setVisibility(View.INVISIBLE);
                                 }
-
-                                if (dataSnapshot.hasChild(Constants.IMAGE_URL))
-                                {
-                                    userImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
-                                    String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
-                                    String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
-
-                                    holder.userName.setText(profileName);
-                                    holder.userStatus.setText(profileStatus);
-                                    Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
-                                }
-                                else
-                                {
-                                    String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
-                                    String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
-
-                                    holder.userName.setText(profileName);
-                                    holder.userStatus.setText(profileStatus);
-                                }
-
-                                holder.profileImage.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                        fullScreenIntent.putExtra("image_url_string", userImage[0]);
-                                        v.getContext().startActivity(fullScreenIntent);
-                                    }
-                                });
-
-
+                            } else {
+                                holder.onlineIcon.setVisibility(View.INVISIBLE);
                             }
+
+                            if (dataSnapshot.hasChild(Constants.IMAGE_URL)) {
+                                userImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                                String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
+                                String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
+
+                                holder.userName.setText(profileName);
+                                holder.userStatus.setText(profileStatus);
+                                Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
+                            } else {
+                                String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
+                                String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
+
+                                holder.userName.setText(profileName);
+                                holder.userStatus.setText(profileStatus);
+                            }
+
+                            holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                    fullScreenIntent.putExtra("image_url_string", userImage[0]);
+                                    v.getContext().startActivity(fullScreenIntent);
+                                }
+                            });
+
+
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-                }
+                    }
+                });
+            }
 
-                @NonNull
-                @Override
-                public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
-                {
-                    View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_group_chat, viewGroup, false);
-                    ContactsViewHolder viewHolder = new ContactsViewHolder(view);
-                    return viewHolder;
-                }
-            };
+            @NonNull
+            @Override
+            public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_group_chat, viewGroup, false);
+                ContactsViewHolder viewHolder = new ContactsViewHolder(view);
+                return viewHolder;
+            }
+        };
 
-            myContactsList.setAdapter(adapter);
-            adapter.startListening();
+        myContactsList.setAdapter(adapter);
+        adapter.startListening();
 
     }
 
-    public static class ContactsViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView userName, userStatus;
-        CircleImageView profileImage;
-        ImageView onlineIcon;
-
-
-        public ContactsViewHolder(@NonNull View itemView)
-        {
-            super(itemView);
-
-            userName = itemView.findViewById(R.id.display_name);
-            userStatus = itemView.findViewById(R.id.user_status);
-            profileImage = itemView.findViewById(R.id.image_profile);
-            onlineIcon = (ImageView) itemView.findViewById(R.id.user_online_status);
-           // onlineIcon.setVisibility(View.VISIBLE);
-        }
-    }
     private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
@@ -357,5 +325,22 @@ public class ContactUserActivity extends AppCompatActivity {
         RootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("userState")
                 .updateChildren(onlineStateMap);
 
+    }
+
+    public static class ContactsViewHolder extends RecyclerView.ViewHolder {
+        TextView userName, userStatus;
+        CircleImageView profileImage;
+        ImageView onlineIcon;
+
+
+        public ContactsViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            userName = itemView.findViewById(R.id.display_name);
+            userStatus = itemView.findViewById(R.id.user_status);
+            profileImage = itemView.findViewById(R.id.image_profile);
+            onlineIcon = (ImageView) itemView.findViewById(R.id.user_online_status);
+            // onlineIcon.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -98,7 +98,7 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     if (dataSnapshot.hasChild("image_url")) {
-                         image_url[0] = dataSnapshot.child("image_url").getValue().toString();
+                        image_url[0] = dataSnapshot.child("image_url").getValue().toString();
                         Picasso.get().load(image_url[0]).into(image_profile);
                     }
                 }
@@ -139,10 +139,10 @@ public class GroupChatActivity extends AppCompatActivity {
         group_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent groupMembersIntent= new Intent(GroupChatActivity.this, GroupMembersActivity.class);
-                groupMembersIntent.putExtra("group_id",CurrentGroupId);
-                groupMembersIntent.putExtra("image_url",image_url[0]);
-                groupMembersIntent.putExtra("group_name",currentGroupName);
+                Intent groupMembersIntent = new Intent(GroupChatActivity.this, GroupMembersActivity.class);
+                groupMembersIntent.putExtra("group_id", CurrentGroupId);
+                groupMembersIntent.putExtra("image_url", image_url[0]);
+                groupMembersIntent.putExtra("group_name", currentGroupName);
 
                 startActivity(groupMembersIntent);
             }

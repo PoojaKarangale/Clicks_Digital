@@ -61,13 +61,13 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         final String group_name;
         final String[] user_name = new String[1];
         userId = userRequest.getRequesting_user();
-        final String image[]=new String[1];
+        final String image[] = new String[1];
 
         databaseReference.child("Users").child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                user_name[0]=dataSnapshot.child(Constants.USER_NAME).getValue().toString();
+                user_name[0] = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
                 holder.displayName.setText(user_name[0]);
                 if (dataSnapshot.hasChild("image_url")) {
                     image[0] = dataSnapshot.child("image_url").getValue().toString();
@@ -84,7 +84,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             @Override
             public void onClick(View v) {
                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra("image_url_string",image[0]);
+                fullScreenIntent.putExtra("image_url_string", image[0]);
                 v.getContext().startActivity(fullScreenIntent);
             }
         });

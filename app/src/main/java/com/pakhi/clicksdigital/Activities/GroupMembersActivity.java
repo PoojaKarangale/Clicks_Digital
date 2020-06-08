@@ -47,7 +47,7 @@ import java.util.List;
 public class GroupMembersActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String currentGroupId, group_image_url, group_name_str;
-    ImageView app_bar_image, set_group_name, change_group_icon, edit_group_name,add_member;
+    ImageView app_bar_image, set_group_name, change_group_icon, edit_group_name, add_member;
     EditText get_group_name;
     TextView group_name, group_info, group_description, number_of_participants;
     FirebaseAuth firebaseAuth;
@@ -55,11 +55,12 @@ public class GroupMembersActivity extends AppCompatActivity {
     Uri imageUriGalary, imageUriCamera;
     long number_of_participants_in_number;
     GroupChat group;
+    Button exit_group;
     private RecyclerView memberListRecyclerView;
     private DatabaseReference groupMembersRef, UsersRef, GroupRef;
     private GroupMembersAdapter groupMembersAdapter;
     private List<User> members;
-Button exit_group;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +88,7 @@ Button exit_group;
         number_of_participants = findViewById(R.id.number_of_participants);
 
         //seting group info
-       Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
+        Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
       /*  group_name.setText(group_name_str);
         get_group_name.setText(group_name_str);
 
@@ -102,7 +103,7 @@ Button exit_group;
 
                 Log.d("GroupMebersTESTING", dataSnapshot.toString());
 
-               group = dataSnapshot.getValue(GroupChat.class);
+                group = dataSnapshot.getValue(GroupChat.class);
 
                 group_name.setText(group.getGroup_name());
                 get_group_name.setText(group.getGroup_name());
@@ -148,7 +149,7 @@ Button exit_group;
 
                             if (user_type.equals("admin")) {
                                 //only adim can edit group info
-                               edit_group_name.setVisibility(View.VISIBLE);
+                                edit_group_name.setVisibility(View.VISIBLE);
                                 add_member.setVisibility(View.VISIBLE);
                             }
                         }
@@ -160,7 +161,7 @@ Button exit_group;
                     }
                 });
 
-       edit_group_name.setOnClickListener(new View.OnClickListener() {
+        edit_group_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 group_name.setVisibility(View.GONE);
@@ -180,7 +181,7 @@ Button exit_group;
 
         readGroupMembers();
 
-      //  number_of_participants.setText(String.valueOf(number_of_participants_in_number) + " participants");
+        //  number_of_participants.setText(String.valueOf(number_of_participants_in_number) + " participants");
 
     }
 
@@ -319,7 +320,7 @@ Button exit_group;
                     @Override
                     public void onSuccess(Void aVoid) {
                         exit_group.setEnabled(false);
-                        exit_group.setTextColor(Color.rgb(128,128,128));
+                        exit_group.setTextColor(Color.rgb(128, 128, 128));
                         Toast.makeText(GroupMembersActivity.this, "Group left", Toast.LENGTH_SHORT);
 
                     }
@@ -336,7 +337,7 @@ Button exit_group;
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 number_of_participants_in_number = dataSnapshot.getChildrenCount();
-                 number_of_participants.setText(String.valueOf(number_of_participants_in_number) + " participants");
+                number_of_participants.setText(String.valueOf(number_of_participants_in_number) + " participants");
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     members.clear();

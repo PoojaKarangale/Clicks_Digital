@@ -51,7 +51,6 @@ import com.pakhi.clicksdigital.Model.Messages;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -64,14 +63,14 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    final static int PICK_PDF_CODE = 2342;
+    static final int REQUESTCODE = 12;
+    static int REQUEST_CODE = 1;
     private final List<Messages> messagesList = new ArrayList<>();
     Uri imageUriGalary, imageUriCamera, docUri;
     User user;
     ImageView attach_file_btn;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    final static int PICK_PDF_CODE = 2342;
-    static int REQUEST_CODE = 1;
-    static final int REQUESTCODE = 12;
     private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
     private TextView userName, userLastSeen;
     private CircleImageView userImage;
@@ -247,39 +246,39 @@ public class ChatActivity extends AppCompatActivity {
 
     private void SendMessage(String messageType, String message) {
 
-            String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
-            String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
+        String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
+        String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
 
-            DatabaseReference userMessageKeyRef = RootRef.child("Messages")
-                    .child(messageSenderID).child(messageReceiverID).push();
+        DatabaseReference userMessageKeyRef = RootRef.child("Messages")
+                .child(messageSenderID).child(messageReceiverID).push();
 
-            String messagePushID = userMessageKeyRef.getKey();
+        String messagePushID = userMessageKeyRef.getKey();
 
-            Map messageTextBody = new HashMap();
-            messageTextBody.put("message", message);
-            messageTextBody.put("type", messageType);
-            messageTextBody.put("from", messageSenderID);
-            messageTextBody.put("to", messageReceiverID);
-            messageTextBody.put("messageID", messagePushID);
-            messageTextBody.put("time", saveCurrentTime);
-            messageTextBody.put("date", saveCurrentDate);
+        Map messageTextBody = new HashMap();
+        messageTextBody.put("message", message);
+        messageTextBody.put("type", messageType);
+        messageTextBody.put("from", messageSenderID);
+        messageTextBody.put("to", messageReceiverID);
+        messageTextBody.put("messageID", messagePushID);
+        messageTextBody.put("time", saveCurrentTime);
+        messageTextBody.put("date", saveCurrentDate);
 
-            Map messageBodyDetails = new HashMap();
-            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-            messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+        Map messageBodyDetails = new HashMap();
+        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+        messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
 
-            RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                    MessageInputText.setText("");
+        RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+                MessageInputText.setText("");
+            }
+        });
+    }
 
 
     private void updateUserStatus(String state) {
@@ -480,8 +479,8 @@ public class ChatActivity extends AppCompatActivity {
                     break;
 
                 */
-                case REQUESTCODE :
-                    imageUriGalary=data.getData();
+                case REQUESTCODE:
+                    imageUriGalary = data.getData();
                     uploadImage(imageUriGalary);
                     break;
                 case REQUEST_IMAGE_CAPTURE:

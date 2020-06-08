@@ -17,17 +17,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,7 +33,6 @@ import com.pakhi.clicksdigital.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 public class CreateNewGroupActivity extends AppCompatActivity {
@@ -47,16 +42,16 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     StorageReference storageReference;
     String user_type;
+    String saveCurrentTime, saveCurrentDate;
+    SimpleDateFormat currentTime, currentDate;
+    Calendar calendar;
+    boolean isProfileSelected = false;
+    DatabaseReference RootRef;
     private ImageView profile_img;
     private EditText display_name, description;
     private FloatingActionButton done_btn;
     private ProgressDialog progressDialog;
     private Button send_request_btn;
-    String saveCurrentTime, saveCurrentDate;
-    SimpleDateFormat currentTime,currentDate;
-    Calendar calendar;
-    boolean isProfileSelected=false;
-    DatabaseReference RootRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +60,11 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
         //user_type = getIntent().getStringExtra("user_type");
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0);
-        user_type=pref.getString("user_type","user");
+        user_type = pref.getString("user_type", "user");
         //user_type = "admin";
 
-         currentDate = new SimpleDateFormat("MMM dd, yyyy");
-         currentTime = new SimpleDateFormat("hh:mm a");
+        currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        currentTime = new SimpleDateFormat("hh:mm a");
 
         profile_img = findViewById(R.id.profile_img);
         done_btn = findViewById(R.id.done_btn);
@@ -78,7 +73,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         send_request_btn = findViewById(R.id.send_request_btn);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        RootRef=FirebaseDatabase.getInstance().getReference();
+        RootRef = FirebaseDatabase.getInstance().getReference();
         progressDialog = new ProgressDialog(CreateNewGroupActivity.this);
         progressDialog.setMessage("Loading...");
 
@@ -138,24 +133,24 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     private void sendRequestToCreateGroup(final String groupName, final String description_str) {
         final String userid = firebaseAuth.getCurrentUser().getUid();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Group_requests");
-       // final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
+        // final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
 
         calendar = Calendar.getInstance();
         saveCurrentDate = currentDate.format(calendar.getTime());
         saveCurrentTime = currentTime.format(calendar.getTime());
 
-                String group_request_id = reference.push().getKey();
-                HashMap<String, Object> hashMap = new HashMap<>();
+        String group_request_id = reference.push().getKey();
+        HashMap<String, Object> hashMap = new HashMap<>();
 
-                hashMap.put("group_name", groupName);
-                hashMap.put("description", description_str);
-                hashMap.put("group_request_id", group_request_id);
-                hashMap.put("date", saveCurrentDate);
-                hashMap.put("requesting_user", userid);
-                hashMap.put("request_status", "pending");
+        hashMap.put("group_name", groupName);
+        hashMap.put("description", description_str);
+        hashMap.put("group_request_id", group_request_id);
+        hashMap.put("date", saveCurrentDate);
+        hashMap.put("requesting_user", userid);
+        hashMap.put("request_status", "pending");
 
-                reference.child(group_request_id).setValue(hashMap);
-                goToActivity();
+        reference.child(group_request_id).setValue(hashMap);
+        goToActivity();
 
     }
 
@@ -176,21 +171,21 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         saveCurrentDate = currentDate.format(calendar.getTime());
         saveCurrentTime = currentTime.format(calendar.getTime());
 
-                HashMap<String, Object> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
 
-                hashMap.put("group_name", groupName);
-                hashMap.put("description", description_str);
-                hashMap.put("groupid", groupid);
-                hashMap.put("uid_creater", userid);
-                hashMap.put("date", saveCurrentDate);
-                hashMap.put("time", saveCurrentTime);
+        hashMap.put("group_name", groupName);
+        hashMap.put("description", description_str);
+        hashMap.put("groupid", groupid);
+        hashMap.put("uid_creater", userid);
+        hashMap.put("date", saveCurrentDate);
+        hashMap.put("time", saveCurrentTime);
 
-                if(isProfileSelected)
-                hashMap.put("image_url", picImageUri.toString());
-                else
-                    hashMap.put("image_url", "default_profile");
+        if (isProfileSelected)
+            hashMap.put("image_url", picImageUri.toString());
+        else
+            hashMap.put("image_url", "default_profile");
 
-                reference.child(groupid).setValue(hashMap);
+        reference.child(groupid).setValue(hashMap);
 
     }
 
@@ -241,7 +236,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
 
-                        picImageUri=uri;
+                        picImageUri = uri;
                         showToast("new group created");
                         updateUI();
 

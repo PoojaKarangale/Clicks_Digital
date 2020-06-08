@@ -16,7 +16,7 @@ public class GroupChat {
     String requesting_userid;
 
 
-    HashMap<String,String> Users;
+    HashMap<String, String> Users;
 
     //here status is joined or requested
     //info is created at date time and created by group description

@@ -1,32 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="5dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/message_profile_image"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:src="@drawable/profile_image"
         android:layout_marginTop="10dp"
-        />
+        android:src="@drawable/profile_image" />
 
-    <TextView
-        android:id="@+id/receiver_message_text"
+    <LinearLayout
+        android:id="@+id/receiver_message_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="3dp"
         android:layout_toEndOf="@+id/message_profile_image"
-        android:background="@drawable/back_edit_text"
-        android:text="receiver messages here"
-        android:padding="10dp"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:background="@drawable/receiver_messages_layout"
         android:gravity="bottom"
-        />
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/receiver_message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato"
+            android:paddingStart="10dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="2dp"
+            android:text="receiver messages here"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/receiver_message_date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato"
+            android:paddingStart="10dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="4dp"
+            android:text="1:30 PM-May 1, 2020"
+            android:textColor="#F1EBEB"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
 
     <ImageView
@@ -36,45 +61,63 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="5dp"
         android:scaleType="centerCrop"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
 
 
     <ImageView
         android:id="@+id/message_receiver_image_view"
         android:layout_width="170dp"
         android:layout_height="170dp"
-        android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/message_profile_image"
         android:layout_margin="5dp"
+        android:layout_toEndOf="@+id/message_profile_image"
         android:scaleType="centerCrop"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
 
     <ImageView
+        android:id="@+id/download_image_receiver"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        android:id="@+id/download_image_receiver"
-        android:src="@drawable/download"
         android:layout_margin="5dp"
         android:layout_toRightOf="@+id/message_receiver_image_view"
+        android:src="@drawable/download" />
 
-        />
-
-    <TextView
-        android:id="@+id/sender_messsage_text"
+    <LinearLayout
+        android:id="@+id/sender_message_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/back_edit_text"
-        android:text="sender messages"
-        android:textSize="14sp"
-        android:padding="10dp"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimary"
+        android:background="@drawable/sender_messages_layout"
         android:gravity="bottom"
-        />
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/sender_messsage_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato"
+            android:paddingStart="10dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="2dp"
+            android:text="sender messages"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/sender_messsage_date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato"
+            android:paddingStart="10dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="4dp"
+            android:text="1:30 PM-May 1, 2020"
+            android:textColor="#F1EBEB"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
 
 </RelativeLayout>
