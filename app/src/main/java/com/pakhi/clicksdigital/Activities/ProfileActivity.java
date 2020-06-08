@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +37,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends AppCompatActivity {
 
     String user_id;
+    //private FirebaseAuth mAuth;
+    boolean isVisterIsAdmin = false;
+    boolean isProfileUserIsAdmin = false;
     private ImageView profile_image;
     private Button edit_profile, visit_profile;
     private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
@@ -43,14 +47,10 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private User user, getUser;
     private String receiverUserID, senderUserID, Current_State;
-
     private CircleImageView userProfileImage;
     private TextView userProfileName, userProfileStatus;
-    private Button SendMessageRequestButton, DeclineMessageRequestButton;
-
+    private Button SendMessageRequestButton, DeclineMessageRequestButton, make_admin;
     private DatabaseReference UserRef, ChatRequestRef, ContactsRef, NotificationRef;
-    //private FirebaseAuth mAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
         experience = findViewById(R.id.tv_experiences);
         mAuth = FirebaseAuth.getInstance();
         edit_profile = findViewById(R.id.edit_profile);
+        make_admin = findViewById(R.id.make_admin);
 
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -86,7 +87,8 @@ public class ProfileActivity extends AppCompatActivity {
                         .load(user.getImage_url())
                         .resize(120, 120)
                         .into(profile_image);
-
+                if (user.getUser_type().equals("admin"))
+                    isProfileUserIsAdmin = true;
                 Toast.makeText(ProfileActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
                 loadData();
             }
@@ -106,13 +108,47 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        UserRef.child(mAuth.getCurrentUser().getUid())
+                .child("user_type")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            String user_type = dataSnapshot.getValue().toString();
+
+                            if (user_type.equals("admin")) {
+                                isVisterIsAdmin = true;
+                            }
+                            if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
+                                // make him admin btn set visible
+                                make_admin.setVisibility(View.VISIBLE);
+                            }
+                            Log.d("ProfileActMAKEADMIN",user_type+" ---------- "+isVisterIsAdmin);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
         SendMessageRequestButton = findViewById(R.id.accept_msg_request);
         DeclineMessageRequestButton = findViewById(R.id.decline_msg_request);
         //loading done
+        Log.d("ProfileActMAKEADMIN",isProfileUserIsAdmin+" ---------- "+isVisterIsAdmin);
         if (user_id.equals(mAuth.getCurrentUser().getUid())) {
             SendMessageRequestButton.setVisibility(View.INVISIBLE);
             edit_profile.setVisibility(View.VISIBLE);
         } else {
+            //if visiter (current user) is admin
+           /* if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
+                // make him admin btn set visible
+                make_admin.setVisibility(View.VISIBLE);
+            }
+
+            */
             SendMessageRequestButton.setVisibility(View.VISIBLE);
             edit_profile.setVisibility(View.INVISIBLE);
         }
@@ -538,5 +574,14 @@ public class ProfileActivity extends AppCompatActivity {
         UserRef.child(mAuth.getCurrentUser().getUid()).child("userState")
                 .updateChildren(onlineStateMap);
 
+    }
+
+    public void makeAdmin(View view) {
+        databaseReference.child("user_type").setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(ProfileActivity.this,user.getUser_name()+" is admin now",Toast.LENGTH_SHORT);
+            }
+        });
     }
 }

@@ -215,6 +215,7 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Messages messages = dataSnapshot.getValue(Messages.class);
+                        //messagesList.clear();
 
                         messagesList.add(messages);
 

@@ -92,13 +92,31 @@ public class GroupChatActivity extends AppCompatActivity {
         groupChatRefForCurrentGroup = FirebaseDatabase.getInstance().getReference("GroupChat").child(CurrentGroupId);
 
         InitializeFields();
+        GroupIdRef.child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.child(currentUserID).exists()) {
+                    userMessageInput.setText("You can't sent message to this group");
+                    userMessageInput.setEnabled(false);
+                    SendMessageButton.setEnabled(false);
+                    attach_file_btn.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         final String[] image_url = new String[1];
         GroupIdRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     if (dataSnapshot.hasChild("image_url")) {
-                         image_url[0] = dataSnapshot.child("image_url").getValue().toString();
+                        image_url[0] = dataSnapshot.child("image_url").getValue().toString();
                         Picasso.get().load(image_url[0]).into(image_profile);
                     }
                 }
@@ -139,10 +157,10 @@ public class GroupChatActivity extends AppCompatActivity {
         group_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent groupMembersIntent= new Intent(GroupChatActivity.this, GroupMembersActivity.class);
-                groupMembersIntent.putExtra("group_id",CurrentGroupId);
-                groupMembersIntent.putExtra("image_url",image_url[0]);
-                groupMembersIntent.putExtra("group_name",currentGroupName);
+                Intent groupMembersIntent = new Intent(GroupChatActivity.this, GroupMembersActivity.class);
+                groupMembersIntent.putExtra("group_id", CurrentGroupId);
+                groupMembersIntent.putExtra("image_url", image_url[0]);
+                groupMembersIntent.putExtra("group_name", currentGroupName);
 
                 startActivity(groupMembersIntent);
             }
@@ -159,7 +177,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
 
                     Messages messages = dataSnapshot.getValue(Messages.class);
-
+                   // messagesList.clear();
                     messagesList.add(messages);
 
                     messageAdapter.notifyDataSetChanged();

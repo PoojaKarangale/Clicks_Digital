@@ -122,6 +122,7 @@
 
     </LinearLayout>
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -134,6 +135,22 @@
             android:layout_marginTop="24dp"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/make_admin"
+                android:layout_width="63dp"
+                android:layout_height="19dp"
+                android:layout_gravity="right"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="-20dp"
+                android:background="@drawable/back_round_button"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="make admin"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:visibility="gone"
+                android:onClick="makeAdmin"
+                />
             <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
@@ -197,6 +214,7 @@
                 android:textAllCaps="false"
                 android:textColor="#272727"
                 android:textSize="16sp"/>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -310,7 +328,7 @@
                 android:textAllCaps="false"
                 android:layout_gravity="center_horizontal"
                 android:text="Send Message Request"
-                android:visibility="invisible"
+                android:visibility="gone"
                 />
                 <Button
                     android:id="@+id/decline_msg_request"
@@ -323,7 +341,7 @@
                     android:textAllCaps="false"
                     android:layout_gravity="center_horizontal"
                     android:text="Send Message Request"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     />
 </LinearLayout>
             </RelativeLayout>
