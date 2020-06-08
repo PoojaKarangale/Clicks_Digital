@@ -80,7 +80,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             @Override
             public void onClick(View v) {
                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra("image_url_string",group.getImage_url());
+                fullScreenIntent.putExtra("image_url_string", group.getImage_url());
                 v.getContext().startActivity(fullScreenIntent);
             }
         });

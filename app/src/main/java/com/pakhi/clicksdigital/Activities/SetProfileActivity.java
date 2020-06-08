@@ -428,8 +428,8 @@ public class SetProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
-            switch (requestCode){
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     picImageUri = result.getUri();
@@ -440,7 +440,8 @@ public class SetProfileActivity extends AppCompatActivity {
                         uploadFile(data.getData());
                     }
                     break;
-                default: Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
+                default:
+                    Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
 
             }
         }

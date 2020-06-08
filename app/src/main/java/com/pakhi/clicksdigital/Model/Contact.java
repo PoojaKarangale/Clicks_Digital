@@ -5,23 +5,13 @@ import java.io.Serializable;
 public class Contact implements Serializable {
 
 
-    private String  uid;
-
-    public String getUser_name() {
-        return user_name;
-    }
-
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
-    }
-
+    private String uid;
     private String user_name;
     private String number;
     private String notificationKey;
     private String image;
     private String bio;
     private String request_type;
-
     private Boolean selected = false;
 
     public Contact() {
@@ -48,14 +38,22 @@ public class Contact implements Serializable {
         this.bio = bio;
     }
 
-
-    public Contact(String uid){
+    public Contact(String uid) {
         this.uid = uid;
     }
-    public Contact(String uid, String user_name, String number){
+
+    public Contact(String uid, String user_name, String number) {
         this.uid = uid;
         this.user_name = user_name;
         this.number = number;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public String getImage() {
@@ -75,23 +73,26 @@ public class Contact implements Serializable {
     }
 
 
-
     public String getUid() {
         return uid;
     }
+
     public String getNumber() {
         return number;
     }
+
     public String getNotificationKey() {
         return notificationKey;
-    }
-    public Boolean getSelected() {
-        return selected;
     }
 
     public void setNotificationKey(String notificationKey) {
         this.notificationKey = notificationKey;
     }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
     public void setSelected(Boolean selected) {
         this.selected = selected;
     }

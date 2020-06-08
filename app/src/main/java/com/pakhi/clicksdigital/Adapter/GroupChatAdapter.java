@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,10 +18,10 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.ViewHolder> {
-private Context mcontext;
-private List<GroupChat> groups;
-private FirebaseUser firebaseUser;
-private boolean sentRequestFlag = false;
+    private Context mcontext;
+    private List<GroupChat> groups;
+    private FirebaseUser firebaseUser;
+    private boolean sentRequestFlag = false;
 
     public GroupChatAdapter(Context mcontext, List<GroupChat> groups) {
         this.mcontext = mcontext;

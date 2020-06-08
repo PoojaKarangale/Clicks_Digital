@@ -89,9 +89,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
-                  //  sendUserToStartActivity();
+                    //  sendUserToStartActivity();
                 } else {
-                  //  SendUserToSetProfileActivity();
+                    //  SendUserToSetProfileActivity();
                 }
             }
 

@@ -1,26 +1,15 @@
 package com.pakhi.clicksdigital.Model;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
 @SuppressWarnings("serial")
 public class User implements Serializable {
 
+    String image_url;
+    HashMap<String, Object> groups, userState;
     private String expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
             speaker_experience, twiter_link, user_bio, user_email, user_name, user_type, weblink, work_profession;
-
-
-
-    String image_url;
-
-    HashMap<String,Object> groups,userState;
-
-    public void setGroups(HashMap<String, Object> groups) {
-        this.groups = groups;
-    }
-
-    public void setUserState(HashMap<String, Object> userState) {
-        this.userState = userState;
-    }
 
     public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession, String image_url) {
         this.expectations_from_us = expectations_from_us;
@@ -47,13 +36,6 @@ public class User implements Serializable {
 
     public User() {
     }
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
 
     public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession) {
         this.expectations_from_us = expectations_from_us;
@@ -71,6 +53,22 @@ public class User implements Serializable {
         this.user_type = user_type;
         this.weblink = weblink;
         this.work_profession = work_profession;
+    }
+
+    public void setGroups(HashMap<String, Object> groups) {
+        this.groups = groups;
+    }
+
+    public void setUserState(HashMap<String, Object> userState) {
+        this.userState = userState;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getExpectations_from_us() {
