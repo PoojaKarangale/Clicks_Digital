@@ -1,7 +1,6 @@
 package com.pakhi.clicksdigital.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,7 +31,7 @@ import java.util.List;
 public class JoinGroupActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     String user_type;
-    ImageView close_post, home_btn;
+    ImageView home_btn;
     DatabaseReference UsersRef;
     private FloatingActionButton fab_create_group;
     private RecyclerView recyclerView;
@@ -44,7 +43,9 @@ public class JoinGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_group);
 
-        close_post = findViewById(R.id.close_post);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+
         home_btn = findViewById(R.id.home_btn);
 
         fab_create_group = findViewById(R.id.fab_create_group);
@@ -55,18 +56,30 @@ public class JoinGroupActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
-        user_type = pref.getString("user_type", "user");
+        home_btn.setVisibility(View.GONE);
 
-        if (user_type.equals("user")) {
-            close_post.setVisibility(View.INVISIBLE);
-            home_btn.setVisibility(View.VISIBLE);
-            //home_btn.setEnabled(false);
-        }
-        if (user_type.equals("admin")) {
-            home_btn.setVisibility(View.INVISIBLE);
-            close_post.setVisibility(View.VISIBLE);
-        }
+        UsersRef.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if ((dataSnapshot.child("groups").exists())) {
+                    home_btn.setVisibility(View.VISIBLE);
+                } else {
+                    home_btn.setVisibility(View.GONE);
+                }
+
+                user_type = dataSnapshot.child("user_type").getValue(String.class);
+                if (user_type.equals("admin")) {
+                    home_btn.setVisibility(View.VISIBLE);
+                    fab_create_group.setVisibility(View.VISIBLE);
+                } else
+                    fab_create_group.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         home_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,16 +89,6 @@ public class JoinGroupActivity extends AppCompatActivity {
             }
         });
 
-        close_post.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(JoinGroupActivity.this, StartActivity.class));
-                finish();
-            }
-        });
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         recyclerView = findViewById(R.id.recycler_groups);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -120,34 +123,8 @@ public class JoinGroupActivity extends AppCompatActivity {
     }
 
     private void addNewGroup() {
-
         Intent createGroupActivity = new Intent(getApplicationContext(), CreateNewGroupActivity.class);
-        //createGroupActivity.putExtra("user_type", user_type[0]);
         startActivity(createGroupActivity);
-
-
-/*
-        String uid = firebaseUser.getUid();
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userReference = databaseReference.child("Users").child(uid).child("user_type");
-
-        final String[] user_type = new String[1];
-        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user_type[0] = dataSnapshot.getValue(String.class);
-
-                Intent createGroupActivity = new Intent(getApplicationContext(), CreateNewGroupActivity.class);
-                //createGroupActivity.putExtra("user_type", user_type[0]);
-                startActivity(createGroupActivity);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
- */
     }
 
     @Override

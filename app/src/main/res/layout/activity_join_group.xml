@@ -22,12 +22,6 @@
                 android:layout_marginEnd="10dp"
                 >
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_cross"
-                    android:id="@+id/close_post"
-                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

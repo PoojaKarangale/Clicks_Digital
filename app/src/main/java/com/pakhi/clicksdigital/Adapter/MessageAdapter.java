@@ -1,9 +1,12 @@
 package com.pakhi.clicksdigital.Adapter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,12 +43,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
     Bitmap bitmap;
+    String chatType, currentGroupId = "";
+    Messages messages;
     private List<Messages> userMessagesList;
     private FirebaseAuth mAuth;
-    private DatabaseReference usersRef;
+    private DatabaseReference rootRef, usersRef, personalChatRefFrom, personalChatRefTo, groupChatRef;
 
-    public MessageAdapter(List<Messages> userMessagesList) {
+    public MessageAdapter(List<Messages> userMessagesList, String chatType, String currentGroupId) {
         this.userMessagesList = userMessagesList;
+        this.chatType = chatType;
+        this.currentGroupId = currentGroupId;
+    }
+
+    public MessageAdapter(List<Messages> userMessagesList, String chatType) {
+        this.userMessagesList = userMessagesList;
+        this.chatType = chatType;
     }
 
     @NonNull
@@ -55,19 +68,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 .inflate(R.layout.custom_messages_layout, viewGroup, false);
 
         mAuth = FirebaseAuth.getInstance();
-
+        rootRef = FirebaseDatabase.getInstance().getReference();
         return new MessageViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MessageViewHolder messageViewHolder, int position) {
-        String messageSenderId = mAuth.getCurrentUser().getUid();
-        final Messages messages = userMessagesList.get(position);
-
+    public void onBindViewHolder(@NonNull final MessageViewHolder messageViewHolder, final int position) {
+        String currentUserId = mAuth.getCurrentUser().getUid();
+        messages = userMessagesList.get(position);
+        //this.position = position;
         String fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
 
-        usersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(fromUserID);
+        usersRef = rootRef.child("Users").child(fromUserID);
         final String[] receiverImage = new String[1];
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -100,7 +113,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.download_image_receiver.setVisibility(View.GONE);
 
         if (fromMessageType.equals("text")) {
-            if (fromUserID.equals(messageSenderId)) {
+            if (fromUserID.equals(currentUserId)) {
                 messageViewHolder.senderlayout.setVisibility(View.VISIBLE);
                 messageViewHolder.senderDate.setText(messages.getTime() + " - " + messages.getDate());
                 messageViewHolder.senderMessageText.setText(messages.getMessage());
@@ -111,7 +124,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 messageViewHolder.receiverMessageText.setText(messages.getMessage());
             }
         } else if (fromMessageType.equals("image")) {
-            if (fromUserID.equals(messageSenderId)) {
+            if (fromUserID.equals(currentUserId)) {
                 messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
                 Picasso.get()
                         .load(String.valueOf(messages.getMessage()))
@@ -152,7 +165,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.download_image_receiver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 saveImage(v, messageViewHolder);
                 // messageViewHolder.download_image_receiver.setVisibility(View.GONE);
                 /*
@@ -166,6 +178,89 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     }
                 }
                  */
+            }
+        });
+
+        messageViewHolder.messageSenderPicture.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                openAlertBuilderWithOptions(new CharSequence[]{"Delete"}, v, position);
+                return true;
+            }
+        });
+        messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                openAlertBuilderWithOptions(new CharSequence[]{"Delete"}, v, position);
+                return true;
+            }
+        });
+    }
+
+    private void openAlertBuilderWithOptions(CharSequence[] optionsGet, final View v, final int position) {
+        CharSequence options[] = optionsGet;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        // builder.setTitle("");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0:
+                        deleteMessage(v, position);
+                        break;
+
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void deleteMessage(View v, int position) {
+        switch (chatType) {
+            case "PersonalChat":
+                deletePersonalChat(v, position);
+                break;
+            case "GroupChat":
+                deleteGroupChat(v, position);
+                break;
+        }
+    }
+
+    private void deletePersonalChat(final View v, final int position) {
+        final Messages messages = userMessagesList.get(position);
+        String toUserId = messages.getTo();
+        String fromUserID = messages.getFrom();
+
+        personalChatRefFrom = rootRef.child("Messages").child(fromUserID).child(toUserId);
+        personalChatRefTo = rootRef.child("Messages").child(toUserId).child(fromUserID);
+
+        personalChatRefFrom.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                personalChatRefTo.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
+                        userMessagesList.remove(position);
+                        notifyItemRemoved(position);
+                    }
+                });
+            }
+        });
+    }
+
+    private void deleteGroupChat(final View v, final int position) {
+        Messages messages = userMessagesList.get(position);
+        groupChatRef = rootRef.child("GroupChat");
+
+        groupChatRef.child(currentGroupId).child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
+                userMessagesList.remove(position);
+                notifyItemRemoved(position);
             }
         });
     }
@@ -188,7 +283,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             Toast.makeText(v.getContext(), "Image is saved in DCIM", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            // e.printStackTrace();
             Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

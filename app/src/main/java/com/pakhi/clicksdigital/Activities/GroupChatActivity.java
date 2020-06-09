@@ -170,6 +170,7 @@ public class GroupChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         updateUserStatus("online");
         groupChatRefForCurrentGroup.addChildEventListener(new ChildEventListener() {
             @Override
@@ -183,7 +184,6 @@ public class GroupChatActivity extends AppCompatActivity {
                     messageAdapter.notifyDataSetChanged();
 
                     userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
-
                 }
             }
 
@@ -223,7 +223,7 @@ public class GroupChatActivity extends AppCompatActivity {
         image_profile = findViewById(R.id.image_profile);
         group_members = findViewById(R.id.group_members);
 
-        messageAdapter = new MessageAdapter(messagesList);
+        messageAdapter = new MessageAdapter(messagesList,"GroupChat",CurrentGroupId);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -267,6 +267,7 @@ public class GroupChatActivity extends AppCompatActivity {
         messageInfoMap.put("name", currentUserName);
         messageInfoMap.put("from", currentUserID);
         messageInfoMap.put("message", message);
+        messageInfoMap.put("messageID", messagekEY);
         messageInfoMap.put("date", currentDate);
         messageInfoMap.put("time", currentTime);
         messageInfoMap.put("type", messageType);
