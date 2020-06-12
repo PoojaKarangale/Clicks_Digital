@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "693260952324-jagjmdmlra6dct1iscl1jeakrpmjolu6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakhi.clicksdigital",
+            "certificate_hash": "12264535a18309db8fa971010bc19481578afa7c"
+          }
+        },
+        {
           "client_id": "693260952324-aloajidieqsj6ldv42vltvgbklb13l1h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

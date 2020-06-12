@@ -27,6 +27,14 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/nav_profile" />
+                <ImageView
+                    android:id="@+id/user_requests_to_join_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/people"
+                    android:layout_toStartOf="@+id/profile_activity"
+                    />
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>

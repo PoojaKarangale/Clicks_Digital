@@ -180,6 +180,11 @@ public class SetProfileActivity extends AppCompatActivity {
                 if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
                     //Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                     //sendUserToStartActivity();
+                    if (dataSnapshot.child("groups").exists()) {
+                        sendUserToStartActivity();
+                    } else {
+                        sendUserToJoinGroupActivity();
+                    }
                     user = dataSnapshot.getValue(User.class);
                     loadData();
 
@@ -359,7 +364,8 @@ public class SetProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child("groups").exists())) {
-                    SendUserToSetProfileActivity(userid);
+                    //SendUserToSetProfileActivity(userid);
+                    sendUserToStartActivity();
                 } else {
                     sendUserToJoinGroupActivity();
                 }

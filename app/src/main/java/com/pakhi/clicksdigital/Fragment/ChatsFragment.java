@@ -145,6 +145,8 @@ public class ChatsFragment extends Fragment {
 
         chatsList.setAdapter(adapter);
         adapter.startListening();
+
+
     }
 
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {

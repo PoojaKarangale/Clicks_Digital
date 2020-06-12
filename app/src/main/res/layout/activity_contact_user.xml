@@ -32,7 +32,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Users"
+                    android:text="My Friends"
                     android:layout_toEndOf="@+id/close_post"
                     android:layout_marginStart="10dp"
                     android:textSize="16dp"

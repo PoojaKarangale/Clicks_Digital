@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.CreateNewGroupActivity;
+import com.pakhi.clicksdigital.Activities.JoinGroupActivity;
 import com.pakhi.clicksdigital.Activities.RegisterActivity;
 import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
 import com.pakhi.clicksdigital.Model.GroupChat;
@@ -35,9 +36,9 @@ public class GroupsFragment extends Fragment {
     private View groupFragmentView;
     private JoinGroupAdapter groupAdapter;
     private List<GroupChat> groups;
-    private FloatingActionButton fab_create_group;
+    private FloatingActionButton fab_create_group, fab_join_group;
     private RecyclerView recyclerView;
-    private DatabaseReference GroupRef, userGroupRef;
+    private DatabaseReference GroupRef, userGroupRef, UsersRef;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -46,23 +47,52 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() != null) {
-            //startActivity(new Intent(getContext(), RegisterActivity.class));
-            userID = firebaseAuth.getCurrentUser().getUid();
-            userGroupRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("groups");
-        } else startActivity(new Intent(getContext(), RegisterActivity.class));
-
         groupFragmentView = inflater.inflate(R.layout.fragment_groups, container, false);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        userID = firebaseAuth.getCurrentUser().getUid();
+        userGroupRef = UsersRef.child(userID).child("groups");
 
         fab_create_group = groupFragmentView.findViewById(R.id.fab_create_group);
+        fab_join_group = groupFragmentView.findViewById(R.id.fab_join_group);
+
+        final String[] user_type = new String[1];
+        UsersRef.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                user_type[0] = dataSnapshot.child("user_type").getValue(String.class);
+                if (user_type[0].equals("admin")) {
+                    fab_create_group.setVisibility(View.VISIBLE);
+                    fab_join_group.setVisibility(View.GONE);
+
+                } else {
+                    fab_create_group.setVisibility(View.GONE);
+                    fab_join_group.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         fab_create_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), CreateNewGroupActivity.class));
+            }
+        });
+
+        fab_join_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), JoinGroupActivity.class));
             }
         });
 
@@ -82,17 +112,6 @@ public class GroupsFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-
-     /*   if (firebaseAuth.getCurrentUser() == null)
-        {
-            SendUserToRegisterActivity();
-        }
-        else
-        {
-
-        }
-
-      */
     }
 
     private void SendUserToRegisterActivity() {
@@ -126,7 +145,6 @@ public class GroupsFragment extends Fragment {
 
                         }
                     });
-
                 }
             }
 

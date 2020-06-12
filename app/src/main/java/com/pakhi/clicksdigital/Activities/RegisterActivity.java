@@ -89,9 +89,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
-                    //  sendUserToStartActivity();
+                      //sendUserToStartActivity();
+                    if(dataSnapshot.child("groups").exists()){
+                        sendUserToStartActivity();
+                    }
+                    else{
+                        sendUserToJoinGroupActivity();
+                    }
                 } else {
-                    //  SendUserToSetProfileActivity();
+                     SendUserToSetProfileActivity();
                 }
             }
 
@@ -100,6 +106,13 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void sendUserToJoinGroupActivity() {
+        Intent intent = new Intent(RegisterActivity.this, JoinGroupActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     private void sendUserToStartActivity() {

@@ -48,7 +48,7 @@ public class StartActivity extends AppCompatActivity {
     private ChatsFragment chatsFragment;
     private HomeFragment homeFragment;
 
-    private ImageView profile;
+    private ImageView profile, user_requests_to_join_group;
 
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
@@ -63,15 +63,32 @@ public class StartActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         profile = findViewById(R.id.profile_activity);
+        user_requests_to_join_group = findViewById(R.id.user_requests_to_join_group);
         currentUser = mAuth.getCurrentUser();
+
+        currentUserID = currentUser.getUid();
 
         RootRef = FirebaseDatabase.getInstance().getReference();
 
 
-        if (!(currentUser == null)) {
-            currentUserID = mAuth.getCurrentUser().getUid();
-        }
+        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("user_type").exists()) {
+                    String user_type = dataSnapshot.child("user_type").getValue().toString();
+                    if (user_type.equals("admin")) {
+                        user_requests_to_join_group.setVisibility(View.VISIBLE);
+                    } else {
+                        user_requests_to_join_group.setVisibility(View.GONE);
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         eventsFragment = new EventsFragment();
         groupsFragment = new GroupsFragment();
@@ -109,13 +126,20 @@ public class StartActivity extends AppCompatActivity {
         badgeDrawable.setVisible(true);
         badgeDrawable.setNumber(10);
 
+
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent profileIntent = new Intent(StartActivity.this, ProfileActivity.class);
                 profileIntent.putExtra("visit_user_id", currentUserID);
-
                 startActivity(profileIntent);
+            }
+        });
+
+        user_requests_to_join_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendUserToUserRequestActivity();
             }
         });
 
@@ -157,43 +181,16 @@ public class StartActivity extends AppCompatActivity {
             mAuth.signOut();
             SendUserToRegisterActivity();
         }
-        if (item.getItemId() == R.id.user_request) {
-            SendUserToUserRequestActivity();
-        }
-        if (item.getItemId() == R.id.group_request) {
-            //SendUserToGroupRequestActivity();
-        }
         if (item.getItemId() == R.id.join_new_groups) {
             //SendUserToGroupRequestActivity();
             startActivity(new Intent(this, JoinGroupActivity.class));
-        }
-        if (item.getItemId() == R.id.contact_users) {
-            //SendUserToSettingsActivity();
-            startActivity(new Intent(this, ContactUserActivity.class));
         }
 
         if (item.getItemId() == R.id.settings) {
             //SendUserToSettingsActivity();
         }
 
-        if (item.getItemId() == R.id.find_friends) {
-            SendUserToFindFriendsActivity();
-        }
-        if (item.getItemId() == R.id.connection_request) {
-            SendUserToConnectionRequestActivity();
-        }
-
         return true;
-    }
-
-    private void SendUserToConnectionRequestActivity() {
-
-        startActivity(new Intent(StartActivity.this, ConnectionRequests.class));
-    }
-
-    private void SendUserToFindFriendsActivity() {
-
-        startActivity(new Intent(StartActivity.this, FindFriendsActivity.class));
     }
 
     private void SendUserToUserRequestActivity() {
@@ -213,7 +210,7 @@ public class StartActivity extends AppCompatActivity {
         if (currentUser == null) {
             // SendUserToRegisterActivity();
         } else {
-            updateUserStatus("online");
+            //  updateUserStatus("online");
             //VerifyUserExistance();
         }
     }
@@ -223,7 +220,7 @@ public class StartActivity extends AppCompatActivity {
         super.onStop();
 
         if (currentUser != null) {
-            updateUserStatus("offline");
+            //updateUserStatus("offline");
         }
     }
 
@@ -232,7 +229,7 @@ public class StartActivity extends AppCompatActivity {
         super.onDestroy();
 
         if (currentUser != null) {
-            updateUserStatus("offline");
+            // updateUserStatus("offline");
         }
     }
 

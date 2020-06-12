@@ -37,19 +37,16 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     private FirebaseUser firebaseUser;
     private boolean sentRequestFlag = false;
 
-
     public JoinGroupAdapter(Context mcontext, List<GroupChat> groups, String in_current_user_groups) {
         this.mcontext = mcontext;
         this.groups = groups;
         this.in_current_user_groups = in_current_user_groups;
     }
 
-
     public JoinGroupAdapter(Context mcontext, List<GroupChat> groups) {
         this.mcontext = mcontext;
         this.groups = groups;
     }
-
 
     @NonNull
     @Override
@@ -60,7 +57,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final JoinGroupAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final JoinGroupAdapter.ViewHolder holder, final int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         final GroupChat group = groups.get(position);
@@ -73,7 +70,6 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
                 .resize(120, 120)
                 .into(holder.image_profile);
 
-
         Log.d("joinGroupAdapter", "----------" + group.getGroup_name());
 
         holder.image_profile.setOnClickListener(new View.OnClickListener() {
@@ -85,13 +81,6 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             }
         });
 
-
-      /*  if (sentRequestFlag) {
-            holder.itemView.setEnabled(false);
-            holder.status_of_request.setVisibility(View.VISIBLE);
-        }
-
-       */
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,13 +92,13 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
                     mcontext.startActivity(groupChatActivity);
 
                 } else {
-                    //    sentRequestToJoinGroup(group.getGroupid(), group.getGroup_name(), firebaseUser.getUid());
-                    //holder.status_of_request.setVisibility(View.VISIBLE);
+
                     holder.itemView.setEnabled(false);
                     sentRequestToJoinGroup(group.getGroupid(), group.getGroup_name(), firebaseUser.getUid());
                     if (sentRequestFlag) {
                         holder.status_of_request.setVisibility(View.VISIBLE);
                     }
+
                 }
             }
         });
@@ -139,6 +128,8 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
         reference.child(group_request_id).setValue(hashMap);
         sentRequestFlag = true;
+
+
     }
 
     @Override

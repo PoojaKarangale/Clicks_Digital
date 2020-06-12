@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Adapter.ProfileListAdapter;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -36,10 +40,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    String user_id;
     //private FirebaseAuth mAuth;
     boolean isVisterIsAdmin = false;
     boolean isProfileUserIsAdmin = false;
+    int[] imagesForListView = {R.drawable.find_friends, R.drawable.my_friends, R.drawable.chat_requests};
+    ProfileListAdapter profileListAdapter;
+    TextView no_groups, no_friends;
+    private String user_id;
+    private ListView listView;
     private ImageView profile_image;
     private Button edit_profile, visit_profile;
     private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
@@ -49,8 +57,9 @@ public class ProfileActivity extends AppCompatActivity {
     private String receiverUserID, senderUserID, Current_State;
     private CircleImageView userProfileImage;
     private TextView userProfileName, userProfileStatus;
-    private Button SendMessageRequestButton, DeclineMessageRequestButton, make_admin,removeAdmin;
+    private Button SendMessageRequestButton, DeclineMessageRequestButton, make_admin, removeAdmin;
     private DatabaseReference UserRef, ChatRequestRef, ContactsRef, NotificationRef;
+    private String[] titleForListView = {"Find Friends", "My Friends", " Chat Requests"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +80,16 @@ public class ProfileActivity extends AppCompatActivity {
         edit_profile = findViewById(R.id.edit_profile);
         make_admin = findViewById(R.id.make_admin);
         removeAdmin = findViewById(R.id.remove_admin);
+        listView = findViewById(R.id.list_view);
+
+        no_friends = findViewById(R.id.no_friends);
+        no_groups = findViewById(R.id.no_groups);
 
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         Toast.makeText(this, "Wait for data to load.", Toast.LENGTH_SHORT).show();
 
+        initializeMsgRequestFields();
 
         //Loading the data
 
@@ -90,10 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .into(profile_image);
                 if (user.getUser_type().equals("admin")) {
                     isProfileUserIsAdmin = true;
-
                 }
-
-                Toast.makeText(ProfileActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
                 loadData();
             }
 
@@ -111,14 +122,24 @@ public class ProfileActivity extends AppCompatActivity {
                 v.getContext().startActivity(fullScreenIntent);
             }
         });
+        ContactsRef.child(user_id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int no_friends_int = (int) dataSnapshot.getChildrenCount();
+                no_friends.setText(String.valueOf(no_friends_int));
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         UserRef.child(mAuth.getCurrentUser().getUid())
-                .child("user_type")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            String user_type = dataSnapshot.getValue().toString();
+                        if (dataSnapshot.child("user_type").exists()) {
+                            String user_type = dataSnapshot.child("user_type").getValue().toString();
 
                             if (user_type.equals("admin")) {
                                 isVisterIsAdmin = true;
@@ -130,8 +151,17 @@ public class ProfileActivity extends AppCompatActivity {
                             if (isVisterIsAdmin && isProfileUserIsAdmin) {
                                 removeAdmin.setVisibility(View.VISIBLE);
                             }
-                            Log.d("ProfileActMAKEADMIN",user_type+" ---------- "+isVisterIsAdmin);
+                            if (user_id.equals(mAuth.getCurrentUser().getUid())) {
+                                make_admin.setVisibility(View.GONE);
+                                removeAdmin.setVisibility(View.GONE);
+                                listView.setVisibility(View.VISIBLE);
+                            } else {
+                                listView.setVisibility(View.GONE);
+                            }
+                            Log.d("ProfileActMAKEADMIN", user_type + " ---------- " + isVisterIsAdmin);
                         }
+                        int no_groups_int = (int) dataSnapshot.child("groups").getChildrenCount();
+                        no_groups.setText(String.valueOf(no_groups_int));
                     }
 
                     @Override
@@ -144,10 +174,12 @@ public class ProfileActivity extends AppCompatActivity {
         SendMessageRequestButton = findViewById(R.id.accept_msg_request);
         DeclineMessageRequestButton = findViewById(R.id.decline_msg_request);
         //loading done
-        Log.d("ProfileActMAKEADMIN",isProfileUserIsAdmin+" ---------- "+isVisterIsAdmin);
+        Log.d("ProfileActMAKEADMIN", isProfileUserIsAdmin + " ---------- " + isVisterIsAdmin);
         if (user_id.equals(mAuth.getCurrentUser().getUid())) {
             SendMessageRequestButton.setVisibility(View.INVISIBLE);
             edit_profile.setVisibility(View.VISIBLE);
+            make_admin.setVisibility(View.GONE);
+            removeAdmin.setVisibility(View.GONE);
         } else {
             SendMessageRequestButton.setVisibility(View.VISIBLE);
             edit_profile.setVisibility(View.INVISIBLE);
@@ -161,10 +193,61 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        initializeMsgRequestFields();
-
         ManageChatRequests();
 
+        profileListAdapter = new ProfileListAdapter(this, titleForListView, imagesForListView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        sendUserToFindFriendsActivity();
+                        break;
+                    case 1:
+                        sendUserToContactActivity();
+                        break;
+                    case 2:
+                        sendUserToConnectionRequestsActivity();
+                        break;
+                }
+            }
+        });
+        listView.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
+
+        listView.setAdapter(profileListAdapter);
+    }
+
+    private void sendUserToConnectionRequestsActivity() {
+        startActivity(new Intent(this, ConnectionRequests.class));
+    }
+
+    private void sendUserToContactActivity() {
+        startActivity(new Intent(this, ContactUserActivity.class));
+    }
+
+    private void sendUserToFindFriendsActivity() {
+
+        startActivity(new Intent(this, FindFriendsActivity.class));
     }
 
     private void loadData() {
@@ -199,7 +282,7 @@ public class ProfileActivity extends AppCompatActivity {
         loadCertification();
         socialMediaHandles();
         contactInfo();
-
+        Toast.makeText(ProfileActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
     }
 
     private void socialMediaHandles() {
@@ -582,7 +665,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onSuccess(Void aVoid) {
                 make_admin.setVisibility(View.GONE);
                 removeAdmin.setVisibility(View.VISIBLE);
-                Toast.makeText(ProfileActivity.this,user.getUser_name()+" is admin now",Toast.LENGTH_SHORT);
+                Toast.makeText(ProfileActivity.this, user.getUser_name() + " is admin now", Toast.LENGTH_SHORT);
             }
         });
     }
@@ -594,7 +677,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onSuccess(Void aVoid) {
                 make_admin.setVisibility(View.VISIBLE);
                 removeAdmin.setVisibility(View.GONE);
-                Toast.makeText(ProfileActivity.this,user.getUser_name()+" is no longer admin now",Toast.LENGTH_SHORT);
+                Toast.makeText(ProfileActivity.this, user.getUser_name() + " is no longer admin now", Toast.LENGTH_SHORT);
             }
         });
     }

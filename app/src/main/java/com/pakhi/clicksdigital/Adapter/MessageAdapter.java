@@ -74,10 +74,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(@NonNull final MessageViewHolder messageViewHolder, final int position) {
-        String currentUserId = mAuth.getCurrentUser().getUid();
+        final String currentUserId = mAuth.getCurrentUser().getUid();
         messages = userMessagesList.get(position);
         //this.position = position;
-        String fromUserID = messages.getFrom();
+        final String fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
 
         usersRef = rootRef.child("Users").child(fromUserID);
@@ -142,8 +142,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         } else if (fromMessageType.equals("pdf")) {
 
         }
-
-
         messageViewHolder.messageSenderPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,7 +158,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 v.getContext().startActivity(fullScreenIntent);
             }
         });
-
 
         messageViewHolder.download_image_receiver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +188,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                openAlertBuilderWithOptions(new CharSequence[]{"Delete"}, v, position);
+                if (fromUserID.equals(currentUserId)) {
+                    openAlertBuilderWithOptions(new CharSequence[]{"Delete for me","Delete for all"}, v, position);
+                } else {
+                    openAlertBuilderWithOptions(new CharSequence[]{"Delete for me"}, v, position);
+                }
+
                 return true;
             }
         });
@@ -207,28 +209,29 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
-                    case 0:
-                        deleteMessage(v, position);
+                    case 0: deleteMessage(v, position,"deleteForMe");
                         break;
-
+                    case 1:
+                        deleteMessage(v, position,"deleteForAll");
+                        break;
                 }
             }
         });
         builder.show();
     }
 
-    private void deleteMessage(View v, int position) {
+    private void deleteMessage(View v, int position,String deleteScope) {
         switch (chatType) {
             case "PersonalChat":
-                deletePersonalChat(v, position);
+                deletePersonalChat(v, position,deleteScope);
                 break;
             case "GroupChat":
-                deleteGroupChat(v, position);
+                deleteGroupChat(v, position,deleteScope);
                 break;
         }
     }
 
-    private void deletePersonalChat(final View v, final int position) {
+    private void deletePersonalChat(final View v, final int position,String deleteScope) {
         final Messages messages = userMessagesList.get(position);
         String toUserId = messages.getTo();
         String fromUserID = messages.getFrom();
@@ -236,33 +239,51 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         personalChatRefFrom = rootRef.child("Messages").child(fromUserID).child(toUserId);
         personalChatRefTo = rootRef.child("Messages").child(toUserId).child(fromUserID);
 
-        personalChatRefFrom.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                personalChatRefTo.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
-                        userMessagesList.remove(position);
-                        notifyItemRemoved(position);
-                    }
-                });
-            }
-        });
+        if(deleteScope.equals("deleteForMe")){
+            personalChatRefFrom.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
+                    userMessagesList.remove(position);
+                    notifyItemRemoved(position);
+                }
+            });
+        }else if(deleteScope.equals("deleteForAll")){
+            personalChatRefFrom.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    personalChatRefTo.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
+                            userMessagesList.remove(position);
+                            notifyItemRemoved(position);
+                        }
+                    });
+                }
+            });
+        }
     }
 
-    private void deleteGroupChat(final View v, final int position) {
+    private void deleteGroupChat(final View v, final int position, String deleteScope) {
         Messages messages = userMessagesList.get(position);
         groupChatRef = rootRef.child("GroupChat");
 
-        groupChatRef.child(currentGroupId).child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
-                userMessagesList.remove(position);
-                notifyItemRemoved(position);
-            }
-        });
+        if(deleteScope.equals("deleteForMe")){
+
+            userMessagesList.remove(position);
+            notifyItemRemoved(position);
+
+        }else if(deleteScope.equals("deleteForAll")){
+            groupChatRef.child(currentGroupId).child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
+                    userMessagesList.remove(position);
+                    notifyItemRemoved(position);
+                }
+            });
+        }
     }
 
     private void saveImage(View v, MessageViewHolder messageViewHolder) {
@@ -286,7 +307,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 
     @Override
     public int getItemCount() {

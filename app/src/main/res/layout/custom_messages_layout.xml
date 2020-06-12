@@ -35,7 +35,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="2dp"
             android:text="receiver messages here"
-            android:textColor="#FFFFFF"
+            android:textColor="#00518F"
             android:textSize="18sp" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="4dp"
             android:text="1:30 PM-May 1, 2020"
-            android:textColor="#F1EBEB"
+            android:textColor="#B1B1B1"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -114,7 +114,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="4dp"
             android:text="1:30 PM-May 1, 2020"
-            android:textColor="#F1EBEB"
+            android:textColor="#E3E3E3"
             android:textSize="12sp" />
 
     </LinearLayout>
