@@ -59,7 +59,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_group);
 
         //user_type = getIntent().getStringExtra("user_type");
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Const.SHARED_PREF, 0);
         user_type = pref.getString("user_type", "user");
         //user_type = "admin";
 

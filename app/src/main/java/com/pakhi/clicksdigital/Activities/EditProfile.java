@@ -185,10 +185,10 @@ public class EditProfile extends AppCompatActivity {
         userid = firebaseAuth.getCurrentUser().getUid();
         final String str_name_of_file = cerifications.getText().toString();
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Constants.USER_MEDIA_PATH).child(Constants.FILES_PATH);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Const.USER_MEDIA_PATH).child(Const.FILES_PATH);
         Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
         progressDialog.show();
-        StorageReference sRef = mStorageReference.child(Constants.USER_MEDIA_PATH).child(userid).child("Files/" + str_name_of_file + " " + System.currentTimeMillis() + ".pdf");
+        StorageReference sRef = mStorageReference.child(Const.USER_MEDIA_PATH).child(userid).child("Files/" + str_name_of_file + " " + System.currentTimeMillis() + ".pdf");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
@@ -255,11 +255,11 @@ public class EditProfile extends AppCompatActivity {
 
     private void createUserProfile() {
         String uid = firebaseAuth.getCurrentUser().getUid();
-        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(uid).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
+        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(uid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
 
         if (picImageUri != null) {
             final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
-            mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Constants.USER_MEDIA_PATH).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Const.USER_MEDIA_PATH).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
             imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

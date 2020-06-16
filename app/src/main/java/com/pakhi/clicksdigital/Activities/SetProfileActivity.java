@@ -82,7 +82,7 @@ private boolean isNewProfilePicSelected=false;
         setContentView(R.layout.activity_set_profile);
 
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Const.SHARED_PREF, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         //  number = getIntent().getStringExtra("PhoneNumber");
         number = pref.getString("PhoneNumber", "");
@@ -188,7 +188,7 @@ private boolean isNewProfilePicSelected=false;
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child(Constants.USER_DETAILS).child(Constants.USER_NAME).exists())) {
+                if ((dataSnapshot.child(Const.USER_DETAILS).child(Const.USER_NAME).exists())) {
                     if (previousActivity.equals("RegisterActivity") || previousActivity.equals("RegisterActivity")) {
                         if (dataSnapshot.child("groups").exists()) {
                             sendUserToStartActivity();
@@ -196,7 +196,7 @@ private boolean isNewProfilePicSelected=false;
                             sendUserToJoinGroupActivity();
                         }
                     }
-                    user = dataSnapshot.child(Constants.USER_DETAILS).getValue(User.class);
+                    user = dataSnapshot.child(Const.USER_DETAILS).getValue(User.class);
                     Log.d("setProfileTESTING", user.getUser_name());
                     loadData();
                 } else {
@@ -299,7 +299,7 @@ private boolean isNewProfilePicSelected=false;
             numberOfCertificate[0]++;
         }*/
 
-        reference.child(userid).child(Constants.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child(userid).child(Const.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 progressDialog.dismiss();
@@ -310,7 +310,7 @@ private boolean isNewProfilePicSelected=false;
 
     private void createUserProfile(final String full_name_str, final String email_str, final String bio_str, final String weblink_str) {
         //  String uid = firebaseAuth.getCurrentUser().getUid();
-        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(userid).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
+        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

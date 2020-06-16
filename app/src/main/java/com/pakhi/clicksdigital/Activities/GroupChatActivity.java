@@ -233,11 +233,11 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void GetUserInfo() {
-        UsersRef.child(currentUserID).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        UsersRef.child(currentUserID).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    currentUserName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
+                    currentUserName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
                 }
             }
 

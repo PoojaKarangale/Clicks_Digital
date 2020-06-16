@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.ChatActivity;
-import com.pakhi.clicksdigital.Activities.Constants;
+import com.pakhi.clicksdigital.Activities.Const;
 import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
@@ -80,14 +80,14 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    if (dataSnapshot.child(Constants.USER_DETAILS).hasChild("image_url")) {
-                                        retImage[0] = dataSnapshot.child(Constants.USER_DETAILS).child("image_url").getValue().toString();
+                                    if (dataSnapshot.child(Const.USER_DETAILS).hasChild("image_url")) {
+                                        retImage[0] = dataSnapshot.child(Const.USER_DETAILS).child("image_url").getValue().toString();
                                         Picasso.get().load(retImage[0]).into(holder.profileImage);
                                         // after adding image uri to users database
                                     }
 
-                                    final String retName = dataSnapshot.child(Constants.USER_DETAILS).child("user_name").getValue().toString();
-                                    final String retStatus = dataSnapshot.child(Constants.USER_DETAILS).child("user_bio").getValue().toString();
+                                    final String retName = dataSnapshot.child(Const.USER_DETAILS).child("user_name").getValue().toString();
+                                    final String retStatus = dataSnapshot.child(Const.USER_DETAILS).child("user_bio").getValue().toString();
 
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText(retStatus);

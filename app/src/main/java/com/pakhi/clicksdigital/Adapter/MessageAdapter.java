@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.Constants;
+import com.pakhi.clicksdigital.Activities.Const;
 import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Model.Messages;
 import com.pakhi.clicksdigital.R;
@@ -81,7 +80,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         final String fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
 
-        usersRef = rootRef.child("Users").child(fromUserID).child(Constants.USER_DETAILS);
+        usersRef = rootRef.child("Users").child(fromUserID).child(Const.USER_DETAILS);
         final String[] receiverImage = new String[1];
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override

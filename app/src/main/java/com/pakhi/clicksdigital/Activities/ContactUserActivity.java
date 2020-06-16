@@ -134,8 +134,8 @@ public class ContactUserActivity extends AppCompatActivity {
                         if (snapshot.child("number").getValue() != null) {
                             phone = snapshot.child("number").getValue().toString().replace(" ", "");
                         }
-                        if (snapshot.child(Constants.USER_NAME).getValue() != null) {
-                            phone = snapshot.child(Constants.USER_NAME).getValue().toString();
+                        if (snapshot.child(Const.USER_NAME).getValue() != null) {
+                            phone = snapshot.child(Const.USER_NAME).getValue().toString();
                         }
                         Contact contact = new Contact(snapshot.getKey(), name, phone);
 
@@ -236,14 +236,14 @@ public class ContactUserActivity extends AppCompatActivity {
                     }
                 });
 
-                UsersRef.child(userIDs).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                UsersRef.child(userIDs).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //retrive user details
-                        userImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                        userImage[0] = dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
                         Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
-                        String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
-                        String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
+                        String profileName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                        String profileStatus = dataSnapshot.child(Const.USER_BIO).getValue().toString();
 
                         holder.userName.setText(profileName);
                         holder.userStatus.setText(profileStatus);

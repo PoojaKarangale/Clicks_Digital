@@ -95,7 +95,7 @@ public class PhoneVerify extends AppCompatActivity {
         String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]", "");
 
         Log.d("phoneVerify", " ----------------------" + phoneNumberWithoutSpecialChar + "----------" + number);
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Const.SHARED_PREF, 0); // 0 - for private mode
         final SharedPreferences.Editor editor = pref.edit();
         //number=pref.getString("PhoneNumber","");
         editor.putString("PhoneNumber", phoneNumberWithoutSpecialChar);

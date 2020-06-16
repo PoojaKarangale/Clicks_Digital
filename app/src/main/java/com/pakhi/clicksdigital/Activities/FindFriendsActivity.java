@@ -51,10 +51,6 @@ public class FindFriendsActivity extends AppCompatActivity {
         FindFriendsRecyclerList.setLayoutManager(new LinearLayoutManager(this));
 
         mToolbar = findViewById(R.id.find_friends_toolbar);
-        // setSupportActionBar(mToolbar);
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setTitle("Find Friends");
 
     }
 
@@ -73,13 +69,13 @@ public class FindFriendsActivity extends AppCompatActivity {
                     protected void onBindViewHolder(@NonNull final FindFriendViewHolder holder, final int position, @NonNull final User model) {
 
                         final String visit_user_id = getRef(position).getKey();
-                        UsersRef.child(visit_user_id).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                        UsersRef.child(visit_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                holder.userName.setText(dataSnapshot.child(Constants.USER_NAME).getValue().toString());
-                                holder.userStatus.setText(dataSnapshot.child(Constants.USER_BIO).getValue().toString());
+                                holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
+                                holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
                                 Log.d("findFriend", "--------------" + model.getUser_name() + " " + model.getUser_bio());
-                                final String image_url=dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                                final String image_url=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
                                 Picasso.get()
                                         .load(image_url).placeholder(R.drawable.profile_image)
                                         .resize(120, 120)

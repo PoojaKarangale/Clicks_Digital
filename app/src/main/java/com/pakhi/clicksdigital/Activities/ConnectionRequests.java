@@ -57,7 +57,7 @@ public class ConnectionRequests extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Contact> options =
                 new FirebaseRecyclerOptions.Builder<Contact>()
-                        .setQuery(ChatRequestsRef.child(currentUserID).child(Constants.USER_DETAILS), Contact.class)
+                        .setQuery(ChatRequestsRef.child(currentUserID).child(Const.USER_DETAILS), Contact.class)
                         .build();
 
         FirebaseRecyclerAdapter<Contact, RequestsViewHolder> adapter =
@@ -88,8 +88,8 @@ public class ConnectionRequests extends AppCompatActivity {
                                         UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot.hasChild(Constants.IMAGE_URL)) {
-                                                    requestProfileImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                                                if (dataSnapshot.hasChild(Const.IMAGE_URL)) {
+                                                    requestProfileImage[0] = dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
                                                     Picasso.get().load(requestProfileImage[0]).into(holder.profileImage);
                                                 }
 
@@ -102,8 +102,8 @@ public class ConnectionRequests extends AppCompatActivity {
                                                     }
                                                 });
 
-                                                final String requestUserName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
-                                                final String requestUserStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
+                                                final String requestUserName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                                                final String requestUserStatus = dataSnapshot.child(Const.USER_BIO).getValue().toString();
 
                                                 holder.AcceptButton.setVisibility(View.VISIBLE);
                                                 holder.CancelButton.setVisibility(View.VISIBLE);
@@ -290,17 +290,17 @@ public class ConnectionRequests extends AppCompatActivity {
 
                                         holder.itemView.findViewById(R.id.request_cancel_btn).setVisibility(View.INVISIBLE);
 
-                                        UsersRef.child(list_user_id).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                                        UsersRef.child(list_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot.hasChild(Constants.IMAGE_URL)) {
-                                                    final String requestProfileImage = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                                                if (dataSnapshot.hasChild(Const.IMAGE_URL)) {
+                                                    final String requestProfileImage = dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
 
                                                     Picasso.get().load(requestProfileImage).into(holder.profileImage);
                                                 }
 
-                                                final String requestUserName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
-                                                final String requestUserStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
+                                                final String requestUserName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                                                final String requestUserStatus = dataSnapshot.child(Const.USER_BIO).getValue().toString();
 
                                                 holder.userName.setText(requestUserName);
                                                 holder.userStatus.setText("you have sent a request to " + requestUserName);

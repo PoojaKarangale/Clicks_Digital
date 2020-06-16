@@ -73,8 +73,8 @@ public class StartActivity extends AppCompatActivity {
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(Constants.USER_DETAILS).child("user_type").exists()) {
-                    String user_type = dataSnapshot.child(Constants.USER_DETAILS).child("user_type").getValue().toString();
+                if (dataSnapshot.child(Const.USER_DETAILS).child("user_type").exists()) {
+                    String user_type = dataSnapshot.child(Const.USER_DETAILS).child("user_type").getValue().toString();
                     if (user_type.equals("admin")) {
                         user_requests_to_join_group.setVisibility(View.VISIBLE);
                     } else {
@@ -238,7 +238,7 @@ public class StartActivity extends AppCompatActivity {
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
+                if ((dataSnapshot.child(Const.USER_NAME).exists())) {
                     //Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                 } else {
                     SendUserToSetProfileActivity();

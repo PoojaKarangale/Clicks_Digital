@@ -67,7 +67,7 @@ public class JoinGroupActivity extends AppCompatActivity {
                     home_btn.setVisibility(View.GONE);
                 }
 
-                user_type = dataSnapshot.child(Constants.USER_DETAILS).child("user_type").getValue(String.class);
+                user_type = dataSnapshot.child(Const.USER_DETAILS).child("user_type").getValue(String.class);
                 assert user_type != null;
                 if (user_type.equals("admin")) {
                     home_btn.setVisibility(View.VISIBLE);

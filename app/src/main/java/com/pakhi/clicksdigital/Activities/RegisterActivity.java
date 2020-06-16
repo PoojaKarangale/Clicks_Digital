@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Const.SHARED_PREF, 0); // 0 - for private mode
         final SharedPreferences.Editor editor = pref.edit();
 
         verify.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
+                if ((dataSnapshot.child(Const.USER_NAME).exists())) {
                     //sendUserToStartActivity();
                     if (dataSnapshot.child("groups").exists()) {
                         sendUserToStartActivity();

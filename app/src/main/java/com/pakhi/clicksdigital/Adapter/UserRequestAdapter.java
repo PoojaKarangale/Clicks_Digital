@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.Constants;
+import com.pakhi.clicksdigital.Activities.Const;
 import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Activities.ProfileActivity;
 import com.pakhi.clicksdigital.Model.User_request;
@@ -64,11 +64,11 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         userId = userRequest.getRequesting_user();
         final String image[] = new String[1];
 
-        databaseReference.child("Users").child(userId).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Users").child(userId).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                user_name[0] = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
+                user_name[0] = dataSnapshot.child(Const.USER_NAME).getValue().toString();
                 holder.displayName.setText(user_name[0]);
                 if (dataSnapshot.hasChild("image_url")) {
                     image[0] = dataSnapshot.child("image_url").getValue().toString();

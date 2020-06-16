@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,8 +27,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
-
-import java.io.Serializable;
 
 public class AddNewCertificateActivity extends AppCompatActivity {
     final static int PICK_PDF_CODE = 2342;
@@ -110,7 +107,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
     private void uploadFile(Uri data) {
         Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
         progressDialog.show();
-        StorageReference sRef = storageRootReference.child(Constants.USER_MEDIA_PATH).child(userid).child("Files/" + name + " " + System.currentTimeMillis() + ".pdf");
+        StorageReference sRef = storageRootReference.child(Const.USER_MEDIA_PATH).child(userid).child("Files/" + name + " " + System.currentTimeMillis() + ".pdf");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
@@ -133,7 +130,6 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-
     }
 
     @Override

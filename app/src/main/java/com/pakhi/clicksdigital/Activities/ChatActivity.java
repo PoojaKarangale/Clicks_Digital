@@ -51,7 +51,6 @@ import com.pakhi.clicksdigital.Model.Messages;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -97,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(messageReceiverID);
-        databaseReference.child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
@@ -513,7 +512,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference = FirebaseStorage.getInstance().getReference().child("User_Media").child(messageSenderID).child(Constants.PHOTOS).child("Sent_Photos").child(messageReceiverID);
+        StorageReference sReference = FirebaseStorage.getInstance().getReference().child("User_Media").child(messageSenderID).child(Const.PHOTOS).child("Sent_Photos").child(messageReceiverID);
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

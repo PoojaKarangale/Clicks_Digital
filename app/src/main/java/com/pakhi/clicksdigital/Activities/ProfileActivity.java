@@ -94,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
         //Loading the data
 
         //databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user_id);
-        UserRef.child(user_id).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        UserRef.child(user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
@@ -138,8 +138,8 @@ public class ProfileActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child(Constants.USER_DETAILS).child("user_type").exists()) {
-                            String user_type = dataSnapshot.child(Constants.USER_DETAILS).child("user_type").getValue().toString();
+                        if (dataSnapshot.child(Const.USER_DETAILS).child("user_type").exists()) {
+                            String user_type = dataSnapshot.child(Const.USER_DETAILS).child("user_type").getValue().toString();
 
                             if (user_type.equals("admin")) {
                                 isVisterIsAdmin = true;
@@ -347,7 +347,7 @@ public class ProfileActivity extends AppCompatActivity {
         final List<String> certificates = new ArrayList<String>();
 
         //Loading the data
-       DatabaseReference databaseReference = UserRef.child(user_id).child(Constants.USER_MEDIA_PATH).child(Constants.FILES_PATH);
+       DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_MEDIA_PATH).child(Const.FILES_PATH);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -658,7 +658,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
     public void makeAdmin(View view) {
-       DatabaseReference databaseReference = UserRef.child(user_id).child(Constants.USER_DETAILS).child("user_type");
+       DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -670,7 +670,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(View view) {
-       DatabaseReference databaseReference = UserRef.child(user_id).child(Constants.USER_DETAILS).child("user_type");
+       DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

@@ -120,7 +120,7 @@ public class GroupMembersActivity extends AppCompatActivity {
                 group_creater_id[0] = dataSnapshot.child("uid_creater").getValue().toString();
 
                 UsersRef.child(group_creater_id[0])
-                        .child(Constants.USER_DETAILS)
+                        .child(Const.USER_DETAILS)
                         .child("user_name")
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -142,7 +142,7 @@ public class GroupMembersActivity extends AppCompatActivity {
         });
 
         UsersRef.child(firebaseAuth.getCurrentUser().getUid())
-                .child(Constants.USER_DETAILS)
+                .child(Const.USER_DETAILS)
                 .child("user_type")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -344,7 +344,7 @@ public class GroupMembersActivity extends AppCompatActivity {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     members.clear();
-                    UsersRef.child(snapshot.getKey()).child(Constants.USER_DETAILS).addListenerForSingleValueEvent(new ValueEventListener() {
+                    UsersRef.child(snapshot.getKey()).child(Const.USER_DETAILS).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             User user = dataSnapshot.getValue(User.class);
