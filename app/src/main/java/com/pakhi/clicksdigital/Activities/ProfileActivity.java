@@ -52,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button edit_profile, visit_profile;
     private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
     private FirebaseAuth mAuth;
-    private DatabaseReference databaseReference;
+   // private DatabaseReference databaseReference;
     private User user, getUser;
     private String receiverUserID, senderUserID, Current_State;
     private CircleImageView userProfileImage;
@@ -93,8 +93,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Loading the data
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user_id);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        //databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user_id);
+        UserRef.child(user_id).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
@@ -138,8 +138,8 @@ public class ProfileActivity extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child("user_type").exists()) {
-                            String user_type = dataSnapshot.child("user_type").getValue().toString();
+                        if (dataSnapshot.child(Constants.USER_DETAILS).child("user_type").exists()) {
+                            String user_type = dataSnapshot.child(Constants.USER_DETAILS).child("user_type").getValue().toString();
 
                             if (user_type.equals("admin")) {
                                 isVisterIsAdmin = true;
@@ -170,10 +170,10 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
-
         SendMessageRequestButton = findViewById(R.id.accept_msg_request);
         DeclineMessageRequestButton = findViewById(R.id.decline_msg_request);
         //loading done
+
         Log.d("ProfileActMAKEADMIN", isProfileUserIsAdmin + " ---------- " + isVisterIsAdmin);
         if (user_id.equals(mAuth.getCurrentUser().getUid())) {
             SendMessageRequestButton.setVisibility(View.INVISIBLE);
@@ -188,7 +188,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProfileActivity.this, SetProfileActivity.class);
-                intent.putExtra("userdata", user);
+                //intent.putExtra("userdata", user);
+                intent.putExtra("PreviousActivity","ProfileActivity");
                 startActivity(intent);
             }
         });
@@ -346,7 +347,7 @@ public class ProfileActivity extends AppCompatActivity {
         final List<String> certificates = new ArrayList<String>();
 
         //Loading the data
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getCurrentUser().getUid()).child(Constants.USER_MEDIA_PATH).child(Constants.FILES_PATH);
+       DatabaseReference databaseReference = UserRef.child(user_id).child(Constants.USER_MEDIA_PATH).child(Constants.FILES_PATH);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -355,7 +356,6 @@ public class ProfileActivity extends AppCompatActivity {
                         certificates.add(String.valueOf(childSnapshot.getValue()));
                         Log.e("this", childSnapshot.getKey() + "    " + childSnapshot.getValue());
                     }
-
                     addCertificationData(certificates);
                 } else {
                     addCertificationData(null);
@@ -657,10 +657,9 @@ public class ProfileActivity extends AppCompatActivity {
                 .updateChildren(onlineStateMap);
 
     }
-
     public void makeAdmin(View view) {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user_id);
-        databaseReference.child("user_type").setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
+       DatabaseReference databaseReference = UserRef.child(user_id).child(Constants.USER_DETAILS).child("user_type");
+        databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 make_admin.setVisibility(View.GONE);
@@ -671,8 +670,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(View view) {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user_id);
-        databaseReference.child("user_type").setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
+       DatabaseReference databaseReference = UserRef.child(user_id).child(Constants.USER_DETAILS).child("user_type");
+        databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 make_admin.setVisibility(View.VISIBLE);

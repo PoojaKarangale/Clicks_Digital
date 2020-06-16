@@ -6,16 +6,18 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,18 +39,20 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
 public class SetProfileActivity extends AppCompatActivity {
 
-    final static int PICK_PDF_CODE = 2342;
+    final static int PICK_PDF_CODE = 2342, REQUEST_CODE_FOR_CERTIFICATE = 3;
     private static final String TAG = "ProfileActivity";
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
@@ -60,20 +63,24 @@ public class SetProfileActivity extends AppCompatActivity {
     User user;
     StorageReference mStorageReference;
     DatabaseReference mDatabaseReference, RootRef;
+    ArrayList<Certificates> certificates;
+
+    String previousActivity;
     private ImageView profile_img, done_btn;
     private EditText full_name, email, weblink, bio;
     private ProgressDialog progressDialog;
     private String gender, user_type;
-    private Button choose_certificate;
-    private EditText cerifications;
-    private TextView set_cetificate_name;
+    //    private Button choose_certificate;
+//    private EditText cerifications;
+//    private TextView set_cetificate_name;
     private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, get_facebook_link, get_insta_link, get_twiter_link;
-
-    //String str_image_url="";
+    private ImageButton add_more_certificate;
+private boolean isNewProfilePicSelected=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
+
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
@@ -89,6 +96,9 @@ public class SetProfileActivity extends AppCompatActivity {
         editor.putString("user_type", user_type);
         editor.commit();
 
+        Intent intent = getIntent();
+        previousActivity = intent.getStringExtra("PreviousActivity");
+
         get_working = findViewById(R.id.working);
         get_experiences = findViewById(R.id.experiences);
         get_speaker_experience = findViewById(R.id.speaker_experience);
@@ -97,9 +107,12 @@ public class SetProfileActivity extends AppCompatActivity {
         get_facebook_link = findViewById(R.id.facebook_link);
         get_insta_link = findViewById(R.id.insta_link);
         get_twiter_link = findViewById(R.id.twiter_link);
+        // add_more_certificate = findViewById(R.id.add_more_certificate);
 
+        certificates = new ArrayList<>();
 
         firebaseAuth = FirebaseAuth.getInstance();
+        userid = firebaseAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
         profile_img = findViewById(R.id.profile_img);
         full_name = findViewById(R.id.full_name);
@@ -109,7 +122,6 @@ public class SetProfileActivity extends AppCompatActivity {
         done_btn = findViewById(R.id.done_btn);
         progressDialog = new ProgressDialog(SetProfileActivity.this);
         progressDialog.setMessage("Loading...");
-
 
         profile_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,29 +151,28 @@ public class SetProfileActivity extends AppCompatActivity {
                     showToast("Select you profile picture");
                 } else {
                     progressDialog.show();
+                    if(isNewProfilePicSelected)
                     createUserProfile(full_name_str, email_str, bio_str, weblink_str);
-                    // uploadData(full_name_str, email_str, bio_str, weblink_str);
+                    else
+                     uploadData(full_name_str, email_str, bio_str, weblink_str);
                 }
             }
         });
 
         mStorageReference = FirebaseStorage.getInstance().getReference();
-        choose_certificate = findViewById(R.id.btn_cerification_choose);
-        cerifications = findViewById(R.id.cerifications);
-        set_cetificate_name = findViewById(R.id.cerifications);
 
-        choose_certificate.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String str_name_of_file = set_cetificate_name.getText().toString().trim();
-                        if (str_name_of_file.equals(""))
-                            showToast("Please enter name for your file first");
-                        else
-                            getPDF();
-                    }
-                }
-        );
+        add_more_certificate = findViewById(R.id.add_more_certificate);
+        add_more_certificate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                add_more_certificate_function();
+            }
+        });
+    }
+
+    private void add_more_certificate_function() {
+        Intent addMoreCertiIntent = new Intent(SetProfileActivity.this, AddNewCertificateActivity.class);
+        startActivityForResult(addMoreCertiIntent, REQUEST_CODE_FOR_CERTIFICATE);
     }
 
     @Override
@@ -177,19 +188,19 @@ public class SetProfileActivity extends AppCompatActivity {
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child(Constants.USER_NAME).exists())) {
-                    //Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
-                    //sendUserToStartActivity();
-                    if (dataSnapshot.child("groups").exists()) {
-                        sendUserToStartActivity();
-                    } else {
-                        sendUserToJoinGroupActivity();
+                if ((dataSnapshot.child(Constants.USER_DETAILS).child(Constants.USER_NAME).exists())) {
+                    if (previousActivity.equals("RegisterActivity") || previousActivity.equals("RegisterActivity")) {
+                        if (dataSnapshot.child("groups").exists()) {
+                            sendUserToStartActivity();
+                        } else {
+                            sendUserToJoinGroupActivity();
+                        }
                     }
-                    user = dataSnapshot.getValue(User.class);
+                    user = dataSnapshot.child(Constants.USER_DETAILS).getValue(User.class);
+                    Log.d("setProfileTESTING", user.getUser_name());
                     loadData();
-
                 } else {
-                    //SendUserToSetProfileActivity();
+
                 }
             }
 
@@ -205,7 +216,7 @@ public class SetProfileActivity extends AppCompatActivity {
                 .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .resize(120, 120)
                 .into(profile_img);
-
+        picImageUri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
         full_name.setText(user.getUser_name());
         email.setText(user.getUser_email());
         weblink.setText(user.getWeblink());
@@ -225,66 +236,8 @@ public class SetProfileActivity extends AppCompatActivity {
         startActivity(new Intent(SetProfileActivity.this, StartActivity.class));
     }
 
-    private void getPDF() {
-        //for greater than lolipop versions we need the permissions asked on runtime
-        //so if the permission is not available user will go to the screen to allow storage permission
-        Toast.makeText(this, "Allow all the required permissions for this app", Toast.LENGTH_SHORT).show();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + getPackageName()));
-            startActivity(intent);
-            return;
-        }
-
-        //creating an intent for file chooser
-        Intent intent = new Intent();
-        intent.setType("application/pdf");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PDF_CODE);
-    }
-
-    private void uploadFile(Uri data) {
-        userid = firebaseAuth.getCurrentUser().getUid();
-        final String str_name_of_file = cerifications.getText().toString();
-
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid).child(Constants.USER_MEDIA_PATH).child(Constants.FILES_PATH);
-        Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
-        progressDialog.show();
-        StorageReference sRef = mStorageReference.child(Constants.USER_MEDIA_PATH).child(userid).child("Files/" + str_name_of_file + " " + System.currentTimeMillis() + ".pdf");
-        sRef.putFile(data)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
-                    String url = "";
-
-                    @SuppressWarnings("VisibleForTests")
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.dismiss();
-                        taskSnapshot.getMetadata().getReference().getDownloadUrl()
-                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        url = String.valueOf(uri);
-                                        mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(url);
-                                        set_cetificate_name.setVisibility(View.VISIBLE);
-                                        set_cetificate_name.setText(str_name_of_file + " uploaded successfully");
-                                    }
-                                });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-
-    }
-
     private void uploadData(final String full_name_str, final String email_str, final String bio_str, final String weblink_str) {
-        userid = firebaseAuth.getCurrentUser().getUid();
+
         String working = "";
         working = get_working.getText().toString();
 
@@ -315,7 +268,38 @@ public class SetProfileActivity extends AppCompatActivity {
         User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
                 speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working, picImageUri.toString());
 
-        reference.child(userid).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        final int[] numberOfCertificate = {-1};
+        reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //showToast(dataSnapshot.getValue().toString());
+                Log.d("setProfileTESTING","------------"+dataSnapshot.getValue().toString());
+                if (dataSnapshot.exists())
+                    numberOfCertificate[0] = (int) dataSnapshot.getChildrenCount();
+               // showToast(String.valueOf(numberOfCertificate[0])+"-----------"+dataSnapshot.getChildrenCount());
+                Log.d("setProfileTESTING","------------"+numberOfCertificate[0]+"-----------"+dataSnapshot.getChildrenCount());
+                Log.d("setProfileTESTING","------------"+numberOfCertificate[0]);
+                //numberOfCertificate[0]++;
+                for (Certificates c : certificates) {
+                    reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
+                    numberOfCertificate[0]++;
+                }
+                certificates.clear();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        Log.d("setProfileTESTING","------------"+numberOfCertificate[0]);
+        //numberOfCertificate[0]++;
+       /* for (Certificates c : certificates) {
+            reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
+            numberOfCertificate[0]++;
+        }*/
+
+        reference.child(userid).child(Constants.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 progressDialog.dismiss();
@@ -325,8 +309,8 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void createUserProfile(final String full_name_str, final String email_str, final String bio_str, final String weblink_str) {
-        String uid = firebaseAuth.getCurrentUser().getUid();
-        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(uid).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
+        //  String uid = firebaseAuth.getCurrentUser().getUid();
+        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Constants.USER_MEDIA_PATH).child(userid).child(Constants.PHOTOS).child(Constants.PROFILE_IMAGE);
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -360,25 +344,29 @@ public class SetProfileActivity extends AppCompatActivity {
 
     private void updateUI(final String userid) {
 
-        RootRef.child("Users").child(userid).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child("groups").exists())) {
-                    //SendUserToSetProfileActivity(userid);
-                    sendUserToStartActivity();
-                } else {
-                    sendUserToJoinGroupActivity();
+        if (previousActivity.equals("RegisterActivity") || previousActivity.equals("RegisterActivity")) {
+            RootRef.child("Users").child(userid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if ((dataSnapshot.child("groups").exists())) {
+                        sendUserToStartActivity();
+                    } else {
+                        sendUserToJoinGroupActivity();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        } else if (previousActivity.equals("ProfileActivity")) {
+            //sendUserToProfileActivity(userid);
+            finish();
+        }
     }
 
-    private void SendUserToSetProfileActivity(String userid) {
+    private void sendUserToProfileActivity(String userid) {
         Intent profileIntent = new Intent(SetProfileActivity.this, ProfileActivity.class);
         profileIntent.putExtra("visit_user_id", userid);
         startActivity(profileIntent);
@@ -439,18 +427,32 @@ public class SetProfileActivity extends AppCompatActivity {
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     picImageUri = result.getUri();
+                    isNewProfilePicSelected = true;
                     profile_img.setImageURI(picImageUri);
                     break;
-                case PICK_PDF_CODE:
-                    if (data.getData() != null) {
-                        uploadFile(data.getData());
-                    }
+                case REQUEST_CODE_FOR_CERTIFICATE:
+                    Certificates certificate;
+                    certificate = (Certificates) data.getSerializableExtra("certificate");
+                    certificates.add(certificate);
+                    showAddedCertificates(certificate, certificates.size());
                     break;
                 default:
                     Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
-
             }
         }
+    }
+
+    private void showAddedCertificates(Certificates certificate, int size) {
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.add_cerificate_layout);
+        // Add textview 1
+        TextView show_certificate = new TextView(this);
+        show_certificate.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        show_certificate.setText(size + " " + certificate.getName());
+        show_certificate.setTextColor(Color.BLUE);
+        // show_certificate.setBackgroundColor(0xff66ff66); // hex color 0xAARRGGBB
+        // textView1.setPadding(20, 20, 20, 20);// in pixels (left, top, right, bottom)
+        linearLayout.addView(show_certificate);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -476,7 +478,6 @@ public class SetProfileActivity extends AppCompatActivity {
         }
     }
 
-
     private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
@@ -497,4 +498,5 @@ public class SetProfileActivity extends AppCompatActivity {
                 .updateChildren(onlineStateMap);
 
     }
+
 }

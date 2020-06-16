@@ -97,7 +97,7 @@ public class ChatActivity extends AppCompatActivity {
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(messageReceiverID);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);

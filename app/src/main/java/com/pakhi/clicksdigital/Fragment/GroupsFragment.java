@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Activities.Constants;
 import com.pakhi.clicksdigital.Activities.CreateNewGroupActivity;
 import com.pakhi.clicksdigital.Activities.JoinGroupActivity;
 import com.pakhi.clicksdigital.Activities.RegisterActivity;
@@ -65,7 +66,7 @@ public class GroupsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                user_type[0] = dataSnapshot.child("user_type").getValue(String.class);
+                user_type[0] = dataSnapshot.child(Constants.USER_DETAILS).child("user_type").getValue(String.class);
                 if (user_type[0].equals("admin")) {
                     fab_create_group.setVisibility(View.VISIBLE);
                     fab_join_group.setVisibility(View.GONE);

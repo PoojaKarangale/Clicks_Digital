@@ -67,12 +67,15 @@ public class JoinGroupActivity extends AppCompatActivity {
                     home_btn.setVisibility(View.GONE);
                 }
 
-                user_type = dataSnapshot.child("user_type").getValue(String.class);
+                user_type = dataSnapshot.child(Constants.USER_DETAILS).child("user_type").getValue(String.class);
+                assert user_type != null;
                 if (user_type.equals("admin")) {
                     home_btn.setVisibility(View.VISIBLE);
                     fab_create_group.setVisibility(View.VISIBLE);
                 } else
                     fab_create_group.setVisibility(View.INVISIBLE);
+
+
             }
 
             @Override
@@ -102,7 +105,6 @@ public class JoinGroupActivity extends AppCompatActivity {
     }
 
     private void readGroup() {
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Groups");
         reference.addValueEventListener(new ValueEventListener() {
             @Override

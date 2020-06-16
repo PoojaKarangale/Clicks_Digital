@@ -16,10 +16,9 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme"
-
-        >
-        <activity android:name=".Activities.GroupMembersActivity"></activity>
+        android:theme="@style/MyMaterialTheme">
+        <activity android:name=".Activities.AddNewCertificateActivity"></activity>
+        <activity android:name=".Activities.GroupMembersActivity" />
         <activity android:name=".Activities.EnlargedImage" />
         <activity android:name=".Activities.ConnectionRequests" />
         <activity android:name=".Activities.ChatActivity" />

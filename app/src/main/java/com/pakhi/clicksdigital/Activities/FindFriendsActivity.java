@@ -19,8 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -52,6 +55,7 @@ public class FindFriendsActivity extends AppCompatActivity {
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setTitle("Find Friends");
+
     }
 
     @Override
@@ -62,28 +66,40 @@ public class FindFriendsActivity extends AppCompatActivity {
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(UsersRef, User.class)
                         .build();
-
+/* user model is present in  Users->id->Details->user.model instead of Users->id->user.model */
         FirebaseRecyclerAdapter<User, FindFriendViewHolder> adapter =
                 new FirebaseRecyclerAdapter<User, FindFriendViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final FindFriendViewHolder holder, final int position, @NonNull final User model) {
-                        holder.userName.setText(model.getUser_name());
-                        holder.userStatus.setText(model.getUser_bio());
-                        Log.d("findFriend", "--------------" + model.getUser_name() + " " + model.getUser_bio());
-                        Picasso.get()
-                                .load(model.getImage_url()).placeholder(R.drawable.profile_image)
-                                .resize(120, 120)
-                                .into(holder.profile_image);
 
-                        holder.profile_image.setOnClickListener(new View.OnClickListener() {
+                        final String visit_user_id = getRef(position).getKey();
+                        UsersRef.child(visit_user_id).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onClick(View v) {
-                                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                fullScreenIntent.putExtra("image_url_string", model.getImage_url());
-                                v.getContext().startActivity(fullScreenIntent);
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                holder.userName.setText(dataSnapshot.child(Constants.USER_NAME).getValue().toString());
+                                holder.userStatus.setText(dataSnapshot.child(Constants.USER_BIO).getValue().toString());
+                                Log.d("findFriend", "--------------" + model.getUser_name() + " " + model.getUser_bio());
+                                final String image_url=dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                                Picasso.get()
+                                        .load(image_url).placeholder(R.drawable.profile_image)
+                                        .resize(120, 120)
+                                        .into(holder.profile_image);
+
+                                holder.profile_image.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                        fullScreenIntent.putExtra("image_url_string", image_url);
+                                        v.getContext().startActivity(fullScreenIntent);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
                         });
-
 
                         holder.chat_with_friend.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -96,10 +112,9 @@ public class FindFriendsActivity extends AppCompatActivity {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                String visit_user_id = getRef(position).getKey();
+                               // String visit_user_id = getRef(position).getKey();
                                 Intent profileIntent = new Intent(FindFriendsActivity.this, ProfileActivity.class);
                                 profileIntent.putExtra("visit_user_id", visit_user_id);
-                                profileIntent.putExtra("userdata", model);
                                 startActivity(profileIntent);
                             }
                         });
@@ -136,7 +151,6 @@ public class FindFriendsActivity extends AppCompatActivity {
 
         UsersRef.child(mAuth.getCurrentUser().getUid()).child("userState")
                 .updateChildren(onlineStateMap);
-
     }
 
     public static class FindFriendViewHolder extends RecyclerView.ViewHolder {

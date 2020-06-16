@@ -157,7 +157,8 @@ public class PhoneVerify extends AppCompatActivity {
                             btn_verify.setVisibility(View.INVISIBLE);
                             resend_otp.setVisibility(View.INVISIBLE);
                             Intent resIntent = new Intent(PhoneVerify.this, SetProfileActivity.class);
-                            resIntent.putExtra("PhoneNumber", number);
+                          //  resIntent.putExtra("PhoneNumber", number);
+                            resIntent.putExtra("PreviousActivity","PhoneVerify");
                             resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(resIntent);
                             finish();

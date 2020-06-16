@@ -186,7 +186,6 @@ public class CreateNewGroupActivity extends AppCompatActivity {
             hashMap.put("image_url", "default_profile");
 
         reference.child(groupid).setValue(hashMap);
-
     }
 
     private void openGallery() {
@@ -223,7 +222,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 
     private void createGroup() {
-        String uid = firebaseAuth.getCurrentUser().getUid();
+       // String uid = firebaseAuth.getCurrentUser().getUid();
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
 
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));

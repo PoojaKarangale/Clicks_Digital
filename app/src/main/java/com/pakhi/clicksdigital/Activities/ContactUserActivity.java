@@ -227,21 +227,49 @@ public class ContactUserActivity extends AppCompatActivity {
                 final String userIDs = getRef(position).getKey();
                 final String[] userImage = new String[1];
 
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent chatActivity = new Intent(ContactUserActivity.this, ChatActivity.class);
+                        chatActivity.putExtra("visit_user_id", userIDs);
+                        startActivity(chatActivity);
+                    }
+                });
+
+                UsersRef.child(userIDs).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //retrive user details
+                        userImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
+                        Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
+                        String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
+                        String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
+
+                        holder.userName.setText(profileName);
+                        holder.userStatus.setText(profileStatus);
+
+                        holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                fullScreenIntent.putExtra("image_url_string", userImage[0]);
+                                v.getContext().startActivity(fullScreenIntent);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
                 UsersRef.child(userIDs).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent chatActivity = new Intent(ContactUserActivity.this, ChatActivity.class);
-                                    chatActivity.putExtra("visit_user_id", userIDs);
-                                    startActivity(chatActivity);
-                                }
-                            });
 
-
+                            //retrive user state
                             if (dataSnapshot.child("userState").hasChild("state")) {
                                 String state = dataSnapshot.child("userState").child("state").getValue().toString();
                                 String date = dataSnapshot.child("userState").child("date").getValue().toString();
@@ -255,33 +283,6 @@ public class ContactUserActivity extends AppCompatActivity {
                             } else {
                                 holder.onlineIcon.setVisibility(View.INVISIBLE);
                             }
-
-                            if (dataSnapshot.hasChild(Constants.IMAGE_URL)) {
-                                userImage[0] = dataSnapshot.child(Constants.IMAGE_URL).getValue().toString();
-                                String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
-                                String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
-
-                                holder.userName.setText(profileName);
-                                holder.userStatus.setText(profileStatus);
-                                Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
-                            } else {
-                                String profileName = dataSnapshot.child(Constants.USER_NAME).getValue().toString();
-                                String profileStatus = dataSnapshot.child(Constants.USER_BIO).getValue().toString();
-
-                                holder.userName.setText(profileName);
-                                holder.userStatus.setText(profileStatus);
-                            }
-
-                            holder.profileImage.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                    fullScreenIntent.putExtra("image_url_string", userImage[0]);
-                                    v.getContext().startActivity(fullScreenIntent);
-                                }
-                            });
-
-
                         }
                     }
 

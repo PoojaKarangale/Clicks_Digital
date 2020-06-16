@@ -64,7 +64,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         userId = userRequest.getRequesting_user();
         final String image[] = new String[1];
 
-        databaseReference.child("Users").child(userId).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Users").child(userId).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -134,7 +134,6 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         databaseReference.child("Groups").child(groupId).child("Users").child(userId).setValue(" ");
         databaseReference.child("Users").child(userId).child("groups").child(groupId).setValue(" ");
         //databaseReference.child("User_requests").child("request_status").setValue("accepted");
-
     }
 
 

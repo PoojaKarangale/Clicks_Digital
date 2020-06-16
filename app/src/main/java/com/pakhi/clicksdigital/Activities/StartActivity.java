@@ -70,12 +70,11 @@ public class StartActivity extends AppCompatActivity {
 
         RootRef = FirebaseDatabase.getInstance().getReference();
 
-
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("user_type").exists()) {
-                    String user_type = dataSnapshot.child("user_type").getValue().toString();
+                if (dataSnapshot.child(Constants.USER_DETAILS).child("user_type").exists()) {
+                    String user_type = dataSnapshot.child(Constants.USER_DETAILS).child("user_type").getValue().toString();
                     if (user_type.equals("admin")) {
                         user_requests_to_join_group.setVisibility(View.VISIBLE);
                     } else {
@@ -177,7 +176,7 @@ public class StartActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.logout) {
-            updateUserStatus("offline");
+           // updateUserStatus("offline");
             mAuth.signOut();
             SendUserToRegisterActivity();
         }
@@ -254,7 +253,9 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void SendUserToSetProfileActivity() {
-        startActivity(new Intent(StartActivity.this, SetProfileActivity.class));
+        Intent intent = new Intent(StartActivity.this, SetProfileActivity.class);
+        intent.putExtra("PreviousActivity","StartActivity");
+        startActivity(intent);
     }
 
     private void updateUserStatus(String state) {
@@ -283,11 +284,11 @@ public class StartActivity extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         List<String> fragmentTitle = new ArrayList<>();
 
-        public ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+        ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        void addFragment(Fragment fragment, String title) {
             fragments.add(fragment);
             fragmentTitle.add(title);
         }

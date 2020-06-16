@@ -233,7 +233,7 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void GetUserInfo() {
-        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+        UsersRef.child(currentUserID).child(Constants.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -325,7 +325,6 @@ public class GroupChatActivity extends AppCompatActivity {
         }
 
       */
-
         //creating an intent for file chooser
         Intent intent = new Intent();
         intent.setType("application/pdf");
@@ -409,7 +408,7 @@ public class GroupChatActivity extends AppCompatActivity {
             ) {
                 //popupMenuSettigns();
                 //permission granted
-                logMessage("permission granted-----------");
+                logMessage(" permission granted-----------");
 
             } else {
 

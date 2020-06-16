@@ -3,6 +3,7 @@ package com.pakhi.clicksdigital.Activities;
 import java.security.PublicKey;
 
 public class Constants {
+    public static final String USER_DETAILS = "DETAILS";
     final static int PICK_PDF_CODE = 2342;
     public final static String SHARED_PREF = "MyPref";
     final static String USER_MEDIA_PATH = "User_Media";

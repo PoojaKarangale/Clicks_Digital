@@ -394,9 +394,9 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_marginTop="20dp"
                     android:orientation="vertical"
                     android:layout_below="@id/linear1">
@@ -411,40 +411,67 @@
                         android:text="Add Ceritifications"
                         android:textSize="26sp" />
 
+                    <ImageButton
+                        android:id="@+id/add_more_certificate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/add"
+                        android:background="@drawable/back_round_button"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        />
+
                     <LinearLayout
+                        android:id="@+id/add_cerificate_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:layout_below="@+id/certifications_text"
 
-                        <EditText
-                            android:id="@+id/cerifications"
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/edittext_bg"
-                            android:hint="Add name for your file"
-                            android:paddingStart="10dp"
-                            android:textSize="18sp"
-                            android:textColor="#333333"
-                            android:fontFamily="@font/lato" />
-
-                        <Button
-                            android:id="@+id/btn_cerification_choose"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="20dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:textColor="#FFFFFF"
-                            android:textSize="18sp"
-                            android:textAllCaps="false"
-                            android:background="@drawable/button_bg"
-                            android:text="Choose" />
+                        >
 
                     </LinearLayout>
+                    <!--
+                                         <ListView android:id="@+id/MyCertificatesList"
+                                                android:layout_height="fill_parent"
+                                                android:layout_width="fill_parent"
+                                                android:descendantFocusability="beforeDescendants"
 
-                </LinearLayout>
+                                                >
+                                            </ListView>
+
+
+                                          <EditText
+                                                android:id="@+id/cerifications"
+                                                android:layout_width="0dp"
+                                                android:layout_weight="3"
+                                                android:layout_height="50dp"
+                                                android:layout_marginTop="10dp"
+                                                android:background="@drawable/edittext_bg"
+                                                android:hint="Add name for your file"
+                                                android:paddingStart="10dp"
+                                                android:textSize="18sp"
+                                                android:textColor="#333333"
+                                                android:fontFamily="@font/lato" />
+
+                                            <Button
+                                                android:id="@+id/btn_cerification_choose"
+                                                android:layout_width="0dp"
+                                                android:layout_weight="1"
+                                                android:layout_marginStart="20dp"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="10dp"
+                                                android:textColor="#FFFFFF"
+                                                android:textSize="18sp"
+                                                android:textAllCaps="false"
+                                                android:background="@drawable/button_bg"
+                                                android:text="Choose" />
+
+
+                                    -->
+
+                </RelativeLayout>
 
             </RelativeLayout>
 

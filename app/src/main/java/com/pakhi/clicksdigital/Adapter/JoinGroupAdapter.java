@@ -31,7 +31,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder> {
-    String in_current_user_groups = "";
+    private String in_current_user_groups = "";
     private Context mcontext;
     private List<GroupChat> groups;
     private FirebaseUser firebaseUser;
@@ -126,6 +126,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         hashMap.put("requesting_user", uid);
         hashMap.put("request_status", "pending");
 
+        assert group_request_id != null;
         reference.child(group_request_id).setValue(hashMap);
         sentRequestFlag = true;
 
@@ -138,9 +139,9 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView displayName, status_of_request;
-        public CircleImageView image_profile;
-        public ImageView img_info;
+        TextView displayName, status_of_request;
+        CircleImageView image_profile;
+        ImageView img_info;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

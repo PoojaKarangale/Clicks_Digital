@@ -300,7 +300,6 @@ public class EditProfile extends AppCompatActivity {
         } else {
             updateUI();
         }
-
     }
 
     private void updateUI() {
