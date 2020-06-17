@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-        <activity android:name=".Activities.AddNewCertificateActivity"></activity>
+        <activity android:name=".Activities.AddMembersToGroupActivity"></activity>
+        <activity android:name=".Activities.AddNewCertificateActivity" />
         <activity android:name=".Activities.GroupMembersActivity" />
         <activity android:name=".Activities.EnlargedImage" />
         <activity android:name=".Activities.ConnectionRequests" />

@@ -47,8 +47,8 @@ import java.util.List;
 public class GroupMembersActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String currentGroupId, group_image_url, group_name_str;
-    ImageView app_bar_image, set_group_name, change_group_icon, edit_group_name, add_member;
-    EditText get_group_name;
+    ImageView app_bar_image, set_group_name, set_description, edit_group_name, edit_description, add_member;
+    EditText get_group_name, get_description;
     TextView group_name, group_info, group_description, number_of_participants;
     FirebaseAuth firebaseAuth;
     String user_type;
@@ -79,9 +79,12 @@ public class GroupMembersActivity extends AppCompatActivity {
         exit_group = findViewById(R.id.exit_group);
         add_member = findViewById(R.id.add_member);
         edit_group_name = findViewById(R.id.edit_group_name);
+        edit_description = findViewById(R.id.edit_description);
         group_name = findViewById(R.id.group_name);
         set_group_name = findViewById(R.id.set_group_name);
+        set_description = findViewById(R.id.set_description);
         get_group_name = findViewById(R.id.get_group_name);
+        get_description = findViewById(R.id.get_description);
         app_bar_image = findViewById(R.id.app_bar_image);
         group_info = findViewById(R.id.group_info);
         group_description = findViewById(R.id.group_description);
@@ -89,12 +92,13 @@ public class GroupMembersActivity extends AppCompatActivity {
 
         //seting group info
         Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
+
       /*  group_name.setText(group_name_str);
         get_group_name.setText(group_name_str);
-
      */
         final String[] date = new String[1];
         final String[] group_creater_id = new String[1];
+
         Log.d("GroupMebersTESTING", GroupRef.toString() + "------------" + currentGroupId.toString());
 
         GroupRef.child(currentGroupId).addValueEventListener(new ValueEventListener() {
@@ -107,6 +111,7 @@ public class GroupMembersActivity extends AppCompatActivity {
 
                 group_name.setText(group.getGroup_name());
                 get_group_name.setText(group.getGroup_name());
+                get_description.setText(group.getDescription());
                 group_description.setText(group.getDescription());
                 Picasso.get().load(group.getImage_url())
                         .placeholder(R.drawable.default_profile_for_groups)
@@ -153,6 +158,7 @@ public class GroupMembersActivity extends AppCompatActivity {
                             if (user_type.equals("admin")) {
                                 //only adim can edit group info
                                 edit_group_name.setVisibility(View.VISIBLE);
+                                edit_description.setVisibility(View.VISIBLE);
                                 add_member.setVisibility(View.VISIBLE);
                             }
                         }
@@ -172,6 +178,14 @@ public class GroupMembersActivity extends AppCompatActivity {
                 set_group_name.setVisibility(View.VISIBLE);
             }
         });
+        edit_description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // group_name.setVisibility(View.GONE);
+                get_description.setVisibility(View.VISIBLE);
+                set_description.setVisibility(View.VISIBLE);
+            }
+        });
 
         memberListRecyclerView = findViewById(R.id.memberList);
         memberListRecyclerView.setHasFixedSize(true);
@@ -179,7 +193,7 @@ public class GroupMembersActivity extends AppCompatActivity {
 
         members = new ArrayList<>();
 
-        groupMembersAdapter = new GroupMembersAdapter(this, members);
+        groupMembersAdapter = new GroupMembersAdapter(this, members, currentGroupId);
         memberListRecyclerView.setAdapter(groupMembersAdapter);
 
         readGroupMembers();
@@ -202,6 +216,21 @@ public class GroupMembersActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    public void setDescription(View view) {
+        GroupRef.child(currentGroupId)
+                .child("description")
+                .setValue(get_description.getText().toString())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        set_description.setVisibility(View.GONE);
+                        get_description.setVisibility(View.GONE);
+                        //group_name.setVisibility(View.VISIBLE);
+                        Toast.makeText(GroupMembersActivity.this, "Group description updated successfully", Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
     public void changeGroupIcon(View view) {
@@ -330,8 +359,6 @@ public class GroupMembersActivity extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 
     private void readGroupMembers() {
@@ -367,7 +394,6 @@ public class GroupMembersActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void add_member(View view) {
 

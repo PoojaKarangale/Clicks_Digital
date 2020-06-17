@@ -74,8 +74,6 @@ public class JoinGroupActivity extends AppCompatActivity {
                     fab_create_group.setVisibility(View.VISIBLE);
                 } else
                     fab_create_group.setVisibility(View.INVISIBLE);
-
-
             }
 
             @Override

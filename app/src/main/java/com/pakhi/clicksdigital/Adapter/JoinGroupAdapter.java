@@ -64,7 +64,6 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         holder.displayName.setText(group.getGroup_name());
         holder.status_of_request.setText(group.getStatus());
         holder.displayName.setTextColor(Color.BLACK);
-        //.with(mcontext).load(group.getImageUrl()).into(holder.image_profile);
         Picasso.get()
                 .load(group.getImage_url()).placeholder(R.drawable.profile_image)
                 .resize(120, 120)
@@ -92,13 +91,11 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
                     mcontext.startActivity(groupChatActivity);
 
                 } else {
-
                     holder.itemView.setEnabled(false);
                     sentRequestToJoinGroup(group.getGroupid(), group.getGroup_name(), firebaseUser.getUid());
                     if (sentRequestFlag) {
                         holder.status_of_request.setVisibility(View.VISIBLE);
                     }
-
                 }
             }
         });
@@ -129,7 +126,6 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         assert group_request_id != null;
         reference.child(group_request_id).setValue(hashMap);
         sentRequestFlag = true;
-
 
     }
 

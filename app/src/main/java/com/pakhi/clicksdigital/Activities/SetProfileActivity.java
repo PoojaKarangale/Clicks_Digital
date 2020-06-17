@@ -70,12 +70,11 @@ public class SetProfileActivity extends AppCompatActivity {
     private EditText full_name, email, weblink, bio;
     private ProgressDialog progressDialog;
     private String gender, user_type;
-    //    private Button choose_certificate;
-//    private EditText cerifications;
-//    private TextView set_cetificate_name;
-    private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, get_facebook_link, get_insta_link, get_twiter_link;
+
+    private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us;
     private ImageButton add_more_certificate;
-private boolean isNewProfilePicSelected=false;
+    private boolean isNewProfilePicSelected = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,9 +103,7 @@ private boolean isNewProfilePicSelected=false;
         get_speaker_experience = findViewById(R.id.speaker_experience);
         get_offer_to_community = findViewById(R.id.offer_to_community);
         get_expectations_from_us = findViewById(R.id.expectations_from_us);
-        get_facebook_link = findViewById(R.id.facebook_link);
-        get_insta_link = findViewById(R.id.insta_link);
-        get_twiter_link = findViewById(R.id.twiter_link);
+
         // add_more_certificate = findViewById(R.id.add_more_certificate);
 
         certificates = new ArrayList<>();
@@ -151,10 +148,10 @@ private boolean isNewProfilePicSelected=false;
                     showToast("Select you profile picture");
                 } else {
                     progressDialog.show();
-                    if(isNewProfilePicSelected)
-                    createUserProfile(full_name_str, email_str, bio_str, weblink_str);
+                    if (isNewProfilePicSelected)
+                        createUserProfile(full_name_str, email_str, bio_str, weblink_str);
                     else
-                     uploadData(full_name_str, email_str, bio_str, weblink_str);
+                        uploadData(full_name_str, email_str, bio_str, weblink_str);
                 }
             }
         });
@@ -223,12 +220,10 @@ private boolean isNewProfilePicSelected=false;
         bio.setText(user.getUser_bio());
         get_expectations_from_us.setText(user.getExpectations_from_us());
         get_experiences.setText(user.getExperiences());
-        get_facebook_link.setText(user.getFacebook_link());
         get_working.setText(user.getWork_profession());
         get_speaker_experience.setText(user.getSpeaker_experience());
         get_offer_to_community.setText(user.getOffer_to_community());
-        get_insta_link.setText(user.getInsta_link());
-        get_twiter_link.setText(user.getTwiter_link());
+
 
     }
 
@@ -253,32 +248,23 @@ private boolean isNewProfilePicSelected=false;
         String expectations_from_us = "";
         expectations_from_us = get_expectations_from_us.getText().toString();
 
-        String facebook_link = "";
-        facebook_link = get_facebook_link.getText().toString();
-
-        String insta_link = "";
-        insta_link = get_insta_link.getText().toString();
-
-        String twiter_link = "";
-
-        twiter_link = get_twiter_link.getText().toString();
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
-        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
-                speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working, picImageUri.toString());
+        User user = new User(userid, expectations_from_us, experiences, gender, number, offer_to_community,
+                speaker_experience, bio_str, email_str, full_name_str, user_type, weblink_str, working, picImageUri.toString());
 
-        final int[] numberOfCertificate = {-1};
+        final int[] numberOfCertificate = {0};
         reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //showToast(dataSnapshot.getValue().toString());
-                Log.d("setProfileTESTING","------------"+dataSnapshot.getValue().toString());
+                //Log.d("setProfileTESTING", "------------" + dataSnapshot.getValue().toString());
                 if (dataSnapshot.exists())
                     numberOfCertificate[0] = (int) dataSnapshot.getChildrenCount();
-               // showToast(String.valueOf(numberOfCertificate[0])+"-----------"+dataSnapshot.getChildrenCount());
-                Log.d("setProfileTESTING","------------"+numberOfCertificate[0]+"-----------"+dataSnapshot.getChildrenCount());
-                Log.d("setProfileTESTING","------------"+numberOfCertificate[0]);
+                // showToast(String.valueOf(numberOfCertificate[0])+"-----------"+dataSnapshot.getChildrenCount());
+               // Log.d("setProfileTESTING", "------------" + numberOfCertificate[0] + "-----------" + dataSnapshot.getChildrenCount());
+                //Log.d("setProfileTESTING", "------------" + numberOfCertificate[0]);
                 //numberOfCertificate[0]++;
                 for (Certificates c : certificates) {
                     reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
@@ -292,12 +278,7 @@ private boolean isNewProfilePicSelected=false;
 
             }
         });
-        Log.d("setProfileTESTING","------------"+numberOfCertificate[0]);
-        //numberOfCertificate[0]++;
-       /* for (Certificates c : certificates) {
-            reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
-            numberOfCertificate[0]++;
-        }*/
+        Log.d("setProfileTESTING", "------------" + numberOfCertificate[0]);
 
         reference.child(userid).child(Const.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -311,8 +292,8 @@ private boolean isNewProfilePicSelected=false;
     private void createUserProfile(final String full_name_str, final String email_str, final String bio_str, final String weblink_str) {
         //  String uid = firebaseAuth.getCurrentUser().getUid();
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
-        final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
-
+       // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
+        final StorageReference imgPath = sReference.child("profile_image");
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

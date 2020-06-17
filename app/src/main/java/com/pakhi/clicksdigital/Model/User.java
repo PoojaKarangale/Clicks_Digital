@@ -6,61 +6,40 @@ import java.util.HashMap;
 @SuppressWarnings("serial")
 public class User implements Serializable {
 
-    String image_url;
-    HashMap<String, Object> groups, userState;
-    private String expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
-            speaker_experience, twiter_link, user_bio, user_email, user_name, user_type, weblink, work_profession;
+    private String image_url,user_id;
 
-    public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession, String image_url) {
-        this.expectations_from_us = expectations_from_us;
-        this.experiences = experiences;
-        this.facebook_link = facebook_link;
-        this.gender = gender;
-        this.insta_link = insta_link;
-        this.number = number;
-        this.offer_to_community = offer_to_community;
-        this.speaker_experience = speaker_experience;
-        this.twiter_link = twiter_link;
-        this.user_bio = user_bio;
-        this.user_email = user_email;
-        this.user_name = user_name;
-        this.user_type = user_type;
-        this.weblink = weblink;
-        this.work_profession = work_profession;
-        this.image_url = image_url;
-    }
-
-    public User(HashMap<String, Object> groups) {
-        this.groups = groups;
-    }
+    private String expectations_from_us, experiences, gender,  number, offer_to_community,
+            speaker_experience,  user_bio, user_email, user_name, user_type, weblink, work_profession;
 
     public User() {
     }
 
-    public User(String expectations_from_us, String experiences, String facebook_link, String gender, String insta_link, String number, String offer_to_community, String speaker_experience, String twiter_link, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession) {
+    public User(String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String bio_str, String email_str, String full_name_str, String user_type, String weblink_str, String working) {
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public User(String user_id,  String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession,String image_url) {
+        this.image_url = image_url;
+        this.user_id = user_id;
         this.expectations_from_us = expectations_from_us;
         this.experiences = experiences;
-        this.facebook_link = facebook_link;
         this.gender = gender;
-        this.insta_link = insta_link;
         this.number = number;
         this.offer_to_community = offer_to_community;
         this.speaker_experience = speaker_experience;
-        this.twiter_link = twiter_link;
         this.user_bio = user_bio;
         this.user_email = user_email;
         this.user_name = user_name;
         this.user_type = user_type;
         this.weblink = weblink;
         this.work_profession = work_profession;
-    }
-
-    public void setGroups(HashMap<String, Object> groups) {
-        this.groups = groups;
-    }
-
-    public void setUserState(HashMap<String, Object> userState) {
-        this.userState = userState;
     }
 
     public String getImage_url() {
@@ -87,13 +66,7 @@ public class User implements Serializable {
         this.experiences = experiences;
     }
 
-    public String getFacebook_link() {
-        return facebook_link;
-    }
 
-    public void setFacebook_link(String facebook_link) {
-        this.facebook_link = facebook_link;
-    }
 
     public String getGender() {
         return gender;
@@ -103,13 +76,6 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
-    public String getInsta_link() {
-        return insta_link;
-    }
-
-    public void setInsta_link(String insta_link) {
-        this.insta_link = insta_link;
-    }
 
     public String getNumber() {
         return number;
@@ -133,14 +99,6 @@ public class User implements Serializable {
 
     public void setSpeaker_experience(String speaker_experience) {
         this.speaker_experience = speaker_experience;
-    }
-
-    public String getTwiter_link() {
-        return twiter_link;
-    }
-
-    public void setTwiter_link(String twiter_link) {
-        this.twiter_link = twiter_link;
     }
 
     public String getUser_bio() {

@@ -113,13 +113,37 @@
                     android:paddingStart="10dp"
                     android:layout_below="@id/txt2"
                     android:background="@drawable/edittext_bg"/>
+                <TextView
+                    android:id="@+id/txt_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato"
+                    android:text="City*"
+                    android:layout_below="@id/email"
+                    android:layout_marginTop="16dp"
+                    android:textSize="18sp"
+                    android:textColor="#000000" />
 
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="80dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#333333"
+                    android:inputType="textMultiLine"
+                    android:gravity="top"
+                    android:paddingTop="8dp"
+                    android:textSize="18sp"
+                    android:paddingStart="10dp"
+                    android:layout_below="@id/txt_city"
+                    android:background="@drawable/edittext_bg"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato"
                     android:text="Bio*"
-                    android:layout_below="@id/email"
+                    android:layout_below="@id/city"
                     android:id="@+id/txt3"
                     android:layout_marginTop="16dp"
                     android:textSize="18sp"
@@ -353,45 +377,6 @@
                         android:paddingStart="10dp"
                         android:background="@drawable/edittext_bg"/>
 
-                    <EditText
-                        android:id="@+id/facebook_link"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
-                        android:textColor="#333333"
-                        android:inputType="text"
-                        android:hint="Facebook Profile Link"
-                        android:textSize="18sp"
-                        android:textColorHint="#717171"
-                        android:paddingStart="10dp"
-                        android:background="@drawable/edittext_bg"/>
-
-                    <EditText
-                        android:id="@+id/insta_link"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
-                        android:textColor="#333333"
-                        android:inputType="text"
-                        android:hint="Instagram Profile Link"
-                        android:textSize="18sp"
-                        android:textColorHint="#717171"
-                        android:paddingStart="10dp"
-                        android:background="@drawable/edittext_bg"/>
-
-                    <EditText
-                        android:id="@+id/twiter_link"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
-                        android:textColor="#333333"
-                        android:inputType="text"
-                        android:hint="Twitter Profile Link"
-                        android:textSize="18sp"
-                        android:textColorHint="#717171"
-                        android:paddingStart="10dp"
-                        android:background="@drawable/edittext_bg"/>
-
                 </LinearLayout>
 
                 <RelativeLayout
@@ -432,44 +417,6 @@
                         >
 
                     </LinearLayout>
-                    <!--
-                                         <ListView android:id="@+id/MyCertificatesList"
-                                                android:layout_height="fill_parent"
-                                                android:layout_width="fill_parent"
-                                                android:descendantFocusability="beforeDescendants"
-
-                                                >
-                                            </ListView>
-
-
-                                          <EditText
-                                                android:id="@+id/cerifications"
-                                                android:layout_width="0dp"
-                                                android:layout_weight="3"
-                                                android:layout_height="50dp"
-                                                android:layout_marginTop="10dp"
-                                                android:background="@drawable/edittext_bg"
-                                                android:hint="Add name for your file"
-                                                android:paddingStart="10dp"
-                                                android:textSize="18sp"
-                                                android:textColor="#333333"
-                                                android:fontFamily="@font/lato" />
-
-                                            <Button
-                                                android:id="@+id/btn_cerification_choose"
-                                                android:layout_width="0dp"
-                                                android:layout_weight="1"
-                                                android:layout_marginStart="20dp"
-                                                android:layout_height="wrap_content"
-                                                android:layout_marginTop="10dp"
-                                                android:textColor="#FFFFFF"
-                                                android:textSize="18sp"
-                                                android:textAllCaps="false"
-                                                android:background="@drawable/button_bg"
-                                                android:text="Choose" />
-
-
-                                    -->
 
                 </RelativeLayout>
 

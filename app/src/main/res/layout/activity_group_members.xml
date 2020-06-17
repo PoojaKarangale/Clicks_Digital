@@ -2,9 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
@@ -76,11 +74,10 @@
                     android:id="@+id/set_group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="setGroupName"
                     android:padding="5dp"
                     android:src="@drawable/check_right_click_white"
-                    android:visibility="gone"
-                    android:onClick="setGroupName"
-                    />
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -90,8 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center_horizontal"
-                android:textColor="@color/white"
-                />
+                android:textColor="@color/white" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -99,24 +95,24 @@
                 android:layout_height="?attr/actionBarSize">
 
             </androidx.appcompat.widget.Toolbar>
+
             <ImageView
                 android:id="@+id/back_to_group_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_margin="10dp"
-                android:src="@drawable/back"
                 android:onClick="backToGroupChat"
-                />
+                android:src="@drawable/back" />
+
             <ImageView
                 android:id="@+id/change_group_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_margin="10dp"
-                android:src="@drawable/add"
                 android:onClick="changeGroupIcon"
-                />
+                android:src="@drawable/add" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -149,11 +145,51 @@
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/group_description"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="group description" />
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/group_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="group description" />
+
+                    <ImageView
+                        android:id="@+id/edit_description"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/back_round_button"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:padding="5dp"
+                        android:src="@drawable/edit_btn"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/get_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:maxLines="1"
+                        android:text="Your Group name"
+                        android:textColor="@color/white"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/set_description"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:onClick="setDescription"
+                        android:padding="5dp"
+                        android:background="@drawable/back_round_button"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:src="@drawable/check_right_click_white"
+                        android:visibility="gone" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -169,13 +205,12 @@
                 android:id="@+id/add_member"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add_member"
-                android:layout_alignParentEnd="true"
                 android:layout_below="@+id/desc_layout"
+                android:layout_alignParentEnd="true"
                 android:layout_margin="10dp"
                 android:onClick="add_member"
-                android:visibility="gone"
-                />
+                android:src="@drawable/add_member"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/memberList"
@@ -185,22 +220,22 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:scrollbarAlwaysDrawVerticalTrack="true" />
+
             <Button
                 android:id="@+id/exit_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_below="@+id/memberList"
-                android:textColor="@color/colorAccent"
                 android:background="?android:attr/windowBackground"
-                android:textStyle="bold"
-                android:textSize="16dp"
-                android:text="Exit Group"
+                android:gravity="center"
                 android:onClick="exitGroup"
+                android:text="Exit Group"
+                android:textColor="@color/colorAccent"
+                android:textSize="16dp"
+                android:textStyle="bold"
 
                 />
         </RelativeLayout>
-
 
 
     </androidx.core.widget.NestedScrollView>

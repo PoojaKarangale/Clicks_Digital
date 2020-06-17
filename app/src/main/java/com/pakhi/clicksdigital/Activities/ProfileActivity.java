@@ -1,11 +1,18 @@
 package com.pakhi.clicksdigital.Activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,21 +21,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Adapter.ProfileListAdapter;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,27 +52,22 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class ProfileActivity extends AppCompatActivity {
 
-    //private FirebaseAuth mAuth;
+    static int PReqCode = 1;
+    Uri picImageUri = null;
     boolean isVisterIsAdmin = false;
     boolean isProfileUserIsAdmin = false;
     int[] imagesForListView = {R.drawable.find_friends, R.drawable.my_friends, R.drawable.chat_requests};
     ProfileListAdapter profileListAdapter;
-    TextView no_groups, no_friends;
+    boolean isThisIsMyProfile = false;
     private String user_id;
     private ListView listView;
     private ImageView profile_image;
-    private Button edit_profile, visit_profile;
     private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
     private FirebaseAuth mAuth;
-   // private DatabaseReference databaseReference;
-    private User user, getUser;
+    private User user;
     private String receiverUserID, senderUserID, Current_State;
-    private CircleImageView userProfileImage;
-    private TextView userProfileName, userProfileStatus;
     private Button SendMessageRequestButton, DeclineMessageRequestButton, make_admin, removeAdmin;
     private DatabaseReference UserRef, ChatRequestRef, ContactsRef, NotificationRef;
     private String[] titleForListView = {"Find Friends", "My Friends", " Chat Requests"};
@@ -77,13 +88,10 @@ public class ProfileActivity extends AppCompatActivity {
         speaker_experience = findViewById(R.id.tv_speaker_experience);
         experience = findViewById(R.id.tv_experiences);
         mAuth = FirebaseAuth.getInstance();
-        edit_profile = findViewById(R.id.edit_profile);
+        Button edit_profile = findViewById(R.id.edit_profile);
         make_admin = findViewById(R.id.make_admin);
         removeAdmin = findViewById(R.id.remove_admin);
         listView = findViewById(R.id.list_view);
-
-        no_friends = findViewById(R.id.no_friends);
-        no_groups = findViewById(R.id.no_groups);
 
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -114,26 +122,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        profile_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra("image_url_string", user.getImage_url());
-                v.getContext().startActivity(fullScreenIntent);
-            }
-        });
-        ContactsRef.child(user_id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int no_friends_int = (int) dataSnapshot.getChildrenCount();
-                no_friends.setText(String.valueOf(no_friends_int));
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         UserRef.child(mAuth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -160,8 +149,6 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                             Log.d("ProfileActMAKEADMIN", user_type + " ---------- " + isVisterIsAdmin);
                         }
-                        int no_groups_int = (int) dataSnapshot.child("groups").getChildrenCount();
-                        no_groups.setText(String.valueOf(no_groups_int));
                     }
 
                     @Override
@@ -180,16 +167,46 @@ public class ProfileActivity extends AppCompatActivity {
             edit_profile.setVisibility(View.VISIBLE);
             make_admin.setVisibility(View.GONE);
             removeAdmin.setVisibility(View.GONE);
+            isThisIsMyProfile = true;
         } else {
             SendMessageRequestButton.setVisibility(View.VISIBLE);
             edit_profile.setVisibility(View.INVISIBLE);
         }
+
+        profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isThisIsMyProfile) {
+
+
+                    CharSequence options[] = {"View Photo", "Change Photo"};
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    // builder.setTitle("");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            switch (i) {
+                                case 0:
+                                    viewProfile(user.getImage_url());
+                                    break;
+                                case 1:
+                                    changeProfile();
+                                    break;
+                            }
+                        }
+                    });
+                    builder.show();
+                } else {
+                    viewProfile(user.getImage_url());
+                }
+            }
+        });
         edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProfileActivity.this, SetProfileActivity.class);
-                //intent.putExtra("userdata", user);
-                intent.putExtra("PreviousActivity","ProfileActivity");
+                intent.putExtra("PreviousActivity", "ProfileActivity");
                 startActivity(intent);
             }
         });
@@ -236,6 +253,43 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         listView.setAdapter(profileListAdapter);
+    }
+
+    private void changeProfile() {
+        if (Build.VERSION.SDK_INT >= 22) {
+            checkAndRequestForPermissions();
+        } else {
+            openGallery();
+        }
+    }
+
+    private void openGallery() {
+
+        CropImage.activity().setAspectRatio(1, 1)
+                .start(ProfileActivity.this);
+
+    }
+
+    private void checkAndRequestForPermissions() {
+        if (ContextCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(ProfileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                //showToast("Please accept for required permission");
+            } else {
+                ActivityCompat.requestPermissions(ProfileActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PReqCode
+                );
+                openGallery();
+            }
+        } else {
+            openGallery();
+        }
+    }
+
+    private void viewProfile(String image_url) {
+        Intent fullScreenIntent = new Intent(ProfileActivity.this, EnlargedImage.class);
+        fullScreenIntent.putExtra("image_url_string", image_url);
+        startActivity(fullScreenIntent);
     }
 
     private void sendUserToConnectionRequestsActivity() {
@@ -288,9 +342,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void socialMediaHandles() {
         ImageView linkedin = findViewById(R.id.iv_user_linkedin);
-        ImageView instagram = findViewById(R.id.iv_user_instagram);
-        ImageView facebook = findViewById(R.id.iv_user_facebook);
-        ImageView twitter = findViewById(R.id.iv_user_twitter);
 
         //opening the linkedin link
         linkedin.setOnClickListener(new View.OnClickListener() {
@@ -304,50 +355,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        //opening the insta account
-        instagram.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (user.getInsta_link().equals("")) {
-                    Toast.makeText(ProfileActivity.this, "No Instagram Profile given", Toast.LENGTH_SHORT).show();
-                } else {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.getInsta_link())));
-                }
-            }
-        });
-
-        //opening the facebook link
-        facebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (user.getFacebook_link().equals("")) {
-                    Toast.makeText(ProfileActivity.this, "No Facebook Profile given", Toast.LENGTH_SHORT).show();
-                } else {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.getFacebook_link())));
-                }
-
-            }
-        });
-
-        //opening the twitter link
-        twitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (user.getTwiter_link().equals("")) {
-                    Toast.makeText(ProfileActivity.this, "No Twitter Profile given", Toast.LENGTH_SHORT).show();
-                } else {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.getTwiter_link())));
-                }
-            }
-        });
-
     }
 
     private void loadCertification() {
         final List<String> certificates = new ArrayList<String>();
 
         //Loading the data
-       DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_MEDIA_PATH).child(Const.FILES_PATH);
+        DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_MEDIA_PATH).child(Const.FILES_PATH);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -389,7 +403,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void contactInfo() {
         ImageView email = findViewById(R.id.iv_user_email);
-        ImageView number = findViewById(R.id.iv_user_number);
 
         email.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -399,6 +412,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        /*
         number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -407,6 +421,7 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(callIntent);
             }
         });
+        */
     }
 
     private void initializeMsgRequestFields() {
@@ -657,8 +672,9 @@ public class ProfileActivity extends AppCompatActivity {
                 .updateChildren(onlineStateMap);
 
     }
+
     public void makeAdmin(View view) {
-       DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -670,7 +686,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(View view) {
-       DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -679,5 +695,65 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(ProfileActivity.this, user.getUser_name() + " is no longer admin now", Toast.LENGTH_SHORT);
             }
         });
+    }
+
+    String getFileExtention(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void createUserProfile() {
+        final String uid = mAuth.getCurrentUser().getUid();
+        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(uid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
+        final StorageReference imgPath = sReference.child("profile_image");
+
+        imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(final Uri uri) {
+
+                        picImageUri = uri;
+                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                .setPhotoUri(uri)
+                                .build();
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        user.updateProfile(profileUpdate)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // showToast("Profile updated");
+                                        UserRef.child(uid).child(Const.USER_DETAILS).child(Const.IMAGE_URL).setValue(picImageUri).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(ProfileActivity.this,"Profile updated",Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                });
+                    }
+                });
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    picImageUri = result.getUri();
+                    profile_image.setImageURI(picImageUri);
+                    createUserProfile();
+                    break;
+            }
+        }
     }
 }

@@ -152,12 +152,10 @@ public class EditProfile extends AppCompatActivity {
         bio.setText(user.getUser_bio());
         get_expectations_from_us.setText(user.getExpectations_from_us());
         get_experiences.setText(user.getExperiences());
-        get_facebook_link.setText(user.getFacebook_link());
         get_working.setText(user.getWork_profession());
         get_speaker_experience.setText(user.getSpeaker_experience());
         get_offer_to_community.setText(user.getOffer_to_community());
-        get_insta_link.setText(user.getInsta_link());
-        get_twiter_link.setText(user.getTwiter_link());
+
 
     }
 
@@ -247,8 +245,8 @@ public class EditProfile extends AppCompatActivity {
         twiter_link = get_twiter_link.getText().toString();
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        User user = new User(expectations_from_us, experiences, facebook_link, gender, insta_link, number, offer_to_community,
-                speaker_experience, twiter_link, bio_str, email_str, full_name_str, user_type, weblink_str, working);
+        User user = new User(expectations_from_us, experiences,  gender,  number, offer_to_community,
+                speaker_experience,  bio_str, email_str, full_name_str, user_type, weblink_str, working);
 
         reference.child(userid).setValue(user);
     }

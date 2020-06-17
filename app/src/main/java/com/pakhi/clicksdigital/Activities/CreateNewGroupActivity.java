@@ -186,7 +186,20 @@ public class CreateNewGroupActivity extends AppCompatActivity {
             hashMap.put("image_url", "default_profile");
 
         reference.child(groupid).setValue(hashMap);
+
+        addAdminToTheGroup(userid,groupid);
     }
+
+    private void addAdminToTheGroup(String userid,String groupid) {
+        DatabaseReference groupRef,userRef;
+        groupRef=RootRef.child("Groups").child(groupid).child("Users").child(userid);
+        groupRef.setValue("");
+        userRef=RootRef.child("Users").child(userid).child("groups").child(groupid);
+        userRef.setValue("");
+//        setting group admin
+        RootRef.child("Groups").child(groupid).child("admins").child(userid).setValue("");
+    }
+
 
     private void openGallery() {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
