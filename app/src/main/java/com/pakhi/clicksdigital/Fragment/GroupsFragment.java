@@ -24,7 +24,7 @@ import com.pakhi.clicksdigital.Activities.CreateNewGroupActivity;
 import com.pakhi.clicksdigital.Activities.JoinGroupActivity;
 import com.pakhi.clicksdigital.Activities.RegisterActivity;
 import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
-import com.pakhi.clicksdigital.Model.GroupChat;
+import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class GroupsFragment extends Fragment {
     String userID;
     private View groupFragmentView;
     private JoinGroupAdapter groupAdapter;
-    private List<GroupChat> groups;
+    private List<Group> groups;
     private FloatingActionButton fab_create_group, fab_join_group;
     private RecyclerView recyclerView;
     private DatabaseReference GroupRef, userGroupRef, UsersRef;
@@ -134,7 +134,7 @@ public class GroupsFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            GroupChat group = dataSnapshot.getValue(GroupChat.class);
+                            Group group = dataSnapshot.getValue(Group.class);
 
                             groups.add(group);
 

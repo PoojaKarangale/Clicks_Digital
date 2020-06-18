@@ -1,15 +1,34 @@
 package com.pakhi.clicksdigital.Model;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 @SuppressWarnings("serial")
 public class User implements Serializable {
 
-    private String image_url,user_id;
+    private String image_url;
+    private String user_id;
+    private String city;
+    private boolean isSelected;
+    private String expectations_from_us, experiences, gender, number, offer_to_community,
+            speaker_experience, user_bio, user_email, user_name, user_type, weblink, work_profession;
 
-    private String expectations_from_us, experiences, gender,  number, offer_to_community,
-            speaker_experience,  user_bio, user_email, user_name, user_type, weblink, work_profession;
+    public User(String image_url, String user_id, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession) {
+        this.image_url = image_url;
+        this.user_id = user_id;
+        this.city = city;
+        this.expectations_from_us = expectations_from_us;
+        this.experiences = experiences;
+        this.gender = gender;
+        this.number = number;
+        this.offer_to_community = offer_to_community;
+        this.speaker_experience = speaker_experience;
+        this.user_bio = user_bio;
+        this.user_email = user_email;
+        this.user_name = user_name;
+        this.user_type = user_type;
+        this.weblink = weblink;
+        this.work_profession = work_profession;
+    }
 
     public User() {
     }
@@ -17,15 +36,7 @@ public class User implements Serializable {
     public User(String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String bio_str, String email_str, String full_name_str, String user_type, String weblink_str, String working) {
     }
 
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-    }
-
-    public User(String user_id,  String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession,String image_url) {
+    public User(String user_id, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession, String image_url) {
         this.image_url = image_url;
         this.user_id = user_id;
         this.expectations_from_us = expectations_from_us;
@@ -40,6 +51,30 @@ public class User implements Serializable {
         this.user_type = user_type;
         this.weblink = weblink;
         this.work_profession = work_profession;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getImage_url() {
@@ -65,7 +100,6 @@ public class User implements Serializable {
     public void setExperiences(String experiences) {
         this.experiences = experiences;
     }
-
 
 
     public String getGender() {

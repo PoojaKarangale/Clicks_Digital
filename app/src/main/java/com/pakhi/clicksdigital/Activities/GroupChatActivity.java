@@ -41,7 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Adapter.MessageAdapter;
-import com.pakhi.clicksdigital.Model.Messages;
+import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -58,7 +58,7 @@ public class GroupChatActivity extends AppCompatActivity {
     final static int PICK_PDF_CODE = 2342;
     static final int REQUESTCODE = 12;
     static int REQUEST_CODE = 1;
-    private final List<Messages> messagesList = new ArrayList<>();
+    private final List<Message> messagesList = new ArrayList<>();
     DatabaseReference groupChatRefForCurrentGroup;
     ImageView attach_file_btn, image_profile;
     Uri imageUriGalary, imageUriCamera, docUri;
@@ -177,7 +177,7 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
 
-                    Messages messages = dataSnapshot.getValue(Messages.class);
+                    Message messages = dataSnapshot.getValue(Message.class);
                    // messagesList.clear();
                     messagesList.add(messages);
 

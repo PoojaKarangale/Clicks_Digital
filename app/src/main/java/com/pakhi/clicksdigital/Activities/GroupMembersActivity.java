@@ -34,7 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Adapter.GroupMembersAdapter;
-import com.pakhi.clicksdigital.Model.GroupChat;
+import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -54,7 +54,7 @@ public class GroupMembersActivity extends AppCompatActivity {
     String user_type;
     Uri imageUriGalary, imageUriCamera;
     long number_of_participants_in_number;
-    GroupChat group;
+    Group group;
     Button exit_group;
     private RecyclerView memberListRecyclerView;
     private DatabaseReference groupMembersRef, UsersRef, GroupRef;
@@ -107,7 +107,7 @@ public class GroupMembersActivity extends AppCompatActivity {
 
                 Log.d("GroupMebersTESTING", dataSnapshot.toString());
 
-                group = dataSnapshot.getValue(GroupChat.class);
+                group = dataSnapshot.getValue(Group.class);
 
                 group_name.setText(group.getGroup_name());
                 get_group_name.setText(group.getGroup_name());
@@ -345,10 +345,11 @@ public class GroupMembersActivity extends AppCompatActivity {
     }
 
     public void exitGroup(View view) {
-        groupMembersRef.child(firebaseAuth.getCurrentUser().getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+        final String uid=firebaseAuth.getCurrentUser().getUid();
+        groupMembersRef.child(uid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                UsersRef.child(firebaseAuth.getCurrentUser().getUid()).child("groups").child(currentGroupId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                UsersRef.child(uid).child("groups").child(currentGroupId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         exit_group.setEnabled(false);
@@ -359,6 +360,20 @@ public class GroupMembersActivity extends AppCompatActivity {
                 });
             }
         });
+        GroupRef.child(currentGroupId).child("Users").child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    GroupRef.child(currentGroupId).child("Users").child(uid).removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void readGroupMembers() {
@@ -396,6 +411,8 @@ public class GroupMembersActivity extends AppCompatActivity {
     }
 
     public void add_member(View view) {
-
+        Intent addMembersIntent = new Intent(this, AddMembersToGroupActivity.class);
+        addMembersIntent.putExtra("current_group_id", currentGroupId);
+        startActivity(addMembersIntent);
     }
 }

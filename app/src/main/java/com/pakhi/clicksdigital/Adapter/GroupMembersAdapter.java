@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Activities.Const;
 import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Activities.ProfileActivity;
 import com.pakhi.clicksdigital.Model.User;
@@ -97,9 +98,9 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
                     // current user is admin of current group
                     isCurrentUserIsAdmin = true;
                     if (isClickedMemberIsAdmin) {
-                        options = new String[]{"view profile", "remove group admin"};
+                        options = new String[]{"view profile", "remove member", "remove group admin"};
                     } else {
-                        options = new String[]{"view profile", "make group admin"};
+                        options = new String[]{"view profile", "remove member", "make group admin"};
                     }
                 } else {
                     options = new String[]{"view profile"};
@@ -132,7 +133,9 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
                     case 0:
                         viewProfile(visit_user_id);
                         break;
-                    case 1:
+                    case 1:removeMemberFromGroup(visit_user_id);
+                        break;
+                    case 2:
                         if (isClickedMemberIsAdmin) {
                             removeGroupAdmin(visit_user_id);
                         } else {
@@ -144,6 +147,24 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
             }
         });
         builder.show();
+    }
+
+    private void removeMemberFromGroup(final String visit_user_id) {
+        groupRef.child(groupid).child("Users").child(visit_user_id).removeValue();
+        userRef.child(visit_user_id).child("groups").child(groupid).removeValue();
+        groupRef.child(groupid).child("admins").child(visit_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    groupRef.child(groupid).child("admins").child(visit_user_id).removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

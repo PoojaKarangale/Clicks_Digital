@@ -125,7 +125,7 @@
                     android:textColor="#000000" />
 
                 <EditText
-                    android:id="@+id/city"
+                    android:id="@+id/get_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="80dp"
@@ -143,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato"
                     android:text="Bio*"
-                    android:layout_below="@id/city"
+                    android:layout_below="@id/get_city"
                     android:id="@+id/txt3"
                     android:layout_marginTop="16dp"
                     android:textSize="18sp"

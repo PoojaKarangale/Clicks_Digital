@@ -2,7 +2,7 @@ package com.pakhi.clicksdigital.Model;
 
 import java.util.HashMap;
 
-public class GroupChat {
+public class Group {
 
     String group_name;
     String description;
@@ -15,6 +15,8 @@ public class GroupChat {
     String status;
     String requesting_userid;
 
+    private boolean isSelected;
+
 
     HashMap<String, String> Users;
 
@@ -22,7 +24,14 @@ public class GroupChat {
     //info is created at date time and created by group description
 
 
-    public GroupChat() {
+    public Group() {
+    }
+    public boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public HashMap<String, String> getUsers() {
@@ -104,4 +113,6 @@ public class GroupChat {
     public void setRequesting_userid(String requesting_userid) {
         this.requesting_userid = requesting_userid;
     }
+
+
 }

@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.pakhi.clicksdigital.Activities.EnlargedImage;
 import com.pakhi.clicksdigital.Activities.GroupChatActivity;
-import com.pakhi.clicksdigital.Model.GroupChat;
+import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -33,17 +33,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder> {
     private String in_current_user_groups = "";
     private Context mcontext;
-    private List<GroupChat> groups;
+    private List<Group> groups;
     private FirebaseUser firebaseUser;
     private boolean sentRequestFlag = false;
 
-    public JoinGroupAdapter(Context mcontext, List<GroupChat> groups, String in_current_user_groups) {
+    public JoinGroupAdapter(Context mcontext, List<Group> groups, String in_current_user_groups) {
         this.mcontext = mcontext;
         this.groups = groups;
         this.in_current_user_groups = in_current_user_groups;
     }
 
-    public JoinGroupAdapter(Context mcontext, List<GroupChat> groups) {
+    public JoinGroupAdapter(Context mcontext, List<Group> groups) {
         this.mcontext = mcontext;
         this.groups = groups;
     }
@@ -60,7 +60,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     public void onBindViewHolder(@NonNull final JoinGroupAdapter.ViewHolder holder, final int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        final GroupChat group = groups.get(position);
+        final Group group = groups.get(position);
         holder.displayName.setText(group.getGroup_name());
         holder.status_of_request.setText(group.getStatus());
         holder.displayName.setTextColor(Color.BLACK);

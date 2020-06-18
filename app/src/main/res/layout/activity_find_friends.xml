@@ -19,11 +19,11 @@
         ></androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/find_friends_recycler_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/bar"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/find_friends_recycler_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/bar"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
 </RelativeLayout>

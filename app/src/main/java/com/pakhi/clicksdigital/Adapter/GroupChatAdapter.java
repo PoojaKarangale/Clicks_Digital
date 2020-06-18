@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.pakhi.clicksdigital.Model.GroupChat;
+import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 
 import java.util.List;
@@ -19,11 +19,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.ViewHolder> {
     private Context mcontext;
-    private List<GroupChat> groups;
+    private List<Group> groups;
     private FirebaseUser firebaseUser;
     private boolean sentRequestFlag = false;
 
-    public GroupChatAdapter(Context mcontext, List<GroupChat> groups) {
+    public GroupChatAdapter(Context mcontext, List<Group> groups) {
         this.mcontext = mcontext;
         this.groups = groups;
     }

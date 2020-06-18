@@ -47,7 +47,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Adapter.MessageAdapter;
-import com.pakhi.clicksdigital.Model.Messages;
+import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -63,7 +63,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
-    private final List<Messages> messagesList = new ArrayList<>();
+    private final List<Message> messagesList = new ArrayList<>();
     Uri imageUriGalary, imageUriCamera, docUri;
     User user;
     ImageView attach_file_btn;
@@ -213,7 +213,7 @@ public class ChatActivity extends AppCompatActivity {
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Messages messages = dataSnapshot.getValue(Messages.class);
+                        Message messages = dataSnapshot.getValue(Message.class);
                         //messagesList.clear();
 
                         messagesList.add(messages);

@@ -27,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.Const;
 import com.pakhi.clicksdigital.Activities.EnlargedImage;
-import com.pakhi.clicksdigital.Model.Messages;
+import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -44,18 +44,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     Bitmap bitmap;
     String chatType, currentGroupId = "";
-    Messages messages;
-    private List<Messages> userMessagesList;
+    Message messages;
+    private List<Message> userMessagesList;
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef, usersRef, personalChatRefFrom, personalChatRefTo, groupChatRef;
 
-    public MessageAdapter(List<Messages> userMessagesList, String chatType, String currentGroupId) {
+    public MessageAdapter(List<Message> userMessagesList, String chatType, String currentGroupId) {
         this.userMessagesList = userMessagesList;
         this.chatType = chatType;
         this.currentGroupId = currentGroupId;
     }
 
-    public MessageAdapter(List<Messages> userMessagesList, String chatType) {
+    public MessageAdapter(List<Message> userMessagesList, String chatType) {
         this.userMessagesList = userMessagesList;
         this.chatType = chatType;
     }
@@ -116,6 +116,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             if (fromUserID.equals(currentUserId)) {
                 messageViewHolder.senderlayout.setVisibility(View.VISIBLE);
                 messageViewHolder.senderDate.setText(messages.getTime() + " - " + messages.getDate());
+                messageViewHolder.receiver_name.setText(messages.getName());
                 messageViewHolder.senderMessageText.setText(messages.getMessage());
             } else {
                 messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
@@ -189,7 +190,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public boolean onLongClick(View v) {
                 if (fromUserID.equals(currentUserId)) {
-                    openAlertBuilderWithOptions(new CharSequence[]{"Delete for me","Delete for all"}, v, position);
+                    openAlertBuilderWithOptions(new CharSequence[]{"Delete for me", "Delete for all"}, v, position);
                 } else {
                     openAlertBuilderWithOptions(new CharSequence[]{"Delete for me"}, v, position);
                 }
@@ -209,10 +210,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
-                    case 0: deleteMessage(v, position,"deleteForMe");
+                    case 0:
+                        deleteMessage(v, position, "deleteForMe");
                         break;
                     case 1:
-                        deleteMessage(v, position,"deleteForAll");
+                        deleteMessage(v, position, "deleteForAll");
                         break;
                 }
             }
@@ -220,26 +222,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         builder.show();
     }
 
-    private void deleteMessage(View v, int position,String deleteScope) {
+    private void deleteMessage(View v, int position, String deleteScope) {
         switch (chatType) {
             case "PersonalChat":
-                deletePersonalChat(v, position,deleteScope);
+                deletePersonalChat(v, position, deleteScope);
                 break;
             case "GroupChat":
-                deleteGroupChat(v, position,deleteScope);
+                deleteGroupChat(v, position, deleteScope);
                 break;
         }
     }
 
-    private void deletePersonalChat(final View v, final int position,String deleteScope) {
-        final Messages messages = userMessagesList.get(position);
+    private void deletePersonalChat(final View v, final int position, String deleteScope) {
+        final Message messages = userMessagesList.get(position);
         String toUserId = messages.getTo();
         String fromUserID = messages.getFrom();
 
         personalChatRefFrom = rootRef.child("Messages").child(fromUserID).child(toUserId);
         personalChatRefTo = rootRef.child("Messages").child(toUserId).child(fromUserID);
 
-        if(deleteScope.equals("deleteForMe")){
+        if (deleteScope.equals("deleteForMe")) {
             personalChatRefFrom.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -248,7 +250,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     notifyItemRemoved(position);
                 }
             });
-        }else if(deleteScope.equals("deleteForAll")){
+        } else if (deleteScope.equals("deleteForAll")) {
             personalChatRefFrom.child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -266,15 +268,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     private void deleteGroupChat(final View v, final int position, String deleteScope) {
-        Messages messages = userMessagesList.get(position);
+        Message messages = userMessagesList.get(position);
         groupChatRef = rootRef.child("GroupChat");
 
-        if(deleteScope.equals("deleteForMe")){
+        if (deleteScope.equals("deleteForMe")) {
 
             userMessagesList.remove(position);
             notifyItemRemoved(position);
 
-        }else if(deleteScope.equals("deleteForAll")){
+        } else if (deleteScope.equals("deleteForAll")) {
             groupChatRef.child(currentGroupId).child(messages.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -314,7 +316,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView senderMessageText, receiverMessageText, senderDate, receiverDate;
+        public TextView senderMessageText, receiverMessageText, senderDate, receiverDate, receiver_name;
         public CircleImageView receiverProfileImage;
         public ImageView messageSenderPicture, messageReceiverPicture, download_image_receiver;
         LinearLayout receiverlayout, senderlayout;
@@ -326,6 +328,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             senderlayout = itemView.findViewById(R.id.sender_message_layout);
             senderDate = itemView.findViewById(R.id.sender_messsage_date_time);
             receiverDate = itemView.findViewById(R.id.receiver_message_date_time);
+            receiver_name = itemView.findViewById(R.id.receiver_name);
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_messsage_text);
             receiverMessageText = (TextView) itemView.findViewById(R.id.receiver_message_text);
             receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);

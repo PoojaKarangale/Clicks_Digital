@@ -1,8 +1,10 @@
 package com.pakhi.clicksdigital.Activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -40,14 +44,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-    private Toolbar toolbar;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
     private EventsFragment eventsFragment;
     private GroupsFragment groupsFragment;
     private ChatsFragment chatsFragment;
     private HomeFragment homeFragment;
-
+    static int REQUEST_CODE = 1;
     private ImageView profile, user_requests_to_join_group;
 
     private FirebaseUser currentUser;
@@ -55,7 +56,6 @@ public class StartActivity extends AppCompatActivity {
     private DatabaseReference RootRef;
     private String currentUserID;
 
-    //private ProfileFragment profileFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +65,10 @@ public class StartActivity extends AppCompatActivity {
         profile = findViewById(R.id.profile_activity);
         user_requests_to_join_group = findViewById(R.id.user_requests_to_join_group);
         currentUser = mAuth.getCurrentUser();
-
         currentUserID = currentUser.getUid();
-
         RootRef = FirebaseDatabase.getInstance().getReference();
+
+        requestForPremission();
 
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -95,22 +95,18 @@ public class StartActivity extends AppCompatActivity {
         chatsFragment = new ChatsFragment();
         //profileFragment = new ProfileFragment();
 
-        tabLayout = findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
 
-        toolbar = findViewById(R.id.toolbar_start);
+        Toolbar toolbar = findViewById(R.id.toolbar_start);
         setSupportActionBar(toolbar);
-        //assert getSupportActionBar() != null;
-        // getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = findViewById(R.id.viewPager);
+        ViewPager viewPager = findViewById(R.id.viewPager);
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
         viewPagerAdapter.addFragment(homeFragment, "Home");
         viewPagerAdapter.addFragment(groupsFragment, "Groups");
         viewPagerAdapter.addFragment(chatsFragment, "Chat");
         viewPagerAdapter.addFragment(eventsFragment, "Events");
-        //viewPagerAdapter.addFragment(profileFragment,"Profile");
 
 
         viewPager.setAdapter(viewPagerAdapter);
@@ -141,7 +137,6 @@ public class StartActivity extends AppCompatActivity {
                 SendUserToUserRequestActivity();
             }
         });
-
     }
 
     @Override
@@ -309,6 +304,94 @@ public class StartActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return fragmentTitle.get(position);
+        }
+    }
+
+    void requestForPremission() {
+        //checking for permissions
+
+        if (ContextCompat.checkSelfPermission(StartActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) +
+                ContextCompat.checkSelfPermission(StartActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) +
+                ContextCompat.checkSelfPermission(StartActivity.this,
+                        Manifest.permission.READ_CONTACTS) +
+                ContextCompat.checkSelfPermission(StartActivity.this,
+                        Manifest.permission.WRITE_CONTACTS) +
+                ContextCompat.checkSelfPermission(StartActivity.this,
+                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            //when permissions not granted
+            if (ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.READ_CONTACTS) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.WRITE_CONTACTS) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.CAMERA)) {
+                //creating alertDialog
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(StartActivity.this);
+                builder.setTitle("Grant permissioms");
+                builder.setMessage("Camera, read & write Contacts, read & write Storage");
+                builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        ActivityCompat.requestPermissions(
+                                StartActivity.this,
+                                new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_CONTACTS,
+                                        Manifest.permission.WRITE_CONTACTS,
+                                        Manifest.permission.CAMERA
+                                },
+                                REQUEST_CODE
+                        );
+                    }
+                });
+
+                //builder.setNegativeButton("Cancel",null);
+                androidx.appcompat.app.AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            } else {
+                ActivityCompat.requestPermissions(
+                        StartActivity.this,
+                        new String[]{
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.WRITE_CONTACTS,
+                                Manifest.permission.CAMERA
+                        },
+                        REQUEST_CODE
+                );
+
+            }
+        } else {
+            //when those permissions are already granted
+            //popupMenuSettigns();
+            //logMessage("when those permissions are already granted=----------");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //  super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE) {
+            if ((grantResults.length > 0) &&
+                    (grantResults[0] + grantResults[1] + grantResults[2] + grantResults[3] + grantResults[4]
+                            == PackageManager.PERMISSION_GRANTED
+                    )
+            ) {
+                //popupMenuSettigns();
+                //permission granted
+               // logMessage(" permission granted-----------");
+
+            } else {
+
+                //permission not granted
+                //requestForPremission();
+               // logMessage(" permission  not granted-------------");
+
+            }
         }
     }
 

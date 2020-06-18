@@ -27,7 +27,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -47,15 +54,16 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class SetProfileActivity extends AppCompatActivity {
 
-    final static int PICK_PDF_CODE = 2342, REQUEST_CODE_FOR_CERTIFICATE = 3;
+    final static int REQUEST_CODE_FOR_CERTIFICATE = 3, GET_CITY_CODE = 100;
     private static final String TAG = "ProfileActivity";
     static int PReqCode = 1;
-    static int REQUESTCODE = 1;
     String userid;
     Uri picImageUri = null;
     FirebaseAuth firebaseAuth;
@@ -67,7 +75,7 @@ public class SetProfileActivity extends AppCompatActivity {
 
     String previousActivity;
     private ImageView profile_img, done_btn;
-    private EditText full_name, email, weblink, bio;
+    private EditText full_name, email, weblink, bio, get_city;
     private ProgressDialog progressDialog;
     private String gender, user_type;
 
@@ -80,6 +88,9 @@ public class SetProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        userid = firebaseAuth.getCurrentUser().getUid();
+        RootRef = FirebaseDatabase.getInstance().getReference();
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Const.SHARED_PREF, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
@@ -98,19 +109,16 @@ public class SetProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         previousActivity = intent.getStringExtra("PreviousActivity");
 
+        get_city = findViewById(R.id.get_city);
+
         get_working = findViewById(R.id.working);
         get_experiences = findViewById(R.id.experiences);
         get_speaker_experience = findViewById(R.id.speaker_experience);
         get_offer_to_community = findViewById(R.id.offer_to_community);
         get_expectations_from_us = findViewById(R.id.expectations_from_us);
 
-        // add_more_certificate = findViewById(R.id.add_more_certificate);
-
         certificates = new ArrayList<>();
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        userid = firebaseAuth.getCurrentUser().getUid();
-        RootRef = FirebaseDatabase.getInstance().getReference();
         profile_img = findViewById(R.id.profile_img);
         full_name = findViewById(R.id.full_name);
         email = findViewById(R.id.email);
@@ -119,6 +127,8 @@ public class SetProfileActivity extends AppCompatActivity {
         done_btn = findViewById(R.id.done_btn);
         progressDialog = new ProgressDialog(SetProfileActivity.this);
         progressDialog.setMessage("Loading...");
+
+        getCitySelected();
 
         profile_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +173,27 @@ public class SetProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 add_more_certificate_function();
+            }
+        });
+    }
+
+    private void getCitySelected() {
+       // Places.initialize(getApplicationContext(), "AIzaSyCh4NMlBgcTL_HhUI_zvOeYliPMAhTvKTo");
+        Places.initialize(getApplicationContext(), "AIzaSyDFLqgnYmeNcmyllMsoxTe9Co_KrcN7cQs");
+     //   PlacesClient placesClient = Places.createClient(this);
+        get_city.setFocusable(false);
+        get_city.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //initialize field list
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
+                        Place.Field.LAT_LNG,
+                        Place.Field.NAME);
+                //create intent
+                Intent intent = new Autocomplete
+                        .IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList)
+                        .build(SetProfileActivity.this);
+                startActivityForResult(intent, GET_CITY_CODE);
             }
         });
     }
@@ -223,7 +254,7 @@ public class SetProfileActivity extends AppCompatActivity {
         get_working.setText(user.getWork_profession());
         get_speaker_experience.setText(user.getSpeaker_experience());
         get_offer_to_community.setText(user.getOffer_to_community());
-
+        get_city.setText(user.getCity());
 
     }
 
@@ -248,24 +279,22 @@ public class SetProfileActivity extends AppCompatActivity {
         String expectations_from_us = "";
         expectations_from_us = get_expectations_from_us.getText().toString();
 
+        String city = "";
+        city = get_city.getText().toString();
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
-        User user = new User(userid, expectations_from_us, experiences, gender, number, offer_to_community,
-                speaker_experience, bio_str, email_str, full_name_str, user_type, weblink_str, working, picImageUri.toString());
+        User user = new User(picImageUri.toString(), userid, city, expectations_from_us, experiences, gender, number, offer_to_community,
+                speaker_experience, bio_str, email_str, full_name_str, user_type, weblink_str, working);
 
         final int[] numberOfCertificate = {0};
         reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //showToast(dataSnapshot.getValue().toString());
-                //Log.d("setProfileTESTING", "------------" + dataSnapshot.getValue().toString());
+
                 if (dataSnapshot.exists())
                     numberOfCertificate[0] = (int) dataSnapshot.getChildrenCount();
-                // showToast(String.valueOf(numberOfCertificate[0])+"-----------"+dataSnapshot.getChildrenCount());
-               // Log.d("setProfileTESTING", "------------" + numberOfCertificate[0] + "-----------" + dataSnapshot.getChildrenCount());
-                //Log.d("setProfileTESTING", "------------" + numberOfCertificate[0]);
-                //numberOfCertificate[0]++;
+
                 for (Certificates c : certificates) {
                     reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
                     numberOfCertificate[0]++;
@@ -290,9 +319,8 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void createUserProfile(final String full_name_str, final String email_str, final String bio_str, final String weblink_str) {
-        //  String uid = firebaseAuth.getCurrentUser().getUid();
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
-       // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
+        // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
         final StorageReference imgPath = sReference.child("profile_image");
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -417,9 +445,19 @@ public class SetProfileActivity extends AppCompatActivity {
                     certificates.add(certificate);
                     showAddedCertificates(certificate, certificates.size());
                     break;
+                case GET_CITY_CODE:
+                    Log.d("TESTING","------------------get city code");
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    Log.d("SETPROFIETESTING","------------------get city code"+place.getName());
+                    get_city.setText(place.getName());
+                    break;
                 default:
                     Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
             }
+        }
+        else if(resultCode == AutocompleteActivity.RESULT_ERROR){
+            Status status = Autocomplete.getStatusFromIntent(data);
+            showToast(status.getStatusMessage());
         }
     }
 

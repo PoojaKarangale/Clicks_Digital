@@ -1,13 +1,13 @@
 package com.pakhi.clicksdigital.Model;
 
-public class Messages {
+public class Message {
 
     private String from, message, type, to, messageID, time, date, name;
 
-    public Messages() {
+    public Message() {
     }
 
-    public Messages(String from, String message, String type, String to, String messageID, String time, String date, String name) {
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, String name) {
         this.from = from;
         this.message = message;
         this.type = type;
@@ -18,7 +18,7 @@ public class Messages {
         this.name = name;
     }
 
-    public Messages(String from, String message, String type, String messageID, String time, String date) {
+    public Message(String from, String message, String type, String messageID, String time, String date) {
         this.from = from;
         this.message = message;
         this.type = type;

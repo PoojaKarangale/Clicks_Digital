@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
-import com.pakhi.clicksdigital.Model.GroupChat;
+import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 
 import java.text.SimpleDateFormat;
@@ -36,7 +36,7 @@ public class JoinGroupActivity extends AppCompatActivity {
     private FloatingActionButton fab_create_group;
     private RecyclerView recyclerView;
     private JoinGroupAdapter groupAdapter;
-    private List<GroupChat> groups;
+    private List<Group> groups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class JoinGroupActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 groups.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    GroupChat group = snapshot.getValue(GroupChat.class);
+                    Group group = snapshot.getValue(Group.class);
                     groups.add(group);
                 }
                 groupAdapter.notifyDataSetChanged();
