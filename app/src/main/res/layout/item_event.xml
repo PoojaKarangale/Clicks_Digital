@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        app:cardBackgroundColor="@color/cyan"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/payable_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/back_round_button"
+                android:backgroundTint="@color/pale_grey"
+                android:padding="5dp"
+                android:text="Paid"
+                android:textColor="@color/white"
+                android:textSize="10dp"
+                app:drawableTint="@color/colorPrimaryDark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="cost"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/payable_text"
+                app:layout_constraintTop_toTopOf="@+id/payable_text"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/time_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="date and time and time duration"
+                android:layout_marginTop="8dp"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/payable_text" />
+
+            <TextView
+                android:id="@+id/no_of_participants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/profile_image"
+                android:text="people"
+                android:textColor="@color/black"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/payable_text" />
+
+            <ImageView
+                android:id="@+id/event_image"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/residential"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/time_date_text" />
+
+            <TextView
+                android:id="@+id/event_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="event name"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                app:layout_constraintStart_toEndOf="@+id/event_image"
+                app:layout_constraintTop_toTopOf="@+id/event_image" />
+
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="category"
+                android:textColor="@color/colorAccent"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="@+id/event_name"
+                app:layout_constraintTop_toBottomOf="@+id/event_name" />
+
+            <TextView
+                android:id="@+id/city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="City"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_image" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="location"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/city" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/organiser_image"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/profile_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/location" />
+
+            <TextView
+                android:id="@+id/organiser_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="name of organiser"
+                android:textColor="@color/black"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/organiser_image"
+                app:layout_constraintTop_toTopOf="@+id/organiser_image" />
+
+            <TextView
+                android:id="@+id/organiser_bio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Organiser"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="@+id/organiser_name"
+                app:layout_constraintTop_toBottomOf="@+id/organiser_name" />
+
+            <Button
+                android:id="@+id/reg_btn"
+                android:layout_width="45dp"
+                android:layout_height="35dp"
+                android:background="@drawable/back_round_button"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="Join"
+                android:textSize="8dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/organiser_image" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

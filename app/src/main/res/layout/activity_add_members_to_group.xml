@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.AddMembersToGroupActivity">
+    tools:context=".ActivitiesGroupChat.AddMembersToGroupActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
@@ -33,6 +34,7 @@
                 android:layout_centerVertical="true"
                 android:layout_margin="8dp"
                 android:src="@drawable/ic_cross" />
+
             <ImageView
                 android:id="@+id/send"
                 android:layout_width="32dp"
@@ -43,6 +45,7 @@
                 android:src="@drawable/send_message" />
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/add_members_recycler_list"
         android:layout_width="match_parent"

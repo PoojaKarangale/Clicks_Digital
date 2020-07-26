@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ActivitiesEvent.CreateEventActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/event_image"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:src="@drawable/residential"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Name"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/event_image"
+                app:met_baseColor="@android:color/black"
+                app:met_floatingLabel="highlight"
+                app:met_maxCharacters="40"
+                app:met_primaryColor="?colorAccent"
+
+                app:met_singleLineEllipsis="true"
+                tools:layout_editor_absoluteX="16dp" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="top|left"
+                android:hint="Event Description"
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:maxLines="10"
+                android:minLines="1"
+                android:scrollbars="vertical"
+                android:textColorHint="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                app:met_baseColor="@android:color/black"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="?colorAccent"
+                app:met_singleLineEllipsis="true"
+                tools:layout_editor_absoluteX="16dp"
+
+                />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Event Category"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_name" />
+
+            <Spinner
+                android:id="@+id/event_cat_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog"
+                app:layout_constraintStart_toEndOf="@+id/textView4"
+                app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+            <!--   <com.rengwuxian.materialedittext.MaterialEditText
+                   android:id="@+id/new_cat"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:hint="Event Category"
+                   android:text="enter new Category"
+                   android:textCursorDrawable="@drawable/text_cursor_cyan"
+                   android:textSize="12sp"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintTop_toTopOf="@+id/textView4"
+                   app:met_baseColor="@android:color/white"
+                   app:met_floatingLabel="highlight"
+                   app:met_maxCharacters="40"
+                   app:met_primaryColor="?colorAccent"
+                   app:met_singleLineEllipsis="true" />
+   -->
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/get_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Location"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description"
+                app:met_baseColor="@android:color/black"
+                app:met_floatingLabel="highlight"
+                app:met_maxCharacters="20"
+                app:met_primaryColor="?colorAccent"
+                app:met_singleLineEllipsis="true" />
+
+            <LinearLayout
+                android:id="@+id/dateLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/get_location">
+
+                <ImageButton
+                    android:id="@+id/choose_date"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/calender" />
+
+                <TextView
+                    android:id="@+id/choose_date_text"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="12/02/2020" />
+            </LinearLayout>
+
+            <!--  <EditText
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp"
+                  android:background="@drawable/back_round_button"
+                  android:hint="Choose  Date"
+                  android:textSize="16dp"
+                  app:layout_constraintStart_toStartOf="@+id/set_date"
+                  app:layout_constraintTop_toBottomOf="@+id/set_date"
+                  />
+              -->
+            <LinearLayout
+                android:id="@+id/timeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dateLayout"
+                app:layout_constraintTop_toTopOf="@+id/dateLayout">
+
+                <ImageButton
+                    android:id="@+id/choose_time"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/clock" />
+
+                <TextView
+                    android:id="@+id/choose_time_text"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="12.00" />
+            </LinearLayout>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/get_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="time Duration"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateLayout"
+                app:met_baseColor="@android:color/black"
+                app:met_floatingLabel="highlight" />
+
+            <TextView
+                android:id="@+id/event_type_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Event type"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/get_duration" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_type_text">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/onlineChip"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Online"
+                    app:chipBackgroundColor="@color/chipColor" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/offlineChip"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Offline"
+                    app:chipBackgroundColor="@color/chipColor"
+                    app:layout_constraintStart_toEndOf="@+id/onlineChip"
+                    app:layout_constraintTop_toBottomOf="@+id/get_duration"
+                    app:layout_constraintTop_toTopOf="@+id/onlineChip" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/event_payable_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Event payable"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chip_group" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_payble"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_payable_text">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/paidChip"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Paid"
+                    app:chipBackgroundColor="@color/chipColor" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unpaidChip"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unpaid"
+                    app:chipBackgroundColor="@color/chipColor"
+                    app:layout_constraintStart_toEndOf="@+id/onlineChip"
+                    app:layout_constraintTop_toBottomOf="@+id/get_duration"
+                    app:layout_constraintTop_toTopOf="@+id/onlineChip" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/get_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:hint="Cost of event"
+                app:layout_constraintStart_toEndOf="@+id/chip_group_payble"
+                app:layout_constraintTop_toTopOf="@+id/chip_group_payble"
+                app:met_baseColor="@android:color/black"
+                app:met_floatingLabel="highlight"
+                android:enabled="false" />
+
+            <Button
+                android:id="@+id/submit_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/btn_back_stroke_red"
+                android:text="Create Event"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/get_cost" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>

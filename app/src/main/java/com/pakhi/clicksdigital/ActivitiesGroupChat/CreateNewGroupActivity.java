@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesGroupChat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -29,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.Activities.StartActivity;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.R;
 
 import java.text.SimpleDateFormat;
@@ -51,17 +52,18 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     private EditText display_name, description;
     private FloatingActionButton done_btn;
     private ProgressDialog progressDialog;
-    private Button send_request_btn;
+    //  private Button send_request_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_group);
 
-        //user_type = getIntent().getStringExtra("user_type");
+        firebaseAuth = FirebaseAuth.getInstance();
+        RootRef = FirebaseDatabase.getInstance().getReference();
+
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Const.SHARED_PREF, 0);
         user_type = pref.getString("user_type", "user");
-        //user_type = "admin";
 
         currentDate = new SimpleDateFormat("MMM dd, yyyy");
         currentTime = new SimpleDateFormat("hh:mm a");
@@ -70,23 +72,22 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         done_btn = findViewById(R.id.done_btn);
         display_name = findViewById(R.id.display_name);
         description = findViewById(R.id.description);
-        send_request_btn = findViewById(R.id.send_request_btn);
+        // send_request_btn = findViewById(R.id.send_request_btn);
+        done_btn.setVisibility(View.VISIBLE);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        RootRef = FirebaseDatabase.getInstance().getReference();
         progressDialog = new ProgressDialog(CreateNewGroupActivity.this);
         progressDialog.setMessage("Loading...");
 
-        if (user_type.equals("user")) {
+       /* if (user_type.equals("user")) {
             done_btn.setVisibility(View.INVISIBLE);
             send_request_btn.setVisibility(View.VISIBLE);
 
-        }
-        if (user_type.equals("admin")) {
+        }*/
+       /* if (user_type.equals("admin")) {
             send_request_btn.setVisibility(View.INVISIBLE);
             done_btn.setVisibility(View.VISIBLE);
         }
-
+*/
         profile_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +115,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
             }
         });
 
-        send_request_btn.setOnClickListener(new View.OnClickListener() {
+       /* send_request_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String groupName = display_name.getText().toString().trim();
@@ -126,8 +127,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                     sendRequestToCreateGroup(groupName, description_str);
                 }
             }
-        });
-
+        });*/
     }
 
     private void sendRequestToCreateGroup(final String groupName, final String description_str) {
@@ -187,19 +187,18 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
         reference.child(groupid).setValue(hashMap);
 
-        addAdminToTheGroup(userid,groupid);
+        addAdminToTheGroup(userid, groupid);
     }
 
-    private void addAdminToTheGroup(String userid,String groupid) {
-        DatabaseReference groupRef,userRef;
-        groupRef=RootRef.child("Groups").child(groupid).child("Users").child(userid);
+    private void addAdminToTheGroup(String userid, String groupid) {
+        DatabaseReference groupRef, userRef;
+        groupRef = RootRef.child("Groups").child(groupid).child("Users").child(userid);
         groupRef.setValue("");
-        userRef=RootRef.child("Users").child(userid).child("groups").child(groupid);
+        userRef = RootRef.child("Users").child(userid).child("groups").child(groupid);
         userRef.setValue("");
 //        setting group admin
         RootRef.child("Groups").child(groupid).child("admins").child(userid).setValue("");
     }
-
 
     private void openGallery() {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -235,7 +234,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 
     private void createGroup() {
-       // String uid = firebaseAuth.getCurrentUser().getUid();
+        // String uid = firebaseAuth.getCurrentUser().getUid();
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
 
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.CreateNewGroupActivity">
+    tools:context=".ActivitiesGroupChat.CreateNewGroupActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_create_group"
@@ -35,43 +35,43 @@
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-         <!--   <ImageView
-                android:id="@+id/done_btn"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/done_right_click" />
-                -->
+            <!--   <ImageView
+                   android:id="@+id/done_btn"
+                   android:layout_width="36dp"
+                   android:layout_height="36dp"
+                   android:layout_alignParentEnd="true"
+                   android:layout_marginTop="12dp"
+                   android:layout_marginEnd="16dp"
+                   android:src="@drawable/done_right_click" />
+                   -->
 
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
-<!--
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_below="@+id/toolbar_create_group"
-        >
-
-        <View
+    <!--
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@color/white" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="?android:attr/windowBackground" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_below="@+id/toolbar_create_group"
+            >
 
-    </LinearLayout>
-    -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@color/white" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="?android:attr/windowBackground" />
+
+        </LinearLayout>
+        -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -154,8 +154,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp"
-                android:layout_marginBottom="16dp"
-                >
+                android:layout_marginBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -189,6 +188,7 @@
 
         </LinearLayout>
     </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -198,8 +198,7 @@
         android:layout_below="@+id/main_layout"
         android:padding="10dp"
         android:layout_marginTop="-24dp"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_centerHorizontal="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
@@ -211,8 +210,7 @@
         android:layout_marginTop="-12dp"
         android:layout_marginEnd="16dp"
         android:layout_alignParentEnd="true"
-        android:contentDescription="submit"
-        />
+        android:contentDescription="submit" />
 
 
 </RelativeLayout>

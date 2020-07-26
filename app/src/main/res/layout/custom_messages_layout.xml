@@ -24,6 +24,7 @@
         android:gravity="bottom"
         android:orientation="vertical"
         android:padding="10dp">
+
         <TextView
             android:id="@+id/receiver_name"
             android:layout_width="wrap_content"
@@ -35,6 +36,7 @@
             android:text="receiver messages here"
             android:textColor="#0889EC"
             android:textSize="12sp" />
+
         <TextView
             android:id="@+id/receiver_message_text"
             android:layout_width="wrap_content"
@@ -44,6 +46,8 @@
             android:paddingEnd="10dp"
             android:paddingBottom="2dp"
             android:text="receiver messages here"
+            android:longClickable="true"
+            android:textIsSelectable="true"
             android:textColor="#00518F"
             android:textSize="18sp" />
 
@@ -110,6 +114,8 @@
             android:paddingEnd="10dp"
             android:paddingBottom="2dp"
             android:text="sender messages"
+            android:longClickable="true"
+            android:textIsSelectable="true"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 

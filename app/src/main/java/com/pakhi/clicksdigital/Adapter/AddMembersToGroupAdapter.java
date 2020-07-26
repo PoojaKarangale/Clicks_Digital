@@ -1,6 +1,5 @@
 package com.pakhi.clicksdigital.Adapter;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +68,7 @@ public class AddMembersToGroupAdapter extends RecyclerView.Adapter<AddMembersToG
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image_profile;
-        TextView display_name,user_status;
+        TextView display_name, user_status;
         CheckBox checkbox_add;
 
         public ViewHolder(@NonNull View itemView) {

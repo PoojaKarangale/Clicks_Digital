@@ -1,9 +1,7 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesChat;
 
-import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -25,11 +23,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,8 +42,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Adapter.MessageAdapter;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.Utils.Cropper;
+import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -63,14 +61,15 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    final static int PICK_PDF_CODE = 2342;
+    static final int REQUESTCODE = 12;
+    static int REQUEST_CODE = 1;
     private final List<Message> messagesList = new ArrayList<>();
     Uri imageUriGalary, imageUriCamera, docUri;
     User user;
     ImageView attach_file_btn;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    final static int PICK_PDF_CODE = 2342;
-    static int REQUEST_CODE = 1;
-    static final int REQUESTCODE = 12;
+    PermissionsHandling permissions;
     private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
     private TextView userName, userLastSeen;
     private CircleImageView userImage;
@@ -133,6 +132,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         DisplayLastSeen();
+        permissions = new PermissionsHandling(this);
         attach_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +161,7 @@ public class ChatActivity extends AppCompatActivity {
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_btn);
         MessageInputText = (EditText) findViewById(R.id.input_message);
 
-        messageAdapter = new MessageAdapter(messagesList,"PersonalChat");
+        messageAdapter = new MessageAdapter(messagesList, "PersonalChat");
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -247,39 +247,39 @@ public class ChatActivity extends AppCompatActivity {
 
     private void SendMessage(String messageType, String message) {
 
-            String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
-            String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
+        String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
+        String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
 
-            DatabaseReference userMessageKeyRef = RootRef.child("Messages")
-                    .child(messageSenderID).child(messageReceiverID).push();
+        DatabaseReference userMessageKeyRef = RootRef.child("Messages")
+                .child(messageSenderID).child(messageReceiverID).push();
 
-            String messagePushID = userMessageKeyRef.getKey();
+        String messagePushID = userMessageKeyRef.getKey();
 
-            Map messageTextBody = new HashMap();
-            messageTextBody.put("message", message);
-            messageTextBody.put("type", messageType);
-            messageTextBody.put("from", messageSenderID);
-            messageTextBody.put("to", messageReceiverID);
-            messageTextBody.put("messageID", messagePushID);
-            messageTextBody.put("time", saveCurrentTime);
-            messageTextBody.put("date", saveCurrentDate);
+        Map messageTextBody = new HashMap();
+        messageTextBody.put("message", message);
+        messageTextBody.put("type", messageType);
+        messageTextBody.put("from", messageSenderID);
+        messageTextBody.put("to", messageReceiverID);
+        messageTextBody.put("messageID", messagePushID);
+        messageTextBody.put("time", saveCurrentTime);
+        messageTextBody.put("date", saveCurrentDate);
 
-            Map messageBodyDetails = new HashMap();
-            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-            messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+        Map messageBodyDetails = new HashMap();
+        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+        messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
 
-            RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                    MessageInputText.setText("");
+        RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+                MessageInputText.setText("");
+            }
+        });
+    }
 
 
     private void updateUserStatus(String state) {
@@ -356,7 +356,19 @@ public class ChatActivity extends AppCompatActivity {
 
     void requestForPremission() {
         //checking for permissions
-
+        if (!permissions.isPermissionGranted()) {
+            //when permissions not granted
+            if (permissions.isRequestPermissionable()) {
+                //creating alertDialog
+                permissions.showAlertDialog(REQUEST_CODE);
+            } else {
+                permissions.requestPermission(REQUEST_CODE);
+            }
+        } else {
+            //when those permissions are already granted
+            //popupMenuSettigns();
+        }
+        /*
         if (ContextCompat.checkSelfPermission(ChatActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) +
                 ContextCompat.checkSelfPermission(ChatActivity.this,
@@ -415,7 +427,7 @@ public class ChatActivity extends AppCompatActivity {
             //when those permissions are already granted
             //popupMenuSettigns();
             logMessage("when those permissions are already granted=----------");
-        }
+        }*/
     }
 
     @Override
@@ -480,8 +492,8 @@ public class ChatActivity extends AppCompatActivity {
                     break;
 
                 */
-                case REQUESTCODE :
-                    imageUriGalary=data.getData();
+                case REQUESTCODE:
+                    imageUriGalary = data.getData();
                     uploadImage(imageUriGalary);
                     break;
                 case REQUEST_IMAGE_CAPTURE:

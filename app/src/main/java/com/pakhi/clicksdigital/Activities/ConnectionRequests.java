@@ -24,7 +24,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Model.Contact;
+import com.pakhi.clicksdigital.ActivitiesProfile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -69,12 +72,11 @@ public class ConnectionRequests extends AppCompatActivity {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent profileIntent = new Intent(ConnectionRequests.this, ProfileActivity.class);
+                                Intent profileIntent = new Intent(ConnectionRequests.this, VisitProfileActivity.class);
                                 profileIntent.putExtra("visit_user_id", list_user_id);
                                 startActivity(profileIntent);
                             }
                         });
-
 
                         DatabaseReference getTypeRef = getRef(position).child("request_type").getRef();
 

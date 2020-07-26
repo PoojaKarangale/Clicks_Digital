@@ -21,9 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.Const;
-import com.pakhi.clicksdigital.Activities.EnlargedImage;
-import com.pakhi.clicksdigital.Activities.ProfileActivity;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.ActivitiesProfile.VisitProfileActivity;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -133,7 +132,8 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
                     case 0:
                         viewProfile(visit_user_id);
                         break;
-                    case 1:removeMemberFromGroup(visit_user_id);
+                    case 1:
+                        removeMemberFromGroup(visit_user_id);
                         break;
                     case 2:
                         if (isClickedMemberIsAdmin) {
@@ -155,7 +155,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         groupRef.child(groupid).child("admins").child(visit_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     groupRef.child(groupid).child("admins").child(visit_user_id).removeValue();
                 }
             }
@@ -169,7 +169,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
 
     private void viewProfile(String visit_user_id) {
-        Intent profileIntent = new Intent(mcontext, ProfileActivity.class);
+        Intent profileIntent = new Intent(mcontext, VisitProfileActivity.class);
         profileIntent.putExtra("visit_user_id", visit_user_id);
         mcontext.startActivity(profileIntent);
     }

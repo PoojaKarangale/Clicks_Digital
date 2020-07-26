@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.pakhi.clicksdigital">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -8,6 +9,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -16,20 +19,32 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme">
-        <activity android:name=".Activities.AllGroupsAndContactListActivity"></activity>
-        <activity android:name=".Activities.AddMembersToGroupActivity" />
+        android:theme="@style/MyMaterialTheme"
+        tools:replace="android:allowBackup"
+        android:networkSecurityConfig="@xml/network_security_config"
+        >
+        <activity android:name=".PaymentGatewayFiles.PaymentActivity"></activity>
+        <activity android:name=".ActivitiesProfile.VisitProfileActivity" />
+        <activity android:name=".ActivitiesEvent.EventDetailsActivity" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDFLqgnYmeNcmyllMsoxTe9Co_KrcN7cQs" />
+
+        <activity android:name=".ActivitiesChat.ForwardMessageActivity" />
+        <activity android:name=".ActivitiesEvent.CreateEventActivity" />
+        <activity android:name=".ActivitiesGroupChat.AddMembersToGroupActivity" />
         <activity android:name=".Activities.AddNewCertificateActivity" />
-        <activity android:name=".Activities.GroupMembersActivity" />
-        <activity android:name=".Activities.EnlargedImage" />
+        <activity android:name=".ActivitiesGroupChat.GroupMembersActivity" />
+        <activity android:name=".Utils.EnlargedImage" />
         <activity android:name=".Activities.ConnectionRequests" />
-        <activity android:name=".Activities.ChatActivity" />
+        <activity android:name=".ActivitiesChat.ChatActivity" />
         <activity android:name=".Activities.FindFriendsActivity" />
-        <activity android:name=".Activities.GroupChatActivity" />
-        <activity android:name=".Activities.EditProfile" />
-        <activity android:name=".Activities.ProfileActivity" />
-        <activity android:name=".Activities.CreateNewGroupActivity" />
-        <activity android:name=".Activities.JoinGroupActivity" />
+        <activity android:name=".ActivitiesGroupChat.GroupChatActivity" />
+        <activity android:name=".ActivitiesProfile.EditProfile" />
+        <activity android:name=".ActivitiesProfile.ProfileActivity" />
+        <activity android:name=".ActivitiesGroupChat.CreateNewGroupActivity" />
+        <activity android:name=".ActivitiesGroupChat.JoinGroupActivity" />
         <activity android:name=".Activities.UserRequestActivity" />
         <activity android:name=".Activities.ContactUserActivity">
             <intent-filter>
@@ -38,7 +53,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.PhoneVerify">
+        <activity android:name=".ActivitiesRegisterLogin.PhoneVerify">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,14 +67,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.RegisterActivity">
+        <activity android:name=".ActivitiesRegisterLogin.RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SetProfileActivity">
+        <activity android:name=".ActivitiesProfile.SetProfileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

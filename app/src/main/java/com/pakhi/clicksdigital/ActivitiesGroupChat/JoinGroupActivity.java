@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesGroupChat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +18,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.Adapter.JoinGroupAdapter;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 
@@ -66,7 +68,6 @@ public class JoinGroupActivity extends AppCompatActivity {
                 } else {
                     home_btn.setVisibility(View.GONE);
                 }
-
                 user_type = dataSnapshot.child(Const.USER_DETAILS).child("user_type").getValue(String.class);
                 assert user_type != null;
                 if (user_type.equals("admin")) {

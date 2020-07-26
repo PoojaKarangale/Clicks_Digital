@@ -140,6 +140,7 @@
         android:layout_centerVertical="true"
         android:src="@drawable/chat_with_friend"
         android:visibility="invisible" />
+
     <TextView
         android:id="@+id/is_admin"
         android:layout_width="wrap_content"
@@ -148,7 +149,8 @@
         android:text="Admin"
         android:textColor="@color/colorPrimary"
         android:layout_margin="10dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <CheckBox
         android:id="@+id/checkbox_add"
         android:layout_width="wrap_content"
@@ -156,6 +158,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:background="@color/white"
-       android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

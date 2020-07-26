@@ -1,9 +1,10 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesGroupChat;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -34,6 +35,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Adapter.GroupMembersAdapter;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
@@ -56,6 +59,8 @@ public class GroupMembersActivity extends AppCompatActivity {
     long number_of_participants_in_number;
     Group group;
     Button exit_group;
+    UserDatabase db;
+    User user;
     private RecyclerView memberListRecyclerView;
     private DatabaseReference groupMembersRef, UsersRef, GroupRef;
     private GroupMembersAdapter groupMembersAdapter;
@@ -72,30 +77,17 @@ public class GroupMembersActivity extends AppCompatActivity {
 
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
+
         groupMembersRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupId).child("Users");
         firebaseAuth = FirebaseAuth.getInstance();
+        db = new UserDatabase(this);
+        getUserFromDb();
 
-        //change_group_icon = findViewById(R.id.change_group_icon);
-        exit_group = findViewById(R.id.exit_group);
-        add_member = findViewById(R.id.add_member);
-        edit_group_name = findViewById(R.id.edit_group_name);
-        edit_description = findViewById(R.id.edit_description);
-        group_name = findViewById(R.id.group_name);
-        set_group_name = findViewById(R.id.set_group_name);
-        set_description = findViewById(R.id.set_description);
-        get_group_name = findViewById(R.id.get_group_name);
-        get_description = findViewById(R.id.get_description);
-        app_bar_image = findViewById(R.id.app_bar_image);
-        group_info = findViewById(R.id.group_info);
-        group_description = findViewById(R.id.group_description);
-        number_of_participants = findViewById(R.id.number_of_participants);
+        initiateFields();
 
         //seting group info
         Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
 
-      /*  group_name.setText(group_name_str);
-        get_group_name.setText(group_name_str);
-     */
         final String[] date = new String[1];
         final String[] group_creater_id = new String[1];
 
@@ -146,30 +138,12 @@ public class GroupMembersActivity extends AppCompatActivity {
             }
         });
 
-        UsersRef.child(firebaseAuth.getCurrentUser().getUid())
-                .child(Const.USER_DETAILS)
-                .child("user_type")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            user_type = dataSnapshot.getValue().toString();
-
-                            if (user_type.equals("admin")) {
-                                //only adim can edit group info
-                                edit_group_name.setVisibility(View.VISIBLE);
-                                edit_description.setVisibility(View.VISIBLE);
-                                add_member.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
+        if (user.getUser_type().equals("admin")) {
+            //only adim can edit group info
+            edit_group_name.setVisibility(View.VISIBLE);
+            edit_description.setVisibility(View.VISIBLE);
+            add_member.setVisibility(View.VISIBLE);
+        }
         edit_group_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,9 +171,39 @@ public class GroupMembersActivity extends AppCompatActivity {
         memberListRecyclerView.setAdapter(groupMembersAdapter);
 
         readGroupMembers();
-
         //  number_of_participants.setText(String.valueOf(number_of_participants_in_number) + " participants");
+    }
 
+    private void initiateFields() {
+        exit_group = findViewById(R.id.exit_group);
+        add_member = findViewById(R.id.add_member);
+        edit_group_name = findViewById(R.id.edit_group_name);
+        edit_description = findViewById(R.id.edit_description);
+        group_name = findViewById(R.id.group_name);
+        set_group_name = findViewById(R.id.set_group_name);
+        set_description = findViewById(R.id.set_description);
+        get_group_name = findViewById(R.id.get_group_name);
+        get_description = findViewById(R.id.get_description);
+        app_bar_image = findViewById(R.id.app_bar_image);
+        group_info = findViewById(R.id.group_info);
+        group_description = findViewById(R.id.group_description);
+        number_of_participants = findViewById(R.id.number_of_participants);
+    }
+
+    private void getUserFromDb() {
+        db.getReadableDatabase();
+        Cursor res = db.getAllData();
+        if (res.getCount() == 0) {
+
+        } else {
+            res.moveToFirst();
+            user = new User(res.getString(0), res.getString(1),
+                    res.getString(2), res.getString(3), res.getString(4),
+                    res.getString(5), res.getString(6), res.getString(7),
+                    res.getString(8), res.getString(9), res.getString(10),
+                    res.getString(11), res.getString(12), res.getString(13),
+                    res.getString(14));
+        }
     }
 
     public void setGroupName(View view) {
@@ -345,7 +349,8 @@ public class GroupMembersActivity extends AppCompatActivity {
     }
 
     public void exitGroup(View view) {
-        final String uid=firebaseAuth.getCurrentUser().getUid();
+        // final String uid = firebaseAuth.getCurrentUser().getUid();
+        final String uid = user.getUser_id();
         groupMembersRef.child(uid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -363,7 +368,7 @@ public class GroupMembersActivity extends AppCompatActivity {
         GroupRef.child(currentGroupId).child("Users").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     GroupRef.child(currentGroupId).child("Users").child(uid).removeValue();
                 }
             }

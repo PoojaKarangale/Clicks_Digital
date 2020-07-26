@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesRegisterLogin;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +18,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hbb20.CountryCodePicker;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.ActivitiesGroupChat.JoinGroupActivity;
+import com.pakhi.clicksdigital.ActivitiesProfile.SetProfileActivity;
+import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.R;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -26,7 +30,6 @@ public class RegisterActivity extends AppCompatActivity {
     private String number;
     private CountryCodePicker ccp;
     private EditText mobileNo_reg;
-    private Button verify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mobileNo_reg = (EditText) findViewById(R.id.mobileNo_reg);
-        verify = findViewById(R.id.verify);
+        Button verify = findViewById(R.id.verify);
         ccp = findViewById(R.id.ccp);
 
         firebaseAuth = FirebaseAuth.getInstance();

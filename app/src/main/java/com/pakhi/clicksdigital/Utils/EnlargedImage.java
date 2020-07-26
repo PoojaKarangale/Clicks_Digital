@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.Utils;
 
 import android.content.Intent;
 import android.os.Bundle;

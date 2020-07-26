@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesProfile;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -245,9 +246,9 @@ public class EditProfile extends AppCompatActivity {
         twiter_link = get_twiter_link.getText().toString();
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        User user = new User(expectations_from_us, experiences,  gender,  number, offer_to_community,
+      /*  User user = new User(expectations_from_us, experiences,  gender,  number, offer_to_community,
                 speaker_experience,  bio_str, email_str, full_name_str, user_type, weblink_str, working);
-
+*/
         reference.child(userid).setValue(user);
     }
 

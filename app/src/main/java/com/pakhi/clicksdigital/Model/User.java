@@ -12,9 +12,21 @@ public class User implements Serializable {
     private String expectations_from_us, experiences, gender, number, offer_to_community,
             speaker_experience, user_bio, user_email, user_name, user_type, weblink, work_profession;
 
-    public User(String image_url, String user_id, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession) {
+    public User() {
+    }
+
+
+    public User(String image_url, String user_id, String user_bio, String user_name, String user_type) {
         this.image_url = image_url;
         this.user_id = user_id;
+        this.user_bio = user_bio;
+        this.user_name = user_name;
+        this.user_type = user_type;
+    }
+
+    public User(String userid, String full_name_str, String bio_str, String image_url, String user_type, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_email, String weblink, String work_profession) {
+        this.image_url = image_url;
+        this.user_id = userid;
         this.city = city;
         this.expectations_from_us = expectations_from_us;
         this.experiences = experiences;
@@ -22,36 +34,14 @@ public class User implements Serializable {
         this.number = number;
         this.offer_to_community = offer_to_community;
         this.speaker_experience = speaker_experience;
-        this.user_bio = user_bio;
+        this.user_bio = bio_str;
         this.user_email = user_email;
-        this.user_name = user_name;
+        this.user_name = full_name_str;
         this.user_type = user_type;
         this.weblink = weblink;
         this.work_profession = work_profession;
     }
 
-    public User() {
-    }
-
-    public User(String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String bio_str, String email_str, String full_name_str, String user_type, String weblink_str, String working) {
-    }
-
-    public User(String user_id, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_bio, String user_email, String user_name, String user_type, String weblink, String work_profession, String image_url) {
-        this.image_url = image_url;
-        this.user_id = user_id;
-        this.expectations_from_us = expectations_from_us;
-        this.experiences = experiences;
-        this.gender = gender;
-        this.number = number;
-        this.offer_to_community = offer_to_community;
-        this.speaker_experience = speaker_experience;
-        this.user_bio = user_bio;
-        this.user_email = user_email;
-        this.user_name = user_name;
-        this.user_type = user_type;
-        this.weblink = weblink;
-        this.work_profession = work_profession;
-    }
 
     public String getCity() {
         return city;

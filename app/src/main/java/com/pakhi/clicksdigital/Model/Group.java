@@ -26,6 +26,7 @@ public class Group {
 
     public Group() {
     }
+
     public boolean getSelected() {
         return isSelected;
     }

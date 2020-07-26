@@ -3,7 +3,7 @@ package com.pakhi.clicksdigital.Model;
 import java.io.Serializable;
 
 public class Certificates implements Serializable {
-    String name,institute,fileUri;
+    String name, institute, fileUri;
 
     public Certificates() {
     }

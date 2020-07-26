@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,8 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.Const;
-import com.pakhi.clicksdigital.Activities.EnlargedImage;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -42,9 +43,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-    Bitmap bitmap;
-    String chatType, currentGroupId = "";
-    Message messages;
+    private String chatType, currentGroupId = "";
+    private Message messages;
     private List<Message> userMessagesList;
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef, usersRef, personalChatRefFrom, personalChatRefTo, groupChatRef;
@@ -77,6 +77,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         final String currentUserId = mAuth.getCurrentUser().getUid();
         messages = userMessagesList.get(position);
         //this.position = position;
+
         final String fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
 
@@ -111,6 +112,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
         messageViewHolder.download_image_receiver.setVisibility(View.GONE);
+
+        messageViewHolder.senderMessageText.setTextIsSelectable(true);
+        messageViewHolder.receiverMessageText.setTextIsSelectable(true);
+
 
         if (fromMessageType.equals("text")) {
             if (fromUserID.equals(currentUserId)) {
@@ -189,6 +194,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                messageViewHolder.checkBox_add.setVisibility(View.VISIBLE);
                 if (fromUserID.equals(currentUserId)) {
                     openAlertBuilderWithOptions(new CharSequence[]{"Delete for me", "Delete for all"}, v, position);
                 } else {
@@ -289,7 +295,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     private void saveImage(View v, MessageViewHolder messageViewHolder) {
-        bitmap = ((BitmapDrawable) messageViewHolder.messageReceiverPicture.getDrawable()).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) messageViewHolder.messageReceiverPicture.getDrawable()).getBitmap();
         String time = new SimpleDateFormat("yyyyMMDD_HHmmss", Locale.getDefault())
                 .format(System.currentTimeMillis());
         File path = Environment.getExternalStorageDirectory();
@@ -320,6 +326,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public CircleImageView receiverProfileImage;
         public ImageView messageSenderPicture, messageReceiverPicture, download_image_receiver;
         LinearLayout receiverlayout, senderlayout;
+        CheckBox checkBox_add;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -335,6 +342,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             download_image_receiver = itemView.findViewById(R.id.download_image_receiver);
             messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image_view);
             messageSenderPicture = itemView.findViewById(R.id.message_sender_image_view);
+
+            checkBox_add = itemView.findViewById(R.id.checkbox_add);
         }
     }
 }

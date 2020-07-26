@@ -24,7 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.ActivitiesChat.ChatActivity;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.ActivitiesProfile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -62,7 +66,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(UsersRef, User.class)
                         .build();
-/* user model is present in  Users->id->Details->user.model instead of Users->id->user.model */
+        /* user model is present in  Users->id->Details->user.model instead of Users->id->user.model */
         FirebaseRecyclerAdapter<User, FindFriendViewHolder> adapter =
                 new FirebaseRecyclerAdapter<User, FindFriendViewHolder>(options) {
                     @Override
@@ -75,7 +79,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                                 holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
                                 holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
                                 Log.d("findFriend", "--------------" + model.getUser_name() + " " + model.getUser_bio());
-                                final String image_url=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                final String image_url = dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
                                 Picasso.get()
                                         .load(image_url).placeholder(R.drawable.profile_image)
                                         .resize(120, 120)
@@ -108,8 +112,8 @@ public class FindFriendsActivity extends AppCompatActivity {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                               // String visit_user_id = getRef(position).getKey();
-                                Intent profileIntent = new Intent(FindFriendsActivity.this, ProfileActivity.class);
+                                // String visit_user_id = getRef(position).getKey();
+                                Intent profileIntent = new Intent(FindFriendsActivity.this, VisitProfileActivity.class);
                                 profileIntent.putExtra("visit_user_id", visit_user_id);
                                 startActivity(profileIntent);
                             }

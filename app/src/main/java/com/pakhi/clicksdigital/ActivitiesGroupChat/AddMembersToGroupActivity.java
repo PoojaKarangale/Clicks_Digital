@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesGroupChat;
 
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.AddMembersToGroupAdapter;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 

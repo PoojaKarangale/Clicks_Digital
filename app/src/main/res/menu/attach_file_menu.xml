@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/camera_menu"
-        android:title="Camera"/>
+        android:title="Camera" />
     <item
         android:id="@+id/galary_pic_menu"
-        android:title="Galary"/>
+        android:title="Galary" />
     <item
         android:id="@+id/doc_file_menu"
-        android:title="Documents"/>
+        android:title="Documents" />
     <item
         android:id="@+id/audio_menu"
-        android:title="Audio"/>
+        android:title="Audio" />
     <item
         android:id="@+id/contact_menu"
-        android:title="contact"/>
+        android:title="contact" />
     <item
         android:id="@+id/location_menu"
-        android:title="Location"/>
+        android:title="Location" />
 
 </menu>

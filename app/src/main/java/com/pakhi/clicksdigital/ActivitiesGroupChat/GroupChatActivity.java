@@ -1,10 +1,9 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesGroupChat;
 
-import android.Manifest;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +20,8 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +37,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Adapter.MessageAdapter;
+import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Message;
+import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
@@ -63,6 +62,9 @@ public class GroupChatActivity extends AppCompatActivity {
     ImageView attach_file_btn, image_profile;
     Uri imageUriGalary, imageUriCamera, docUri;
     ImageView group_members;
+    UserDatabase db;
+    User user;
+    PermissionsHandling permissions;
     private Toolbar mToolbar;
     private ImageButton SendMessageButton;
     private EditText userMessageInput;
@@ -90,6 +92,8 @@ public class GroupChatActivity extends AppCompatActivity {
         GroupIdRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(CurrentGroupId);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         groupChatRefForCurrentGroup = FirebaseDatabase.getInstance().getReference("GroupChat").child(CurrentGroupId);
+        db = new UserDatabase(this);
+        getUserFromDb();
 
         InitializeFields();
         GroupIdRef.child("Users").addValueEventListener(new ValueEventListener() {
@@ -108,7 +112,6 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
-
 
         final String[] image_url = new String[1];
         GroupIdRef.addValueEventListener(new ValueEventListener() {
@@ -145,7 +148,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 }
             }
         });
-
+        permissions = new PermissionsHandling(this);
         attach_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +170,22 @@ public class GroupChatActivity extends AppCompatActivity {
         });
     }
 
+    private void getUserFromDb() {
+        db.getReadableDatabase();
+        Cursor res = db.getAllData();
+        if (res.getCount() == 0) {
+
+        } else {
+            res.moveToFirst();
+            user = new User(res.getString(0), res.getString(1),
+                    res.getString(2), res.getString(3), res.getString(4),
+                    res.getString(5), res.getString(6), res.getString(7),
+                    res.getString(8), res.getString(9), res.getString(10),
+                    res.getString(11), res.getString(12), res.getString(13),
+                    res.getString(14));
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -178,7 +197,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
 
                     Message messages = dataSnapshot.getValue(Message.class);
-                   // messagesList.clear();
+                    // messagesList.clear();
                     messagesList.add(messages);
 
                     messageAdapter.notifyDataSetChanged();
@@ -223,7 +242,7 @@ public class GroupChatActivity extends AppCompatActivity {
         image_profile = findViewById(R.id.image_profile);
         group_members = findViewById(R.id.group_members);
 
-        messageAdapter = new MessageAdapter(messagesList,"GroupChat",CurrentGroupId);
+        messageAdapter = new MessageAdapter(messagesList, "GroupChat", CurrentGroupId);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -233,7 +252,8 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void GetUserInfo() {
-        UsersRef.child(currentUserID).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        currentUserName = user.getUser_name();
+       /* UsersRef.child(currentUserID).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -246,6 +266,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
+    */
     }
 
     private void SaveMessageInfoToDatabase(String messageType, String message) {
@@ -335,7 +356,20 @@ public class GroupChatActivity extends AppCompatActivity {
     void requestForPremission() {
         //checking for permissions
 
-        if (ContextCompat.checkSelfPermission(GroupChatActivity.this,
+        if (!permissions.isPermissionGranted()) {
+            //when permissions not granted
+            if (permissions.isRequestPermissionable()) {
+                //creating alertDialog
+                permissions.showAlertDialog(REQUEST_CODE);
+            } else {
+                permissions.requestPermission(REQUEST_CODE);
+            }
+        } else {
+            //when those permissions are already granted
+            //popupMenuSettigns();
+        }
+
+  /*      if (ContextCompat.checkSelfPermission(GroupChatActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) +
                 ContextCompat.checkSelfPermission(GroupChatActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) +
@@ -394,7 +428,8 @@ public class GroupChatActivity extends AppCompatActivity {
             //when those permissions are already granted
             //popupMenuSettigns();
             logMessage("when those permissions are already granted=----------");
-        }
+        }*/
+
     }
 
     @Override

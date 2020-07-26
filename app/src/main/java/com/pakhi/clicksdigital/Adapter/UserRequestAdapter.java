@@ -19,9 +19,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.Const;
-import com.pakhi.clicksdigital.Activities.EnlargedImage;
-import com.pakhi.clicksdigital.Activities.ProfileActivity;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.ActivitiesProfile.VisitProfileActivity;
 import com.pakhi.clicksdigital.Model.User_request;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -99,7 +99,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             @Override
             public void onClick(View v) {
 
-                Intent profileActivity = new Intent(mcontext, ProfileActivity.class);
+                Intent profileActivity = new Intent(mcontext, VisitProfileActivity.class);
                 profileActivity.putExtra("user_id", userId);
                 profileActivity.putExtra("visit_user_id", userId);
                 profileActivity.putExtra("group_id", groupId);

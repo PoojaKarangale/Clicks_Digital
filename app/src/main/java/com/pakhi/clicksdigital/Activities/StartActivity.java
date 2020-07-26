@@ -1,10 +1,10 @@
 package com.pakhi.clicksdigital.Activities;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -31,11 +29,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.ActivitiesGroupChat.JoinGroupActivity;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Fragment.ChatsFragment;
 import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
+import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
+import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.Utils.PermissionsHandling;
+import com.pakhi.clicksdigital.ActivitiesProfile.ProfileActivity;
+import com.pakhi.clicksdigital.ActivitiesProfile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.ActivitiesRegisterLogin.RegisterActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,17 +50,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-    private EventsFragment eventsFragment;
-    private GroupsFragment groupsFragment;
-    private ChatsFragment chatsFragment;
-    private HomeFragment homeFragment;
     static int REQUEST_CODE = 1;
+    ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
+    UserDatabase db;
+    EventsFragment eventsFragment;
+    GroupsFragment groupsFragment;
+    HomeFragment homeFragment;
+    ChatsFragment chatsFragment;
+    Toolbar toolbar;
+    TabLayout tabLayout;
+    PermissionsHandling permissions;
     private ImageView profile, user_requests_to_join_group;
-
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
-    private String currentUserID;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,71 +73,28 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         mAuth = FirebaseAuth.getInstance();
-        profile = findViewById(R.id.profile_activity);
-        user_requests_to_join_group = findViewById(R.id.user_requests_to_join_group);
         currentUser = mAuth.getCurrentUser();
-        currentUserID = currentUser.getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
+        profile = findViewById(R.id.profile_activity);
+        user_requests_to_join_group = findViewById(R.id.user_requests_to_join_group);
+        db = new UserDatabase(this);
+        getUserFromDb();
+        permissions = new PermissionsHandling(StartActivity.this);
         requestForPremission();
 
-        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(Const.USER_DETAILS).child("user_type").exists()) {
-                    String user_type = dataSnapshot.child(Const.USER_DETAILS).child("user_type").getValue().toString();
-                    if (user_type.equals("admin")) {
-                        user_requests_to_join_group.setVisibility(View.VISIBLE);
-                    } else {
-                        user_requests_to_join_group.setVisibility(View.GONE);
-                    }
-                }
-            }
+        if (user.getUser_type().equals("admin")) {
+            user_requests_to_join_group.setVisibility(View.VISIBLE);
+        } else {
+            user_requests_to_join_group.setVisibility(View.GONE);
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        eventsFragment = new EventsFragment();
-        groupsFragment = new GroupsFragment();
-        homeFragment = new HomeFragment();
-        chatsFragment = new ChatsFragment();
-        //profileFragment = new ProfileFragment();
-
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-
-        Toolbar toolbar = findViewById(R.id.toolbar_start);
-        setSupportActionBar(toolbar);
-
-        ViewPager viewPager = findViewById(R.id.viewPager);
-
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        viewPagerAdapter.addFragment(homeFragment, "Home");
-        viewPagerAdapter.addFragment(groupsFragment, "Groups");
-        viewPagerAdapter.addFragment(chatsFragment, "Chat");
-        viewPagerAdapter.addFragment(eventsFragment, "Events");
-
-
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-
-        tabLayout.getTabAt(0).setIcon(R.drawable.home);
-        tabLayout.getTabAt(1).setIcon(R.drawable.chat);
-        tabLayout.getTabAt(2).setIcon(R.drawable.nav_profile);
-        tabLayout.getTabAt(3).setIcon(R.drawable.event);
-
-        BadgeDrawable badgeDrawable = tabLayout.getTabAt(0).getOrCreateBadge();
-        badgeDrawable.setVisible(true);
-        badgeDrawable.setNumber(10);
-
+        setupTabLayout();
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent profileIntent = new Intent(StartActivity.this, ProfileActivity.class);
-                profileIntent.putExtra("visit_user_id", currentUserID);
                 startActivity(profileIntent);
             }
         });
@@ -139,10 +107,46 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
+    private void setupTabLayout() {
+
+        eventsFragment = new EventsFragment();
+        groupsFragment = new GroupsFragment();
+        homeFragment = new HomeFragment();
+        chatsFragment = new ChatsFragment();
+
+        tabLayout = findViewById(R.id.tab_layout);
+        toolbar = findViewById(R.id.toolbar_start);
+
+        setSupportActionBar(toolbar);
+
+        viewPager = findViewById(R.id.viewPager);
+
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
+        viewPagerAdapter.addFragment(homeFragment, "Home");
+        viewPagerAdapter.addFragment(groupsFragment, "Groups");
+        viewPagerAdapter.addFragment(chatsFragment, "Chat");
+        viewPagerAdapter.addFragment(eventsFragment, "Events");
+
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+/*
+        tabLayout.getTabAt(0).setIcon(R.drawable.home);
+        tabLayout.getTabAt(1).setIcon(R.drawable.chat);
+        tabLayout.getTabAt(2).setIcon(R.drawable.nav_profile);
+        tabLayout.getTabAt(3).setIcon(R.drawable.event);
+ */
+        BadgeDrawable badgeDrawable = tabLayout.getTabAt(0).getOrCreateBadge();
+        badgeDrawable.setVisible(true);
+        badgeDrawable.setNumber(10);
+    }
+
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        new AlertDialog.Builder(this)
+       /* Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.createEventContainer);
+        if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
+            super.onBackPressed();
+        }*/        /* new AlertDialog.Builder(this)
 
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Closing Activity")
@@ -154,7 +158,72 @@ public class StartActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton("No", null)
-                .show();
+                .show();*/        /* int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+
+            //additional code
+        } else {
+            getSupportFragmentManager().popBackStack();
+            //finish();
+        }*/
+    /*    Log.d("TESTINGSTART", "---------------on back pressed--");
+        Log.d("TESTINGSTART", "-------------get cur itrm----" + viewPager.getCurrentItem());
+        Log.d("TESTINGSTART", "-----------frag count------" + getSupportFragmentManager().getBackStackEntryCount());
+        Log.d("TESTINGSTART", "-----------frag count------" + getSupportFragmentManager());*/
+        if (viewPager.getCurrentItem() == 0) {
+//            Log.d("TESTINGSTART", "-------------get cur itrm----" + viewPager.getCurrentItem());
+            if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
+//                Log.d("TESTINGSTART", "---------home--------");
+                new AlertDialog.Builder(this)
+
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Closing Activity")
+                        .setMessage("Are you sure you want to close this activity?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+//            Log.d("TESTINGSTART", "-----------------" + getSupportFragmentManager().getBackStackEntryCount());
+            FragmentManager fm = getSupportFragmentManager();
+            fm.popBackStack();
+        } else {
+//            Log.d("TESTINGSTART", "---------------else part--");
+               /* int count = getSupportFragmentManager().getBackStackEntryCount();
+
+                if (count == 0) {
+                    super.onBackPressed();
+
+                    //additional code
+                } else {
+                    getSupportFragmentManager().popBackStack();
+                    //finish();
+                }*/
+               /* String TAG_FRAGMENT = "TAG_FRAGMENT";
+
+                Fragment fragment = (Fragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT);
+                if (fragment != null) // could be null if not instantiated yet
+                {
+                    if (fragment.getView() != null) {
+                        // Pop the backstack on the ChildManager if there is any. If not, close this activity as normal.
+                        if (!fragment.getChildFragmentManager().popBackStackImmediate()) {
+                            finish();
+                        }
+                    }
+                }*/
+                /*final Myfragment fragment = (Myfragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT);
+
+                if (fragment.allowBackPressed()) { // and then you define a method allowBackPressed with the logic to allow back pressed or not
+                    super.onBackPressed();
+                }*/
+        }
     }
 
     @Override
@@ -171,20 +240,34 @@ public class StartActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.logout) {
-           // updateUserStatus("offline");
+            // updateUserStatus("offline");
             mAuth.signOut();
             SendUserToRegisterActivity();
         }
         if (item.getItemId() == R.id.join_new_groups) {
-            //SendUserToGroupRequestActivity();
             startActivity(new Intent(this, JoinGroupActivity.class));
         }
 
         if (item.getItemId() == R.id.settings) {
-            //SendUserToSettingsActivity();
         }
 
         return true;
+    }
+
+    private void getUserFromDb() {
+        db.getReadableDatabase();
+        Cursor res = db.getAllData();
+        if (res.getCount() == 0) {
+
+        } else {
+            res.moveToFirst();
+            user = new User(res.getString(0), res.getString(1),
+                    res.getString(2), res.getString(3), res.getString(4),
+                    res.getString(5), res.getString(6), res.getString(7),
+                    res.getString(8), res.getString(9), res.getString(10),
+                    res.getString(11), res.getString(12), res.getString(13),
+                    res.getString(14));
+        }
     }
 
     private void SendUserToUserRequestActivity() {
@@ -249,7 +332,7 @@ public class StartActivity extends AppCompatActivity {
 
     private void SendUserToSetProfileActivity() {
         Intent intent = new Intent(StartActivity.this, SetProfileActivity.class);
-        intent.putExtra("PreviousActivity","StartActivity");
+        intent.putExtra("PreviousActivity", "StartActivity");
         startActivity(intent);
     }
 
@@ -269,48 +352,27 @@ public class StartActivity extends AppCompatActivity {
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
 
-        RootRef.child("Users").child(currentUserID).child("userState")
+        RootRef.child("Users").child(user.getUser_id()).child("userState")
                 .updateChildren(onlineStateMap);
 
     }
 
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
-
-        List<Fragment> fragments = new ArrayList<>();
-        List<String> fragmentTitle = new ArrayList<>();
-
-        ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
-        }
-
-        void addFragment(Fragment fragment, String title) {
-            fragments.add(fragment);
-            fragmentTitle.add(title);
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitle.get(position);
-        }
-    }
-
     void requestForPremission() {
         //checking for permissions
+        if (!permissions.isPermissionGranted()) {
+            //when permissions not granted
+            if (permissions.isRequestPermissionable()) {
+                //creating alertDialog
+                permissions.showAlertDialog(REQUEST_CODE);
+            } else {
+                permissions.requestPermission(REQUEST_CODE);
+            }
+        } else {
+            //when those permissions are already granted
+            //popupMenuSettigns();
+        }
 
-        if (ContextCompat.checkSelfPermission(StartActivity.this,
+      /*  if (ContextCompat.checkSelfPermission(StartActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) +
                 ContextCompat.checkSelfPermission(StartActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) +
@@ -369,7 +431,7 @@ public class StartActivity extends AppCompatActivity {
             //when those permissions are already granted
             //popupMenuSettigns();
             //logMessage("when those permissions are already granted=----------");
-        }
+        }*/
     }
 
     @Override
@@ -383,15 +445,48 @@ public class StartActivity extends AppCompatActivity {
             ) {
                 //popupMenuSettigns();
                 //permission granted
-               // logMessage(" permission granted-----------");
+                // logMessage(" permission granted-----------");
 
             } else {
 
                 //permission not granted
                 //requestForPremission();
-               // logMessage(" permission  not granted-------------");
+                // logMessage(" permission  not granted-------------");
 
             }
+        }
+    }
+
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
+        List<Fragment> fragments = new ArrayList<>();
+        List<String> fragmentTitle = new ArrayList<>();
+
+        ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        void addFragment(Fragment fragment, String title) {
+            fragments.add(fragment);
+            fragmentTitle.add(title);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitle.get(position);
         }
     }
 

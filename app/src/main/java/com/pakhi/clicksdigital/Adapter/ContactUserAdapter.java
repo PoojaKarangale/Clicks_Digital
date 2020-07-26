@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.pakhi.clicksdigital.Activities.ChatActivity;
+import com.pakhi.clicksdigital.ActivitiesChat.ChatActivity;
 import com.pakhi.clicksdigital.Model.Contact;
 import com.pakhi.clicksdigital.R;
 

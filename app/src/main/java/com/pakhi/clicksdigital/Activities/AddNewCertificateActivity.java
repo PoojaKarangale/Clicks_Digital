@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
 
@@ -47,6 +48,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userid = firebaseAuth.getUid();
         storageRootReference = FirebaseStorage.getInstance().getReference();
+
         name_of_certificate = findViewById(R.id.name_of_certificate);
         name_of_institute = findViewById(R.id.name_of_institute);
         choose_certificate = findViewById(R.id.choose_certificate);
@@ -70,11 +72,11 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(name)) {
                     Toast.makeText(AddNewCertificateActivity.this, "name of certificate cannot be empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    certificate = new Certificates(name,institute,fileUri);
+                    certificate = new Certificates(name, institute, fileUri);
                     Intent sendDataBackIntent = new Intent();
                     //sendDataBackIntent.putExtra("certificate", certificate);
                     sendDataBackIntent.putExtra("certificate", certificate);
-                    setResult(RESULT_OK,sendDataBackIntent);
+                    setResult(RESULT_OK, sendDataBackIntent);
                     finish();
                 }
             }

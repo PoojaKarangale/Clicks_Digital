@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.GroupChatActivity">
+    tools:context=".ActivitiesGroupChat.GroupChatActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
@@ -32,6 +32,7 @@
 
 
             </androidx.appcompat.widget.Toolbar>
+
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -39,8 +40,7 @@
                 android:src="@drawable/people"
                 android:layout_margin="8dp"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                />
+                android:layout_centerVertical="true" />
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -71,17 +71,25 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        >
+        android:layout_marginEnd="10dp">
 
         <EditText
             android:id="@+id/input_group_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/attach_file_btn"
+            android:layout_toLeftOf="@+id/raise_question"
             android:background="@drawable/back_edit_text"
             android:hint="write your message here..."
-            android:padding="8dp" />
+            android:padding="8dp"
+
+            />
+
+        <ImageView
+            android:id="@+id/raise_question"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toLeftOf="@+id/attach_file_btn"
+            android:src="@drawable/people" />
 
         <ImageView
             android:id="@+id/attach_file_btn"

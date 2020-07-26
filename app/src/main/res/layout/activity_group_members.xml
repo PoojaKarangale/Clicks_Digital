@@ -125,7 +125,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".Activities.GroupMembersActivity">
+            tools:context=".ActivitiesGroupChat.GroupMembersActivity">
 
             <LinearLayout
                 android:id="@+id/desc_layout"

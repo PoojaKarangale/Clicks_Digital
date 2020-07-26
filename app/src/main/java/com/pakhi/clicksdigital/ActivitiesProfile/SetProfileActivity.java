@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.ActivitiesProfile;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -6,6 +6,8 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -31,7 +33,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -46,6 +47,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.Activities.AddNewCertificateActivity;
+import com.pakhi.clicksdigital.ActivitiesGroupChat.JoinGroupActivity;
+import com.pakhi.clicksdigital.Activities.StartActivity;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
@@ -68,17 +74,17 @@ public class SetProfileActivity extends AppCompatActivity {
     Uri picImageUri = null;
     FirebaseAuth firebaseAuth;
     String number;
-    User user;
+    // User user;
     StorageReference mStorageReference;
     DatabaseReference mDatabaseReference, RootRef;
     ArrayList<Certificates> certificates;
-
+    boolean isCertificatesAdded = false;
     String previousActivity;
+    UserDatabase db;
     private ImageView profile_img, done_btn;
     private EditText full_name, email, weblink, bio, get_city;
     private ProgressDialog progressDialog;
-    private String gender, user_type;
-
+    private String gender = "", user_type = "";
     private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us;
     private ImageButton add_more_certificate;
     private boolean isNewProfilePicSelected = false;
@@ -91,6 +97,8 @@ public class SetProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userid = firebaseAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
+
+        db = new UserDatabase(this);
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Const.SHARED_PREF, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
@@ -144,7 +152,7 @@ public class SetProfileActivity extends AppCompatActivity {
         done_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String full_name_str, email_str, bio_str, weblink_str;
+                String full_name_str = "", email_str = "", bio_str = "", weblink_str = "";
                 full_name_str = full_name.getText().toString().trim();
                 email_str = email.getText().toString().trim();
                 bio_str = bio.getText().toString().trim();
@@ -178,9 +186,9 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void getCitySelected() {
-       // Places.initialize(getApplicationContext(), "AIzaSyCh4NMlBgcTL_HhUI_zvOeYliPMAhTvKTo");
+        // Places.initialize(getApplicationContext(), "AIzaSyCh4NMlBgcTL_HhUI_zvOeYliPMAhTvKTo");
         Places.initialize(getApplicationContext(), "AIzaSyDFLqgnYmeNcmyllMsoxTe9Co_KrcN7cQs");
-     //   PlacesClient placesClient = Places.createClient(this);
+        //   PlacesClient placesClient = Places.createClient(this);
         get_city.setFocusable(false);
         get_city.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +219,7 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void VerifyUserExistance() {
-        String currentUserID = firebaseAuth.getCurrentUser().getUid();
+        final String currentUserID = firebaseAuth.getCurrentUser().getUid();
 
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -224,11 +232,9 @@ public class SetProfileActivity extends AppCompatActivity {
                             sendUserToJoinGroupActivity();
                         }
                     }
-                    user = dataSnapshot.child(Const.USER_DETAILS).getValue(User.class);
-                    Log.d("setProfileTESTING", user.getUser_name());
-                    loadData();
-                } else {
-
+                    //user = dataSnapshot.child(Const.USER_DETAILS).getValue(User.class);
+                    // Log.d("setProfileTESTING", user.getUser_name());
+                    loadData(currentUserID);
                 }
             }
 
@@ -239,8 +245,8 @@ public class SetProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void loadData() {
-        Picasso.get()
+    private void loadData(String currentUserID) {
+        /*Picasso.get()
                 .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .resize(120, 120)
                 .into(profile_img);
@@ -254,8 +260,37 @@ public class SetProfileActivity extends AppCompatActivity {
         get_working.setText(user.getWork_profession());
         get_speaker_experience.setText(user.getSpeaker_experience());
         get_offer_to_community.setText(user.getOffer_to_community());
-        get_city.setText(user.getCity());
+        get_city.setText(user.getCity());*/
+        // SQLiteDatabase sqlDb = db.getWritableDatabase();
+        db.getReadableDatabase();
+        Cursor res = db.getAllData();
+        if (res.getCount() == 0) {
 
+        } else {
+            res.moveToFirst();
+            final User user = new User(res.getString(0), res.getString(1),
+                    res.getString(2), res.getString(3), res.getString(4),
+                    res.getString(5), res.getString(6), res.getString(7),
+                    res.getString(8), res.getString(9), res.getString(10),
+                    res.getString(11), res.getString(12), res.getString(13),
+                    res.getString(14));
+
+            Picasso.get()
+                    .load(user.getImage_url())
+                    .resize(120, 120)
+                    .into(profile_img);
+            picImageUri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+            full_name.setText(user.getUser_name());
+            email.setText(user.getUser_email());
+            weblink.setText(user.getWeblink());
+            bio.setText(user.getUser_bio());
+            get_expectations_from_us.setText(user.getExpectations_from_us());
+            get_experiences.setText(user.getExperiences());
+            get_working.setText(user.getWork_profession());
+            get_speaker_experience.setText(user.getSpeaker_experience());
+            get_offer_to_community.setText(user.getOffer_to_community());
+            get_city.setText(user.getCity());
+        }
     }
 
     private void sendUserToStartActivity() {
@@ -284,39 +319,75 @@ public class SetProfileActivity extends AppCompatActivity {
 
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
-        User user = new User(picImageUri.toString(), userid, city, expectations_from_us, experiences, gender, number, offer_to_community,
-                speaker_experience, bio_str, email_str, full_name_str, user_type, weblink_str, working);
+        final User user = new User(userid, full_name_str, bio_str, picImageUri.toString(), user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
+                speaker_experience, email_str, weblink_str, working);
 
-        final int[] numberOfCertificate = {0};
-        reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        final HashMap<String, String> userItems = new HashMap<>();
+        userItems.put(Const.USER_ID, userid);
+        userItems.put(Const.USER_NAME, full_name_str);
+        userItems.put(Const.USER_BIO, bio_str);
+        userItems.put(Const.IMAGE_URL, picImageUri.toString());
+        userItems.put(Const.USER_TYPE, user_type);
+        userItems.put(Const.CITY, city);
+        userItems.put("expectations_from_us", expectations_from_us);
+        userItems.put("experiences", experiences);
+        userItems.put("gender", gender);
+        userItems.put("number", number);
+        userItems.put("offer_to_community", offer_to_community);
+        userItems.put("speaker_experience", speaker_experience);
+        userItems.put("email", email_str);
+        userItems.put("weblink", weblink_str);
+        userItems.put("working", working);
 
-                if (dataSnapshot.exists())
-                    numberOfCertificate[0] = (int) dataSnapshot.getChildrenCount();
+        if (isCertificatesAdded) {
 
-                for (Certificates c : certificates) {
-                    reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
-                    numberOfCertificate[0]++;
+            final int[] numberOfCertificate = {0};
+            reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.exists())
+                        numberOfCertificate[0] = (int) dataSnapshot.getChildrenCount();
+
+                    for (Certificates c : certificates) {
+                        reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
+                        numberOfCertificate[0]++;
+                    }
+                    certificates.clear();
                 }
-                certificates.clear();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-        Log.d("setProfileTESTING", "------------" + numberOfCertificate[0]);
+                }
+            });
+        }
+
+        // Log.d("setProfileTESTING", "------------" + numberOfCertificate[0]);
 
         reference.child(userid).child(Const.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                addCurrentUserToDatabase(userItems);
                 progressDialog.dismiss();
                 updateUI(userid);
             }
         });
     }
+
+    private void addCurrentUserToDatabase(HashMap<String, String> userItems) {
+        Log.d("TESTING", "=====================in add user");
+        SQLiteDatabase sqlDb = db.getWritableDatabase();
+        Log.d("TESTING", "=====================sqlDb" + sqlDb.toString());
+        db.onUpgrade(sqlDb, 0, 1);
+        Log.d("TESTING", "=====================data entered suc" + db.insertData(userItems));
+
+    }
+
+  /*  private boolean addCurrentUserToDatabase(String userid, String full_name_str, String bio_str, String image_url, String user_type) {
+        return db.insertData(userid, full_name_str, bio_str, image_url, user_type);
+    }*/
+
 
     private void createUserProfile(final String full_name_str, final String email_str, final String bio_str, final String weblink_str) {
         StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
@@ -441,21 +512,21 @@ public class SetProfileActivity extends AppCompatActivity {
                     break;
                 case REQUEST_CODE_FOR_CERTIFICATE:
                     Certificates certificate;
+                    isCertificatesAdded = true;
                     certificate = (Certificates) data.getSerializableExtra("certificate");
                     certificates.add(certificate);
                     showAddedCertificates(certificate, certificates.size());
                     break;
                 case GET_CITY_CODE:
-                    Log.d("TESTING","------------------get city code");
+                    Log.d("TESTING", "------------------get city code");
                     Place place = Autocomplete.getPlaceFromIntent(data);
-                    Log.d("SETPROFIETESTING","------------------get city code"+place.getName());
+                    Log.d("SETPROFIETESTING", "------------------get city code" + place.getName());
                     get_city.setText(place.getName());
                     break;
                 default:
                     Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(resultCode == AutocompleteActivity.RESULT_ERROR){
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             showToast(status.getStatusMessage());
         }

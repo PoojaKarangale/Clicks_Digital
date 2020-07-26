@@ -30,6 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.ContactUserAdapter;
+import com.pakhi.clicksdigital.ActivitiesChat.ChatActivity;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Model.Contact;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -55,7 +58,6 @@ public class ContactUserActivity extends AppCompatActivity {
     private RecyclerView myContactsList;
 
     private DatabaseReference ContacsRef, UsersRef;
-    private FirebaseAuth mAuth;
     private String currentUserID;
 
     @Override
@@ -78,22 +80,13 @@ public class ContactUserActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         showContacts();
  */
-
-
         firebaseAuth = FirebaseAuth.getInstance();
         RootRef = FirebaseDatabase.getInstance().getReference();
         myContactsList = findViewById(R.id.recycler_contact_user);
         myContactsList.setLayoutManager(new LinearLayoutManager(ContactUserActivity.this));
-
-
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
-
-
+        currentUserID = firebaseAuth.getCurrentUser().getUid();
         ContacsRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUserID);
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-
-
     }
 
     private void getContactList() {
@@ -323,7 +316,7 @@ public class ContactUserActivity extends AppCompatActivity {
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
 
-        RootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("userState")
+        RootRef.child("Users").child(currentUserID).child("userState")
                 .updateChildren(onlineStateMap);
 
     }

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#1768E7</color>
     <color name="colorPrimaryDark">#1768E7</color>
     <color name="colorAccent">#Ff3300</color>
-    <color name="white" >#FFFFFF</color>
-    <color name="grey" >#4B4B4D</color>
-    <color name="pale_grey" >#9B9B9C</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#4B4B4D</color>
+    <color name="pale_grey">#9B9B9C</color>
     <color name="purple">#FF00FF</color>
     <color name="black">#000000</color>
     <color name="black_shade">#171500</color>
+    <color name="cyan">#DFA8FDFA</color>
+    <color name="chipColor">#E4E4E4</color>
 
 </resources>
