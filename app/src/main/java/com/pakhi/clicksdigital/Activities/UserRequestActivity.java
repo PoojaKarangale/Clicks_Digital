@@ -1,6 +1,6 @@
 package com.pakhi.clicksdigital.Activities;
 
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class UserRequestActivity extends AppCompatActivity {
-    SharedPreferences pref;
     DatabaseReference RootRef;
     FirebaseAuth firebaseAuth;
     private RecyclerView recyclerView;

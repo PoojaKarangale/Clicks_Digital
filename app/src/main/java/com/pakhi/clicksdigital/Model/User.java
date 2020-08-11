@@ -8,6 +8,10 @@ public class User implements Serializable {
     private String image_url;
     private String user_id;
     private String city;
+
+
+    private String last_name;
+    private String company;
     private boolean isSelected;
     private String expectations_from_us, experiences, gender, number, offer_to_community,
             speaker_experience, user_bio, user_email, user_name, user_type, weblink, work_profession;
@@ -22,6 +26,26 @@ public class User implements Serializable {
         this.user_bio = user_bio;
         this.user_name = user_name;
         this.user_type = user_type;
+    }
+
+    public User(String userid, String full_name_str, String bio_str, String image_url, String user_type, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_email, String weblink, String work_profession, String last_name, String company) {
+        this.image_url = image_url;
+        this.user_id = userid;
+        this.city = city;
+        this.expectations_from_us = expectations_from_us;
+        this.experiences = experiences;
+        this.gender = gender;
+        this.number = number;
+        this.offer_to_community = offer_to_community;
+        this.speaker_experience = speaker_experience;
+        this.user_bio = bio_str;
+        this.user_email = user_email;
+        this.user_name = full_name_str;
+        this.user_type = user_type;
+        this.weblink = weblink;
+        this.work_profession = work_profession;
+        this.last_name = last_name;
+        this.company = company;
     }
 
     public User(String userid, String full_name_str, String bio_str, String image_url, String user_type, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_email, String weblink, String work_profession) {
@@ -42,6 +66,21 @@ public class User implements Serializable {
         this.work_profession = work_profession;
     }
 
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
 
     public String getCity() {
         return city;

@@ -20,28 +20,24 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.ActivitiesGroupChat.JoinGroupActivity;
-import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Fragment.ChatsFragment;
 import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
+import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Model.User;
-import com.pakhi.clicksdigital.Utils.PermissionsHandling;
-import com.pakhi.clicksdigital.ActivitiesProfile.ProfileActivity;
-import com.pakhi.clicksdigital.ActivitiesProfile.SetProfileActivity;
+import com.pakhi.clicksdigital.Profile.ProfileActivity;
+import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.ActivitiesRegisterLogin.RegisterActivity;
+import com.pakhi.clicksdigital.RegisterLogin.RegisterActivity;
+import com.pakhi.clicksdigital.Utils.PermissionsHandling;
+import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +57,7 @@ public class StartActivity extends AppCompatActivity {
     Toolbar toolbar;
     TabLayout tabLayout;
     PermissionsHandling permissions;
+    String user_type;
     private ImageView profile, user_requests_to_join_group;
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
@@ -78,12 +75,15 @@ public class StartActivity extends AppCompatActivity {
 
         profile = findViewById(R.id.profile_activity);
         user_requests_to_join_group = findViewById(R.id.user_requests_to_join_group);
-        db = new UserDatabase(this);
+
         getUserFromDb();
         permissions = new PermissionsHandling(StartActivity.this);
         requestForPremission();
 
-        if (user.getUser_type().equals("admin")) {
+        SharedPreference pref = SharedPreference.getInstance();
+        user_type = pref.getData(SharedPreference.user_type, getApplicationContext());
+
+        if (user_type.equals("admin")) {
             user_requests_to_join_group.setVisibility(View.VISIBLE);
         } else {
             user_requests_to_join_group.setVisibility(View.GONE);
@@ -122,22 +122,22 @@ public class StartActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        viewPagerAdapter.addFragment(homeFragment, "Home");
-        viewPagerAdapter.addFragment(groupsFragment, "Groups");
-        viewPagerAdapter.addFragment(chatsFragment, "Chat");
-        viewPagerAdapter.addFragment(eventsFragment, "Events");
+        viewPagerAdapter.addFragment(homeFragment, "");//Home
+        viewPagerAdapter.addFragment(groupsFragment, "");//Groups
+        viewPagerAdapter.addFragment(chatsFragment, "");//Chat
+        viewPagerAdapter.addFragment(eventsFragment, "");//Events
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-/*
+
         tabLayout.getTabAt(0).setIcon(R.drawable.home);
-        tabLayout.getTabAt(1).setIcon(R.drawable.chat);
-        tabLayout.getTabAt(2).setIcon(R.drawable.nav_profile);
+        tabLayout.getTabAt(1).setIcon(R.drawable.people);
+        tabLayout.getTabAt(2).setIcon(R.drawable.chat);
         tabLayout.getTabAt(3).setIcon(R.drawable.event);
- */
-        BadgeDrawable badgeDrawable = tabLayout.getTabAt(0).getOrCreateBadge();
+
+        /*BadgeDrawable badgeDrawable = tabLayout.getTabAt(0).getOrCreateBadge();
         badgeDrawable.setVisible(true);
-        badgeDrawable.setNumber(10);
+        badgeDrawable.setNumber(10);*/
     }
 
     @Override
@@ -146,7 +146,8 @@ public class StartActivity extends AppCompatActivity {
        /* Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.createEventContainer);
         if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
             super.onBackPressed();
-        }*/        /* new AlertDialog.Builder(this)
+        }*/
+       /* new AlertDialog.Builder(this)
 
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Closing Activity")
@@ -158,7 +159,8 @@ public class StartActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton("No", null)
-                .show();*/        /* int count = getSupportFragmentManager().getBackStackEntryCount();
+                .show();*/
+       /* int count = getSupportFragmentManager().getBackStackEntryCount();
 
         if (count == 0) {
             super.onBackPressed();
@@ -168,14 +170,13 @@ public class StartActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
             //finish();
         }*/
-    /*    Log.d("TESTINGSTART", "---------------on back pressed--");
+        /*    Log.d("TESTINGSTART", "---------------on back pressed--");
         Log.d("TESTINGSTART", "-------------get cur itrm----" + viewPager.getCurrentItem());
         Log.d("TESTINGSTART", "-----------frag count------" + getSupportFragmentManager().getBackStackEntryCount());
         Log.d("TESTINGSTART", "-----------frag count------" + getSupportFragmentManager());*/
         if (viewPager.getCurrentItem() == 0) {
-//            Log.d("TESTINGSTART", "-------------get cur itrm----" + viewPager.getCurrentItem());
+
             if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
-//                Log.d("TESTINGSTART", "---------home--------");
                 new AlertDialog.Builder(this)
 
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -191,11 +192,9 @@ public class StartActivity extends AppCompatActivity {
                         .show();
             }
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-//            Log.d("TESTINGSTART", "-----------------" + getSupportFragmentManager().getBackStackEntryCount());
             FragmentManager fm = getSupportFragmentManager();
             fm.popBackStack();
         } else {
-//            Log.d("TESTINGSTART", "---------------else part--");
                /* int count = getSupportFragmentManager().getBackStackEntryCount();
 
                 if (count == 0) {
@@ -249,12 +248,14 @@ public class StartActivity extends AppCompatActivity {
         }
 
         if (item.getItemId() == R.id.settings) {
+            startActivity(new Intent(this, SettingActivity.class));
         }
 
         return true;
     }
 
     private void getUserFromDb() {
+        db = new UserDatabase(this);
         db.getReadableDatabase();
         Cursor res = db.getAllData();
         if (res.getCount() == 0) {
@@ -268,6 +269,8 @@ public class StartActivity extends AppCompatActivity {
                     res.getString(11), res.getString(12), res.getString(13),
                     res.getString(14));
         }
+        db.close();
+
     }
 
     private void SendUserToUserRequestActivity() {
@@ -287,7 +290,7 @@ public class StartActivity extends AppCompatActivity {
         if (currentUser == null) {
             // SendUserToRegisterActivity();
         } else {
-            //  updateUserStatus("online");
+            // updateUserStatus("online");
             //VerifyUserExistance();
         }
     }
@@ -311,7 +314,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void VerifyUserExistance() {
-        String currentUserID = mAuth.getCurrentUser().getUid();
+    /*    String currentUserID = mAuth.getCurrentUser().getUid();
 
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -327,7 +330,7 @@ public class StartActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     private void SendUserToSetProfileActivity() {

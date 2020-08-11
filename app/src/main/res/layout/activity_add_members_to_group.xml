@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivitiesGroupChat.AddMembersToGroupActivity">
+    tools:context=".GroupChat.AddMembersToGroupActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
@@ -28,20 +28,20 @@
 
             <ImageView
                 android:id="@+id/close"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/widget_size"
+                android:layout_height="@dimen/widget_size"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:src="@drawable/ic_cross" />
 
             <ImageView
                 android:id="@+id/send"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/widget_size"
+                android:layout_height="@dimen/widget_size"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:src="@drawable/send_message" />
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -50,6 +50,8 @@
         android:id="@+id/add_members_recycler_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/margine_main"
+        android:layout_marginEnd="@dimen/margine_main"
         android:layout_below="@+id/bar"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true" />

@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.pakhi.clicksdigital.ActivitiesChat.ChatActivity;
 import com.pakhi.clicksdigital.Model.Contact;
+import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class ContactUserAdapter extends RecyclerView.Adapter<ContactUserAdapter.
     public ContactUserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(mcontext)
-                .inflate(R.layout.item_group_chat, parent, false);
+                .inflate(R.layout.item_user, parent, false);
         return new ContactUserAdapter.ViewHolder(view);
     }
 

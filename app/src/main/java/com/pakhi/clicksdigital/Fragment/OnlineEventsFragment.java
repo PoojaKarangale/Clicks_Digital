@@ -19,8 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.ActivitiesEvent.CreateEventActivity;
-import com.pakhi.clicksdigital.Adapter.EventAdapter;
+import com.pakhi.clicksdigital.Event.CreateEventActivity;
+import com.pakhi.clicksdigital.Event.EventAdapter;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
 

@@ -11,7 +11,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,9 +24,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class AddNewCertificateActivity extends AppCompatActivity {
     final static int PICK_PDF_CODE = 2342;
@@ -35,7 +35,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     StorageReference storageRootReference;
     String name, institute;
-    private EditText name_of_certificate, name_of_institute;
+    private MaterialEditText name_of_certificate, name_of_institute;
     private Button choose_certificate, add_certificate;
     private ProgressDialog progressDialog;
     private Certificates certificate;
@@ -81,10 +81,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
-
 
     private void getPDF() {
         //for greater than lolipop versions we need the permissions asked on runtime

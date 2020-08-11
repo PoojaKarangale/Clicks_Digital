@@ -13,9 +13,8 @@ import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.payumoney.core.PayUmoneySdkInitializer;
-import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
-
 import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +72,8 @@ public class PaymentActivity extends AppCompatActivity {
                     res.getString(14));
         }
     }
-    public void startpay(){
+
+    public void startpay() {
 
         builder.setAmount(amount)                          // Payment amount
                 .setTxnId(txnid)                     // Transaction ID
@@ -104,11 +104,12 @@ public class PaymentActivity extends AppCompatActivity {
             getHashkey();
 
         } catch (Exception e) {
-            Log.e(TAG, " error s "+e.toString());
+            Log.e(TAG, " error s " + e.toString());
         }
 
     }
-    public void getHashkey(){
+
+    public void getHashkey() {
         ServiceWrapper service = new ServiceWrapper(null);
         Call<String> call = service.newHashCall(merchantkey, txnid, amount, prodname,
                 firstname, email);
@@ -116,8 +117,8 @@ public class PaymentActivity extends AppCompatActivity {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.e(TAG, "hash res "+response.body());
-                String merchantHash= response.body();
+                Log.e(TAG, "hash res " + response.body());
+                String merchantHash = response.body();
                 if (merchantHash.isEmpty() || merchantHash.equals("")) {
                     Toast.makeText(PaymentActivity.this, "Could not generate hash", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "hash empty");
@@ -132,7 +133,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.e(TAG, "hash error "+ t.toString());
+                Log.e(TAG, "hash error " + t.toString());
             }
         });
 
@@ -146,16 +147,16 @@ public class PaymentActivity extends AppCompatActivity {
         // Result Code is -1 send from Payumoney activity
         Log.e("StartPaymentActivity", "request code " + requestCode + " resultcode " + resultCode);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-            TransactionResponse transactionResponse = data.getParcelableExtra( PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE );
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
 
             if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
 
-                if(transactionResponse.getTransactionStatus().equals( TransactionResponse.TransactionStatus.SUCCESSFUL )){
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
                     //Success Transaction
 
                     Toast.makeText(PaymentActivity.this, "Susccessfully registered to the Event", Toast.LENGTH_SHORT).show();
                     finish();
-                } else{
+                } else {
                     //Failure Transaction
 
                     Toast.makeText(PaymentActivity.this, "Transaction faild", Toast.LENGTH_SHORT).show();
@@ -167,7 +168,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 // Response from SURl and FURL
                 String merchantResponse = transactionResponse.getTransactionDetails();
-                Log.e(TAG, "tran "+payuResponse+"---"+ merchantResponse);
+                Log.e(TAG, "tran " + payuResponse + "---" + merchantResponse);
             } /* else if (resultModel != null && resultModel.getError() != null) {
                 Log.d(TAG, "Error response : " + resultModel.getError().getTransactionResponse());
             } else {

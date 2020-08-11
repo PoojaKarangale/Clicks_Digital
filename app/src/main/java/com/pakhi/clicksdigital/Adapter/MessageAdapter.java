@@ -26,10 +26,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Utils.Const;
-import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -102,7 +102,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onClick(View v) {
                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra("image_url_string", receiverImage[0]);
+                fullScreenIntent.putExtra(Const.IMAGE_URL, receiverImage[0]);
                 v.getContext().startActivity(fullScreenIntent);
             }
         });
@@ -152,7 +152,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onClick(View v) {
                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra("image_url_string", String.valueOf(messages.getMessage()));
+                fullScreenIntent.putExtra(Const.IMAGE_URL, String.valueOf(messages.getMessage()));
                 v.getContext().startActivity(fullScreenIntent);
             }
         });
@@ -160,7 +160,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onClick(View v) {
                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra("image_url_string", String.valueOf(messages.getMessage()));
+                fullScreenIntent.putExtra(Const.IMAGE_URL, String.valueOf(messages.getMessage()));
                 v.getContext().startActivity(fullScreenIntent);
             }
         });

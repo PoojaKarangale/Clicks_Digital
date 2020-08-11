@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="56dp"
+    tools:context=".FragmentsInSetting.ChangeMyNumberFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_new_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:text="Enter new mobile number here" />
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/ccp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/txt_new_num"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            app:ccp_defaultNameCode="IND"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="true" />
+
+        <EditText
+            android:id="@+id/mobileNo_reg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ccp"
+            android:layout_toEndOf="@+id/ccp"
+            android:background="@drawable/edittext_bg"
+            android:hint="Mobile number"
+            android:inputType="phone"
+
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/verify"
+            android:layout_width="140dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/ccp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/button_bg"
+            android:text="Next"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </RelativeLayout>
+</FrameLayout>

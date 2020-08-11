@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layout_marginTop="56dp"
+    tools:context=".FragmentsInSetting.NotificationsFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_20dp">
+
+        <TextView
+            android:id="@+id/txt_noti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Allow notifications"
+            android:fontFamily="sans-serif"
+            android:textSize="@dimen/dimen_16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txt_noti"
+            android:text="If you uncheck you won't receive any notifications \nfrom this application"
+            android:fontFamily="sans-serif"
+            android:textSize="@dimen/dimen_12dp"
+            android:textColor="@color/pale_grey" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignEnd="@+id/txt_noti"
+            android:checked="true" />
+    </RelativeLayout>
+</FrameLayout>

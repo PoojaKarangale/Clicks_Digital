@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivitiesGroupChat.GroupChatActivity">
+    tools:context=".GroupChat.GroupChatActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_white"
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
@@ -20,6 +21,7 @@
                 android:id="@+id/image_profile"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="@dimen/margine_main"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/ic_launcher" />
 
@@ -30,19 +32,44 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_toEndOf="@+id/image_profile">
 
-
             </androidx.appcompat.widget.Toolbar>
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:id="@+id/group_members"
-                android:src="@drawable/people"
-                android:layout_margin="8dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true" />
+            <!--  <ImageView
+                  android:layout_width="32dp"
+                  android:layout_height="32dp"
+                  android:id="@+id/group_members"
+                  android:src="@drawable/people"
+                  android:layout_margin="8dp"
+                  android:layout_alignParentEnd="true"
+                  android:layout_centerVertical="true" />-->
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <!--    <RelativeLayout
+            android:id="@+id/banner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <ImageView
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="71dp"
+                android:layout_marginTop="-15dp"
+                android:elevation="20dp"
+                android:src="@drawable/bg_rounded_white" />
+
+        </RelativeLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/banner_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-28dp"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/white"
+            android:src="@mipmap/ic_launcher" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,6 +77,7 @@
         android:layout_above="@+id/myLinearLayout"
         android:layout_below="@+id/bar"
         android:scrollbars="vertical"
+        android:layout_marginTop="@dimen/margine_sub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bar">
@@ -58,53 +86,108 @@
             android:id="@+id/private_messages_list_of_users"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margine_main"
+            android:layout_marginEnd="@dimen/margine_main"
             android:layout_marginBottom="6dp">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
+    <!--  <RelativeLayout
+          android:id="@+id/myLinearLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:layout_alignParentBottom="true"
+          android:background="@drawable/bg_rounded_white"
+          android:orientation="horizontal"
+          android:paddingStart="@dimen/margine_main"
+          android:paddingEnd="@dimen/margine_main">
+
+          <EditText
+              android:id="@+id/input_group_message"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_toLeftOf="@+id/attach_file_btn"
+              android:background="@drawable/bg_rounded_white"
+              android:fontFamily="@font/lato"
+              android:hint="write your message here..."
+              android:layout_centerVertical="true"
+              android:textSize="@dimen/title1" />
+
+          &lt;!&ndash;  <ImageView
+                android:id="@+id/raise_question"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_toLeftOf="@+id/attach_file_btn"
+                android:src="@drawable/people" />&ndash;&gt;
+
+          <ImageView
+              android:id="@+id/attach_file_btn"
+              android:layout_width="@dimen/widget_size36"
+              android:layout_height="@dimen/widget_size36"
+              android:layout_centerVertical="true"
+              android:layout_margin="@dimen/dimen_12dp"
+              android:layout_toLeftOf="@+id/send_message_button"
+              android:src="@drawable/attach" />
+
+          <ImageButton
+              android:id="@+id/send_message_button"
+              android:layout_width="@dimen/widget_size36"
+              android:layout_height="@dimen/widget_size36"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="16dp"
+              android:background="@color/white"
+              android:src="@drawable/send_message" />
+
+      </RelativeLayout>-->
     <RelativeLayout
         android:id="@+id/myLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/background_light"
         android:orientation="horizontal"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:paddingStart="@dimen/margine_main"
+        android:paddingEnd="@dimen/margine_main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <EditText
             android:id="@+id/input_group_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/raise_question"
-            android:background="@drawable/back_edit_text"
-            android:hint="write your message here..."
-            android:padding="8dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/attach_file_btn"
+            android:fontFamily="@font/lato"
+            android:hint="type message here..."
+            android:maxLines="5"
+            android:padding="15dp"
+            android:textSize="@dimen/title2" />
 
-            />
-
-        <ImageView
-            android:id="@+id/raise_question"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_toLeftOf="@+id/attach_file_btn"
-            android:src="@drawable/people" />
-
-        <ImageView
+        <ImageButton
             android:id="@+id/attach_file_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_toLeftOf="@+id/send_message_button"
+            android:layout_width="@dimen/widget_size36"
+            android:layout_height="@dimen/widget_size36"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margine_sub"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/send_message_button"
+            android:backgroundTint="@android:color/white"
             android:src="@drawable/attach" />
 
         <ImageButton
             android:id="@+id/send_message_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/widget_size36"
+            android:layout_height="@dimen/widget_size36"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margine_sub"
+            android:backgroundTint="@android:color/white"
             android:src="@drawable/send_message" />
 
     </RelativeLayout>
-
 </RelativeLayout>

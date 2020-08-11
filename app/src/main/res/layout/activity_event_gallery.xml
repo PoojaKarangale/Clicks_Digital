@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Event.EventGalleryActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_white"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/group_chat_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_toEndOf="@+id/image_profile">
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margine_main"
+                android:fontFamily="@font/lato"
+                android:text="Gallery"
+                android:textColor="@color/black"
+                android:textSize="@dimen/heading"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/add_photo"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/back_round_button"
+                android:backgroundTint="@color/colorPrimary"
+                android:src="@drawable/add" />
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <GridView
+        android:id="@+id/myGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bar"
+        android:columnWidth="100dp"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp" />
+</RelativeLayout>

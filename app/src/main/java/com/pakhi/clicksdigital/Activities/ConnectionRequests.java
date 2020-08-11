@@ -24,11 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Model.Contact;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
+import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
-import com.pakhi.clicksdigital.Model.Contact;
-import com.pakhi.clicksdigital.ActivitiesProfile.VisitProfileActivity;
-import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -99,7 +99,7 @@ public class ConnectionRequests extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(View v) {
                                                         Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                                        fullScreenIntent.putExtra("image_url_string", requestProfileImage[0]);
+                                                        fullScreenIntent.putExtra(Const.IMAGE_URL, requestProfileImage[0]);
                                                         v.getContext().startActivity(fullScreenIntent);
                                                     }
                                                 });
@@ -400,7 +400,7 @@ public class ConnectionRequests extends AppCompatActivity {
                     @NonNull
                     @Override
                     public RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_group_chat, viewGroup, false);
+                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
                         RequestsViewHolder holder = new RequestsViewHolder(view);
                         return holder;
                     }

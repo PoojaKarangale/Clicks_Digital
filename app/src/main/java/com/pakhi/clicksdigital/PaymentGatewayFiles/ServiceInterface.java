@@ -16,7 +16,7 @@ public interface ServiceInterface {
 
     // method,, return type ,, secondary url
     @Multipart
-    @POST(SERVER_main_folder+"payumoney/new_hash.php")
+    @POST(SERVER_main_folder + "payumoney/new_hash.php")
     Call<String> getHashCall(
             @Part("key") RequestBody key,
             @Part("txnid") RequestBody txnid,

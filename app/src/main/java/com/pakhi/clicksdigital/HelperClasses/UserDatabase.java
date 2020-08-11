@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -40,7 +41,9 @@ public class UserDatabase extends SQLiteOpenHelper {
                 + "speaker_experience" + " TEXT,"
                 + "email" + " TEXT,"
                 + "weblink" + " TEXT,"
-                + "working" + " TEXT"
+                + "working" + " TEXT,"
+                + "last_name" + " TEXT,"
+                + "company" + " TEXT"
                 +
                 ")");
     }
@@ -84,5 +87,24 @@ public class UserDatabase extends SQLiteOpenHelper {
         Log.d("TESTINGUSERDB", "----------------- result long" + result);
         if (result == -1) return false;
         return true;
+    }
+
+    public boolean updateData(String[] key, String[] value, String Id) {
+
+        SQLiteDatabase myDB = this.getWritableDatabase();
+        String strFilter = Const.USER_ID + "=" + Id;
+        ContentValues args = new ContentValues();
+        for (int i = 0; i < key.length; i++) {
+            args.put(key[i], value[i]);
+        }
+        try {
+            myDB.update(TABLE_NAME, args, strFilter, null);
+            myDB.close();
+            return true;
+
+        } catch (SQLiteException e) {
+            myDB.close();
+            return false;
+        }
     }
 }

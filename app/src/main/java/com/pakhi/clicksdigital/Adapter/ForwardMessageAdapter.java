@@ -40,7 +40,7 @@ public class ForwardMessageAdapter extends RecyclerView.Adapter<ForwardMessageAd
     @Override
     public ForwardMessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext)
-                .inflate(R.layout.item_group_chat, parent, false);
+                .inflate(R.layout.item_user, parent, false);
         return new ForwardMessageAdapter.ViewHolder(view);
     }
 

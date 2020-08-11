@@ -21,11 +21,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.ActivitiesChat.ChatActivity;
+import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
+import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
-import com.pakhi.clicksdigital.Model.User;
-import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,8 +80,8 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    if (dataSnapshot.child(Const.USER_DETAILS).hasChild("image_url")) {
-                                        retImage[0] = dataSnapshot.child(Const.USER_DETAILS).child("image_url").getValue().toString();
+                                    if (dataSnapshot.child(Const.USER_DETAILS).hasChild(Const.IMAGE_URL)) {
+                                        retImage[0] = dataSnapshot.child(Const.USER_DETAILS).child(Const.IMAGE_URL).getValue().toString();
                                         Picasso.get().load(retImage[0]).into(holder.profileImage);
                                         // after adding image uri to users database
                                     }
@@ -130,7 +130,7 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                fullScreenIntent.putExtra("image_url_string", retImage[0]);
+                                fullScreenIntent.putExtra(Const.IMAGE_URL, retImage[0]);
                                 v.getContext().startActivity(fullScreenIntent);
                             }
                         });
@@ -139,7 +139,7 @@ public class ChatsFragment extends Fragment {
                     @NonNull
                     @Override
                     public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_group_chat, viewGroup, false);
+                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
                         return new ChatsViewHolder(view);
                     }
                 };

@@ -20,8 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.ActivitiesEvent.CreateEventActivity;
-import com.pakhi.clicksdigital.Adapter.EventAdapter;
+import com.pakhi.clicksdigital.Event.CreateEventActivity;
+import com.pakhi.clicksdigital.Event.EventAdapter;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
 
@@ -39,6 +39,7 @@ public class OfflineEventsFragment extends Fragment {
     private EventAdapter eventAdapter;
     private List<Event> events;
     private RecyclerView events_recycler;
+
     public OfflineEventsFragment() {
     }
 
@@ -73,6 +74,7 @@ public class OfflineEventsFragment extends Fragment {
         RetrieveAndDisplayEvents();
         return view;
     }
+
     private void RetrieveAndDisplayEvents() {
         eventRef.child("Offline").addValueEventListener(new ValueEventListener() {
             @Override
@@ -91,6 +93,7 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
     }
+
     private void replaceFragment(CreateEventActivity createEventFragment) {
         FragmentTransaction transaction = getChildFragmentManager()
                 .beginTransaction();

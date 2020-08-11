@@ -2,7 +2,6 @@ package com.pakhi.clicksdigital.Activities;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -30,11 +29,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.ContactUserAdapter;
-import com.pakhi.clicksdigital.ActivitiesChat.ChatActivity;
+import com.pakhi.clicksdigital.Model.Contact;
+import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
+import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
-import com.pakhi.clicksdigital.Model.Contact;
-import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -48,7 +47,6 @@ public class ContactUserActivity extends AppCompatActivity {
     //// fields for previous contact list
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     ArrayList<Contact> userList, contactList;
-    SharedPreferences pref;
     DatabaseReference RootRef;
     FirebaseAuth firebaseAuth;
     private RecyclerView recyclerView;
@@ -245,7 +243,7 @@ public class ContactUserActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                fullScreenIntent.putExtra("image_url_string", userImage[0]);
+                                fullScreenIntent.putExtra(Const.IMAGE_URL, userImage[0]);
                                 v.getContext().startActivity(fullScreenIntent);
                             }
                         });
@@ -289,7 +287,7 @@ public class ContactUserActivity extends AppCompatActivity {
             @NonNull
             @Override
             public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_group_chat, viewGroup, false);
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
                 ContactsViewHolder viewHolder = new ContactsViewHolder(view);
                 return viewHolder;
             }

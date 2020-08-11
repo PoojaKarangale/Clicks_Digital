@@ -4,9 +4,9 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bar"
         android:background="?android:attr/windowBackground">
 
         <androidx.appcompat.widget.Toolbar
@@ -17,46 +17,93 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp">
+                android:layout_marginStart="@dimen/margine_main"
+                android:layout_marginEnd="@dimen/margine_main">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/lato"
                     android:text="Join Group"
-                    android:layout_marginStart="10dp"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/heading" />
+
+                <!-- <androidx.appcompat.widget.SearchView
+                     android:id="@+id/search_bar"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentEnd="true"
+                     android:layout_marginStart="@dimen/margine_main"
+                     android:layout_marginEnd="@dimen/margine_main"
+                     android:layout_centerVertical="true"
+                     android:hint="search here..." />-->
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/home_btn"
-                    android:src="@drawable/home"
-                    android:layout_alignParentEnd="true" />
+                    android:id="@+id/close"
+                    android:layout_width="@dimen/widget_size"
+                    android:layout_height="@dimen/widget_size"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/close" />
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/bar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/margine_main"
+        android:layout_marginEnd="@dimen/margine_main"
+        android:hint="search here..." />
+
+    <!-- <TextView
+         android:id="@+id/txt_requested"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/search_bar"
+         android:layout_marginStart="@dimen/margine_main"
+         android:layout_marginEnd="@dimen/margine_main"
+         android:fontFamily="@font/lato"
+         android:text="Requested"
+         android:textSize="@dimen/title1" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_requested_groups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_bar"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/margine_main"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="@dimen/margine_main"
+        android:scrollbarAlwaysDrawVerticalTrack="true" />
+
+    <!-- <TextView
+         android:id="@+id/txt_new_groups"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/recycler_requested_groups"
+         android:layout_marginStart="@dimen/margine_main"
+         android:layout_marginEnd="@dimen/margine_main"
+         android:fontFamily="@font/lato"
+         android:text="New groups"
+         android:textSize="@dimen/title1" />-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_groups"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bar"
+        android:layout_below="@+id/recycler_requested_groups"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/margine_main"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="@dimen/margine_main"
         android:scrollbarAlwaysDrawVerticalTrack="true" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fab_create_group"
-        android:src="@drawable/add"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp" />
 </RelativeLayout>

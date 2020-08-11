@@ -19,11 +19,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Model.User_request;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
+import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
-import com.pakhi.clicksdigital.ActivitiesProfile.VisitProfileActivity;
-import com.pakhi.clicksdigital.Model.User_request;
-import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     @Override
     public UserRequestAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mcontext)
-                .inflate(R.layout.item_group_chat, parent, false);
+                .inflate(R.layout.item_user, parent, false);
         return new UserRequestAdapter.ViewHolder(view);
     }
 
@@ -85,7 +85,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             @Override
             public void onClick(View v) {
                 Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra("image_url_string", image[0]);
+                fullScreenIntent.putExtra(Const.IMAGE_URL, image[0]);
                 v.getContext().startActivity(fullScreenIntent);
             }
         });

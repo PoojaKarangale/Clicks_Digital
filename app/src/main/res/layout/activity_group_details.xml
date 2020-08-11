@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/black"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+                app:toolbarId="@+id/toolbar">
+
+                <ImageView
+                    android:id="@+id/app_bar_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/flag_transparent">
+
+                <ImageView
+                    android:id="@+id/back_to_group_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_margin="@dimen/margine_sub"
+                    android:background="@drawable/flag_transparent"
+                    android:elevation="@dimen/dimen_10dp"
+                    android:onClick="backToGroupChat"
+                    android:src="@drawable/back" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/group_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:maxLines="1"
+                        android:padding="5dp"
+                        android:text="group name"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/heading"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/edit_group_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:padding="5dp"
+                        android:src="@drawable/edit_btn"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/get_group_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Group name"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/heading"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/set_group_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:onClick="setGroupName"
+                        android:padding="5dp"
+                        android:src="@drawable/check_right_click_white"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/margine_main"
+            android:paddingEnd="@dimen/margine_main"
+            tools:context=".GroupChat.GroupDetailsActivity">
+
+            <TextView
+                android:id="@+id/group_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/margine_sub"
+                android:layout_gravity="start"
+                android:gravity="start"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/txt_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/group_info"
+                android:layout_marginTop="@dimen/margine_sub"
+                android:text="Description"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/title2"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/edit_description"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignTop="@+id/txt_des"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/margine_sub"
+                android:layout_toEndOf="@+id/txt_des"
+                android:background="@drawable/back_round_button"
+                android:backgroundTint="@color/colorPrimary"
+                android:contentDescription="edit"
+                android:padding="5dp"
+                android:src="@drawable/edit_btn"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/desc_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_des"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/group_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato"
+
+                    android:text="group description"
+                    android:textSize="@dimen/title1" />
+
+
+                <EditText
+                    android:id="@+id/get_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato"
+                    android:maxLines="1"
+                    android:text="Your Group name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/title1"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/set_description"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/margine_sub"
+                    android:background="@drawable/back_round_button"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:onClick="setDescription"
+                    android:padding="5dp"
+                    android:src="@drawable/check_right_click_white"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/number_of_participants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/desc_layout"
+                android:layout_marginTop="@dimen/margine_sub"
+                android:text="participants"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/title2" />
+
+            <ImageView
+                android:id="@+id/add_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/desc_layout"
+                android:layout_alignParentEnd="true"
+                android:onClick="add_member"
+                android:src="@drawable/add_member"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/memberList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/number_of_participants"
+                android:layout_marginTop="10dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true" />
+
+            <Button
+                android:id="@+id/exit_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/memberList"
+                android:layout_marginTop="@dimen/margine_main"
+                android:background="@drawable/flag_transparent"
+                android:gravity="center"
+                android:onClick="exitGroup"
+                android:text="Exit Group"
+                android:textColor="@color/colorAccent"
+                android:textSize="16dp"
+                android:textStyle="bold"
+
+                />
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,41 +5,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ActivitiesEvent.CreateEventActivity">
+    tools:context=".Event.CreateEventActivity">
+
+    <ImageView
+        android:id="@+id/event_image"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:src="@drawable/event_banner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@id/event_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-15dp"
+        android:background="@drawable/bg_rounded_white"
+        android:elevation="20dp"
+        android:shadowColor="@color/transperent_grey"
+        android:text="Add Image"
+        android:textColor="@color/colorPrimary"
+        android:textSize="10sp" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/event_image"
+        android:background="@color/white"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_marginStart="@dimen/margine_main"
+            android:layout_marginTop="@dimen/margine_sub"
+            android:layout_marginEnd="@dimen/margine_main"
+            android:layout_marginBottom="@dimen/margine_main">
 
-            <ImageView
-                android:id="@+id/event_image"
-                android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:src="@drawable/residential"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Event Name"
-                android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/event_image"
+                android:textSize="@dimen/title1"
+                android:fontFamily="@font/lato"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:met_baseColor="@android:color/black"
                 app:met_floatingLabel="highlight"
                 app:met_maxCharacters="40"
                 app:met_primaryColor="?colorAccent"
-
-                app:met_singleLineEllipsis="true"
-                tools:layout_editor_absoluteX="16dp" />
+                app:met_singleLineEllipsis="true" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/description"
@@ -54,7 +74,8 @@
                 android:minLines="1"
                 android:scrollbars="vertical"
                 android:textColorHint="@color/black"
-                android:textSize="16sp"
+                android:textSize="@dimen/title1"
+                android:fontFamily="@font/lato"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
                 app:met_baseColor="@android:color/black"
                 app:met_floatingLabel="highlight"
@@ -70,7 +91,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Event Category"
-                android:textSize="16dp"
+                android:textSize="@dimen/title1"
+                android:fontFamily="@font/lato"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_name" />
 
@@ -98,32 +120,80 @@
                    app:met_primaryColor="?colorAccent"
                    app:met_singleLineEllipsis="true" />
    -->
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/get_location"
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="Location"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description"
-                app:met_baseColor="@android:color/black"
-                app:met_floatingLabel="highlight"
-                app:met_maxCharacters="20"
-                app:met_primaryColor="?colorAccent"
-                app:met_singleLineEllipsis="true" />
+                tools:layout_editor_absoluteX="16dp">
+
+                <TextView
+                    android:id="@+id/event_type_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Event type"
+                    android:textSize="@dimen/title2"
+                    android:fontFamily="@font/lato"
+                    android:textColor="@color/colorPrimary" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/event_type_text"
+                    android:layout_marginTop="10dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/onlineChip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Online"
+                        android:textSize="@dimen/title1"
+                        android:fontFamily="@font/lato"
+                        app:chipBackgroundColor="@color/chipColor" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/offlineChip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Offline"
+                        android:fontFamily="@font/lato"
+                        android:textSize="@dimen/title1"
+                        app:chipBackgroundColor="@color/chipColor"
+                        app:layout_constraintStart_toEndOf="@+id/onlineChip"
+                        app:layout_constraintTop_toBottomOf="@+id/get_duration"
+                        app:layout_constraintTop_toTopOf="@+id/onlineChip" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/get_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/chip_group"
+                    android:hint="Location"
+                    android:textSize="@dimen/title1"
+                    android:fontFamily="@font/lato"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="20"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
+
+            </RelativeLayout>
+
 
             <LinearLayout
                 android:id="@+id/dateLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/get_location">
+                app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
                 <ImageButton
                     android:id="@+id/choose_date"
@@ -133,9 +203,10 @@
 
                 <TextView
                     android:id="@+id/choose_date_text"
-                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="@dimen/title2"
                     android:hint="12/02/2020" />
             </LinearLayout>
 
@@ -169,9 +240,10 @@
 
                 <TextView
                     android:id="@+id/choose_time_text"
-                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="@dimen/title2"
                     android:hint="12.00" />
             </LinearLayout>
 
@@ -179,61 +251,25 @@
                 android:id="@+id/get_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:hint="time Duration"
+                android:textSize="@dimen/title2"
+                android:fontFamily="@font/lato"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dateLayout"
                 app:met_baseColor="@android:color/black"
                 app:met_floatingLabel="highlight" />
 
             <TextView
-                android:id="@+id/event_type_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Event type"
-                android:textColor="@color/colorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/get_duration" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_type_text">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/onlineChip"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Online"
-                    app:chipBackgroundColor="@color/chipColor" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/offlineChip"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Offline"
-                    app:chipBackgroundColor="@color/chipColor"
-                    app:layout_constraintStart_toEndOf="@+id/onlineChip"
-                    app:layout_constraintTop_toBottomOf="@+id/get_duration"
-                    app:layout_constraintTop_toTopOf="@+id/onlineChip" />
-
-            </com.google.android.material.chip.ChipGroup>
-
-            <TextView
                 android:id="@+id/event_payable_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/dimen_16dp"
                 android:text="Event payable"
+                android:textSize="@dimen/title2"
+                android:fontFamily="@font/lato"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chip_group" />
+                app:layout_constraintTop_toBottomOf="@+id/get_duration" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_payble"
@@ -249,6 +285,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Paid"
+                    android:textSize="@dimen/title1"
+                    android:fontFamily="@font/lato"
                     app:chipBackgroundColor="@color/chipColor" />
 
                 <com.google.android.material.chip.Chip
@@ -257,6 +295,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Unpaid"
+                    android:textSize="@dimen/title1"
+                    android:fontFamily="@font/lato"
                     app:chipBackgroundColor="@color/chipColor"
                     app:layout_constraintStart_toEndOf="@+id/onlineChip"
                     app:layout_constraintTop_toBottomOf="@+id/get_duration"
@@ -269,25 +309,51 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:enabled="false"
                 android:hint="Cost of event"
+                android:textSize="@dimen/title2"
                 app:layout_constraintStart_toEndOf="@+id/chip_group_payble"
                 app:layout_constraintTop_toTopOf="@+id/chip_group_payble"
                 app:met_baseColor="@android:color/black"
-                app:met_floatingLabel="highlight"
-                android:enabled="false" />
+                app:met_floatingLabel="highlight" />
 
-            <Button
-                android:id="@+id/submit_btn"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
                 android:layout_marginTop="30dp"
-                android:layout_marginEnd="30dp"
-                android:background="@drawable/btn_back_stroke_red"
-                android:text="Create Event"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="right"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/get_cost" />
+                app:layout_constraintTop_toBottomOf="@+id/get_cost">
+
+                <Button
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_rounded_grey_border"
+                    android:backgroundTint="@color/white"
+                    android:text="Cancel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/get_cost" />
+
+                <Button
+                    android:id="@+id/submit_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:background="@drawable/back_round_button"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:gravity="center"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:text="Create Event"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cancel_btn" />
+            </LinearLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

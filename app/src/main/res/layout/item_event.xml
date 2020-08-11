@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_20dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="10dp"
-        app:cardBackgroundColor="@color/cyan"
+        android:elevation="20dp"
         app:cardCornerRadius="20dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,6 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:padding="20dp">
 
             <TextView
@@ -38,20 +41,20 @@
                 android:id="@+id/cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="cost"
                 android:layout_marginStart="20dp"
+                android:text="cost"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@+id/payable_text"
-                app:layout_constraintTop_toTopOf="@+id/payable_text"
-                android:visibility="gone" />
+                app:layout_constraintTop_toTopOf="@+id/payable_text" />
 
             <TextView
                 android:id="@+id/time_date_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="date and time and time duration"
                 android:layout_marginTop="8dp"
+                android:text="date and time and time duration"
                 android:textSize="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/payable_text" />
@@ -60,10 +63,11 @@
                 android:id="@+id/no_of_participants"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="@dimen/dimen_12dp"
                 android:drawableLeft="@drawable/profile_image"
                 android:text="people"
                 android:textColor="@color/black"
-                android:layout_marginStart="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/payable_text" />
 
@@ -98,35 +102,52 @@
                 app:layout_constraintStart_toStartOf="@+id/event_name"
                 app:layout_constraintTop_toBottomOf="@+id/event_name" />
 
-            <TextView
-                android:id="@+id/city"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="City"
-                android:textColor="@color/black"
-                android:textSize="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_image" />
+                app:layout_constraintTop_toBottomOf="@+id/event_image"
+                tools:layout_editor_absoluteX="20dp">
+
+                <TextView
+                    android:id="@+id/city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/city"
+                    android:textColor="@color/black"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/location"
+                    android:textSize="10dp"
+                    android:layout_below="@id/city" />
+
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/location"
+                android:id="@+id/event_type_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="location"
+                android:layout_marginTop="@dimen/dimen_12dp"
+                android:text="Organiser"
                 android:textSize="10dp"
+                android:textColor="@color/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/city" />
+                app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/organiser_image"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:src="@drawable/profile_image"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/location" />
+                app:layout_constraintTop_toBottomOf="@+id/event_type_text" />
 
             <TextView
                 android:id="@+id/organiser_name"
@@ -145,25 +166,25 @@
                 android:id="@+id/organiser_bio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Organiser"
+                android:text="Organiser bio"
                 android:textSize="10dp"
                 app:layout_constraintStart_toStartOf="@+id/organiser_name"
                 app:layout_constraintTop_toBottomOf="@+id/organiser_name" />
 
-            <Button
-                android:id="@+id/reg_btn"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:background="@drawable/back_round_button"
-                android:backgroundTint="@color/colorPrimary"
-                android:text="Join"
-                android:textSize="8dp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/organiser_image" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- <Button
+                 android:id="@+id/reg_btn"
+                 android:layout_width="45dp"
+                 android:layout_height="35dp"
+                 android:background="@drawable/back_round_button"
+                 android:backgroundTint="@color/colorPrimary"
+                 android:text="Join"
+                 android:textSize="8dp"
+                 android:textColor="@color/white"
+                 android:textStyle="bold"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintTop_toTopOf="@+id/organiser_image" />-->
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>

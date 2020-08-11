@@ -24,12 +24,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.ActivitiesChat.ChatActivity;
+import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
+import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
-import com.pakhi.clicksdigital.Model.User;
-import com.pakhi.clicksdigital.ActivitiesProfile.VisitProfileActivity;
-import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -89,7 +89,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
                                         Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
-                                        fullScreenIntent.putExtra("image_url_string", image_url);
+                                        fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
                                         v.getContext().startActivity(fullScreenIntent);
                                     }
                                 });
@@ -123,7 +123,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                     @NonNull
                     @Override
                     public FindFriendViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_group_chat, viewGroup, false);
+                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
                         FindFriendViewHolder viewHolder = new FindFriendViewHolder(view);
                         return viewHolder;
                     }

@@ -17,7 +17,7 @@ public class EnlargedImage extends AppCompatActivity {
         setContentView(R.layout.activity_enlarged_image);
 
         Intent intent = getIntent();
-        String image = intent.getStringExtra("image_url_string");
+        String image = intent.getStringExtra(Const.IMAGE_URL);
         //  InputStream is = this.getResources().openRawResource(imageId1);
         // Bitmap originalBitmap = BitmapFactory.decodeStream(is);
         ImageView myimage = (ImageView) findViewById(R.id.imageView);

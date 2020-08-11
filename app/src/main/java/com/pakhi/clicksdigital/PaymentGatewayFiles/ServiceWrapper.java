@@ -5,7 +5,6 @@ import androidx.multidex.BuildConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -16,7 +15,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 
 public class ServiceWrapper {
@@ -53,17 +51,17 @@ public class ServiceWrapper {
         return retrofit;
     }
 
-    public Call<String> newHashCall( String key, String txtid,String amount, String productinfo,
-                                                 String fullname, String email){
-       return mServiceInterface.getHashCall(
-               convertPlainString(key),   convertPlainString(txtid),convertPlainString(amount),
-               convertPlainString(productinfo), convertPlainString( fullname),  convertPlainString(email));
+    public Call<String> newHashCall(String key, String txtid, String amount, String productinfo,
+                                    String fullname, String email) {
+        return mServiceInterface.getHashCall(
+                convertPlainString(key), convertPlainString(txtid), convertPlainString(amount),
+                convertPlainString(productinfo), convertPlainString(fullname), convertPlainString(email));
     }
 
-      // convert aa param into plain text
-    public RequestBody convertPlainString(String data){
+    // convert aa param into plain text
+    public RequestBody convertPlainString(String data) {
         RequestBody plainString = RequestBody.create(MediaType.parse("text/plain"), data);
-        return  plainString;
+        return plainString;
     }
 }
 

@@ -4,21 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivitiesProfile.EditProfile">
+    tools:context=".Profile.EditProfile">
 
     <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:id="@+id/progressBar"
-        android:visibility="invisible"
+        android:layout_centerInParent="true"
         android:indeterminateTint="#FF3300"
-        android:layout_centerInParent="true" />
+        android:visibility="invisible" />
+    <!--
+      <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"></View>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="11"
+                android:background="@drawable/bg_rounded_white" />
+
+        </LinearLayout>-->
 
     <RelativeLayout
         android:id="@+id/layout_view"
-        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/event_banner" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="11"
+                android:background="@drawable/bg_rounded_white" />
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -30,13 +76,13 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/done_btn"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:id="@+id/close"
+                    android:layout_width="@dimen/widget_size36"
+                    android:layout_height="@dimen/widget_size36"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/done_right_click" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/margine_sub"
+                    android:src="@drawable/close" />
 
             </RelativeLayout>
 
@@ -46,123 +92,185 @@
             android:id="@+id/profile_img"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:src="@drawable/residential"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            app:civ_border_color="@color/pale_grey"
-            app:civ_border_width="1.5dp" />
+            android:src="@drawable/persone_profile"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_img"
+            android:layout_marginStart="@dimen/margine_main"
             android:layout_marginTop="40dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="@dimen/margine_main"
             android:layout_marginBottom="40dp"
             android:scrollbars="none">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/lato"
                     android:text="Enter your Personal Details"
                     android:textColor="#000000"
-                    android:textSize="26sp" />
+                    android:textSize="@dimen/title1" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/lato"
-                    android:text="Full Name*"
-                    android:layout_marginTop="20dp"
-                    android:layout_below="@id/header"
-                    android:id="@+id/txt1"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
-
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/full_name"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:inputType="textPersonName"
-                    android:textSize="18sp"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt1"
-                    android:background="@drawable/edittext_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/header"
+                    android:layout_marginTop="@dimen/margine_sub"
                     android:fontFamily="@font/lato"
-                    android:text="Email*"
-                    android:layout_below="@id/full_name"
-                    android:id="@+id/txt2"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:hint="First Name"
+                    android:maxLines="1"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
 
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/header"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/lato"
+                    android:hint="Last Name"
+                    android:maxLines="1"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:inputType="textEmailAddress"
-                    android:textSize="18sp"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt2"
-                    android:background="@drawable/edittext_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/full_name"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/lato"
-                    android:text="Bio*"
-                    android:layout_below="@id/email"
-                    android:id="@+id/txt3"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:hint="Email"
+                    android:maxLines="1"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true"
 
-                <EditText
+                    />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/bio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:inputType="textMultiLine"
-                    android:gravity="top"
-                    android:paddingTop="8dp"
-                    android:textSize="18sp"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt3"
-                    android:background="@drawable/edittext_bg" />
+                    android:layout_below="@id/email"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/lato"
+                    android:hint="Write about you"
+                    android:maxLines="2"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
+
+                <!--    <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:fontFamily="@font/lato"
+                   android:text="Full Name*"
+                   android:layout_marginTop="20dp"
+                   android:layout_below="@id/header"
+                   android:id="@+id/txt1"
+                   android:textSize="18sp"
+                   android:textColor="#000000" />
+
+               <EditText
+                   android:id="@+id/full_name"
+                   android:layout_width="match_parent"
+                   android:layout_height="50dp"
+                   android:layout_marginTop="5dp"
+                   android:textColor="#333333"
+                   android:inputType="textPersonName"
+                   android:textSize="18sp"
+                   android:paddingStart="10dp"
+                   android:layout_below="@id/txt1"
+                   android:background="@drawable/edittext_bg" />
+                     <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:fontFamily="@font/lato"
+                   android:text="Email*"
+                   android:id="@+id/txt2"
+                   android:layout_marginTop="16dp"
+                   android:textSize="18sp"
+                   android:textColor="#000000" />
+
+               <EditText
+                   android:id="@+id/email"
+                   android:layout_width="match_parent"
+                   android:layout_height="50dp"
+                   android:layout_marginTop="5dp"
+                   android:textColor="#333333"
+                   android:inputType="textEmailAddress"
+                   android:textSize="18sp"
+                   android:paddingStart="10dp"
+                   android:layout_below="@id/txt2"
+                   android:background="@drawable/edittext_bg" />
+                       <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:fontFamily="@font/lato"
+                   android:text="Bio*"
+                   android:layout_below="@id/email"
+                   android:id="@+id/txt3"
+                   android:layout_marginTop="16dp"
+                   android:textSize="18sp"
+                   android:textColor="#000000" />
+
+               <EditText
+                   android:id="@+id/bio"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:minHeight="80dp"
+                   android:layout_marginTop="5dp"
+                   android:textColor="#333333"
+                   android:inputType="textMultiLine"
+                   android:gravity="top"
+                   android:paddingTop="8dp"
+                   android:textSize="18sp"
+                   android:paddingStart="10dp"
+                   android:layout_below="@id/txt3"
+                   android:background="@drawable/edittext_bg" />-->
 
                 <LinearLayout
                     android:id="@+id/gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
-                    android:layout_below="@id/bio">
+                    android:layout_below="@id/bio"
+                    android:layout_marginTop="@dimen/margine_sub"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/lato"
                         android:text="Gender*"
-                        android:textSize="20sp"
                         android:textColor="#000000"
-                        android:fontFamily="@font/lato" />
+                        android:textSize="@dimen/title1" />
 
                     <RadioGroup
                         android:layout_width="match_parent"
@@ -174,22 +282,22 @@
                             android:id="@+id/male"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato"
                             android:onClick="onRadioButtonClicked"
                             android:text="Male"
-                            android:textSize="18sp"
                             android:textColor="#000000"
-                            android:fontFamily="@font/lato" />
+                            android:textSize="@dimen/title1" />
 
                         <RadioButton
                             android:id="@+id/female"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
+                            android:fontFamily="@font/lato"
                             android:onClick="onRadioButtonClicked"
                             android:text="Female"
-                            android:textSize="18sp"
                             android:textColor="#000000"
-                            android:fontFamily="@font/lato" />
+                            android:textSize="@dimen/title1" />
 
                     </RadioGroup>
 
@@ -197,264 +305,459 @@
 
                 <TextView
                     android:id="@+id/header2"
-                    android:layout_marginTop="40dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/lato"
                     android:layout_below="@id/gender"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margine_main"
+                    android:fontFamily="@font/lato"
                     android:text="Enter your Experience Details"
                     android:textColor="#000000"
-                    android:textSize="26sp" />
+                    android:textSize="@dimen/title1" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/lato"
-                    android:text="Current Position"
-                    android:layout_marginTop="20dp"
-                    android:layout_below="@id/header2"
-                    android:id="@+id/txt4"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
-
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/working"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:inputType="textShortMessage"
-                    android:textSize="18sp"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt4"
-                    android:background="@drawable/edittext_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/header2"
+                    android:layout_marginTop="@dimen/margine_sub"
                     android:fontFamily="@font/lato"
-                    android:text="Past Experiences"
-                    android:layout_below="@id/working"
-                    android:id="@+id/txt5"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:hint="Current Designation"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
 
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/company"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="@dimen/margine_sub"
+                    android:fontFamily="@font/lato"
+                    android:hint="Current Company"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/get_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/email"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/lato"
+                    android:hint="city"
+                    android:maxLines="2"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/experiences"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:minHeight="100dp"
-                    android:gravity="top"
-                    android:paddingTop="8dp"
-                    android:inputType="textMultiLine"
-                    android:textSize="18sp"
-                    android:hint="Enter each experience in a new line"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt5"
-                    android:background="@drawable/edittext_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_below="@id/working"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/lato"
-                    android:text="Speaker at any event(if any)"
-                    android:layout_below="@id/experiences"
-                    android:id="@+id/txt6"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:hint="Work experience"
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
 
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/speaker_experience"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="80dp"
-                    android:gravity="top"
-                    android:paddingTop="8dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:inputType="textPassword"
-                    android:textSize="18sp"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt6"
-                    android:background="@drawable/edittext_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_below="@id/experiences"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/lato"
-                    android:text="Expectationd from platform"
-                    android:layout_below="@id/speaker_experience"
-                    android:id="@+id/txt7"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:hint="Speaker at any event"
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
 
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/expectations_from_us"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:inputType="textPassword"
-                    android:textSize="18sp"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt7"
-                    android:background="@drawable/edittext_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/experiences"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/lato"
-                    android:text="What can you offer?"
-                    android:layout_below="@id/expectations_from_us"
-                    android:id="@+id/txt8"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:hint="Expectations from us"
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
 
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/offer_to_community"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#333333"
-                    android:inputType="textPassword"
-                    android:textSize="18sp"
-                    android:paddingStart="10dp"
-                    android:layout_below="@id/txt8"
-                    android:background="@drawable/edittext_bg" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/linear1"
-                    android:layout_below="@id/offer_to_community"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/header3"
-                        android:layout_marginTop="40dp"
+                    android:layout_below="@id/experiences"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/lato"
+                    android:hint="What can you offer to community"
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="?colorAccent"
+                    app:met_singleLineEllipsis="true" />
+                <!--     <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/expectations_from_us"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Expectation from us"
+                        android:textSize="@dimen/title1"
+                        app:met_baseColor="@android:color/black"
+                        app:met_floatingLabel="highlight"
+                        android:fontFamily="@font/lato"
+                        android:inputType="textMultiLine"
+                        app:met_primaryColor="?colorAccent"
+                        app:met_singleLineEllipsis="true"
+                        android:layout_below="@id/speaker_experience"
+                        />
+                       <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/offer_to_community"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Expectation from us"
+                        android:textSize="@dimen/title1"
+                        app:met_baseColor="@android:color/black"
+                        app:met_floatingLabel="highlight"
+                        android:fontFamily="@font/lato"
+                        android:inputType="textMultiLine"
+                        app:met_primaryColor="?colorAccent"
+                        app:met_singleLineEllipsis="true"
+                        android:layout_below="@id/expectations_from_us"
+                        />
+                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:fontFamily="@font/lato"
-                        android:layout_below="@id/gender"
-                        android:text="Social Links"
-                        android:textColor="#000000"
-                        android:textSize="26sp" />
+                        android:text="Current Position"
+                        android:layout_marginTop="20dp"
+                        android:layout_below="@id/header2"
+                        android:id="@+id/txt4"
+                        android:textSize="@dimen/title1"
+                        android:textColor="#000000" />
 
                     <EditText
-                        android:id="@+id/weblink"
+                        android:id="@+id/working"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="5dp"
                         android:textColor="#333333"
-                        android:inputType="text"
-                        android:hint="Linked-in Profile Link"
+                        android:inputType="textShortMessage"
                         android:textSize="18sp"
-                        android:textColorHint="#717171"
                         android:paddingStart="10dp"
+                        android:layout_below="@id/txt4"
                         android:background="@drawable/edittext_bg" />
+                            <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="Past Experiences"
+                        android:layout_below="@id/working"
+                        android:id="@+id/txt5"
+                        android:layout_marginTop="16dp"
+                        android:textSize="18sp"
+                        android:textColor="#000000" />
 
                     <EditText
-                        android:id="@+id/facebook_link"
+                        android:id="@+id/experiences"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:textColor="#333333"
-                        android:inputType="text"
-                        android:hint="Facebook Profile Link"
+                        android:minHeight="100dp"
+                        android:gravity="top"
+                        android:paddingTop="8dp"
+                        android:inputType="textMultiLine"
                         android:textSize="18sp"
-                        android:textColorHint="#717171"
+                        android:hint="Enter each experience in a new line"
                         android:paddingStart="10dp"
+                        android:layout_below="@id/txt5"
                         android:background="@drawable/edittext_bg" />
+                        <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="Speaker at any event(if any)"
+                        android:layout_below="@id/experiences"
+                        android:id="@+id/txt6"
+                        android:layout_marginTop="16dp"
+                        android:textSize="18sp"
+                        android:textColor="#000000" />
 
                     <EditText
-                        android:id="@+id/insta_link"
+                        android:id="@+id/speaker_experience"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="80dp"
+                        android:gravity="top"
+                        android:paddingTop="8dp"
+                        android:layout_marginTop="5dp"
                         android:textColor="#333333"
-                        android:inputType="text"
-                        android:hint="Instagram Profile Link"
+                        android:inputType="textPassword"
                         android:textSize="18sp"
-                        android:textColorHint="#717171"
                         android:paddingStart="10dp"
+                        android:layout_below="@id/txt6"
                         android:background="@drawable/edittext_bg" />
+                             <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="Expectationd from platform"
+                        android:layout_below="@id/speaker_experience"
+                        android:id="@+id/txt7"
+                        android:layout_marginTop="16dp"
+                        android:textSize="18sp"
+                        android:textColor="#000000" />
 
                     <EditText
-                        android:id="@+id/twiter_link"
+                        android:id="@+id/expectations_from_us"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="5dp"
                         android:textColor="#333333"
-                        android:inputType="text"
-                        android:hint="Twitter Profile Link"
+                        android:inputType="textPassword"
                         android:textSize="18sp"
-                        android:textColorHint="#717171"
                         android:paddingStart="10dp"
+                        android:layout_below="@id/txt7"
                         android:background="@drawable/edittext_bg" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="What can you offer?"
+                        android:layout_below="@id/expectations_from_us"
+                        android:id="@+id/txt8"
+                        android:layout_marginTop="16dp"
+                        android:textSize="18sp"
+                        android:textColor="#000000" />
 
-                </LinearLayout>
-
-                <LinearLayout
+                    <EditText
+                        android:id="@+id/offer_to_community"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#333333"
+                        android:inputType="textPassword"
+                        android:textSize="18sp"
+                        android:paddingStart="10dp"
+                        android:layout_below="@id/txt8"
+                        android:background="@drawable/edittext_bg" />-->
+                <EditText
+                    android:id="@+id/weblink"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/speaker_experience"
                     android:layout_marginTop="20dp"
-                    android:orientation="vertical"
-                    android:layout_below="@id/linear1">
+                    android:background="@drawable/edittext_bg"
+                    android:hint="Linked-in Profile Link"
+                    android:inputType="text"
+                    android:paddingStart="10dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#717171"
+                    android:textSize="@dimen/title1" />
+                <!--     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:id="@+id/linear1"
+                         android:layout_below="@id/offer_to_community"
+                         android:orientation="vertical">
+
+                         <TextView
+                             android:id="@+id/header3"
+                             android:layout_marginTop="40dp"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_gravity="center_horizontal"
+                             android:fontFamily="@font/lato"
+                             android:layout_below="@id/gender"
+                             android:text="Social Links"
+                             android:textColor="#000000"
+                             android:textSize="26sp" />
+
+                         <EditText
+                             android:id="@+id/weblink"
+                             android:layout_width="match_parent"
+                             android:layout_height="50dp"
+                             android:layout_marginTop="20dp"
+                             android:textColor="#333333"
+                             android:inputType="text"
+                             android:hint="Linked-in Profile Link"
+                             android:textSize="18sp"
+                             android:textColorHint="#717171"
+                             android:paddingStart="10dp"
+                             android:background="@drawable/edittext_bg" />
+
+                         <EditText
+                             android:id="@+id/facebook_link"
+                             android:layout_width="match_parent"
+                             android:layout_height="50dp"
+                             android:layout_marginTop="20dp"
+                             android:textColor="#333333"
+                             android:inputType="text"
+                             android:hint="Facebook Profile Link"
+                             android:textSize="18sp"
+                             android:textColorHint="#717171"
+                             android:paddingStart="10dp"
+                             android:background="@drawable/edittext_bg" />
+
+                         <EditText
+                             android:id="@+id/insta_link"
+                             android:layout_width="match_parent"
+                             android:layout_height="50dp"
+                             android:layout_marginTop="20dp"
+                             android:textColor="#333333"
+                             android:inputType="text"
+                             android:hint="Instagram Profile Link"
+                             android:textSize="18sp"
+                             android:textColorHint="#717171"
+                             android:paddingStart="10dp"
+                             android:background="@drawable/edittext_bg" />
+
+                         <EditText
+                             android:id="@+id/twiter_link"
+                             android:layout_width="match_parent"
+                             android:layout_height="50dp"
+                             android:layout_marginTop="20dp"
+                             android:textColor="#333333"
+                             android:inputType="text"
+                             android:hint="Twitter Profile Link"
+                             android:textSize="18sp"
+                             android:textColorHint="#717171"
+                             android:paddingStart="10dp"
+                             android:background="@drawable/edittext_bg" />
+
+                     </LinearLayout>
+
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_below="@id/weblink"
+                       android:layout_marginTop="@dimen/margine_sub"
+                       android:orientation="vertical">
+
+                       <TextView
+                           android:id="@+id/certifications_text"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:fontFamily="@font/lato"
+                           android:padding="5dp"
+                           android:text="Add Ceritifications"
+                           android:textColor="#333333"
+                           android:textSize="@dimen/title1" />
+
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:orientation="horizontal">
+
+                           <EditText
+                               android:id="@+id/cerifications"
+                               android:layout_width="0dp"
+                               android:layout_height="wrap_content"
+                               android:layout_marginTop="10dp"
+                               android:layout_weight="3"
+                               android:background="@drawable/edittext_bg"
+                               android:fontFamily="@font/lato"
+                               android:hint="Add name for your file"
+                               android:padding="@dimen/dimen_10dp"
+                               android:paddingStart="10dp"
+                               android:textColor="#333333"
+                               android:textSize="@dimen/title1" />
+
+                           <Button
+                               android:id="@+id/btn_cerification_choose"
+                               android:layout_width="0dp"
+                               android:layout_height="wrap_content"
+                               android:layout_marginStart="20dp"
+                               android:layout_marginTop="10dp"
+                               android:layout_weight="1"
+                               android:background="@drawable/bg_rounded_grey_border"
+                               android:backgroundTint="@color/white"
+                               android:text="Choose"
+                               android:textAllCaps="false"
+                               android:textColor="@color/colorPrimary"
+                               android:textSize="@dimen/button" />
+
+                       </LinearLayout>
+
+
+                   </LinearLayout>-->
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_below="@id/weblink"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/certifications_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:textColor="#333333"
                         android:fontFamily="@font/lato"
+                        android:padding="5dp"
                         android:text="Add Ceritifications"
-                        android:textSize="26sp" />
+                        android:textColor="#333333"
+                        android:textSize="@dimen/title1" />
+
+                    <Button
+                        android:id="@+id/add_more_certificate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/bg_rounded_white"
+                        android:text="Add"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/button" />
 
                     <LinearLayout
+                        android:id="@+id/add_cerificate_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_below="@+id/certifications_text"
+                        android:orientation="vertical"
 
-                        <EditText
-                            android:id="@+id/cerifications"
-                            android:layout_width="0dp"
-                            android:layout_weight="3"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/edittext_bg"
-                            android:hint="Add name for your file"
-                            android:paddingStart="10dp"
-                            android:textSize="18sp"
-                            android:textColor="#333333"
-                            android:fontFamily="@font/lato" />
-
-                        <Button
-                            android:id="@+id/btn_cerification_choose"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="20dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:textColor="#FFFFFF"
-                            android:textSize="18sp"
-                            android:textAllCaps="false"
-                            android:background="@drawable/button_bg"
-                            android:text="Choose" />
+                        >
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </RelativeLayout>
 
-            </RelativeLayout>
+                <Button
+                    android:id="@+id/done_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/back_round_button"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="Done"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/button" />
+
+            </LinearLayout>
 
         </ScrollView>
 

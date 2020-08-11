@@ -4,7 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transperent_grey"
     tools:context=".Fragment.OnlineEventsFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="105dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/dimen_16dp"
+            android:paddingEnd="@dimen/dimen_16dp"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/events_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_create_event"
@@ -14,31 +36,4 @@
         android:layout_margin="16dp"
         android:baselineAlignBottom="true"
         android:src="@android:drawable/ic_input_add" />
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/events_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:id="@+id/createEventContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
 </FrameLayout>
