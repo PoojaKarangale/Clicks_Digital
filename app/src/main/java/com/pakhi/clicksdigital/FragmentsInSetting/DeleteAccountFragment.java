@@ -19,7 +19,7 @@ public class DeleteAccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_delete_account, container, false);
+        view=inflater.inflate(R.layout.fragment_delete_account, container, false);
         return view;
     }
 }

@@ -8,10 +8,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
@@ -21,24 +23,24 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaymentActivity extends AppCompatActivity {
-    UserDatabase db;
-    User user;
-    Event event;
-    PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+    UserDatabase                                 db;
+    User                                         user;
+    Event                                        event;
+    PayUmoneySdkInitializer.PaymentParam.Builder builder     =new PayUmoneySdkInitializer.PaymentParam.Builder();
     //declare paymentParam object
-    PayUmoneySdkInitializer.PaymentParam paymentParam = null;
+    PayUmoneySdkInitializer.PaymentParam         paymentParam=null;
 
-    String TAG = "PaymentActivity", txnid = "txt12346", amount, phone,
+    String TAG        ="PaymentActivity", txnid="txt12346", amount, phone,
             prodname, firstname, email,
-            merchantId = ConstPayUmoney.MERCHANT_ID, merchantkey = ConstPayUmoney.MERCHANT_KEY;  //   first test key only
+            merchantId=ConstPayUmoney.MERCHANT_ID, merchantkey=ConstPayUmoney.MERCHANT_KEY;  //   first test key only
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        event = (Event) getIntent().getSerializableExtra("Event");
-        db = new UserDatabase(this);
+        event=(Event) getIntent().getSerializableExtra("Event");
+        db=new UserDatabase(this);
         getUserData();
         initializeStrings();
 
@@ -50,21 +52,21 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void initializeStrings() {
-        amount = event.getCost();
-        phone = user.getNumber();
-        prodname = event.getName();
-        firstname = user.getUser_name();
-        email = user.getUser_email();
+        // amount = event.getTotalFee();
+        phone=user.getNumber();
+        prodname=event.getEventName();
+        firstname=user.getUser_name();
+        email=user.getUser_email();
     }
 
     void getUserData() {
         db.getReadableDatabase();
-        Cursor res = db.getAllData();
+        Cursor res=db.getAllData();
         if (res.getCount() == 0) {
 
         } else {
             res.moveToFirst();
-            user = new User(res.getString(0), res.getString(1),
+            user=new User(res.getString(0), res.getString(1),
                     res.getString(2), res.getString(3), res.getString(4),
                     res.getString(5), res.getString(6), res.getString(7),
                     res.getString(8), res.getString(9), res.getString(10),
@@ -99,7 +101,7 @@ public class PaymentActivity extends AppCompatActivity {
 
 
         try {
-            paymentParam = builder.build();
+            paymentParam=builder.build();
             // generateHashFromServer(paymentParam );
             getHashkey();
 
@@ -110,15 +112,15 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     public void getHashkey() {
-        ServiceWrapper service = new ServiceWrapper(null);
-        Call<String> call = service.newHashCall(merchantkey, txnid, amount, prodname,
+        ServiceWrapper service=new ServiceWrapper(null);
+        Call<String> call=service.newHashCall(merchantkey, txnid, amount, prodname,
                 firstname, email);
 
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.e(TAG, "hash res " + response.body());
-                String merchantHash = response.body();
+                String merchantHash=response.body();
                 if (merchantHash.isEmpty() || merchantHash.equals("")) {
                     Toast.makeText(PaymentActivity.this, "Could not generate hash", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "hash empty");
@@ -139,6 +141,13 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
+    private void addUserToEventDataBase() {
+        FirebaseDatabaseInstance rootRef=FirebaseDatabaseInstance.getInstance();
+        DatabaseReference currentEventRef=rootRef.getEventRef().child(event.getEventId());
+        Toast.makeText(this, "you have registerd successully", Toast.LENGTH_SHORT).show();
+        currentEventRef.child("Participants").child(user.getUser_id()).setValue("");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -147,14 +156,14 @@ public class PaymentActivity extends AppCompatActivity {
         // Result Code is -1 send from Payumoney activity
         Log.e("StartPaymentActivity", "request code " + requestCode + " resultcode " + resultCode);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+            TransactionResponse transactionResponse=data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
 
             if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
 
                 if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
                     //Success Transaction
-
-                    Toast.makeText(PaymentActivity.this, "Susccessfully registered to the Event", Toast.LENGTH_SHORT).show();
+                    addUserToEventDataBase();
+                    //Toast.makeText(PaymentActivity.this, "Susccessfully registered to the Event", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     //Failure Transaction
@@ -164,10 +173,10 @@ public class PaymentActivity extends AppCompatActivity {
                 }
 
                 // Response from Payumoney
-                String payuResponse = transactionResponse.getPayuResponse();
+                String payuResponse=transactionResponse.getPayuResponse();
 
                 // Response from SURl and FURL
-                String merchantResponse = transactionResponse.getTransactionDetails();
+                String merchantResponse=transactionResponse.getTransactionDetails();
                 Log.e(TAG, "tran " + payuResponse + "---" + merchantResponse);
             } /* else if (resultModel != null && resultModel.getError() != null) {
                 Log.d(TAG, "Error response : " + resultModel.getError().getTransactionResponse());

@@ -10,38 +10,53 @@
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_rounded_white"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_rounded_white">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="@dimen/widget_size"
+                android:layout_height="@dimen/widget_size"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/back" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_profile"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="@dimen/margine_main"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_marginStart="@dimen/margine_sub"
                 android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/back_btn"
                 android:src="@mipmap/ic_launcher" />
-
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/group_chat_bar_layout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_toEndOf="@+id/image_profile">
+                android:layout_toLeftOf="@+id/requesting_users"
+                android:layout_toEndOf="@+id/image_profile"
+                android:gravity="start">
 
             </androidx.appcompat.widget.Toolbar>
 
-            <!--  <ImageView
-                  android:layout_width="32dp"
-                  android:layout_height="32dp"
-                  android:id="@+id/group_members"
-                  android:src="@drawable/people"
-                  android:layout_margin="8dp"
-                  android:layout_alignParentEnd="true"
-                  android:layout_centerVertical="true" />-->
+            <ImageView
+                android:id="@+id/requesting_users"
+                android:layout_width="@dimen/widget_size"
+                android:layout_height="@dimen/widget_size"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@color/white"
+                android:src="@drawable/default_profile_for_groups"
+                android:visibility="gone" />
+
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -76,8 +91,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/myLinearLayout"
         android:layout_below="@+id/bar"
+        android:background="@color/chatBackground"
         android:scrollbars="vertical"
-        android:layout_marginTop="@dimen/margine_sub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bar">
@@ -145,10 +160,11 @@
     <RelativeLayout
         android:id="@+id/myLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:background="@android:color/background_light"
+        android:elevation="20dp"
         android:orientation="horizontal"
         android:paddingStart="@dimen/margine_main"
         android:paddingEnd="@dimen/margine_main"

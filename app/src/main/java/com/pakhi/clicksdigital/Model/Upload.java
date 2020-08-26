@@ -11,8 +11,8 @@ public class Upload {
     }
 
     public Upload(String name, String url) {
-        this.name = name;
-        this.url = url;
+        this.name=name;
+        this.url=url;
     }
 
     public String getName() {

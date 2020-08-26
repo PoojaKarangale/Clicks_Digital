@@ -22,14 +22,14 @@ public class ServiceWrapper {
     private ServiceInterface mServiceInterface;
 
     public ServiceWrapper(Interceptor mInterceptorheader) {
-        mServiceInterface = getRetrofit(mInterceptorheader).create(ServiceInterface.class);
+        mServiceInterface=getRetrofit(mInterceptorheader).create(ServiceInterface.class);
     }
 
     public Retrofit getRetrofit(Interceptor mInterceptorheader) {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        HttpLoggingInterceptor loggingInterceptor=new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient mOkHttpClient = null;
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient mOkHttpClient=null;
+        OkHttpClient.Builder builder=new OkHttpClient.Builder();
         builder.connectTimeout(ConstPayUmoney.API_CONNECTION_TIMEOUT, TimeUnit.SECONDS);
         builder.readTimeout(ConstPayUmoney.API_READ_TIMEOUT, TimeUnit.SECONDS);
 
@@ -41,9 +41,9 @@ public class ServiceWrapper {
         }
 
 
-        mOkHttpClient = builder.build();
-        Gson gson = new GsonBuilder().setLenient().create();
-        Retrofit retrofit = new Retrofit.Builder()
+        mOkHttpClient=builder.build();
+        Gson gson=new GsonBuilder().setLenient().create();
+        Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl(ConstPayUmoney.BASE_URL) // ConstPayUmoney.MONEY_HASH
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(mOkHttpClient)
@@ -60,7 +60,7 @@ public class ServiceWrapper {
 
     // convert aa param into plain text
     public RequestBody convertPlainString(String data) {
-        RequestBody plainString = RequestBody.create(MediaType.parse("text/plain"), data);
+        RequestBody plainString=RequestBody.create(MediaType.parse("text/plain"), data);
         return plainString;
     }
 }

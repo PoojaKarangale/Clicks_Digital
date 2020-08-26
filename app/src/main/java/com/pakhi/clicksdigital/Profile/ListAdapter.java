@@ -15,15 +15,15 @@ import com.pakhi.clicksdigital.R;
 
 public class ListAdapter extends BaseAdapter {
     String[] title;
-    int[] image_resources;
+    int[]    image_resources;
     private Context mcontext;
     LayoutInflater inflater;
 
     public ListAdapter(@NonNull Context context, String[] title, int[] image_resources) {
-        this.mcontext = context;
-        this.title = title;
-        this.image_resources = image_resources;
-        inflater = (LayoutInflater.from(context));
+        this.mcontext=context;
+        this.title=title;
+        this.image_resources=image_resources;
+        inflater=(LayoutInflater.from(context));
     }
 
     @Override
@@ -46,9 +46,9 @@ public class ListAdapter extends BaseAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         // LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = inflater.inflate(R.layout.item_list_view, null);
-        ImageView row_image = view.findViewById(R.id.row_image);
-        TextView row_title = view.findViewById(R.id.row_title);
+        View view=inflater.inflate(R.layout.item_list_view, null);
+        ImageView row_image=view.findViewById(R.id.row_image);
+        TextView row_title=view.findViewById(R.id.row_title);
 
         row_image.setImageResource(image_resources[position]);
         row_title.setText(title[position]);

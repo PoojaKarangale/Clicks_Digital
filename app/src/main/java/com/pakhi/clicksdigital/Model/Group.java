@@ -32,7 +32,7 @@ public class Group {
     }
 
     public void setSelected(boolean selected) {
-        isSelected = selected;
+        isSelected=selected;
     }
 
     public HashMap<String, String> getUsers() {
@@ -40,7 +40,7 @@ public class Group {
     }
 
     public void setUsers(HashMap<String, String> users) {
-        Users = users;
+        Users=users;
     }
 
     public String getGroup_name() {
@@ -48,7 +48,7 @@ public class Group {
     }
 
     public void setGroup_name(String group_name) {
-        this.group_name = group_name;
+        this.group_name=group_name;
     }
 
     public String getDescription() {
@@ -56,7 +56,7 @@ public class Group {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description=description;
     }
 
     public String getGroupid() {
@@ -64,7 +64,7 @@ public class Group {
     }
 
     public void setGroupid(String groupid) {
-        this.groupid = groupid;
+        this.groupid=groupid;
     }
 
     public String getUid_creater() {
@@ -72,7 +72,7 @@ public class Group {
     }
 
     public void setUid_creater(String uid_creater) {
-        this.uid_creater = uid_creater;
+        this.uid_creater=uid_creater;
     }
 
     public String getDate() {
@@ -80,7 +80,7 @@ public class Group {
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.date=date;
     }
 
     public String getTime() {
@@ -88,7 +88,7 @@ public class Group {
     }
 
     public void setTime(String time) {
-        this.time = time;
+        this.time=time;
     }
 
     public String getImage_url() {
@@ -96,7 +96,7 @@ public class Group {
     }
 
     public void setImage_url(String image_url) {
-        this.image_url = image_url;
+        this.image_url=image_url;
     }
 
     public String getStatus() {
@@ -104,7 +104,7 @@ public class Group {
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status=status;
     }
 
     public String getRequesting_userid() {
@@ -112,7 +112,7 @@ public class Group {
     }
 
     public void setRequesting_userid(String requesting_userid) {
-        this.requesting_userid = requesting_userid;
+        this.requesting_userid=requesting_userid;
     }
 
 

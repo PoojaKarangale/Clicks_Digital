@@ -21,20 +21,20 @@ import java.util.List;
 
 public class ContactUserAdapter extends RecyclerView.Adapter<ContactUserAdapter.ViewHolder> {
     ArrayList<Contact> userList;
-    private Context mcontext;
+    private Context       mcontext;
     private List<Contact> contacts;
-    private FirebaseUser firebaseUser;
+    private FirebaseUser  firebaseUser;
 
     public ContactUserAdapter(Context mcontext, List<Contact> userList) {
-        this.mcontext = mcontext;
-        this.userList = (ArrayList<Contact>) userList;
+        this.mcontext=mcontext;
+        this.userList=(ArrayList<Contact>) userList;
     }
 
     @NonNull
     @Override
     public ContactUserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(mcontext)
+        View view=LayoutInflater.from(mcontext)
                 .inflate(R.layout.item_user, parent, false);
         return new ContactUserAdapter.ViewHolder(view);
     }
@@ -46,8 +46,8 @@ public class ContactUserAdapter extends RecyclerView.Adapter<ContactUserAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uid = userList.get(position).getUid();
-                Intent chatActivityIntent = new Intent(mcontext, ChatActivity.class);
+                String uid=userList.get(position).getUid();
+                Intent chatActivityIntent=new Intent(mcontext, ChatActivity.class);
                 chatActivityIntent.putExtra("user_id", uid);
 
                 chatActivityIntent.putExtra("visit_user_id", uid);
@@ -69,9 +69,9 @@ public class ContactUserAdapter extends RecyclerView.Adapter<ContactUserAdapter.
 
         ViewHolder(View view) {
             super(view);
-            mName = view.findViewById(R.id.display_name);
-            mPhone = view.findViewById(R.id.number);
-            mLayout = view.findViewById(R.id.main_layout);
+            mName=view.findViewById(R.id.display_name);
+            mPhone=view.findViewById(R.id.number);
+            mLayout=view.findViewById(R.id.main_layout);
             mPhone.setVisibility(View.VISIBLE);
         }
     }

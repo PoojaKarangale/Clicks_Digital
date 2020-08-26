@@ -19,8 +19,8 @@ public class ChangeMyNumberFragment extends Fragment {
 
     String number;
     private EditText mobileNo_reg;
-    private View view;
-    private Button verify;
+    private View     view;
+    private Button   verify;
 
     public ChangeMyNumberFragment() {
         // Required empty public constructor
@@ -29,12 +29,12 @@ public class ChangeMyNumberFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_change_my_number, container, false);
+        view=inflater.inflate(R.layout.fragment_change_my_number, container, false);
         initializingFields();
         verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                number = mobileNo_reg.getText().toString();
+                number=mobileNo_reg.getText().toString();
                 if (TextUtils.isEmpty(number)) {
                     mobileNo_reg.requestFocus();
                     mobileNo_reg.setError("Required");
@@ -48,14 +48,14 @@ public class ChangeMyNumberFragment extends Fragment {
     }
 
     private void sendUserToPhoneVerify() {
-        Intent i = new Intent(getContext(), PhoneVerify.class);
+        Intent i=new Intent(getContext(), PhoneVerify.class);
         i.putExtra(Const.MO_NUMBER, number);
         i.putExtra("previousActivity", "changeNumber");
         startActivity(i);
     }
 
     private void initializingFields() {
-        mobileNo_reg = view.findViewById(R.id.mobileNo_reg);
-        verify = view.findViewById(R.id.verify);
+        mobileNo_reg=view.findViewById(R.id.mobileNo_reg);
+        verify=view.findViewById(R.id.verify);
     }
 }

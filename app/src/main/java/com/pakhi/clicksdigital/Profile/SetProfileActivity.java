@@ -28,7 +28,6 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,6 +39,7 @@ import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
@@ -56,29 +56,30 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;*/
 
 public class SetProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    final static int REQUEST_CODE_FOR_CERTIFICATE = 3, GET_CITY_CODE = 100;
-    private static final String TAG = "ProfileActivity";
-    static int REQUEST_CODE = 1;
+    final static int REQUEST_CODE_FOR_CERTIFICATE=3, GET_CITY_CODE=100;
+    private static final String TAG         ="ProfileActivity";
+    static               int    REQUEST_CODE=1;
     String userid;
-    Uri picImageUri;
+    Uri    picImageUri;
     String number, imageUrl_string;
-    ArrayList<Certificates> certificates = new ArrayList<>();
-    boolean isCertificatesAdded = false;
-    User user;
-    UserDatabase db;
-    SharedPreference pref;
-    EditText weblink;
-    PermissionsHandling permissions;
-    Button done_btn;
-    ImageView close;
-    HashMap<String, String> userItems;
-    String previousActivity;
+    ArrayList<Certificates>  certificates       =new ArrayList<>();
+    boolean                  isCertificatesAdded=false;
+    User                     user;
+    UserDatabase             db;
+    SharedPreference         pref;
+    EditText                 weblink;
+    PermissionsHandling      permissions;
+    Button                   done_btn;
+    ImageView                close;
+    HashMap<String, String>  userItems;
+    String                   previousActivity;
+    FirebaseDatabaseInstance rootRef;
     // AsyncTask<?, ?, ?> runningTask;
-    private boolean isNewProfilePicSelected = false;
-    private ImageView profile_img;
+    private boolean          isNewProfilePicSelected=false;
+    private ImageView        profile_img;
     private MaterialEditText full_name, email, bio, last_name;
     private ProgressDialog progressDialog;
-    private String gender, user_type;
+    private String         gender, user_type;
     private MaterialEditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
     private Button add_more_certificate;
 
@@ -87,20 +88,21 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
 
-        Intent intent = getIntent();
-        previousActivity = intent.getStringExtra("PreviousActivity");
+        Intent intent=getIntent();
+        previousActivity=intent.getStringExtra("PreviousActivity");
 
-        userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        pref=SharedPreference.getInstance();
 
-        db = new UserDatabase(this);
+        rootRef=FirebaseDatabaseInstance.getInstance();
+        userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        db=new UserDatabase(this);
 
-        pref = SharedPreference.getInstance();
-        number = pref.getData(SharedPreference.phone, getApplicationContext());
+        number=pref.getData(SharedPreference.phone, getApplicationContext());
 
         if (number.equals("+918007997748")) {
-            user_type = "admin";
+            user_type="admin";
         } else {
-            user_type = "user";
+            user_type="user";
         }
 
         pref.saveData(SharedPreference.user_type, user_type, getApplicationContext());
@@ -113,45 +115,46 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initializeFields() {
-        get_working = findViewById(R.id.working);
-        get_experiences = findViewById(R.id.experiences);
-        get_speaker_experience = findViewById(R.id.speaker_experience);
-        get_offer_to_community = findViewById(R.id.offer_to_community);
-        get_expectations_from_us = findViewById(R.id.expectations_from_us);
-        company = findViewById(R.id.company);
-        profile_img = findViewById(R.id.profile_img);
-        full_name = findViewById(R.id.full_name);
-        last_name = findViewById(R.id.last_name);
-        email = findViewById(R.id.email);
-        weblink = findViewById(R.id.weblink);
-        bio = findViewById(R.id.bio);
-        get_city = findViewById(R.id.get_city);
+        get_working=findViewById(R.id.working);
+        get_experiences=findViewById(R.id.experiences);
+        get_speaker_experience=findViewById(R.id.speaker_experience);
+        get_offer_to_community=findViewById(R.id.offer_to_community);
+        get_expectations_from_us=findViewById(R.id.expectations_from_us);
+        company=findViewById(R.id.company);
+        profile_img=findViewById(R.id.profile_img);
+        full_name=findViewById(R.id.full_name);
+        last_name=findViewById(R.id.last_name);
+        email=findViewById(R.id.email);
+        weblink=findViewById(R.id.weblink);
+        bio=findViewById(R.id.bio);
+        get_city=findViewById(R.id.get_city);
 
-        progressDialog = new ProgressDialog(SetProfileActivity.this);
+        progressDialog=new ProgressDialog(SetProfileActivity.this);
         progressDialog.setMessage("Loading...");
 
-        add_more_certificate = findViewById(R.id.add_more_certificate);
-        close = findViewById(R.id.close);
-        done_btn = findViewById(R.id.done_btn);
+        add_more_certificate=findViewById(R.id.add_more_certificate);
+        close=findViewById(R.id.close);
+        done_btn=findViewById(R.id.done_btn);
 
     }
 
     private void validateInputAndUpdate() {
 
         if (ValidateInput.field(full_name)
-                || ValidateInput.field(last_name)
-                || ValidateInput.field(email)
-                || ValidateInput.field(bio)
-                || ValidateInput.field(get_working)
-                || ValidateInput.field(get_expectations_from_us)
-                || ValidateInput.field(company)
+                && ValidateInput.field(last_name)
+                && ValidateInput.field(email)
+                && ValidateInput.field(bio)
+                && ValidateInput.field(get_working)
+                && ValidateInput.field(get_expectations_from_us)
+                && ValidateInput.field(company)
 
         ) {
             if (picImageUri == null) {
                 showToast("Select your profile picture");
             } else {
                 progressDialog.show();
-                new AsyncOperation().execute("createProfile");
+                createUserProfile();
+                // new AsyncOperation().execute("createProfile");
             }
         }
     }
@@ -178,69 +181,62 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     }*/
 
     private void add_more_certificate_function() {
-        Intent addMoreCertiIntent = new Intent(SetProfileActivity.this, AddNewCertificateActivity.class);
+        Intent addMoreCertiIntent=new Intent(SetProfileActivity.this, AddNewCertificateActivity.class);
         startActivityForResult(addMoreCertiIntent, REQUEST_CODE_FOR_CERTIFICATE);
     }
 
-    private void VerifyUserExistance() {
-
-        if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
-                && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(Const.profileSet)) {
-            // loadData(pref.getData(SharedPreference.currentUserId, getApplicationContext()));
-            sendUserToStartActivity();
-        }
-
-    }
 
     private void uploadData() {
 
-        String full_name_str = "", email_str = "", last_name_str = "";
-        full_name_str = full_name.getText().toString().trim();
-        last_name_str = last_name.getText().toString().trim();
-        email_str = email.getText().toString().trim();
-        String working = "";
-        working = get_working.getText().toString();
+        String full_name_str="", email_str="", last_name_str="";
+        full_name_str=full_name.getText().toString().trim();
+        last_name_str=last_name.getText().toString().trim();
+        email_str=email.getText().toString().trim();
+        String working="";
+        working=get_working.getText().toString();
 
-        String experiences = "";
-        experiences = get_experiences.getText().toString();
+        String experiences="";
+        experiences=get_experiences.getText().toString();
 
-        String speaker_experience = "";
-        speaker_experience = get_speaker_experience.getText().toString();
+        String speaker_experience="";
+        speaker_experience=get_speaker_experience.getText().toString();
 
-        String offer_to_community = "";
-        offer_to_community = get_offer_to_community.getText().toString();
+        String offer_to_community="";
+        offer_to_community=get_offer_to_community.getText().toString();
 
-        String expectations_from_us = "";
-        expectations_from_us = get_expectations_from_us.getText().toString();
+        String expectations_from_us="";
+        expectations_from_us=get_expectations_from_us.getText().toString();
 
-        String city = "";
-        city = get_city.getText().toString();
+        String city="";
+        city=get_city.getText().toString();
 
-        String company_str = "";
-        company_str = company.getText().toString();
+        String company_str="";
+        company_str=company.getText().toString();
 
-        String bio_str = bio.getText().toString().trim();
-        String weblink_str = weblink.getText().toString().trim();
+        String bio_str=bio.getText().toString().trim();
+        String weblink_str=weblink.getText().toString().trim();
 
-        user = new User(userid, full_name_str, bio_str, imageUrl_string, user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
+        user=new User(userid, full_name_str, bio_str, imageUrl_string, user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
                 speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
 
         ;//= new HashMap<>();
-        userItems = putDataIntoHashMap(userid, full_name_str, bio_str, imageUrl_string, user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
+        userItems=putDataIntoHashMap(userid, full_name_str, bio_str, imageUrl_string, user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
                 speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
         /*  if (runningTask != null) {
             runningTask.cancel(true);
         }*/
 
         if (isCertificatesAdded) {
-            new AsyncOperation().execute("cerificate");
+            //  new AsyncOperation().execute("cerificate");
+            addCertificatesToDatabase();
         } else {
-            new AsyncOperation().execute("uploadData");
+            // new AsyncOperation().execute("uploadData");
         }
+        addUserDetailsToDatabase();
     }
 
     private void addUserDetailsToDatabase() {
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        final DatabaseReference reference=rootRef.getUserRef();
         reference.child(userid).child(Const.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -248,20 +244,21 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
                 saveDataToSharedPref();
                 progressDialog.dismiss();
                 // finish();
-                //sendUserToStartActivity();
+
+                sendUserToStartActivity();
             }
         });
     }
 
     private void addCertificatesToDatabase() {
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        final int[] numberOfCertificate = {0};
+        final DatabaseReference reference=rootRef.getUserRef();
+        final int[] numberOfCertificate={0};
         reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.exists())
-                    numberOfCertificate[0] = (int) dataSnapshot.getChildrenCount();
+                    numberOfCertificate[0]=(int) dataSnapshot.getChildrenCount();
 
                 for (Certificates c : certificates) {
                     reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
@@ -280,7 +277,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     }
 
     private HashMap<String, String> putDataIntoHashMap(String userid, String full_name_str, String bio_str, String imageUrl_string, String user_type, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String email_str, String weblink_str, String working, String last_name_str, String company_str) {
-        final HashMap<String, String> userItems = new HashMap<>();
+        final HashMap<String, String> userItems=new HashMap<>();
 
         userItems.put(Const.USER_ID, userid);
         userItems.put(Const.USER_NAME, full_name_str);
@@ -303,20 +300,22 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void saveDataToSharedPref() {
+        pref.saveData(SharedPreference.userState, Const.profileStoredUserStored, getApplicationContext());
         pref.saveData(SharedPreference.isProfileSet, Const.profileSet, getApplicationContext());
     }
 
     private void addCurrentUserToDatabase(HashMap<String, String> userItems) {
-        SQLiteDatabase sqlDb = db.getWritableDatabase();
+        SQLiteDatabase sqlDb=db.getWritableDatabase();
         db.onUpgrade(sqlDb, 0, 1);
         db.insertData(userItems);
+        //  db.close();
     }
 
     private void createUserProfile() {
 //).child(
-        StorageReference sReference = FirebaseStorage.getInstance().getReference(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
+        StorageReference sReference=FirebaseStorage.getInstance().getReference(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
         // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
-        final StorageReference imgPath = sReference.child("profile_image");
+        final StorageReference imgPath=sReference.child("profile_image");
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -326,12 +325,12 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
                     public void onSuccess(Uri uri) {
 
                         // picImageUri = uri;
-                        imageUrl_string = uri.toString();
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                        imageUrl_string=uri.toString();
+                        UserProfileChangeRequest profileUpdate=new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(uri)
                                 .build();
 
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
                         user.updateProfile(profileUpdate)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -372,7 +371,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
             openGallery();
         }*/
 
-        permissions = new PermissionsHandling(this);
+        permissions=new PermissionsHandling(this);
         if (!permissions.isPermissionGranted()) {
             //when permissions not granted
             if (permissions.isRequestPermissionable()) {
@@ -412,9 +411,9 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showAddedCertificates(Certificates certificate, int size) {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.add_cerificate_layout);
+        LinearLayout linearLayout=(LinearLayout) findViewById(R.id.add_cerificate_layout);
         // Add textview 1
-        TextView show_certificate = new TextView(this);
+        TextView show_certificate=new TextView(this);
         show_certificate.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
         show_certificate.setText(size + " " + certificate.getName());
@@ -425,16 +424,16 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
+        boolean checked=((RadioButton) view).isChecked();
 
         switch (view.getId()) {
             case R.id.male:
                 if (checked)
-                    gender = "Male";
+                    gender="Male";
                 break;
             case R.id.female:
                 if (checked)
-                    gender = "Female";
+                    gender="Female";
                 break;
         }
     }
@@ -446,15 +445,15 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    picImageUri = result.getUri();
-                    isNewProfilePicSelected = true;
+                    CropImage.ActivityResult result=CropImage.getActivityResult(data);
+                    picImageUri=result.getUri();
+                    isNewProfilePicSelected=true;
                     profile_img.setImageURI(picImageUri);
                     break;
                 case REQUEST_CODE_FOR_CERTIFICATE:
                     Certificates certificate;
-                    isCertificatesAdded = true;
-                    certificate = (Certificates) data.getSerializableExtra("certificate");
+                    isCertificatesAdded=true;
+                    certificate=(Certificates) data.getSerializableExtra("certificate");
                     certificates.add(certificate);
                     showAddedCertificates(certificate, certificates.size());
                     break;
@@ -497,7 +496,17 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         super.onStart();
         VerifyUserExistance();
         //  updateUserStatus("online");
-        new AsyncOperation().execute("online");
+        // new AsyncOperation().execute("online");
+    }
+
+    private void VerifyUserExistance() {
+
+        if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
+                && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(Const.profileSet)) {
+            // loadData(pref.getData(SharedPreference.currentUserId, getApplicationContext()));
+            sendUserToStartActivity();
+        }
+
     }
 
     @Override
@@ -514,20 +523,19 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         String saveCurrentTime, saveCurrentDate;
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar=Calendar.getInstance();
 
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calendar.getTime());
+        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate=currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        saveCurrentTime = currentTime.format(calendar.getTime());
+        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
+        saveCurrentTime=currentTime.format(calendar.getTime());
 
-        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        HashMap<String, Object> onlineStateMap=new HashMap<>();
         onlineStateMap.put("time", saveCurrentTime);
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
-        DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference();
-        RootRef.child("Users").child(userid).child("userState")
+        rootRef.getUserRef().child(userid).child("userState")
                 .updateChildren(onlineStateMap);
 
     }
@@ -542,8 +550,8 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected String doInBackground(String... params) {
-            String param = params[0];
-            String s = "";
+            String param=params[0];
+            String s="";
             switch (param) {
                 case "createProfile":
                     createUserProfile();
@@ -554,7 +562,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
                     //break;
                 case "uploadData":
                     addUserDetailsToDatabase();
-                    s = "Executed";
+                    s="Executed";
                     break;
                 case "online":
                     updateUserStatus("online");
@@ -568,8 +576,8 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.equals("Executed"))
-                sendUserToStartActivity();
+//            if (result.equals("Executed"))
+//                sendUserToStartActivity();
 
         }
     }

@@ -18,39 +18,42 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Contact;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ConnectionRequests extends AppCompatActivity {
-    private RecyclerView myRequestsList;
-
+    SharedPreference         pref;
+    FirebaseDatabaseInstance rootRef;
+    private RecyclerView      myRequestsList;
     private DatabaseReference ChatRequestsRef, UsersRef, ContactsRef;
-    private FirebaseAuth mAuth;
     private String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection_requests);
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        ChatRequestsRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
-        ContactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
 
-        myRequestsList = findViewById(R.id.chat_requests_list);
+        pref=SharedPreference.getInstance();
+        rootRef=FirebaseDatabaseInstance.getInstance();
+
+        currentUserID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        UsersRef=rootRef.getUserRef();
+        ChatRequestsRef=rootRef.getChatRequestsRef();
+        ContactsRef=rootRef.getContactRef();
+
+        myRequestsList=findViewById(R.id.chat_requests_list);
         myRequestsList.setLayoutManager(new LinearLayoutManager(ConnectionRequests.this));
     }
 
@@ -58,54 +61,54 @@ public class ConnectionRequests extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        FirebaseRecyclerOptions<Contact> options =
+        FirebaseRecyclerOptions<Contact> options=
                 new FirebaseRecyclerOptions.Builder<Contact>()
                         .setQuery(ChatRequestsRef.child(currentUserID).child(Const.USER_DETAILS), Contact.class)
                         .build();
 
-        FirebaseRecyclerAdapter<Contact, RequestsViewHolder> adapter =
+        FirebaseRecyclerAdapter<Contact, RequestsViewHolder> adapter=
                 new FirebaseRecyclerAdapter<Contact, RequestsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final RequestsViewHolder holder, int position, @NonNull Contact model) {
 
-                        final String list_user_id = getRef(position).getKey();
+                        final String list_user_id=getRef(position).getKey();
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent profileIntent = new Intent(ConnectionRequests.this, VisitProfileActivity.class);
+                                Intent profileIntent=new Intent(ConnectionRequests.this, VisitProfileActivity.class);
                                 profileIntent.putExtra("visit_user_id", list_user_id);
                                 startActivity(profileIntent);
                             }
                         });
 
-                        DatabaseReference getTypeRef = getRef(position).child("request_type").getRef();
+                        DatabaseReference getTypeRef=getRef(position).child("request_type").getRef();
 
                         getTypeRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    String type = dataSnapshot.getValue().toString();
-                                    final String[] requestProfileImage = new String[1];
+                                    String type=dataSnapshot.getValue().toString();
+                                    final String[] requestProfileImage=new String[1];
                                     if (type.equals("received")) {
                                         UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.hasChild(Const.IMAGE_URL)) {
-                                                    requestProfileImage[0] = dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                                    requestProfileImage[0]=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
                                                     Picasso.get().load(requestProfileImage[0]).into(holder.profileImage);
                                                 }
 
                                                 holder.profileImage.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
-                                                        Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                                        Intent fullScreenIntent=new Intent(v.getContext(), EnlargedImage.class);
                                                         fullScreenIntent.putExtra(Const.IMAGE_URL, requestProfileImage[0]);
                                                         v.getContext().startActivity(fullScreenIntent);
                                                     }
                                                 });
 
-                                                final String requestUserName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                                                final String requestUserStatus = dataSnapshot.child(Const.USER_BIO).getValue().toString();
+                                                final String requestUserName=dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                                                final String requestUserStatus=dataSnapshot.child(Const.USER_BIO).getValue().toString();
 
                                                 holder.AcceptButton.setVisibility(View.VISIBLE);
                                                 holder.CancelButton.setVisibility(View.VISIBLE);
@@ -287,7 +290,7 @@ public class ConnectionRequests extends AppCompatActivity {
                                             }
                                         });
                                     } else if (type.equals("sent")) {
-                                        Button request_sent_btn = holder.itemView.findViewById(R.id.request_accept_btn);
+                                        Button request_sent_btn=holder.itemView.findViewById(R.id.request_accept_btn);
                                         request_sent_btn.setText("Req Sent");
 
                                         holder.itemView.findViewById(R.id.request_cancel_btn).setVisibility(View.INVISIBLE);
@@ -296,13 +299,13 @@ public class ConnectionRequests extends AppCompatActivity {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.hasChild(Const.IMAGE_URL)) {
-                                                    final String requestProfileImage = dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                                    final String requestProfileImage=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
 
                                                     Picasso.get().load(requestProfileImage).into(holder.profileImage);
                                                 }
 
-                                                final String requestUserName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                                                final String requestUserStatus = dataSnapshot.child(Const.USER_BIO).getValue().toString();
+                                                final String requestUserName=dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                                                final String requestUserStatus=dataSnapshot.child(Const.USER_BIO).getValue().toString();
 
                                                 holder.userName.setText(requestUserName);
                                                 holder.userStatus.setText("you have sent a request to " + requestUserName);
@@ -400,8 +403,8 @@ public class ConnectionRequests extends AppCompatActivity {
                     @NonNull
                     @Override
                     public RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
-                        RequestsViewHolder holder = new RequestsViewHolder(view);
+                        View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
+                        RequestsViewHolder holder=new RequestsViewHolder(view);
                         return holder;
                     }
                 };
@@ -413,18 +416,18 @@ public class ConnectionRequests extends AppCompatActivity {
     public static class RequestsViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
         CircleImageView profileImage;
-        Button AcceptButton, CancelButton;
+        Button          AcceptButton, CancelButton;
 
 
         public RequestsViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            userName = itemView.findViewById(R.id.display_name);
-            userStatus = itemView.findViewById(R.id.user_status);
-            profileImage = itemView.findViewById(R.id.image_profile);
+            userName=itemView.findViewById(R.id.display_name);
+            userStatus=itemView.findViewById(R.id.user_status);
+            profileImage=itemView.findViewById(R.id.image_profile);
 
-            AcceptButton = itemView.findViewById(R.id.request_accept_btn);
-            CancelButton = itemView.findViewById(R.id.request_cancel_btn);
+            AcceptButton=itemView.findViewById(R.id.request_accept_btn);
+            CancelButton=itemView.findViewById(R.id.request_cancel_btn);
 
 /*
             AcceptButton.setVisibility(View.VISIBLE);

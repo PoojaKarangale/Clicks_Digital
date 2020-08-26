@@ -11,23 +11,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.pakhi.clicksdigital.Adapter.SettingListAdapter;
 import com.pakhi.clicksdigital.FragmentsInSetting.AppInfoFragment;
 import com.pakhi.clicksdigital.FragmentsInSetting.ChangeMyNumberFragment;
 import com.pakhi.clicksdigital.FragmentsInSetting.ContactUsFragment;
 import com.pakhi.clicksdigital.FragmentsInSetting.NotificationsFragment;
-import com.pakhi.clicksdigital.Adapter.SettingListAdapter;
 import com.pakhi.clicksdigital.R;
 
 public class SettingActivity extends AppCompatActivity {
     SettingListAdapter listAdapter;
     private ListView listView;
-    private int[] imagesForListView = {
+    private int[]    imagesForListView={
             R.drawable.notifications,
             R.drawable.change_number,
             R.drawable.contact_us,
             R.drawable.info
     };
-    private String[] titleForListView = {
+    private String[] titleForListView ={
             "Notifications",
             "Change number",
             "Contact us",
@@ -42,7 +42,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void settingUpList() {
-        listAdapter = new SettingListAdapter(this, titleForListView, imagesForListView);
+        listAdapter=new SettingListAdapter(this, titleForListView, imagesForListView);
         setUpListItems();
         setUpListOnClick();
         listView.setAdapter(listAdapter);
@@ -52,7 +52,7 @@ public class SettingActivity extends AppCompatActivity {
         listView.setOnTouchListener(new ListView.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
+                int action=event.getAction();
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
                         // Disallow ScrollView to intercept touch events.
@@ -79,26 +79,26 @@ public class SettingActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Fragment fragment = null;
+                Fragment fragment=null;
                 switch (position) {
                     case 0:
-                        fragment = new NotificationsFragment();
+                        fragment=new NotificationsFragment();
                         break;
                     case 1:
-                        fragment = new ChangeMyNumberFragment();
+                        fragment=new ChangeMyNumberFragment();
                         break;
                     case 2:
-                        fragment = new ContactUsFragment();
+                        fragment=new ContactUsFragment();
                         break;
                     case 3:
-                        fragment = new AppInfoFragment();
+                        fragment=new AppInfoFragment();
                         break;
                     case 4:
                         break;
                     case 5:
                         break;
                 }
-                listView.setOnItemClickListener(null);
+                //listView.setOnItemClickListener(null);
                 updatePage(fragment);
             }
         });
@@ -106,7 +106,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void updatePage(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager()
+        FragmentTransaction transaction=getSupportFragmentManager()
                 .beginTransaction();
         transaction.addToBackStack(null);
         transaction.add(R.id.fragmentContainer, fragment, "TAG_FRAGMENT");
@@ -117,6 +117,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void initializingFields() {
-        listView = findViewById(R.id.list_view);
+        listView=findViewById(R.id.list_view);
     }
 }

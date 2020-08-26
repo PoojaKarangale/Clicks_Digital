@@ -20,40 +20,41 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class AddNewCertificateActivity extends AppCompatActivity {
-    final static int PICK_PDF_CODE = 2342;
-    String userid, fileUri = "";
-    FirebaseAuth firebaseAuth;
+    final static int PICK_PDF_CODE=2342;
+    String currentUserId, fileUri="";
+
     StorageReference storageRootReference;
-    String name, institute;
+    String           name, institute;
     private MaterialEditText name_of_certificate, name_of_institute;
     private Button choose_certificate, add_certificate;
     private ProgressDialog progressDialog;
-    private Certificates certificate;
+    private Certificates   certificate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_certificate);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        userid = firebaseAuth.getUid();
-        storageRootReference = FirebaseStorage.getInstance().getReference();
+        SharedPreference pref=SharedPreference.getInstance();
+        currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
-        name_of_certificate = findViewById(R.id.name_of_certificate);
-        name_of_institute = findViewById(R.id.name_of_institute);
-        choose_certificate = findViewById(R.id.choose_certificate);
-        add_certificate = findViewById(R.id.add_certificate);
-        progressDialog = new ProgressDialog(AddNewCertificateActivity.this);
+        storageRootReference=FirebaseStorage.getInstance().getReference();
+
+        name_of_certificate=findViewById(R.id.name_of_certificate);
+        name_of_institute=findViewById(R.id.name_of_institute);
+        choose_certificate=findViewById(R.id.choose_certificate);
+        add_certificate=findViewById(R.id.add_certificate);
+        progressDialog=new ProgressDialog(AddNewCertificateActivity.this);
         progressDialog.setMessage("Loading...");
 
         choose_certificate.setOnClickListener(new View.OnClickListener() {
@@ -67,13 +68,13 @@ public class AddNewCertificateActivity extends AppCompatActivity {
         add_certificate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                name = name_of_certificate.getText().toString();
-                institute = name_of_institute.getText().toString();
+                name=name_of_certificate.getText().toString();
+                institute=name_of_institute.getText().toString();
                 if (TextUtils.isEmpty(name)) {
                     Toast.makeText(AddNewCertificateActivity.this, "name of certificate cannot be empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    certificate = new Certificates(name, institute, fileUri);
-                    Intent sendDataBackIntent = new Intent();
+                    certificate=new Certificates(name, institute, fileUri);
+                    Intent sendDataBackIntent=new Intent();
                     //sendDataBackIntent.putExtra("certificate", certificate);
                     sendDataBackIntent.putExtra("certificate", certificate);
                     setResult(RESULT_OK, sendDataBackIntent);
@@ -90,14 +91,14 @@ public class AddNewCertificateActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Intent intent=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.parse("package:" + getPackageName()));
             startActivity(intent);
             return;
         }
 
         //creating an intent for file chooser
-        Intent intent = new Intent();
+        Intent intent=new Intent();
         intent.setType("application/pdf");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PDF_CODE);
@@ -106,7 +107,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
     private void uploadFile(Uri data) {
         Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
         progressDialog.show();
-        StorageReference sRef = storageRootReference.child(Const.USER_MEDIA_PATH).child(userid).child("Files/" + name + " " + System.currentTimeMillis() + ".pdf");
+        StorageReference sRef=storageRootReference.child(Const.USER_MEDIA_PATH).child(currentUserId).child("Files/" + name + " " + System.currentTimeMillis() + ".pdf");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
@@ -118,7 +119,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        fileUri = String.valueOf(uri);
+                                        fileUri=String.valueOf(uri);
                                     }
                                 });
                     }

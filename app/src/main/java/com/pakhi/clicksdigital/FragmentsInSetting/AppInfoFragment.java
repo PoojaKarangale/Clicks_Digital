@@ -14,7 +14,7 @@ import com.pakhi.clicksdigital.R;
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
 public class AppInfoFragment extends Fragment {
-    View view;
+    View     view;
     TextView txtVisit;
 
     public AppInfoFragment() {
@@ -26,7 +26,7 @@ public class AppInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_app_info, container, false);
+        view=inflater.inflate(R.layout.fragment_app_info, container, false);
         initializingFields();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             txtVisit.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
@@ -36,6 +36,6 @@ public class AppInfoFragment extends Fragment {
     }
 
     private void initializingFields() {
-        txtVisit = view.findViewById(R.id.txtVisit);
+        txtVisit=view.findViewById(R.id.txtVisit);
     }
 }

@@ -10,18 +10,66 @@
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/chat_toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground">
+            android:layout_height="wrap_content">
 
-        </androidx.appcompat.widget.Toolbar>
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="@dimen/widget_size"
+                android:layout_height="@dimen/widget_size"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/ic_arrow_back_black_24dp" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/custom_profile_image"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/back_btn"
+                android:cropToPadding="true"
+                android:src="@drawable/profile_image" />
+
+            <TextView
+                android:id="@+id/custom_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/custom_profile_image"
+                android:text="Display UserName"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title1"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/custom_user_last_seen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/custom_profile_name"
+                android:layout_alignStart="@+id/custom_profile_name"
+                android:layout_marginTop="3dp"
+                android:text="Last Seen"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+        <!--  <androidx.appcompat.widget.Toolbar
+              android:id="@+id/chat_toolbar"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?android:attr/windowBackground">
+
+          </androidx.appcompat.widget.Toolbar>-->
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- <RelativeLayout
@@ -50,10 +98,12 @@
          android:src="@mipmap/ic_launcher" />-->
 
     <LinearLayout
+        android:id="@+id/messageLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_linear_layout"
         android:layout_below="@+id/bar"
+        android:background="@color/chatBackground"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +113,8 @@
             android:id="@+id/private_messages_list_of_users"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp">
+            android:layout_marginStart="@dimen/margine_sub"
+            android:layout_marginEnd="@dimen/margine_sub">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
@@ -71,10 +122,11 @@
     <RelativeLayout
         android:id="@+id/chat_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/background_light"
+        android:background="@drawable/bg_rounded_white"
+        android:elevation="20dp"
         android:orientation="horizontal"
         android:paddingStart="@dimen/margine_main"
         android:paddingEnd="@dimen/margine_main"
@@ -102,7 +154,7 @@
             android:layout_marginStart="@dimen/margine_sub"
             android:layout_marginEnd="0dp"
             android:layout_toStartOf="@+id/send_message_btn"
-            android:backgroundTint="@android:color/white"
+            android:background="@drawable/flag_transparent"
             android:src="@drawable/attach" />
 
         <ImageButton
@@ -112,7 +164,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/margine_sub"
-            android:backgroundTint="@android:color/white"
+            android:background="@drawable/flag_transparent"
             android:src="@drawable/send_message" />
 
     </RelativeLayout>

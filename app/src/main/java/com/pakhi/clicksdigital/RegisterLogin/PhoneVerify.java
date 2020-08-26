@@ -21,35 +21,40 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ToastClass;
 
 import java.util.concurrent.TimeUnit;
 
 public class PhoneVerify extends AppCompatActivity implements View.OnClickListener {
-    String previousActivity;
-    DatabaseReference userRef;
-    String userId;
-    UserDatabase ud;
+    String                   previousActivity;
+    // DatabaseReference userRef;
+    String                   userId;
+    UserDatabase             ud;
+    SharedPreference         pref;
+    FirebaseDatabaseInstance rootRef;
     private FirebaseAuth firebaseAuth;
-    private String number, verificationCode;
+    private String       number, verificationCode;
     private EditText get_code;
-    private Button btn_verify, resend_otp;
-    private PhoneAuthProvider.ForceResendingToken token;
-    private ProgressBar loading_bar;
-    private TextView verify_number;
+    private Button   btn_verify, resend_otp;
+    private PhoneAuthProvider.ForceResendingToken                 token;
+    private ProgressBar                                           loading_bar;
+    private TextView                                              verify_number;
     //the callback to detect the verification status
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             //Getting the code sent by SMS
-            String code = phoneAuthCredential.getSmsCode();
+            String code=phoneAuthCredential.getSmsCode();
             //sometime the code is not detected automatically
             //in this case the code will be null
             //so user has to manually enter the code
@@ -84,8 +89,8 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
             loading_bar.setVisibility(View.INVISIBLE);
             resend_otp.setVisibility(View.VISIBLE);
             showToast("Code Sent");
-            verificationCode = s;
-            token = forceResendingToken;
+            verificationCode=s;
+            token=forceResendingToken;
         }
     };
 
@@ -94,12 +99,13 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
 
-        number = getIntent().getStringExtra(Const.MO_NUMBER);
-        previousActivity = getIntent().getStringExtra(Const.prevActivity);
-        String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]", "");
-
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        userId = FirebaseAuth.getInstance().getUid();
+        number=getIntent().getStringExtra(Const.MO_NUMBER);
+        previousActivity=getIntent().getStringExtra(Const.prevActivity);
+        String phoneNumberWithoutSpecialChar=number.replaceAll("[ -()/]", "");
+        pref=SharedPreference.getInstance();
+        rootRef=FirebaseDatabaseInstance.getInstance();
+        // userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        // userId = FirebaseAuth.getInstance().getUid();
 
         initializingFields();
         Log.d("phoneVerify", " ----------------------" + phoneNumberWithoutSpecialChar + "----------" + number);
@@ -112,12 +118,12 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     }
 
     private void initializingFields() {
-        loading_bar = findViewById(R.id.loading_bar);
-        firebaseAuth = FirebaseAuth.getInstance();
-        btn_verify = findViewById(R.id.btn_verify);
-        get_code = findViewById(R.id.get_code);
-        verify_number = findViewById(R.id.verify_number);
-        resend_otp = findViewById(R.id.resend_otp);
+        loading_bar=findViewById(R.id.loading_bar);
+        firebaseAuth=FirebaseAuth.getInstance();
+        btn_verify=findViewById(R.id.btn_verify);
+        get_code=findViewById(R.id.get_code);
+        verify_number=findViewById(R.id.verify_number);
+        resend_otp=findViewById(R.id.resend_otp);
     }
 
     private void initializeListeners() {
@@ -139,7 +145,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
     private void verifyVerificationCode(String code) {
         //creating the credential
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, code);
+        PhoneAuthCredential credential=PhoneAuthProvider.getCredential(verificationCode, code);
         //signing the user
         signInWithCredential(credential);
     }
@@ -159,8 +165,9 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
                             }
                             //user verifies mobile number we can store it in shared preferences now!!!
                             saveDataToSharedPreferences();
-                            setUserToSetProfileActivity();
-                            finish();
+                            updateUi();
+                            // setUserToSetProfileActivity();
+                            //finish();
                         } else {
                             loading_bar.setVisibility(View.VISIBLE);
                             resend_otp.setVisibility(View.VISIBLE);
@@ -173,22 +180,53 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
                 });
     }
 
+    private void updateUi() {
+        if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
+                && pref.getData(SharedPreference.userState, getApplicationContext()).equals(Const.verifiedUserState)) {
+            checkUserOnline();
+        } else if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
+                && pref.getData(SharedPreference.userState, getApplicationContext()).equals(Const.profileStoredUserStored)) {
+            sendUserToStartActivity();
+        }
+        finish();
+    }
+
+    private void checkUserOnline() {
+        // rootRef.getUserRef()
+        String currentUserID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        rootRef.getUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if ((dataSnapshot.child(Const.USER_NAME).exists())) {
+                    sendUserToStartActivity();
+                } else {
+                    setUserToSetProfileActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     void showToast(String s) {
         ToastClass.makeText(getApplicationContext(), s);
     }
 
     private void updateUserData() {
-        userRef.child(userId).
+        rootRef.getUserRef().child(userId).
                 child(Const.USER_DETAILS).
                 child(Const.MO_NUMBER).
                 setValue(number).
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        ud = new UserDatabase(PhoneVerify.this);
-                        String[] key = {"number"};
-                        String[] value = {number};
-                        boolean isUpdated = ud.updateData(key, value, userId);
+                        ud=new UserDatabase(PhoneVerify.this);
+                        String[] key={"number"};
+                        String[] value={number};
+                        boolean isUpdated=ud.updateData(key, value, userId);
                         if (isUpdated) {
                             showToast("Mobile number is updated");
 
@@ -200,24 +238,33 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     }
 
     private void saveDataToSharedPreferences() {
-        SharedPreference pref = SharedPreference.getInstance();
+        SharedPreference pref=SharedPreference.getInstance();
         pref.saveData(SharedPreference.phone, number.replaceAll(" ", ""), getApplicationContext());
         pref.saveData(SharedPreference.logging, Const.loggedIn, getApplicationContext());
         pref.saveData(SharedPreference.currentUserId, FirebaseAuth.getInstance().getUid(), getApplicationContext());
+        pref.saveData(SharedPreference.userState, Const.verifiedUserState, getApplicationContext());
     }
 
     void setUserToSetProfileActivity() {
-        Intent resIntent = new Intent(PhoneVerify.this, SetProfileActivity.class);
+        Intent resIntent=new Intent(PhoneVerify.this, SetProfileActivity.class);
         resIntent.putExtra("PreviousActivity", "PhoneVerify");
         resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resIntent);
+    }
+
+    private void sendUserToStartActivity() {
+
+        Intent intent=new Intent(PhoneVerify.this, StartActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_verify:
-                String code = get_code.getText().toString().trim();
+                String code=get_code.getText().toString().trim();
                 if (code.isEmpty() || code.length() < 6) {
                     get_code.setError("Enter valid code");
                     get_code.requestFocus();
@@ -232,4 +279,5 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
         }
     }
+
 }

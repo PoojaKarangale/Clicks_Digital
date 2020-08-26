@@ -1,38 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:fitsSystemWindows="true"
     tools:context=".Event.CreateEventActivity">
 
-    <ImageView
-        android:id="@+id/event_image"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
-        android:src="@drawable/event_banner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_below="@id/event_image"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-15dp"
-        android:background="@drawable/bg_rounded_white"
-        android:elevation="20dp"
-        android:shadowColor="@color/transperent_grey"
-        android:text="Add Image"
-        android:textColor="@color/colorPrimary"
-        android:textSize="10sp" />
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+            app:toolbarId="@+id/toolbar">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/event_image"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:elevation="20dp"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:shadowColor="@color/transperent_grey"
+                android:text="Add Image"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/event_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@drawable/rectangle_box"
+                android:scaleType="fitCenter"
+                android:src="@drawable/event_banner"
+                app:layout_collapseMode="parallax" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato"
+                    android:text="Create Event"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/heading"
+                    android:textStyle="bold" />
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/event_image"
         android:background="@color/white"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -44,21 +79,21 @@
             android:layout_marginEnd="@dimen/margine_main"
             android:layout_marginBottom="@dimen/margine_main">
 
-
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Event Name"
-                android:textSize="@dimen/title1"
                 android:fontFamily="@font/lato"
+                android:hint="Event Name"
+                android:textAllCaps="true"
+                android:textSize="@dimen/title1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:met_baseColor="@android:color/black"
                 app:met_floatingLabel="highlight"
                 app:met_maxCharacters="40"
-                app:met_primaryColor="?colorAccent"
+                app:met_primaryColor="?colorPrimary"
                 app:met_singleLineEllipsis="true" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
@@ -66,33 +101,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="top|left"
+                android:background="@color/white"
+                android:fontFamily="@font/lato"
+                android:gravity="top|start"
                 android:hint="Event Description"
-                android:inputType="textMultiLine"
+                android:inputType="text|textMultiLine"
                 android:lines="8"
                 android:maxLines="10"
-                android:minLines="1"
+                android:minLines="4"
                 android:scrollbars="vertical"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
                 android:textColorHint="@color/black"
                 android:textSize="@dimen/title1"
-                android:fontFamily="@font/lato"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
                 app:met_baseColor="@android:color/black"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="?colorAccent"
-                app:met_singleLineEllipsis="true"
-                tools:layout_editor_absoluteX="16dp"
-
-                />
+                app:met_primaryColor="?colorPrimary"
+                tools:layout_editor_absoluteX="16dp" />
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/lato"
                 android:text="Event Category"
                 android:textSize="@dimen/title1"
-                android:fontFamily="@font/lato"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_name" />
 
@@ -102,39 +137,25 @@
                 android:layout_height="wrap_content"
                 android:spinnerMode="dialog"
                 app:layout_constraintStart_toEndOf="@+id/textView4"
-                app:layout_constraintTop_toTopOf="@+id/textView4" />
+                app:layout_constraintTop_toTopOf="@+id/textView4"
+                tools:listheader="" />
 
-            <!--   <com.rengwuxian.materialedittext.MaterialEditText
-                   android:id="@+id/new_cat"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:hint="Event Category"
-                   android:text="enter new Category"
-                   android:textCursorDrawable="@drawable/text_cursor_cyan"
-                   android:textSize="12sp"
-                   app:layout_constraintEnd_toEndOf="parent"
-                   app:layout_constraintTop_toTopOf="@+id/textView4"
-                   app:met_baseColor="@android:color/white"
-                   app:met_floatingLabel="highlight"
-                   app:met_maxCharacters="40"
-                   app:met_primaryColor="?colorAccent"
-                   app:met_singleLineEllipsis="true" />
-   -->
             <RelativeLayout
                 android:id="@+id/relativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/description"
-                tools:layout_editor_absoluteX="16dp">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description">
 
                 <TextView
                     android:id="@+id/event_type_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Event type"
-                    android:textSize="@dimen/title2"
                     android:fontFamily="@font/lato"
-                    android:textColor="@color/colorPrimary" />
+                    android:text="Event Type"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/title2" />
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chip_group"
@@ -148,9 +169,9 @@
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
                         android:text="Online"
                         android:textSize="@dimen/title1"
-                        android:fontFamily="@font/lato"
                         app:chipBackgroundColor="@color/chipColor" />
 
                     <com.google.android.material.chip.Chip
@@ -158,118 +179,213 @@
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Offline"
                         android:fontFamily="@font/lato"
+                        android:text="Offline"
+                        android:textSize="@dimen/title1" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/bothChip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="Online and Offline"
                         android:textSize="@dimen/title1"
-                        app:chipBackgroundColor="@color/chipColor"
-                        app:layout_constraintStart_toEndOf="@+id/onlineChip"
-                        app:layout_constraintTop_toBottomOf="@+id/get_duration"
-                        app:layout_constraintTop_toTopOf="@+id/onlineChip" />
+                        app:chipBackgroundColor="@color/chipColor" />
 
                 </com.google.android.material.chip.ChipGroup>
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/get_location"
+                <TextView
+                    android:id="@+id/addresstxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/chip_group"
+                    android:fontFamily="@font/lato"
+                    android:text="Event Address"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/title2" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/chip_group"
-                    android:hint="Location"
-                    android:textSize="@dimen/title1"
-                    android:fontFamily="@font/lato"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_maxCharacters="20"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                    android:layout_below="@+id/addresstxt"
+                    android:orientation="vertical">
 
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/venu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:hint="Venu"
+                        android:textSize="@dimen/title1"
+                        app:met_baseColor="@android:color/black"
+                        app:met_floatingLabel="highlight"
+                        app:met_primaryColor="?colorPrimary"
+                        app:met_singleLineEllipsis="true" />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/city"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:hint="City"
+                        android:textSize="@dimen/title1"
+                        app:met_baseColor="@android:color/black"
+                        app:met_floatingLabel="highlight"
+                        app:met_primaryColor="?colorPrimary"
+                        app:met_singleLineEllipsis="true" />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:hint="Address"
+                        android:textSize="@dimen/title1"
+                        app:met_baseColor="@android:color/black"
+                        app:met_floatingLabel="highlight"
+                        app:met_primaryColor="?colorPrimary"
+                        app:met_singleLineEllipsis="true" />
+                </LinearLayout>
             </RelativeLayout>
 
-
-            <LinearLayout
-                android:id="@+id/dateLayout"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/dateTimeLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
                 <ImageButton
-                    android:id="@+id/choose_date"
+                    android:id="@+id/imageDate"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
                     android:src="@drawable/calender" />
 
-                <TextView
-                    android:id="@+id/choose_date_text"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/dateLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textSize="@dimen/title2"
-                    android:hint="12/02/2020" />
-            </LinearLayout>
+                    android:layout_below="@id/imageDate"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margine_sub"
+                    android:gravity="center">
 
-            <!--  <EditText
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="10dp"
-                  android:background="@drawable/back_round_button"
-                  android:hint="Choose  Date"
-                  android:textSize="16dp"
-                  app:layout_constraintStart_toStartOf="@+id/set_date"
-                  app:layout_constraintTop_toBottomOf="@+id/set_date"
-                  />
-              -->
-            <LinearLayout
-                android:id="@+id/timeLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/dateLayout"
-                app:layout_constraintTop_toTopOf="@+id/dateLayout">
+                    <TextView
+                        android:id="@+id/txtStartDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="Start Date"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/title2" />
+
+                    <TextView
+                        android:id="@+id/choose_start_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/txtStartDate"
+                        android:layout_marginStart="@dimen/margine_main"
+                        android:layout_toEndOf="@+id/txtStartDate"
+                        android:hint="12/02/2020"
+                        android:textSize="@dimen/title2" />
+
+                    <TextView
+                        android:id="@+id/txtEndDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txtStartDate"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/lato"
+                        android:text="End Date"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/title2" />
+
+                    <TextView
+                        android:id="@+id/choose_end_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/choose_start_date"
+                        android:layout_alignTop="@+id/txtEndDate"
+                        android:layout_toEndOf="@+id/txtEndDate"
+                        android:hint="12/02/2020"
+                        android:textSize="@dimen/title2" />
+                </RelativeLayout>
 
                 <ImageButton
-                    android:id="@+id/choose_time"
+                    android:id="@+id/imageTime"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_below="@id/dateLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margine_main"
+                    android:padding="5dp"
                     android:src="@drawable/clock" />
 
-                <TextView
-                    android:id="@+id/choose_time_text"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textSize="@dimen/title2"
-                    android:hint="12.00" />
-            </LinearLayout>
+                    android:layout_below="@id/imageTime"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margine_sub"
+                    android:gravity="center">
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/get_duration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="time Duration"
-                android:textSize="@dimen/title2"
-                android:fontFamily="@font/lato"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dateLayout"
-                app:met_baseColor="@android:color/black"
-                app:met_floatingLabel="highlight" />
+                    <TextView
+                        android:id="@+id/txtStartTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:text="Start Date"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/title2" />
+
+                    <TextView
+                        android:id="@+id/choose_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/txtStartTime"
+                        android:layout_marginStart="@dimen/margine_main"
+                        android:layout_toEndOf="@+id/txtStartTime"
+                        android:hint="12.00"
+                        android:textSize="@dimen/title2" />
+
+                    <TextView
+                        android:id="@+id/txtEndTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txtStartTime"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/lato"
+                        android:text="End Date"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/title2" />
+
+                    <TextView
+                        android:id="@+id/choose_end_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/choose_start_time"
+                        android:layout_alignTop="@+id/txtEndTime"
+                        android:layout_toEndOf="@+id/txtEndTime"
+                        android:hint="12.00"
+                        android:textSize="@dimen/title2" />
+                </RelativeLayout>
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/event_payable_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_16dp"
-                android:text="Event payable"
-                android:textSize="@dimen/title2"
+                android:layout_marginTop="@dimen/margine_main"
                 android:fontFamily="@font/lato"
+                android:text="Event Fee"
                 android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/title2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/get_duration" />
+                app:layout_constraintTop_toBottomOf="@+id/dateTimeLayout" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_payble"
@@ -284,9 +400,9 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato"
                     android:text="Paid"
                     android:textSize="@dimen/title1"
-                    android:fontFamily="@font/lato"
                     app:chipBackgroundColor="@color/chipColor" />
 
                 <com.google.android.material.chip.Chip
@@ -294,68 +410,157 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Unpaid"
-                    android:textSize="@dimen/title1"
                     android:fontFamily="@font/lato"
+                    android:text="Free"
+                    android:textSize="@dimen/title1"
                     app:chipBackgroundColor="@color/chipColor"
                     app:layout_constraintStart_toEndOf="@+id/onlineChip"
-                    app:layout_constraintTop_toBottomOf="@+id/get_duration"
+                    app:layout_constraintTop_toBottomOf="@+id/dateTimeLayout"
                     app:layout_constraintTop_toTopOf="@+id/onlineChip" />
 
             </com.google.android.material.chip.ChipGroup>
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/get_cost"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/fee_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:enabled="false"
-                android:hint="Cost of event"
-                android:textSize="@dimen/title2"
-                app:layout_constraintStart_toEndOf="@+id/chip_group_payble"
-                app:layout_constraintTop_toTopOf="@+id/chip_group_payble"
-                app:met_baseColor="@android:color/black"
-                app:met_floatingLabel="highlight" />
+                app:layout_constraintTop_toBottomOf="@id/chip_group_payble">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/fee_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Fee of event (in rupees)"
+                    android:inputType="number"
+                    android:text="0"
+                    android:textSize="@dimen/title1"
+                    app:met_baseColor="@android:color/black"
+                    app:met_floatingLabel="highlight" />
+
+                <TextView
+                    android:id="@+id/info_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/fee_amount"
+                    android:enabled="false"
+                    android:fontFamily="@font/lato"
+                    android:text="(Fee for event ticket including all taxes)"
+                    android:textSize="@dimen/title2" />
+
+                <TextView
+                    android:id="@+id/convenience_fee_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/info_fee"
+                    android:layout_marginTop="10dp"
+                    android:text="0.0"
+                    android:textSize="@dimen/title1" />
+
+                <TextView
+                    android:id="@+id/info_con_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/convenience_fee_amount"
+                    android:enabled="false"
+                    android:fontFamily="@font/lato"
+                    android:text="(Convenience Fee to launch the event on the platform : 8%)"
+                    android:textSize="@dimen/title2" />
+
+                <TextView
+                    android:id="@+id/payumoney_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/info_con_fee"
+                    android:layout_marginTop="10dp"
+                    android:text="0.0"
+                    android:textSize="@dimen/title1" />
+
+                <TextView
+                    android:id="@+id/info_pay_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/payumoney_amount"
+                    android:enabled="false"
+                    android:fontFamily="@font/lato"
+                    android:text="(Amount cut per trandaction by payment gateway : 2%)"
+                    android:textSize="@dimen/title2" />
+
+                <Button
+                    android:id="@+id/calculateTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/info_pay_fee"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:elevation="10dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="Calculate Total"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/button" />
+
+                <TextView
+                    android:id="@+id/total_fee_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/calculateTotal"
+                    android:layout_marginTop="@dimen/margine_sub"
+                    android:text="Total Fee"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/title2" />
+
+                <TextView
+                    android:id="@+id/total_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/calculateTotal"
+                    android:layout_marginStart="@dimen/margine_sub"
+                    android:layout_marginTop="@dimen/margine_sub"
+                    android:layout_toEndOf="@+id/total_fee_txt"
+                    android:text="0"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/title1" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:gravity="right"
-                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/get_cost">
-
-                <Button
-                    android:id="@+id/cancel_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_rounded_grey_border"
-                    android:backgroundTint="@color/white"
-                    android:text="Cancel"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/button"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/get_cost" />
+                app:layout_constraintTop_toBottomOf="@+id/fee_layout">
 
                 <Button
                     android:id="@+id/submit_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:background="@drawable/back_round_button"
+                    android:background="@drawable/rectangle_box"
                     android:backgroundTint="@color/colorPrimary"
                     android:gravity="center"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
-                    android:text="Create Event"
+                    android:text="Launch Event"
                     android:textColor="@color/white"
                     android:textSize="@dimen/button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/cancel_btn" />
+
+                <TextView
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:shadowColor="@color/grey"
+                    android:text="Cancel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/get_cost" />
             </LinearLayout>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.core.widget.NestedScrollView>
-</RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

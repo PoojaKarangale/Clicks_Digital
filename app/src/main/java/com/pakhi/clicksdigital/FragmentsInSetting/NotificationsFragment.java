@@ -16,9 +16,9 @@ import com.pakhi.clicksdigital.Utils.Notification;
 public class NotificationsFragment extends Fragment {
 
 
-    private View view;
+    private View                                                      view;
     private com.google.android.material.switchmaterial.SwitchMaterial simpleSwitch;
-    private TextView subText;
+    private TextView                                                  subText;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -27,17 +27,17 @@ public class NotificationsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_notifications, container, false);
+        view=inflater.inflate(R.layout.fragment_notifications, container, false);
         initializingFields();
         simpleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Notification.isNotificationOn = true;
+                    Notification.isNotificationOn=true;
                     subText.setText("If you uncheck you won't receive any notifications \nfrom this application");
                     Log.d("NOTIFICATIONTEST", subText.getText().toString() + Notification.isNotificationOn);
                 } else {
-                    Notification.isNotificationOn = false;
+                    Notification.isNotificationOn=false;
                     subText.setText("To get notification from the app check this");
                     Log.d("NOTIFICATIONTEST", subText.getText().toString() + Notification.isNotificationOn);
                 }
@@ -48,7 +48,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void initializingFields() {
-        simpleSwitch = view.findViewById(R.id.switch_notify);
-        subText = view.findViewById(R.id.subtext);
+        simpleSwitch=view.findViewById(R.id.switch_notify);
+        subText=view.findViewById(R.id.subtext);
     }
 }

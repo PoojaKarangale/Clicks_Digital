@@ -14,17 +14,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.GroupChat.CreateNewGroupActivity;
 import com.pakhi.clicksdigital.GroupChat.MyGroupsAdapter;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -32,16 +31,18 @@ import java.util.List;
 
 
 public class GroupsFragment extends Fragment implements View.OnClickListener {
-    FirebaseAuth firebaseAuth;
-    String userID;
-    String user_type;
-    SharedPreference pref;
-    LinearLayout join_group_layout;
+
+    String                   userID;
+    String                   user_type;
+    SharedPreference         pref;
+    FirebaseDatabaseInstance rootRef;
+
+    LinearLayout    join_group_layout;
     MyGroupsAdapter groupAdapter;
-    private View groupFragmentView;
-    private List<Group> groups;
+    private View                 groupFragmentView;
+    private List<Group>          groups;
     private FloatingActionButton fab_create_group, fab_join_group;
-    private RecyclerView recyclerView;
+    private RecyclerView      recyclerView;
     private DatabaseReference GroupRef, userGroupRef, UsersRef;
 
     public GroupsFragment() {
@@ -51,15 +52,15 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        groupFragmentView = inflater.inflate(R.layout.fragment_groups, container, false);
+        groupFragmentView=inflater.inflate(R.layout.fragment_groups, container, false);
+        pref=SharedPreference.getInstance();
+        rootRef=FirebaseDatabaseInstance.getInstance();
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        GroupRef=rootRef.getGroupRef();
+        UsersRef=rootRef.getUserRef();
 
-        GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-
-        userID = firebaseAuth.getCurrentUser().getUid();
-        userGroupRef = UsersRef.child(userID).child("groups");
+        userID=pref.getData(SharedPreference.currentUserId, getContext());
+        userGroupRef=UsersRef.child(userID).child("groups");
 
         initializeFields();
 
@@ -79,8 +80,8 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        pref = SharedPreference.getInstance();
-        user_type = pref.getData(SharedPreference.user_type, getContext());
+
+        user_type=pref.getData(SharedPreference.user_type, getContext());
         if (user_type.equals("admin")) {
             fab_create_group.setVisibility(View.VISIBLE);
             fab_join_group.setVisibility(View.GONE);
@@ -101,20 +102,20 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setUpRecyclerView() {
-        recyclerView = groupFragmentView.findViewById(R.id.recycler_groups);
+        recyclerView=groupFragmentView.findViewById(R.id.recycler_groups);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        groups = new ArrayList<>();
+        groups=new ArrayList<>();
 
-        groupAdapter = new MyGroupsAdapter(getContext(), groups);
+        groupAdapter=new MyGroupsAdapter(getContext(), groups);
         recyclerView.setAdapter(groupAdapter);
     }
 
     private void initializeFields() {
-        join_group_layout = groupFragmentView.findViewById(R.id.join_group_layout);
-        fab_create_group = groupFragmentView.findViewById(R.id.fab_create_group);
-        fab_join_group = groupFragmentView.findViewById(R.id.fab_join_group);
+        join_group_layout=groupFragmentView.findViewById(R.id.join_group_layout);
+        fab_create_group=groupFragmentView.findViewById(R.id.fab_create_group);
+        fab_join_group=groupFragmentView.findViewById(R.id.fab_join_group);
 
     }
 
@@ -126,13 +127,13 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    String group_key = snapshot.getKey();
+                    String group_key=snapshot.getKey();
                     groups.clear();
                     GroupRef.child(group_key).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            Group group = dataSnapshot.getValue(Group.class);
+                            Group group=dataSnapshot.getValue(Group.class);
 
                             groups.add(group);
 

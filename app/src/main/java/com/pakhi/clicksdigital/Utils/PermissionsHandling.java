@@ -14,7 +14,7 @@ public class PermissionsHandling {
     Context context;
 
     public PermissionsHandling(Context context) {
-        this.context = context;
+        this.context=context;
     }
 
     public boolean isPermissionGranted() {
@@ -46,7 +46,7 @@ public class PermissionsHandling {
     }
 
     public void showAlertDialog(final int REQUEST_CODE) {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        androidx.appcompat.app.AlertDialog.Builder builder=new androidx.appcompat.app.AlertDialog.Builder(context);
         builder.setTitle("Grant permissioms");
         builder.setMessage("Camera, read & write Contacts, read & write Storage");
         builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
@@ -67,7 +67,7 @@ public class PermissionsHandling {
         });
 
         //builder.setNegativeButton("Cancel",null);
-        androidx.appcompat.app.AlertDialog alertDialog = builder.create();
+        androidx.appcompat.app.AlertDialog alertDialog=builder.create();
         alertDialog.show();
     }
 

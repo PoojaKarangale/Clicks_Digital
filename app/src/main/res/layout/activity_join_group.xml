@@ -38,6 +38,11 @@
                      android:layout_marginEnd="@dimen/margine_main"
                      android:layout_centerVertical="true"
                      android:hint="search here..." />-->
+                <androidx.appcompat.widget.SearchView
+                    android:id="@id/search_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/close" />
 
                 <ImageView
                     android:id="@+id/close"
@@ -51,16 +56,16 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <EditText
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_below="@id/bar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="@dimen/margine_main"
-        android:layout_marginEnd="@dimen/margine_main"
-        android:hint="search here..." />
+    <!-- <EditText
+         android:id="@+id/search_bar"
+         android:layout_width="match_parent"
+         android:layout_height="48dp"
+         android:layout_below="@id/bar"
+         android:layout_alignParentStart="true"
+         android:layout_alignParentEnd="true"
+         android:layout_marginStart="@dimen/margine_main"
+         android:layout_marginEnd="@dimen/margine_main"
+         android:hint="search here..." />-->
 
     <!-- <TextView
          android:id="@+id/txt_requested"
@@ -77,7 +82,7 @@
         android:id="@+id/recycler_requested_groups"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search_bar"
+        android:layout_below="@+id/bar"
         android:layout_alignParentStart="true"
         android:layout_marginStart="@dimen/margine_main"
         android:layout_marginTop="5dp"

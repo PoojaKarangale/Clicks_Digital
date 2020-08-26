@@ -9,9 +9,9 @@ public class Certificates implements Serializable {
     }
 
     public Certificates(String name, String institute, String fileUri) {
-        this.name = name;
-        this.institute = institute;
-        this.fileUri = fileUri;
+        this.name=name;
+        this.institute=institute;
+        this.fileUri=fileUri;
     }
 
     public String getName() {
@@ -19,7 +19,7 @@ public class Certificates implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name=name;
     }
 
     public String getInstitute() {
@@ -27,7 +27,7 @@ public class Certificates implements Serializable {
     }
 
     public void setInstitute(String institute) {
-        this.institute = institute;
+        this.institute=institute;
     }
 
     public String getFileUri() {
@@ -35,6 +35,6 @@ public class Certificates implements Serializable {
     }
 
     public void setFileUri(String fileUri) {
-        this.fileUri = fileUri;
+        this.fileUri=fileUri;
     }
 }

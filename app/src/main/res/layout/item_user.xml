@@ -6,49 +6,37 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_profile"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
         android:layout_centerVertical="true"
         android:src="@mipmap/ic_launcher" />
 
-    <LinearLayout
-        android:id="@+id/name_layout"
+    <ImageView
+        android:id="@+id/user_online_status"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="5dp"
+        android:src="@drawable/online"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="@dimen/margine_3"
         android:layout_toEndOf="@id/image_profile"
-        android:orientation="horizontal"
-        android:paddingTop="8dp">
-
-        <TextView
-            android:id="@+id/display_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margine_3"
-            android:fontFamily="@font/lato"
-            android:maxLines="1"
-            android:text="Name"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/title1"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/user_online_status"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/online"
-            android:visibility="invisible" />
-
-    </LinearLayout>
-
+        android:fontFamily="@font/lato"
+        android:maxLines="1"
+        android:text="Name"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/title1"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/user_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_layout"
-
+        android:layout_below="@+id/display_name"
         android:layout_marginStart="@dimen/margine_3"
         android:layout_toEndOf="@+id/image_profile"
         android:fontFamily="@font/lato"
@@ -61,7 +49,7 @@
         android:id="@+id/number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_layout"
+        android:layout_below="@+id/display_name"
         android:layout_marginStart="@dimen/margine_3"
         android:layout_toEndOf="@+id/image_profile"
         android:fontFamily="@font/lato"
@@ -74,7 +62,7 @@
         android:id="@+id/group_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_layout"
+        android:layout_below="@+id/display_name"
         android:layout_marginStart="@dimen/margine_3"
         android:layout_toEndOf="@+id/image_profile"
         android:fontFamily="@font/lato"
@@ -88,27 +76,27 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="4dp"
-        android:layout_toEndOf="@+id/name_layout"
+        android:layout_toEndOf="@+id/display_name"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/request_accept_btn"
+            android:id="@+id/request_cancel_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:background="@color/white"
-            android:text="Accept"
+            android:text="Cancel"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="10sp"
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/request_cancel_btn"
+            android:id="@+id/request_accept_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginStart="10dp"
             android:background="@color/colorPrimary"
-            android:text="Cancel"
+            android:text="Accept"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="10sp"

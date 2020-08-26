@@ -16,14 +16,14 @@ public class EnlargedImage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enlarged_image);
 
-        Intent intent = getIntent();
-        String image = intent.getStringExtra(Const.IMAGE_URL);
+        Intent intent=getIntent();
+        String image=intent.getStringExtra(Const.IMAGE_URL);
         //  InputStream is = this.getResources().openRawResource(imageId1);
         // Bitmap originalBitmap = BitmapFactory.decodeStream(is);
-        ImageView myimage = (ImageView) findViewById(R.id.imageView);
+        ImageView myimage=(ImageView) findViewById(R.id.imageView);
 
         Picasso.get().load(image).placeholder(R.drawable.profile_image)
-                .resize(550, 550)
+//                .resize(550, 550)
                 .into(myimage);
 
         //  myimage.setImageBitmap(originalBitmap);

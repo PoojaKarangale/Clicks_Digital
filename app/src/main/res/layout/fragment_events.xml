@@ -2,56 +2,49 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
-    android:paddingTop="?attr/actionBarSize">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
+    <!-- ?attr/actionBarSize-->
+    <!-- android:layout_marginTop="55dp"
+     android:paddingTop="?attr/actionBarSize"
+     android:layout_marginTop="?attr/actionBarSize"
+     -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/white"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </com.google.android.material.tabs.TabLayout>
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPagerEvents"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPagerEvents"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/tabs">
+        </androidx.viewpager.widget.ViewPager>
 
-    </androidx.viewpager.widget.ViewPager>
-    <!--
-        <FrameLayout
-            android:id="@+id/fragment_con"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/tabs" />
-            -->
-    <!--
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            app:layout_constraintTop_toBottomOf="@+id/tabs"
-            app:layout_constraintTop_toTopOf="@+id/viewPager">
+            android:background="@color/white"
+            app:tabGravity="fill"
+            android:layout_gravity="bottom"
+            app:tabIndicatorHeight="1dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/colorPrimary"
+            app:tabTextColor="@color/black">
 
-            <FrameLayout
-                android:id="@+id/create_event_contain"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:paddingTop="?attr/actionBarSize"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+        </com.google.android.material.tabs.TabLayout>
+    </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
-    -->
-
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_create_event"
+        android:layout_width="wrap_content"
+        app:fabSize="mini"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:baselineAlignBottom="true"
+        android:src="@android:drawable/ic_input_add" />
 </FrameLayout>

@@ -16,12 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserDatabase extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "user.db";
-    public static final String TABLE_NAME = "current_user";
+    public static final String DATABASE_NAME="user.db";
+    public static final String TABLE_NAME   ="current_user";
 
     public UserDatabase(@Nullable Context context) {
         super(context, TABLE_NAME, null, 1);
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db=this.getWritableDatabase();
     }
 
     @Override
@@ -46,6 +46,7 @@ public class UserDatabase extends SQLiteOpenHelper {
                 + "company" + " TEXT"
                 +
                 ")");
+        // db.close();
     }
 
     @Override
@@ -54,6 +55,7 @@ public class UserDatabase extends SQLiteOpenHelper {
         Log.d("TESTINGUSERDB", "----------------- onupgrade");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+        //db.close();
     }
 
   /*  public boolean insertData(String userid, String name, String bio, String image_url, String user_type) {
@@ -71,30 +73,32 @@ public class UserDatabase extends SQLiteOpenHelper {
     }*/
 
     public Cursor getAllData() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from " + TABLE_NAME, null);
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor res=db.rawQuery("select * from " + TABLE_NAME, null);
         //+" where "+Const.USER_ID+" = "+currentUserID
+        //db.close();
         return res;
     }
 
     public boolean insertData(HashMap<String, String> userItems) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
         for (Map.Entry<String, String> m : userItems.entrySet()) {
             contentValues.put(m.getKey(), m.getValue());
         }
-        long result = db.insert(TABLE_NAME, null, contentValues);
+        long result=db.insert(TABLE_NAME, null, contentValues);
         Log.d("TESTINGUSERDB", "----------------- result long" + result);
+        //  db.close();
         if (result == -1) return false;
         return true;
     }
 
     public boolean updateData(String[] key, String[] value, String Id) {
 
-        SQLiteDatabase myDB = this.getWritableDatabase();
-        String strFilter = Const.USER_ID + "=" + Id;
-        ContentValues args = new ContentValues();
-        for (int i = 0; i < key.length; i++) {
+        SQLiteDatabase myDB=this.getWritableDatabase();
+        String strFilter=Const.USER_ID + "=" + Id;
+        ContentValues args=new ContentValues();
+        for (int i=0; i < key.length; i++) {
             args.put(key[i], value[i]);
         }
         try {

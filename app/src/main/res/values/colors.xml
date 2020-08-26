@@ -2,17 +2,23 @@
 <resources>
 
     <color name="colorPrimary">#1768E7</color>
-    <color name="colorPrimaryDark">#1768E7</color>
+    <color name="colorPrimaryDark">#95BEFF</color> <!--#1768E7-->
     <color name="colorAccent">#Ff3300</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#4B4B4D</color>
     <color name="pale_grey">#9B9B9C</color>
     <color name="transperent_grey">#59EDEDED</color>
-    <color name="purple">#FF00FF</color>
 
     <color name="black_shade">#171500</color>
     <color name="cyan">#DFA8FDFA</color>
     <color name="chipColor">#E4E4E4</color>
-
+    <!--chat avtivity -->
+    <color name="chatBackground">#daecfb</color>
+    <color name="recevierChatBox">#FFFFFF</color>
+    <color name="recevierMessage">#00518F</color>
+    <color name="recevierDateTime">#B1B1B1</color>
+    <color name="senderChatBox">#ecf6fd</color>
+    <color name="senderMessage">#FFFFFF</color>
+    <color name="senderDateTime">#E3E3E3</color>
 </resources>

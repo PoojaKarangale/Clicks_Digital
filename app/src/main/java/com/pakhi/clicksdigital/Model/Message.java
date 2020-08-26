@@ -2,29 +2,41 @@ package com.pakhi.clicksdigital.Model;
 
 public class Message {
 
-    private String from, message, type, to, messageID, time, date, name;
+    private String from, message, type, to, messageID, time, date;
+
+
+    boolean isSeen;
+
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, boolean isSeen) {
+        this.from=from;
+        this.message=message;
+        this.type=type;
+        this.to=to;
+        this.messageID=messageID;
+        this.time=time;
+        this.date=date;
+        this.isSeen=isSeen;
+    }
 
     public Message() {
     }
 
-    public Message(String from, String message, String type, String to, String messageID, String time, String date, String name) {
-        this.from = from;
-        this.message = message;
-        this.type = type;
-        this.to = to;
-        this.messageID = messageID;
-        this.time = time;
-        this.date = date;
-        this.name = name;
+    public Message(String from, String message, String type, String to, String messageID, String time, String date) {
+        this.from=from;
+        this.message=message;
+        this.type=type;
+        this.to=to;
+        this.messageID=messageID;
+        this.time=time;
+        this.date=date;
     }
 
-    public Message(String from, String message, String type, String messageID, String time, String date) {
-        this.from = from;
-        this.message = message;
-        this.type = type;
-        this.messageID = messageID;
-        this.time = time;
-        this.date = date;
+    public boolean isSeen() {
+        return isSeen;
+    }
+
+    public void setSeen(boolean seen) {
+        isSeen=seen;
     }
 
     public String getFrom() {
@@ -32,7 +44,7 @@ public class Message {
     }
 
     public void setFrom(String from) {
-        this.from = from;
+        this.from=from;
     }
 
     public String getMessage() {
@@ -40,7 +52,7 @@ public class Message {
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.message=message;
     }
 
     public String getType() {
@@ -48,7 +60,7 @@ public class Message {
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.type=type;
     }
 
     public String getTo() {
@@ -56,7 +68,7 @@ public class Message {
     }
 
     public void setTo(String to) {
-        this.to = to;
+        this.to=to;
     }
 
     public String getMessageID() {
@@ -64,7 +76,7 @@ public class Message {
     }
 
     public void setMessageID(String messageID) {
-        this.messageID = messageID;
+        this.messageID=messageID;
     }
 
     public String getTime() {
@@ -72,7 +84,7 @@ public class Message {
     }
 
     public void setTime(String time) {
-        this.time = time;
+        this.time=time;
     }
 
     public String getDate() {
@@ -80,14 +92,7 @@ public class Message {
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.date=date;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

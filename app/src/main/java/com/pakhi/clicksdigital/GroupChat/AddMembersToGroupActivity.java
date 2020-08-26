@@ -12,42 +12,42 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddMembersToGroupActivity extends AppCompatActivity {
     private AddMembersToGroupAdapter addMembersToGroupAdapter;
-    private DatabaseReference userRef, RootRef, groupRef;
-    private String groupId;
+    private DatabaseReference        userRef, RootRef, groupRef;
+    private String     groupId;
     private List<User> allUsers;
-    private ImageView send;
+    private ImageView  send;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_members_to_group);
 
-        RootRef = FirebaseDatabase.getInstance().getReference();
-        userRef = RootRef.child("Users");
-        groupRef = RootRef.child("Groups");
+        FirebaseDatabaseInstance rootRef=FirebaseDatabaseInstance.getInstance();
+        userRef=rootRef.getUserRef();
+        groupRef=rootRef.getGroupRef();
 
-        groupId = getIntent().getStringExtra("current_group_id");
+        groupId=getIntent().getStringExtra("current_group_id");
 
-        send = findViewById(R.id.send);
+        send=findViewById(R.id.send);
 
-        RecyclerView findFriendsRecyclerList = (RecyclerView) findViewById(R.id.add_members_recycler_list);
+        RecyclerView findFriendsRecyclerList=(RecyclerView) findViewById(R.id.add_members_recycler_list);
         findFriendsRecyclerList.setHasFixedSize(true);
         findFriendsRecyclerList.setLayoutManager(new LinearLayoutManager(AddMembersToGroupActivity.this));
 
-        allUsers = new ArrayList<>();
+        allUsers=new ArrayList<>();
 
-        addMembersToGroupAdapter = new AddMembersToGroupAdapter(this, allUsers);
+        addMembersToGroupAdapter=new AddMembersToGroupAdapter(this, allUsers);
         findFriendsRecyclerList.setAdapter(addMembersToGroupAdapter);
         readAllMembers();
 

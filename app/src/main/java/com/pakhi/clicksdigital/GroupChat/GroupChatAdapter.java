@@ -18,20 +18,20 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.ViewHolder> {
-    private Context mcontext;
-    private List<Group> groups;
+    private Context      mcontext;
+    private List<Group>  groups;
     private FirebaseUser firebaseUser;
-    private boolean sentRequestFlag = false;
+    private boolean      sentRequestFlag=false;
 
     public GroupChatAdapter(Context mcontext, List<Group> groups) {
-        this.mcontext = mcontext;
-        this.groups = groups;
+        this.mcontext=mcontext;
+        this.groups=groups;
     }
 
     @NonNull
     @Override
     public GroupChatAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mcontext)
+        View view=LayoutInflater.from(mcontext)
                 .inflate(R.layout.item_user, parent, false);
         return new GroupChatAdapter.ViewHolder(view);
     }
@@ -47,14 +47,14 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView displayName;
+        public TextView        displayName;
         public CircleImageView image_profile;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            displayName = itemView.findViewById(R.id.display_name);
-            image_profile = itemView.findViewById(R.id.image_profile);
+            displayName=itemView.findViewById(R.id.display_name);
+            image_profile=itemView.findViewById(R.id.image_profile);
         }
     }
 }

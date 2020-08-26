@@ -15,12 +15,12 @@ import java.util.List;
 public class ImageAdapter extends BaseAdapter {
     private List<String> imagesUrls;
     private List<String> imagesNames;
-    private Context mContext;
+    private Context      mContext;
 
     public ImageAdapter(List<String> imageUrls, List<String> imagesNames, Context mContext) {
-        this.imagesUrls = imageUrls;
-        this.imagesNames = imagesNames;
-        this.mContext = mContext;
+        this.imagesUrls=imageUrls;
+        this.imagesNames=imagesNames;
+        this.mContext=mContext;
     }
 
     @Override
@@ -41,10 +41,10 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView = (ImageView) convertView;
+        ImageView imageView=(ImageView) convertView;
 
         if (imageView == null) {
-            imageView = new ImageView(mContext);
+            imageView=new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(350, 450));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }

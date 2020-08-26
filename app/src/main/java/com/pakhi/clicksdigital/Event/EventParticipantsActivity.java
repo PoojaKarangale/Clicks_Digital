@@ -19,7 +19,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.User;
@@ -28,6 +27,7 @@ import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -36,27 +36,30 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EventParticipantsActivity extends AppCompatActivity {
-    Event event;
+    Event             event;
     DatabaseReference eventRef, currentEventRef, usersRef;
-    List<String> participantsList = new ArrayList<>();
-    RecyclerView user_recycler_list;
+    List<String>             participantsList=new ArrayList<>();
+    RecyclerView             user_recycler_list;
+    FirebaseDatabaseInstance rootRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_participants);
 
-        event = (Event) getIntent().getSerializableExtra("Event");
-        eventRef = FirebaseDatabase.getInstance().getReference().child("Events");
-        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        rootRef=FirebaseDatabaseInstance.getInstance();
 
-        currentEventRef = eventRef.child(event.getEvent_type()).child(event.getEventId());
+        event=(Event) getIntent().getSerializableExtra("Event");
+        eventRef=rootRef.getEventRef();
+        usersRef=rootRef.getUserRef();
+
+        currentEventRef=eventRef.child(event.getEventType()).child(event.getEventId());
         initializeFields();
         currentEventRef.child("Participants").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    int participants = (int) snapshot.getChildrenCount();
+                    int participants=(int) snapshot.getChildrenCount();
                     // no_of_participants.setText(participants);
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         participantsList.add(dataSnapshot.getKey());
@@ -72,7 +75,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
     }
 
     private void initializeFields() {
-        user_recycler_list = findViewById(R.id.user_recycler_list);
+        user_recycler_list=findViewById(R.id.user_recycler_list);
         user_recycler_list.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -81,21 +84,21 @@ public class EventParticipantsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //updateUserStatus("online");
-        FirebaseRecyclerOptions<User> options =
+        FirebaseRecyclerOptions<User> options=
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(currentEventRef, User.class)
                         .build();
-        FirebaseRecyclerAdapter<User, EventParticipantsActivity.EventParticipantsViewHolder> adapter =
+        FirebaseRecyclerAdapter<User, EventParticipantsActivity.EventParticipantsViewHolder> adapter=
                 new FirebaseRecyclerAdapter<User, EventParticipantsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final EventParticipantsViewHolder holder, final int position, @NonNull final User model) {
-                        final String visit_user_id = getRef(position).getKey();
+                        final String visit_user_id=getRef(position).getKey();
                         usersRef.child(visit_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
                                 holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
-                                final String image_url = dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                final String image_url=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
                                 Picasso.get()
                                         .load(image_url).placeholder(R.drawable.profile_image)
                                         .resize(120, 120)
@@ -104,7 +107,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                                 holder.profile_image.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
+                                        Intent fullScreenIntent=new Intent(v.getContext(), EnlargedImage.class);
                                         fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
                                         v.getContext().startActivity(fullScreenIntent);
                                     }
@@ -119,7 +122,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                         holder.chat_with_friend.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent chatActivity = new Intent(EventParticipantsActivity.this, ChatActivity.class);
+                                Intent chatActivity=new Intent(EventParticipantsActivity.this, ChatActivity.class);
                                 chatActivity.putExtra("visit_user_id", getRef(position).getKey());
                                 startActivity(chatActivity);
                             }
@@ -128,7 +131,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 // String visit_user_id = getRef(position).getKey();
-                                Intent profileIntent = new Intent(EventParticipantsActivity.this, VisitProfileActivity.class);
+                                Intent profileIntent=new Intent(EventParticipantsActivity.this, VisitProfileActivity.class);
                                 profileIntent.putExtra("visit_user_id", visit_user_id);
                                 startActivity(profileIntent);
                             }
@@ -138,8 +141,8 @@ public class EventParticipantsActivity extends AppCompatActivity {
                     @NonNull
                     @Override
                     public EventParticipantsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
-                        EventParticipantsViewHolder viewHolder = new EventParticipantsViewHolder(view);
+                        View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_user, viewGroup, false);
+                        EventParticipantsViewHolder viewHolder=new EventParticipantsViewHolder(view);
                         return viewHolder;
                     }
                 };
@@ -151,18 +154,18 @@ public class EventParticipantsActivity extends AppCompatActivity {
     public static class EventParticipantsViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
         CircleImageView profile_image;
-        ImageView chat_with_friend;
+        ImageView       chat_with_friend;
 
         public EventParticipantsViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            userName = itemView.findViewById(R.id.display_name);
-            userStatus = itemView.findViewById(R.id.user_status);
-            chat_with_friend = itemView.findViewById(R.id.chat_with_friend);
+            userName=itemView.findViewById(R.id.display_name);
+            userStatus=itemView.findViewById(R.id.user_status);
+            chat_with_friend=itemView.findViewById(R.id.chat_with_friend);
 
             chat_with_friend.setVisibility(View.VISIBLE);
             userName.setTextColor(Color.BLACK);
-            profile_image = itemView.findViewById(R.id.image_profile);
+            profile_image=itemView.findViewById(R.id.image_profile);
             userStatus.setVisibility(View.VISIBLE);
         }
     }

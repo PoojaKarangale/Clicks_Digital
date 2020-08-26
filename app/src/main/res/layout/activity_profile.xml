@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
     <!-- <com.google.android.material.appbar.AppBarLayout
          android:id="@+id/appbar"
@@ -117,7 +117,7 @@
                android:textSize="20sp"
                android:textStyle="bold" />
        </RelativeLayout>-->
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:id="@+id/nestedScrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -155,8 +155,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:fontFamily="@font/lato"
                 android:layout_marginTop="@dimen/dimen_16dp"
+                android:fontFamily="@font/lato"
                 android:text="User Name"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
@@ -167,22 +167,22 @@
                 android:id="@+id/profile_img"
                 android:layout_width="108dp"
                 android:layout_height="108dp"
-                android:layout_marginTop="@dimen/dimen_16dp"
                 android:layout_below="@+id/tv_user_name_heading"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dimen_16dp"
                 android:src="@drawable/profile_image"
-                app:civ_border_color="#939393"
-                app:civ_border_width="2dp" />
+                app:civ_border_color="@color/white"
+                app:civ_border_width="3dp" />
 
             <LinearLayout
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_img"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:layout_below="@+id/profile_img">
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/edit_profile"
@@ -346,30 +346,12 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/list_layput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/main_layout"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
-
-                <ListView
-                    android:id="@+id/list_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="#FFFFFF"
-                    android:dividerHeight="3dp"
-                    android:footerDividersEnabled="false"
-                    android:listSelector="#DEFBFF"
-                    android:background="@color/white" />
-            </LinearLayout>
-
         </RelativeLayout>
 
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

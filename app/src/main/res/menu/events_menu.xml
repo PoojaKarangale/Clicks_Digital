@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/online"
+        android:enabled="true"
+        android:title="online" />
+    <item
+        android:id="@+id/offline"
+        android:enabled="true"
+        android:title="offline" />
+    <!-- android:icon="@drawable/icon_2"-->
+</menu>

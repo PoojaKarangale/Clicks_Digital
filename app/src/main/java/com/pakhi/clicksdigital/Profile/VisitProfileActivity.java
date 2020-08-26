@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,36 +13,36 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
+import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class VisitProfileActivity extends AppCompatActivity {
 
-    boolean isVisterIsAdmin = false;
-    boolean isProfileUserIsAdmin = false;
+    boolean      isVisterIsAdmin     =false;
+    boolean      isProfileUserIsAdmin=false;
     UserDatabase db;
-    private String user_id;
+    private String    user_id;
     private ImageView profile_image;
-    private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
+    private TextView  user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
     private User user, currentUser;
     private String receiverUserID, senderUserID, Current_State;
-    private Button SendMessageRequestButton, DeclineMessageRequestButton, make_admin, removeAdmin;
+    private Button make_admin, removeAdmin, message_btn;
     private DatabaseReference UserRef, ChatRequestRef, ContactsRef, NotificationRef;
 
     @Override
@@ -51,9 +50,9 @@ public class VisitProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_profile);
 
-        UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        user_id = getIntent().getStringExtra("visit_user_id");
-        db = new UserDatabase(this);
+        UserRef=FirebaseDatabase.getInstance().getReference().child("Users");
+        user_id=getIntent().getStringExtra("visit_user_id");
+        db=new UserDatabase(this);
         getCurrentUserFromDb();
 
         initializeMsgRequestFields();
@@ -61,13 +60,13 @@ public class VisitProfileActivity extends AppCompatActivity {
         UserRef.child(user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
+                user=dataSnapshot.getValue(User.class);
                 Picasso.get()
                         .load(user.getImage_url())
                         .resize(120, 120)
                         .into(profile_image);
                 if (user.getUser_type().equals("admin")) {
-                    isProfileUserIsAdmin = true;
+                    isProfileUserIsAdmin=true;
                 }
                 loadData();
             }
@@ -79,7 +78,7 @@ public class VisitProfileActivity extends AppCompatActivity {
         });
 
         if (currentUser.getUser_type().equals("admin")) {
-            isVisterIsAdmin = true;
+            isVisterIsAdmin=true;
         }
         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
             // make him admin btn set visible
@@ -88,11 +87,6 @@ public class VisitProfileActivity extends AppCompatActivity {
         if (isVisterIsAdmin && isProfileUserIsAdmin) {
             removeAdmin.setVisibility(View.VISIBLE);
         }
-
-        SendMessageRequestButton = findViewById(R.id.accept_msg_request);
-        DeclineMessageRequestButton = findViewById(R.id.decline_msg_request);
-
-        SendMessageRequestButton.setVisibility(View.VISIBLE);
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,18 +97,27 @@ public class VisitProfileActivity extends AppCompatActivity {
             }
         });
 
-        ManageChatRequests();
+        message_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent chatIntent=new Intent(getApplicationContext(), ChatActivity.class);
+                chatIntent.putExtra("visit_user_id", user.getUser_id());
+                chatIntent.putExtra("visit_user_name", user.getUser_name());
+                startActivity(chatIntent);
+            }
+        });
+        // ManageChatRequests();
 
     }
 
     private void getCurrentUserFromDb() {
         db.getReadableDatabase();
-        Cursor res = db.getAllData();
+        Cursor res=db.getAllData();
         if (res.getCount() == 0) {
 
         } else {
             res.moveToFirst();
-            currentUser = new User(res.getString(0), res.getString(1),
+            currentUser=new User(res.getString(0), res.getString(1),
                     res.getString(2), res.getString(3), res.getString(4),
                     res.getString(5), res.getString(6), res.getString(7),
                     res.getString(8), res.getString(9), res.getString(10),
@@ -125,25 +128,26 @@ public class VisitProfileActivity extends AppCompatActivity {
 
     private void initializeMsgRequestFields() {
 
-        ChatRequestRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
-        ContactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
-        NotificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
-        senderUserID = currentUser.getUser_id();
-        receiverUserID = user_id;
+        ChatRequestRef=FirebaseDatabase.getInstance().getReference().child("Chat Requests");
+        ContactsRef=FirebaseDatabase.getInstance().getReference().child("Contacts");
+        NotificationRef=FirebaseDatabase.getInstance().getReference().child("Notifications");
+        senderUserID=currentUser.getUser_id();
+        receiverUserID=user_id;
 
-        profile_image = findViewById(R.id.profile_img);
-        user_name_heading = findViewById(R.id.tv_user_name_heading);
-        user_name = findViewById(R.id.tv_user_name);
-        gender = findViewById(R.id.tv_gender);
-        profession = findViewById(R.id.tv_profession);
-        bio = findViewById(R.id.tv_user_bio);
-        speaker_experience = findViewById(R.id.tv_speaker_experience);
-        experience = findViewById(R.id.tv_experiences);
+        profile_image=findViewById(R.id.profile_img);
+        user_name_heading=findViewById(R.id.tv_user_name_heading);
+        user_name=findViewById(R.id.tv_user_name);
+        gender=findViewById(R.id.tv_gender);
+        profession=findViewById(R.id.tv_profession);
+        bio=findViewById(R.id.tv_user_bio);
+        speaker_experience=findViewById(R.id.tv_speaker_experience);
+        experience=findViewById(R.id.tv_experiences);
 
-        make_admin = findViewById(R.id.make_admin);
-        removeAdmin = findViewById(R.id.remove_admin);
+        make_admin=findViewById(R.id.make_admin);
+        removeAdmin=findViewById(R.id.remove_admin);
+        message_btn=findViewById(R.id.message_btn);
 
-        Current_State = "new";
+        Current_State="new";
 
     }
 
@@ -183,40 +187,45 @@ public class VisitProfileActivity extends AppCompatActivity {
         Toast.makeText(this, "Data Loaded", Toast.LENGTH_SHORT).show();
     }
 
-    private void addCertificationData(final List<String> certificates) {
-        ImageView certi_1 = findViewById(R.id.certi_1);
+    private void addCertificationData(final List<Certificates> certificates) {
+        ImageView certi_1=findViewById(R.id.certi_1);
         certi_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (certificates == null) {
-                    Toast.makeText(view.getContext(), "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VisitProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
                 } else {
-                    Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("certificates", (Serializable) certificates);
+                    ShowCertificatesFragment gmapFragment=new ShowCertificatesFragment();
+                    gmapFragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, gmapFragment).commit();
+                   /* Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
+                    startActivity(intent);*/
                 }
             }
         });
     }
 
     private void loadCertification() {
-        final List<String> certificates = new ArrayList<String>();
-
+        final List<Certificates> certificates=new ArrayList<Certificates>();
         //Loading the data
-        DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_MEDIA_PATH).child(Const.FILES_PATH);
+
+        DatabaseReference databaseReference=UserRef.child(user_id).child("cerificates");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                        certificates.add(String.valueOf(childSnapshot.getValue()));
-                        Log.e("this", childSnapshot.getKey() + "    " + childSnapshot.getValue());
+                        certificates.add(childSnapshot.getValue(Certificates.class));
+//                        certificates.add(String.valueOf(childSnapshot.getValue()));
+//                        Log.e("this", childSnapshot.getKey() + "    " + childSnapshot.getValue());
                     }
                     addCertificationData(certificates);
                 } else {
                     addCertificationData(null);
                 }
-
             }
 
             @Override
@@ -224,11 +233,10 @@ public class VisitProfileActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void socialMediaHandles() {
-        ImageView linkedin = findViewById(R.id.iv_user_linkedin);
+        ImageView linkedin=findViewById(R.id.iv_user_linkedin);
 
         //opening the linkedin link
         linkedin.setOnClickListener(new View.OnClickListener() {
@@ -244,36 +252,25 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void contactInfo() {
-        ImageView email = findViewById(R.id.iv_user_email);
+        ImageView email=findViewById(R.id.iv_user_email);
 
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + user.getUser_email()));
+                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + user.getUser_email()));
                 startActivity(intent);
             }
         });
-
-        /*
-        number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:" + user.getNumber()));
-                startActivity(callIntent);
-            }
-        });
-        */
     }
 
     private void viewProfile(String image_url) {
-        Intent fullScreenIntent = new Intent(this, EnlargedImage.class);
+        Intent fullScreenIntent=new Intent(this, EnlargedImage.class);
         fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
         startActivity(fullScreenIntent);
     }
 
     public void makeAdmin(final View view) {
-        DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -285,7 +282,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(final View view) {
-        DatabaseReference databaseReference = UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -294,215 +291,5 @@ public class VisitProfileActivity extends AppCompatActivity {
                 Toast.makeText(view.getContext(), user.getUser_name() + " is no longer admin now", Toast.LENGTH_SHORT);
             }
         });
-    }
-
-    private void ManageChatRequests() {
-        ChatRequestRef.child(senderUserID)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild(receiverUserID)) {
-                            String request_type = dataSnapshot.child(receiverUserID).child("request_type").getValue().toString();
-
-                            if (request_type.equals("sent")) {
-                                Current_State = "request_sent";
-                                SendMessageRequestButton.setText("Cancel Chat Request");
-                            } else if (request_type.equals("received")) {
-                                Current_State = "request_received";
-                                SendMessageRequestButton.setText("Accept Chat Request");
-
-                                DeclineMessageRequestButton.setVisibility(View.VISIBLE);
-                                DeclineMessageRequestButton.setEnabled(true);
-
-                                DeclineMessageRequestButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        CancelChatRequest();
-                                    }
-                                });
-                            }
-                        } else {
-                            ContactsRef.child(senderUserID)
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.hasChild(receiverUserID)) {
-                                                Current_State = "friends";
-                                                SendMessageRequestButton.setText("Remove this Contact");
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-        if (!senderUserID.equals(receiverUserID)) {
-            SendMessageRequestButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SendMessageRequestButton.setEnabled(false);
-
-                    if (Current_State.equals("new")) {
-                        SendChatRequest();
-                    }
-                    if (Current_State.equals("request_sent")) {
-                        CancelChatRequest();
-                    }
-                    if (Current_State.equals("request_received")) {
-                        AcceptChatRequest();
-                    }
-                    if (Current_State.equals("friends")) {
-                        RemoveSpecificContact();
-                    }
-                }
-            });
-        } else {
-            SendMessageRequestButton.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private void RemoveSpecificContact() {
-        ContactsRef.child(senderUserID).child(receiverUserID)
-                .removeValue()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            ContactsRef.child(receiverUserID).child(senderUserID)
-                                    .removeValue()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                SendMessageRequestButton.setEnabled(true);
-                                                Current_State = "new";
-                                                SendMessageRequestButton.setText("Send Message");
-
-                                                DeclineMessageRequestButton.setVisibility(View.INVISIBLE);
-                                                DeclineMessageRequestButton.setEnabled(false);
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-                });
-    }
-
-    private void AcceptChatRequest() {
-        ContactsRef.child(senderUserID).child(receiverUserID)
-                .child("Contacts").setValue("Saved")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            ContactsRef.child(receiverUserID).child(senderUserID)
-                                    .child("Contacts").setValue("Saved")
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                ChatRequestRef.child(senderUserID).child(receiverUserID)
-                                                        .removeValue()
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    ChatRequestRef.child(receiverUserID).child(senderUserID)
-                                                                            .removeValue()
-                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                @Override
-                                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                                    SendMessageRequestButton.setEnabled(true);
-                                                                                    Current_State = "friends";
-                                                                                    SendMessageRequestButton.setText("Remove this Contact");
-
-                                                                                    DeclineMessageRequestButton.setVisibility(View.INVISIBLE);
-                                                                                    DeclineMessageRequestButton.setEnabled(false);
-                                                                                }
-                                                                            });
-                                                                }
-                                                            }
-                                                        });
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-                });
-    }
-
-    private void CancelChatRequest() {
-        ChatRequestRef.child(senderUserID).child(receiverUserID)
-                .removeValue()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            ChatRequestRef.child(receiverUserID).child(senderUserID)
-                                    .removeValue()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                SendMessageRequestButton.setEnabled(true);
-                                                Current_State = "new";
-                                                SendMessageRequestButton.setText("Send Message");
-
-                                                DeclineMessageRequestButton.setVisibility(View.INVISIBLE);
-                                                DeclineMessageRequestButton.setEnabled(false);
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-                });
-    }
-
-    private void SendChatRequest() {
-        ChatRequestRef.child(senderUserID).child(receiverUserID)
-                .child("request_type").setValue("sent")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            ChatRequestRef.child(receiverUserID).child(senderUserID)
-                                    .child("request_type").setValue("received")
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                HashMap<String, String> chatNotificationMap = new HashMap<>();
-                                                chatNotificationMap.put("from", senderUserID);
-                                                chatNotificationMap.put("type", "request");
-
-                                                NotificationRef.child(receiverUserID).push()
-                                                        .setValue(chatNotificationMap)
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    SendMessageRequestButton.setEnabled(true);
-                                                                    Current_State = "request_sent";
-                                                                    SendMessageRequestButton.setText("Cancel Chat Request");
-                                                                }
-                                                            }
-                                                        });
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-                });
     }
 }

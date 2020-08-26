@@ -20,5 +20,7 @@
     <dimen name="margine_main">20dp</dimen>
     <dimen name="margine_sub">16dp</dimen>
     <dimen name="margine_3">12dp</dimen>
+    <dimen name="title3">12sp</dimen>
+    <dimen name="title4">10sp</dimen>
 
 </resources>

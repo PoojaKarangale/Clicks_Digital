@@ -4,57 +4,65 @@ import java.io.Serializable;
 
 public class Event implements Serializable {
 
-
-    String eventId;
-    String name;
-    String description;
-    String event_image;
-    String city;
-    String location;
-    String time;
-    String date;
-    String duration;
-    String event_type;
-    String payable;
-    String cost;
-    String category;
-    String creater_id;
+    String  eventId;
+    String  eventName;
+    String  description;
+    String  event_image;
+    String  venu;
+    String  city;
+    String  address;
+    Long    timeStamp;
+    String  startDate;
+    String  endDate;
+    String  startTime;
+    String  endTime;
+    String  eventType;
+    boolean payable;
+    int     totalFee;
+    String  category;
+    String  creater_id;
 
     public Event() {
     }
 
+    public Event(String eventKey, String eventName, String eventDescription, String category, String picImageUrlString, String event_type, String venuStr, String cityStr, String addressStr, Long timeStamp, String startDate, String endDate, String startTime, String endTime, boolean payable, int totalFee, String creater_id) {
 
-    public Event(String eventId, String name, String description, String event_image, String city, String location, String time, String date, String duration, String event_type, String payable, String cost, String category, String creater_id) {
-        this.eventId = eventId;
-        this.name = name;
-        this.description = description;
-        this.event_image = event_image;
-        this.city = city;
-        this.location = location;
-        this.time = time;
-        this.date = date;
-        this.duration = duration;
-        this.event_type = event_type;
-        this.payable = payable;
-        this.cost = cost;
-        this.category = category;
-        this.creater_id = creater_id;
+        this.eventId=eventKey;
+        this.eventName=eventName;
+        this.description=eventDescription;
+        this.event_image=picImageUrlString;
+        this.venu=venuStr;
+        this.city=cityStr;
+        this.address=addressStr;
+        this.timeStamp=timeStamp;
+        this.startDate=startDate;
+        this.endDate=endDate;
+        this.startTime=startTime;
+        this.endTime=endTime;
+        this.eventType=event_type;
+        this.payable=payable;
+        this.totalFee=totalFee;
+        this.category=category;
+        this.creater_id=creater_id;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public Event(String eventKey, String eventName, String eventDescription, String category, String picImageUrlString, String event_type, String addressStr, Long timeStamp, String startDate, String endDate, String startTime, String endTime, boolean payable, int totalFee, String creater_id) {
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getEvent_image() {
-        return event_image;
-    }
-
-    public void setEvent_image(String event_image) {
-        this.event_image = event_image;
+        this.eventId=eventKey;
+        this.eventName=eventName;
+        this.description=eventDescription;
+        this.event_image=picImageUrlString;
+        this.address=addressStr;
+        this.timeStamp=timeStamp;
+        this.startDate=startDate;
+        this.endDate=endDate;
+        this.startTime=startTime;
+        this.endTime=endTime;
+        this.eventType=event_type;
+        this.payable=payable;
+        this.totalFee=totalFee;
+        this.category=category;
+        this.creater_id=creater_id;
     }
 
     public String getEventId() {
@@ -62,23 +70,39 @@ public class Event implements Serializable {
     }
 
     public void setEventId(String eventId) {
-        this.eventId = eventId;
+        this.eventId=eventId;
     }
 
-    public String getCreater_id() {
-        return creater_id;
+    public String getEventName() {
+        return eventName;
     }
 
-    public void setCreater_id(String creater_id) {
-        this.creater_id = creater_id;
+    public void setEventName(String eventName) {
+        this.eventName=eventName;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description=description;
+    }
+
+    public String getEvent_image() {
+        return event_image;
+    }
+
+    public void setEvent_image(String event_image) {
+        this.event_image=event_image;
+    }
+
+    public String getVenu() {
+        return venu;
+    }
+
+    public void setVenu(String venu) {
+        this.venu=venu;
     }
 
     public String getCity() {
@@ -86,63 +110,79 @@ public class Event implements Serializable {
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city=city;
     }
 
-    public String getLocation() {
-        return location;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(String address) {
+        this.address=address;
     }
 
-    public String getTime() {
-        return time;
+    public Long getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimeStamp(Long timeStamp) {
+        this.timeStamp=timeStamp;
     }
 
-    public String getDate() {
-        return date;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setStartDate(String startDate) {
+        this.startDate=startDate;
     }
 
-    public String getDuration() {
-        return duration;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
+    public void setEndDate(String endDate) {
+        this.endDate=endDate;
     }
 
-    public String getEvent_type() {
-        return event_type;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setEvent_type(String event_type) {
-        this.event_type = event_type;
+    public void setStartTime(String startTime) {
+        this.startTime=startTime;
     }
 
-    public String getPayable() {
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime=endTime;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType=eventType;
+    }
+
+    public boolean isPayable() {
         return payable;
     }
 
-    public void setPayable(String payable) {
-        this.payable = payable;
+    public void setPayable(boolean payable) {
+        this.payable=payable;
     }
 
-    public String getCost() {
-        return cost;
+    public int getTotalFee() {
+        return totalFee;
     }
 
-    public void setCost(String cost) {
-        this.cost = cost;
+    public void setTotalFee(int totalFee) {
+        this.totalFee=totalFee;
     }
 
     public String getCategory() {
@@ -150,6 +190,15 @@ public class Event implements Serializable {
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category=category;
     }
+
+    public String getCreater_id() {
+        return creater_id;
+    }
+
+    public void setCreater_id(String creater_id) {
+        this.creater_id=creater_id;
+    }
+
 }

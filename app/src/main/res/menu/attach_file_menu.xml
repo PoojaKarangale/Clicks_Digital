@@ -5,11 +5,11 @@
         android:title="Camera" />
     <item
         android:id="@+id/galary_pic_menu"
-        android:title="Galary" />
+        android:title="Gallery" />
     <item
         android:id="@+id/doc_file_menu"
         android:title="Documents" />
-    <item
+    <!--<item
         android:id="@+id/audio_menu"
         android:title="Audio" />
     <item
@@ -17,6 +17,6 @@
         android:title="contact" />
     <item
         android:id="@+id/location_menu"
-        android:title="Location" />
+        android:title="Location" />-->
 
 </menu>

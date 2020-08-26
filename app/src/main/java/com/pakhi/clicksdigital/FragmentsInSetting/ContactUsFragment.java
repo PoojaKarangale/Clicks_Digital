@@ -19,7 +19,7 @@ public class ContactUsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_contact_us, container, false);
+        view=inflater.inflate(R.layout.fragment_contact_us, container, false);
        /* // 1) How to replace link by text like "Click Here to visit Google" and
         // the text is linked with the website url ?
         TextView link = (TextView) findViewById(R.id.textView1);

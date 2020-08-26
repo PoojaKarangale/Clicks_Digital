@@ -42,6 +42,7 @@ import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
@@ -57,30 +58,30 @@ import java.util.HashMap;
 public class EditProfile extends AppCompatActivity implements View.OnClickListener {
 
 
-    final static int PICK_PDF_CODE = 2342;
-    final static int REQUEST_CODE_FOR_CERTIFICATE = 3, GET_CITY_CODE = 100;
-    private static final String TAG = "ProfileActivity";
-    static int REQUEST_CODE = 1;
+    final static int PICK_PDF_CODE               =2342;
+    final static int REQUEST_CODE_FOR_CERTIFICATE=3, GET_CITY_CODE=100;
+    private static final String TAG         ="ProfileActivity";
+    static               int    REQUEST_CODE=1;
     String userid;
-    Uri picImageUri;
-    FirebaseAuth firebaseAuth;
-    String number;
-    ArrayList<Certificates> certificates;
-    boolean isCertificatesAdded = false;
-    StorageReference mStorageReference;
-    DatabaseReference rootRef;
-    User user;
-    UserDatabase db;
-    SharedPreference pref;
-    EditText weblink;
-    PermissionsHandling permissions;
-    Button done_btn;
-    ImageView close;
-    private boolean isNewProfilePicSelected = false;
-    private ImageView profile_img;
+    Uri    picImageUri;
+
+    String                   number;
+    ArrayList<Certificates>  certificates;
+    boolean                  isCertificatesAdded=false;
+    StorageReference         mStorageReference;
+    User                     user;
+    UserDatabase             db;
+    SharedPreference         pref;
+    EditText                 weblink;
+    PermissionsHandling      permissions;
+    Button                   done_btn;
+    ImageView                close;
+    FirebaseDatabaseInstance rootRef;
+    private boolean          isNewProfilePicSelected=false;
+    private ImageView        profile_img;
     private MaterialEditText full_name, email, bio, last_name;
     private ProgressDialog progressDialog;
-    private String gender, user_type;
+    private String         gender, user_type;
     private MaterialEditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
     private Button add_more_certificate;
 
@@ -89,15 +90,17 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("userdata");
 
-        mStorageReference = FirebaseStorage.getInstance().getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-        userid = firebaseAuth.getCurrentUser().getUid();
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        mStorageReference = FirebaseStorage.getInstance().getReference();
-        pref = SharedPreference.getInstance();
+        Intent intent=getIntent();
+        user=(User) intent.getSerializableExtra("userdata");
+
+        pref=SharedPreference.getInstance();
+        userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+
+        rootRef=FirebaseDatabaseInstance.getInstance();
+        mStorageReference=FirebaseStorage.getInstance().getReference();
+
+        // rootRef = FirebaseDatabase.getInstance().getReference();
 
         initializedFields();
         readUserData();
@@ -111,29 +114,28 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
     private void initializedFields() {
 
-        get_working = findViewById(R.id.working);
-        get_experiences = findViewById(R.id.experiences);
-        get_speaker_experience = findViewById(R.id.speaker_experience);
-        get_offer_to_community = findViewById(R.id.offer_to_community);
-        get_expectations_from_us = findViewById(R.id.expectations_from_us);
-        company = findViewById(R.id.company);
-        firebaseAuth = FirebaseAuth.getInstance();
-        profile_img = findViewById(R.id.profile_img);
-        full_name = findViewById(R.id.full_name);
-        last_name = findViewById(R.id.last_name);
-        email = findViewById(R.id.email);
-        weblink = findViewById(R.id.weblink);
-        bio = findViewById(R.id.bio);
-        done_btn = findViewById(R.id.done_btn);
+        get_working=findViewById(R.id.working);
+        get_experiences=findViewById(R.id.experiences);
+        get_speaker_experience=findViewById(R.id.speaker_experience);
+        get_offer_to_community=findViewById(R.id.offer_to_community);
+        get_expectations_from_us=findViewById(R.id.expectations_from_us);
+        company=findViewById(R.id.company);
+        profile_img=findViewById(R.id.profile_img);
+        full_name=findViewById(R.id.full_name);
+        last_name=findViewById(R.id.last_name);
+        email=findViewById(R.id.email);
+        weblink=findViewById(R.id.weblink);
+        bio=findViewById(R.id.bio);
+        done_btn=findViewById(R.id.done_btn);
 
-        progressDialog = new ProgressDialog(EditProfile.this);
+        progressDialog=new ProgressDialog(EditProfile.this);
         progressDialog.setMessage("Loading...");
 
-        certificates = new ArrayList<>();
+        certificates=new ArrayList<>();
 
-        add_more_certificate = findViewById(R.id.add_more_certificate);
-        get_city = findViewById(R.id.get_city);
-        close = findViewById(R.id.close);
+        add_more_certificate=findViewById(R.id.add_more_certificate);
+        get_city=findViewById(R.id.get_city);
+        close=findViewById(R.id.close);
     }
 
 
@@ -183,37 +185,59 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     }
 
     private void add_more_certificate_function() {
-        Intent addMoreCertiIntent = new Intent(this, AddNewCertificateActivity.class);
+        Intent addMoreCertiIntent=new Intent(this, AddNewCertificateActivity.class);
         startActivityForResult(addMoreCertiIntent, REQUEST_CODE_FOR_CERTIFICATE);
     }
 
     private void readUserData() {
-        db = new UserDatabase(this);
+        db=new UserDatabase(this);
         db.getReadableDatabase();
-        Cursor res = db.getAllData();
+        Cursor res=db.getAllData();
         if (res.getCount() == 0) {
 
         } else {
             res.moveToFirst();
-            user = new User(res.getString(0), res.getString(1),
+            user=new User(res.getString(0), res.getString(1),
                     res.getString(2), res.getString(3), res.getString(4),
                     res.getString(5), res.getString(6), res.getString(7),
                     res.getString(8), res.getString(9), res.getString(10),
                     res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14)); //,res.getString(15),res.getString(16)
+                    res.getString(14), res.getString(15), res.getString(16));
 
         }
-        db.close();
+        // db.close();
     }
 
     private void loadData() {
 
-        Picasso.get()
+        rootRef.getUserRef().child(userid).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child(Const.IMAGE_URL).exists()) {
+                    // picImageUri=(Uri)snapshot.child(Const.IMAGE_URL).getValue().toString();
+                    Picasso.get()
+                            .load(snapshot.child(Const.IMAGE_URL).getValue().toString())
+                            .resize(120, 120)
+                            .into(profile_img);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+      /*  Picasso.get()
                 .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .resize(120, 120).placeholder(R.drawable.persone_profile)
-                .into(profile_img);
+                .into(profile_img);*/
 
-        picImageUri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+        picImageUri=firebaseAuth.getCurrentUser().getPhotoUrl();
+
         full_name.setText(user.getUser_name());
         email.setText(user.getUser_email());
         weblink.setText(user.getWeblink());
@@ -223,48 +247,47 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         get_working.setText(user.getWork_profession());
         get_speaker_experience.setText(user.getSpeaker_experience());
         get_offer_to_community.setText(user.getOffer_to_community());
-       /* get_city.setText(user.getCity());
+        get_city.setText(user.getCity());
         last_name.setText(user.getLast_name());
-        company.setText(user.getCompany());*/
-
+        company.setText(user.getCompany());
     }
 
     private void uploadData() {
 
-        String full_name_str = "", email_str = "", last_name_str = "";
-        full_name_str = full_name.getText().toString().trim();
-        last_name_str = last_name.getText().toString().trim();
-        email_str = email.getText().toString().trim();
-        String working = "";
-        working = get_working.getText().toString();
+        String full_name_str="", email_str="", last_name_str="";
+        full_name_str=full_name.getText().toString().trim();
+        last_name_str=last_name.getText().toString().trim();
+        email_str=email.getText().toString().trim();
+        String working="";
+        working=get_working.getText().toString();
 
-        String experiences = "";
-        experiences = get_experiences.getText().toString();
+        String experiences="";
+        experiences=get_experiences.getText().toString();
 
-        String speaker_experience = "";
-        speaker_experience = get_speaker_experience.getText().toString();
+        String speaker_experience="";
+        speaker_experience=get_speaker_experience.getText().toString();
 
-        String offer_to_community = "";
-        offer_to_community = get_offer_to_community.getText().toString();
+        String offer_to_community="";
+        offer_to_community=get_offer_to_community.getText().toString();
 
-        String expectations_from_us = "";
-        expectations_from_us = get_expectations_from_us.getText().toString();
+        String expectations_from_us="";
+        expectations_from_us=get_expectations_from_us.getText().toString();
 
-        String city = "";
-        city = get_city.getText().toString();
+        String city="";
+        city=get_city.getText().toString();
 
-        String company_str = "";
-        company_str = company.getText().toString();
+        String company_str="";
+        company_str=company.getText().toString();
 
-        String bio_str = bio.getText().toString().trim();
-        String weblink_str = weblink.getText().toString().trim();
+        String bio_str=bio.getText().toString().trim();
+        String weblink_str=weblink.getText().toString().trim();
 
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        final DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
 
-        final User user = new User(userid, full_name_str, bio_str, picImageUri.toString(), user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
+        final User user=new User(userid, full_name_str, bio_str, picImageUri.toString(), user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
                 speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
 
-        final HashMap<String, String> userItems = new HashMap<>();
+        final HashMap<String, String> userItems=new HashMap<>();
         userItems.put(Const.USER_ID, userid);
         userItems.put(Const.USER_NAME, full_name_str);
         userItems.put(Const.USER_BIO, bio_str);
@@ -285,13 +308,13 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         if (isCertificatesAdded) {
 
-            final int[] numberOfCertificate = {0};
+            final int[] numberOfCertificate={0};
             reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.exists())
-                        numberOfCertificate[0] = (int) dataSnapshot.getChildrenCount();
+                        numberOfCertificate[0]=(int) dataSnapshot.getChildrenCount();
 
                     for (Certificates c : certificates) {
                         reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
@@ -319,15 +342,15 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     }
 
     private void addCurrentUserToDatabase(HashMap<String, String> userItems) {
-        SQLiteDatabase sqlDb = db.getWritableDatabase();
+        SQLiteDatabase sqlDb=db.getWritableDatabase();
         db.onUpgrade(sqlDb, 0, 1);
         db.insertData(userItems);
     }
 
     private void createUserProfile() {
-        StorageReference sReference = FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
+        StorageReference sReference=FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
         // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
-        final StorageReference imgPath = sReference.child("profile_image");
+        final StorageReference imgPath=sReference.child("profile_image");
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -336,12 +359,12 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                     @Override
                     public void onSuccess(Uri uri) {
 
-                        picImageUri = uri;
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                        picImageUri=uri;
+                        UserProfileChangeRequest profileUpdate=new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(uri)
                                 .build();
 
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
                         user.updateProfile(profileUpdate)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -382,7 +405,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             openGallery();
         }*/
 
-        permissions = new PermissionsHandling(this);
+        permissions=new PermissionsHandling(this);
         if (!permissions.isPermissionGranted()) {
             //when permissions not granted
             if (permissions.isRequestPermissionable()) {
@@ -423,9 +446,9 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     }
 
     private void showAddedCertificates(Certificates certificate, int size) {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.add_cerificate_layout);
+        LinearLayout linearLayout=(LinearLayout) findViewById(R.id.add_cerificate_layout);
         // Add textview 1
-        TextView show_certificate = new TextView(this);
+        TextView show_certificate=new TextView(this);
         show_certificate.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
         show_certificate.setText(size + " " + certificate.getName());
@@ -436,16 +459,16 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     }
 
     public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
+        boolean checked=((RadioButton) view).isChecked();
 
         switch (view.getId()) {
             case R.id.male:
                 if (checked)
-                    gender = "Male";
+                    gender="Male";
                 break;
             case R.id.female:
                 if (checked)
-                    gender = "Female";
+                    gender="Female";
                 break;
         }
     }
@@ -457,15 +480,15 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    picImageUri = result.getUri();
-                    isNewProfilePicSelected = true;
+                    CropImage.ActivityResult result=CropImage.getActivityResult(data);
+                    picImageUri=result.getUri();
+                    isNewProfilePicSelected=true;
                     profile_img.setImageURI(picImageUri);
                     break;
                 case REQUEST_CODE_FOR_CERTIFICATE:
                     Certificates certificate;
-                    isCertificatesAdded = true;
-                    certificate = (Certificates) data.getSerializableExtra("certificate");
+                    isCertificatesAdded=true;
+                    certificate=(Certificates) data.getSerializableExtra("certificate");
                     certificates.add(certificate);
                     showAddedCertificates(certificate, certificates.size());
                     break;
@@ -479,7 +502,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                     Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
             }
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-            Status status = Autocomplete.getStatusFromIntent(data);
+            Status status=Autocomplete.getStatusFromIntent(data);
             showToast(status.getStatusMessage());
         }
     }
@@ -524,20 +547,20 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar=Calendar.getInstance();
 
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calendar.getTime());
+        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate=currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        saveCurrentTime = currentTime.format(calendar.getTime());
+        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
+        saveCurrentTime=currentTime.format(calendar.getTime());
 
-        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        HashMap<String, Object> onlineStateMap=new HashMap<>();
         onlineStateMap.put("time", saveCurrentTime);
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
 
-        rootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("userState")
+        rootRef.getUserRef().child(userid).child("userState")
                 .updateChildren(onlineStateMap);
 
     }

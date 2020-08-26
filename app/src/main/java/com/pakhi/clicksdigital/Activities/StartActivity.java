@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -31,11 +32,8 @@ import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
-import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
-import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.RegisterLogin.RegisterActivity;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -46,95 +44,104 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-    static int REQUEST_CODE = 1;
-    ViewPager viewPager;
-    ViewPagerAdapter viewPagerAdapter;
-    UserDatabase db;
-    EventsFragment eventsFragment;
-    GroupsFragment groupsFragment;
-    HomeFragment homeFragment;
-    ChatsFragment chatsFragment;
-    Toolbar toolbar;
-    TabLayout tabLayout;
+    static int REQUEST_CODE=1;
+    ViewPager           viewPager;
+    ViewPagerAdapter    viewPagerAdapter;
+    UserDatabase        db;
+    EventsFragment      eventsFragment;
+    GroupsFragment      groupsFragment;
+    HomeFragment        homeFragment;
+    ChatsFragment       chatsFragment;
+    Toolbar             toolbar;
+    TabLayout           tabLayout;
     PermissionsHandling permissions;
-    String user_type;
-    private ImageView profile, user_requests_to_join_group;
-    private FirebaseUser currentUser;
-    private FirebaseAuth mAuth;
+    String              user_type;
+    String              userID;
+    private ImageView         profile;
+    private FirebaseUser      currentUser;
+    private FirebaseAuth      mAuth;
     private DatabaseReference RootRef;
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-        RootRef = FirebaseDatabase.getInstance().getReference();
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
+        RootRef=FirebaseDatabase.getInstance().getReference();
 
-        profile = findViewById(R.id.profile_activity);
-        user_requests_to_join_group = findViewById(R.id.user_requests_to_join_group);
-
-        getUserFromDb();
-        permissions = new PermissionsHandling(StartActivity.this);
+        permissions=new PermissionsHandling(StartActivity.this);
         requestForPremission();
 
-        SharedPreference pref = SharedPreference.getInstance();
-        user_type = pref.getData(SharedPreference.user_type, getApplicationContext());
+        SharedPreference pref=SharedPreference.getInstance();
+        user_type=pref.getData(SharedPreference.user_type, getApplicationContext());
 
-        if (user_type.equals("admin")) {
-            user_requests_to_join_group.setVisibility(View.VISIBLE);
-        } else {
-            user_requests_to_join_group.setVisibility(View.GONE);
-        }
-
+        userID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
         setupTabLayout();
 
+        profile=findViewById(R.id.profile_activity);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent = new Intent(StartActivity.this, ProfileActivity.class);
+                Intent profileIntent=new Intent(StartActivity.this, ProfileActivity.class);
                 startActivity(profileIntent);
-            }
-        });
-
-        user_requests_to_join_group.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SendUserToUserRequestActivity();
             }
         });
     }
 
     private void setupTabLayout() {
+        // homeFragment = new HomeFragment();
+        eventsFragment=new EventsFragment();
+        groupsFragment=new GroupsFragment();
+        chatsFragment=new ChatsFragment();
 
-        eventsFragment = new EventsFragment();
-        groupsFragment = new GroupsFragment();
-        homeFragment = new HomeFragment();
-        chatsFragment = new ChatsFragment();
-
-        tabLayout = findViewById(R.id.tab_layout);
-        toolbar = findViewById(R.id.toolbar_start);
+        tabLayout=findViewById(R.id.tab_layout);
+        toolbar=findViewById(R.id.toolbar_start);
 
         setSupportActionBar(toolbar);
 
-        viewPager = findViewById(R.id.viewPager);
+        viewPager=findViewById(R.id.viewPager);
 
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        viewPagerAdapter.addFragment(homeFragment, "");//Home
+        viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager(), 0);
+        // viewPagerAdapter.addFragment(homeFragment, "");//Home
+        viewPagerAdapter.addFragment(eventsFragment, "");//Events
         viewPagerAdapter.addFragment(groupsFragment, "");//Groups
         viewPagerAdapter.addFragment(chatsFragment, "");//Chat
-        viewPagerAdapter.addFragment(eventsFragment, "");//Events
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.home);
+        //tabLayout.getTabAt(0).setIcon(R.drawable.home);
         tabLayout.getTabAt(1).setIcon(R.drawable.people);
         tabLayout.getTabAt(2).setIcon(R.drawable.chat);
-        tabLayout.getTabAt(3).setIcon(R.drawable.event);
+        tabLayout.getTabAt(0).setIcon(R.drawable.event).select();
+        tabLayout.setTabTextColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.white));
+        // tabLayout.setSelectedTabIndicator(0);
+        //tabLayout.getTabAt(0).select();
+        tabLayout.setOnTabSelectedListener(
+                new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
 
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        super.onTabSelected(tab);
+                        int tabIconColor=ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
+                        tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                        super.onTabUnselected(tab);
+                        int tabIconColor=ContextCompat.getColor(getApplicationContext(), R.color.black);
+                        tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+                        super.onTabReselected(tab);
+                    }
+                }
+        );
         /*BadgeDrawable badgeDrawable = tabLayout.getTabAt(0).getOrCreateBadge();
         badgeDrawable.setVisible(true);
         badgeDrawable.setNumber(10);*/
@@ -143,40 +150,10 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-       /* Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.createEventContainer);
-        if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
-            super.onBackPressed();
-        }*/
-       /* new AlertDialog.Builder(this)
 
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Closing Activity")
-                .setMessage("Are you sure you want to close this activity?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();*/
-       /* int count = getSupportFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
-            super.onBackPressed();
-
-            //additional code
-        } else {
-            getSupportFragmentManager().popBackStack();
-            //finish();
-        }*/
-        /*    Log.d("TESTINGSTART", "---------------on back pressed--");
-        Log.d("TESTINGSTART", "-------------get cur itrm----" + viewPager.getCurrentItem());
-        Log.d("TESTINGSTART", "-----------frag count------" + getSupportFragmentManager().getBackStackEntryCount());
-        Log.d("TESTINGSTART", "-----------frag count------" + getSupportFragmentManager());*/
         if (viewPager.getCurrentItem() == 0) {
 
-            if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
+            if (viewPagerAdapter.getItem(0) instanceof EventsFragment) {
                 new AlertDialog.Builder(this)
 
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -192,36 +169,10 @@ public class StartActivity extends AppCompatActivity {
                         .show();
             }
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm=getSupportFragmentManager();
             fm.popBackStack();
         } else {
-               /* int count = getSupportFragmentManager().getBackStackEntryCount();
 
-                if (count == 0) {
-                    super.onBackPressed();
-
-                    //additional code
-                } else {
-                    getSupportFragmentManager().popBackStack();
-                    //finish();
-                }*/
-               /* String TAG_FRAGMENT = "TAG_FRAGMENT";
-
-                Fragment fragment = (Fragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT);
-                if (fragment != null) // could be null if not instantiated yet
-                {
-                    if (fragment.getView() != null) {
-                        // Pop the backstack on the ChildManager if there is any. If not, close this activity as normal.
-                        if (!fragment.getChildFragmentManager().popBackStackImmediate()) {
-                            finish();
-                        }
-                    }
-                }*/
-                /*final Myfragment fragment = (Myfragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT);
-
-                if (fragment.allowBackPressed()) { // and then you define a method allowBackPressed with the logic to allow back pressed or not
-                    super.onBackPressed();
-                }*/
         }
     }
 
@@ -238,11 +189,6 @@ public class StartActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
 
-        if (item.getItemId() == R.id.logout) {
-            // updateUserStatus("offline");
-            mAuth.signOut();
-            SendUserToRegisterActivity();
-        }
         if (item.getItemId() == R.id.join_new_groups) {
             startActivity(new Intent(this, JoinGroupActivity.class));
         }
@@ -254,63 +200,18 @@ public class StartActivity extends AppCompatActivity {
         return true;
     }
 
-    private void getUserFromDb() {
-        db = new UserDatabase(this);
-        db.getReadableDatabase();
-        Cursor res = db.getAllData();
-        if (res.getCount() == 0) {
-
-        } else {
-            res.moveToFirst();
-            user = new User(res.getString(0), res.getString(1),
-                    res.getString(2), res.getString(3), res.getString(4),
-                    res.getString(5), res.getString(6), res.getString(7),
-                    res.getString(8), res.getString(9), res.getString(10),
-                    res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14));
-        }
-        db.close();
-
-    }
-
-    private void SendUserToUserRequestActivity() {
-
-        startActivity(new Intent(StartActivity.this, UserRequestActivity.class));
-    }
-
-    private void SendUserToRegisterActivity() {
-
-        startActivity(new Intent(StartActivity.this, RegisterActivity.class));
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (currentUser == null) {
-            // SendUserToRegisterActivity();
-        } else {
-            // updateUserStatus("online");
-            //VerifyUserExistance();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        if (currentUser != null) {
-            //updateUserStatus("offline");
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (currentUser != null) {
+      /*  if (currentUser != null) {
             // updateUserStatus("offline");
-        }
+        }*/
     }
 
     private void VerifyUserExistance() {
@@ -333,29 +234,23 @@ public class StartActivity extends AppCompatActivity {
         });*/
     }
 
-    private void SendUserToSetProfileActivity() {
-        Intent intent = new Intent(StartActivity.this, SetProfileActivity.class);
-        intent.putExtra("PreviousActivity", "StartActivity");
-        startActivity(intent);
-    }
-
     private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar=Calendar.getInstance();
 
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calendar.getTime());
+        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate=currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        saveCurrentTime = currentTime.format(calendar.getTime());
+        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
+        saveCurrentTime=currentTime.format(calendar.getTime());
 
-        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        HashMap<String, Object> onlineStateMap=new HashMap<>();
         onlineStateMap.put("time", saveCurrentTime);
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
 
-        RootRef.child("Users").child(user.getUser_id()).child("userState")
+        RootRef.child("Users").child(userID).child("userState")
                 .updateChildren(onlineStateMap);
 
     }
@@ -372,69 +267,8 @@ public class StartActivity extends AppCompatActivity {
             }
         } else {
             //when those permissions are already granted
-            //popupMenuSettigns();
         }
 
-      /*  if (ContextCompat.checkSelfPermission(StartActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) +
-                ContextCompat.checkSelfPermission(StartActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) +
-                ContextCompat.checkSelfPermission(StartActivity.this,
-                        Manifest.permission.READ_CONTACTS) +
-                ContextCompat.checkSelfPermission(StartActivity.this,
-                        Manifest.permission.WRITE_CONTACTS) +
-                ContextCompat.checkSelfPermission(StartActivity.this,
-                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            //when permissions not granted
-            if (ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.READ_CONTACTS) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.WRITE_CONTACTS) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(StartActivity.this, Manifest.permission.CAMERA)) {
-                //creating alertDialog
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(StartActivity.this);
-                builder.setTitle("Grant permissioms");
-                builder.setMessage("Camera, read & write Contacts, read & write Storage");
-                builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        ActivityCompat.requestPermissions(
-                                StartActivity.this,
-                                new String[]{
-                                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                        Manifest.permission.READ_CONTACTS,
-                                        Manifest.permission.WRITE_CONTACTS,
-                                        Manifest.permission.CAMERA
-                                },
-                                REQUEST_CODE
-                        );
-                    }
-                });
-
-                //builder.setNegativeButton("Cancel",null);
-                androidx.appcompat.app.AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
-            } else {
-                ActivityCompat.requestPermissions(
-                        StartActivity.this,
-                        new String[]{
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_CONTACTS,
-                                Manifest.permission.WRITE_CONTACTS,
-                                Manifest.permission.CAMERA
-                        },
-                        REQUEST_CODE
-                );
-
-            }
-        } else {
-            //when those permissions are already granted
-            //popupMenuSettigns();
-            //logMessage("when those permissions are already granted=----------");
-        }*/
     }
 
     @Override
@@ -446,24 +280,18 @@ public class StartActivity extends AppCompatActivity {
                             == PackageManager.PERMISSION_GRANTED
                     )
             ) {
-                //popupMenuSettigns();
                 //permission granted
-                // logMessage(" permission granted-----------");
 
             } else {
-
                 //permission not granted
-                //requestForPremission();
-                // logMessage(" permission  not granted-------------");
-
             }
         }
     }
 
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-        List<Fragment> fragments = new ArrayList<>();
-        List<String> fragmentTitle = new ArrayList<>();
+        List<Fragment> fragments    =new ArrayList<>();
+        List<String>   fragmentTitle=new ArrayList<>();
 
         ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);
