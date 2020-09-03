@@ -128,14 +128,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        gallery.setOnClickListener(new View.OnClickListener() {
+        /*gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent eventDetailsIntent = new Intent(EventDetailsActivity.this, EventGalleryActivity.class);
                 eventDetailsIntent.putExtra("event", event);
                 startActivity(eventDetailsIntent);
             }
-        });
+        });*/
     }
 
     private void checkUserIsAlreadyRegisterd() {
@@ -183,7 +183,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void initialiseFields() {
-        gallery=findViewById(R.id.gallery);
+        //gallery=findViewById(R.id.gallery);
 
         join_event_btn=findViewById(R.id.register);
         organiser_name=findViewById(R.id.organiser_name);
