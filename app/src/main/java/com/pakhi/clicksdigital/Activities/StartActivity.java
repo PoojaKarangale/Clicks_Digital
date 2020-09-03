@@ -22,18 +22,14 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.pakhi.clicksdigital.Fragment.ChatsFragment;
 import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
-import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -45,31 +41,26 @@ import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
     static int REQUEST_CODE=1;
-    ViewPager           viewPager;
-    ViewPagerAdapter    viewPagerAdapter;
-    UserDatabase        db;
-    EventsFragment      eventsFragment;
-    GroupsFragment      groupsFragment;
-    HomeFragment        homeFragment;
-    ChatsFragment       chatsFragment;
-    Toolbar             toolbar;
-    TabLayout           tabLayout;
-    PermissionsHandling permissions;
-    String              user_type;
-    String              userID;
-    private ImageView         profile;
-    private FirebaseUser      currentUser;
-    private FirebaseAuth      mAuth;
-    private DatabaseReference RootRef;
+    ViewPager                viewPager;
+    ViewPagerAdapter         viewPagerAdapter;
+    EventsFragment           eventsFragment;
+    GroupsFragment           groupsFragment;
+    HomeFragment             homeFragment;
+    ChatsFragment            chatsFragment;
+    Toolbar                  toolbar;
+    TabLayout                tabLayout;
+    PermissionsHandling      permissions;
+    String                   user_type;
+    String                   userID;
+    FirebaseDatabaseInstance rootRef;
+    private ImageView profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        mAuth=FirebaseAuth.getInstance();
-        currentUser=mAuth.getCurrentUser();
-        RootRef=FirebaseDatabase.getInstance().getReference();
+        rootRef=FirebaseDatabaseInstance.getInstance();
 
         permissions=new PermissionsHandling(StartActivity.this);
         requestForPremission();
@@ -91,7 +82,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void setupTabLayout() {
-        // homeFragment = new HomeFragment();
+        homeFragment=new HomeFragment();
         eventsFragment=new EventsFragment();
         groupsFragment=new GroupsFragment();
         chatsFragment=new ChatsFragment();
@@ -100,22 +91,23 @@ public class StartActivity extends AppCompatActivity {
         toolbar=findViewById(R.id.toolbar_start);
 
         setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
 
         viewPager=findViewById(R.id.viewPager);
 
         viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        // viewPagerAdapter.addFragment(homeFragment, "");//Home
-        viewPagerAdapter.addFragment(eventsFragment, "");//Events
+        viewPagerAdapter.addFragment(homeFragment, "");//Home
         viewPagerAdapter.addFragment(groupsFragment, "");//Groups
         viewPagerAdapter.addFragment(chatsFragment, "");//Chat
+        viewPagerAdapter.addFragment(eventsFragment, "");//Events
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        //tabLayout.getTabAt(0).setIcon(R.drawable.home);
+        tabLayout.getTabAt(0).setIcon(R.drawable.home).select();;
         tabLayout.getTabAt(1).setIcon(R.drawable.people);
         tabLayout.getTabAt(2).setIcon(R.drawable.chat);
-        tabLayout.getTabAt(0).setIcon(R.drawable.event).select();
+        tabLayout.getTabAt(3).setIcon(R.drawable.event);
         tabLayout.setTabTextColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.white));
         // tabLayout.setSelectedTabIndicator(0);
         //tabLayout.getTabAt(0).select();
@@ -153,7 +145,7 @@ public class StartActivity extends AppCompatActivity {
 
         if (viewPager.getCurrentItem() == 0) {
 
-            if (viewPagerAdapter.getItem(0) instanceof EventsFragment) {
+            if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
                 new AlertDialog.Builder(this)
 
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -217,7 +209,7 @@ public class StartActivity extends AppCompatActivity {
     private void VerifyUserExistance() {
     /*    String currentUserID = mAuth.getCurrentUser().getUid();
 
-        RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+         rootRef.getUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child(Const.USER_NAME).exists())) {
@@ -250,7 +242,7 @@ public class StartActivity extends AppCompatActivity {
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
 
-        RootRef.child("Users").child(userID).child("userState")
+        rootRef.getUserRef().child(userID).child("userState")
                 .updateChildren(onlineStateMap);
 
     }
@@ -306,7 +298,6 @@ public class StartActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             return fragments.get(position);
-
         }
 
         @Override

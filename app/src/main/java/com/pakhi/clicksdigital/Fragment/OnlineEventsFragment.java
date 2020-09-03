@@ -84,7 +84,6 @@ public class OnlineEventsFragment extends Fragment {
                     if (event.getEventName().toLowerCase().contains(s)
                             || event.getDescription().toLowerCase().contains(s)
                             || event.getCategory().toLowerCase().contains(s)
-                            || event.getAddress().toLowerCase().contains(s)
                     ) {
                         events.add(event);
                     }
@@ -107,7 +106,6 @@ public class OnlineEventsFragment extends Fragment {
                     if (event.getEventName().toLowerCase().contains(s)
                             || event.getDescription().toLowerCase().contains(s)
                             || event.getCategory().toLowerCase().contains(s)
-                            || event.getAddress().toLowerCase().contains(s)
                     ) {
                         events.add(event);
                     }

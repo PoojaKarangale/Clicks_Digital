@@ -36,7 +36,10 @@ public class ShowCertificatesFragment extends Fragment {
         view=inflater.inflate(R.layout.fragment_show_certificates, container, false);
 
         //Bundle arguments;
-        certificates=(List<Certificates>) savedInstanceState.getSerializable("certificates");
+        Bundle bundle=this.getArguments();
+        if (bundle != null)
+            certificates=(List<Certificates>) bundle.getSerializable("certificates");
+
         recyclerView=(RecyclerView) view.findViewById(R.id.certificates_list);
         recyclerView.setHasFixedSize(true);
         // use a linear layout manager
@@ -89,19 +92,20 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         final Certificates certificate=values.get(position);
         holder.txtHeader.setText(certificate.getName());
         holder.txtFooter.setText(certificate.getInstitute());
-        holder.certi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (certificate.getFileUri().equals("")) {
-                    Toast.makeText(view.getContext(), "No Certificates Provided", Toast.LENGTH_SHORT).show();
-                } else {
+        if (holder.certi != null)
+            holder.certi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (certificate.getFileUri().equals("")) {
+                        Toast.makeText(view.getContext(), "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    } else {
 
-                    Uri uri=Uri.parse(certificate.getFileUri()); // missing 'http://' will cause crashed
-                    Intent intent=new Intent(Intent.ACTION_VIEW, uri);
-                    view.getContext().startActivity(intent);
+                        Uri uri=Uri.parse(certificate.getFileUri()); // missing 'http://' will cause crashed
+                        Intent intent=new Intent(Intent.ACTION_VIEW, uri);
+                        view.getContext().startActivity(intent);
+                    }
                 }
-            }
-        });
+            });
 
     }
 
@@ -126,6 +130,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             layout=v;
             txtHeader=(TextView) v.findViewById(R.id.name);
             txtFooter=(TextView) v.findViewById(R.id.institute);
+            certi=v.findViewById(R.id.certi);
         }
     }
 

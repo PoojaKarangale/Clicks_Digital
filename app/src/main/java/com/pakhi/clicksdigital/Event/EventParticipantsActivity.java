@@ -79,7 +79,6 @@ public class EventParticipantsActivity extends AppCompatActivity {
         user_recycler_list.setLayoutManager(new LinearLayoutManager(this));
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();

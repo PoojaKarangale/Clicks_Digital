@@ -58,7 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     static int PReqCode=1;
     Uri          picImageUri=null;
-    /* ListAdapter listAdapter;*/
     Button       edit_profile;
     UserDatabase db;
     private String    user_id;
@@ -68,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
     private User              user;
     private DatabaseReference UserRef;
     //    private int[] imagesForListView = {R.drawable.find_friends, R.drawable.my_friends, R.drawable.chat_requests};
-//    private String[] titleForListView = {"Find Friends", "My Friends", " Chat Requests"};
+    //    private String[] titleForListView = {"Find Friends", "My Friends", " Chat Requests"};
     FirebaseDatabaseInstance rootRef;
 
     @Override
@@ -212,7 +211,6 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(fullScreenIntent);
     }
 
-
     private void getUserFromDb() {
         db.getReadableDatabase();
         Cursor res=db.getAllData();
@@ -311,7 +309,7 @@ public class ProfileActivity extends AppCompatActivity {
         final List<Certificates> certificates=new ArrayList<Certificates>();
         //Loading the data
 
-        DatabaseReference databaseReference=UserRef.child(user_id).child("cerificates");
+        DatabaseReference databaseReference=UserRef.child(user_id).child("certificates");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -345,6 +343,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Bundle bundle=new Bundle();
                     bundle.putSerializable("certificates", (Serializable) certificates);
                     ShowCertificatesFragment gmapFragment=new ShowCertificatesFragment();
+
                     gmapFragment.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, gmapFragment).commit();
                    /* Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed

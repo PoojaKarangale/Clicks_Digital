@@ -66,7 +66,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         if (firebaseUser != null && sent.equals(firebaseUser.getUid())) {
             if (!currentUser.equals(user)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // Build.VERSION_CODES.O
+                //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // Build.VERSION_CODES.O
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) { // Build.VERSION_CODES.O
                     sendOreoNotification(remoteMessage);
                 } else {
                     sendNotification(remoteMessage);

@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:layout_height="400px"
+    android:layout_height="200dp"
     android:layout_marginStart="@dimen/margine_sub"
-    android:layout_marginTop="@dimen/margine_sub"
+    android:layout_marginTop="10dp"
     android:layout_marginEnd="@dimen/margine_sub"
+    android:layout_marginBottom="10dp"
     android:elevation="10dp"
     app:cardCornerRadius="15dp">
 
@@ -14,50 +15,38 @@
         android:id="@+id/card_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
-        android:orientation="horizontal">
+        android:background="@color/pale_grey"
+        android:orientation="horizontal"
+        android:padding="@dimen/margine_sub">
 
         <ImageView
             android:id="@+id/event_image"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="136dp"
+            android:layout_height="136dp"
+            android:layout_centerInParent="true"
             android:layout_gravity="top"
-            android:layout_weight="1"
-            android:padding="@dimen/margine_sub"
+            android:layout_marginTop="1dp"
             android:src="@drawable/residential" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margine_sub"
-            android:layout_marginEnd="@dimen/margine_sub"
-            android:layout_marginBottom="@dimen/margine_sub"
-            android:layout_weight="1"
+            android:layout_marginStart="@dimen/margine_sub"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:capitalize="characters"
                 android:fontFamily="@font/lato"
-                android:gravity="left"
+                android:gravity="start|top"
                 android:maxLines="2"
                 android:text="WORKSHOP TO BECOME AN INFLUENCER"
                 android:textColor="@color/black"
                 android:textSize="@dimen/title3"
                 android:textStyle="bold" />
 
-            <!--  <TextView
-                  android:id="@+id/category"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:fontFamily="@font/lato"
-                  android:text="category"
-                  android:textColor="@color/chatBackground"
-                  android:textSize="@dimen/title3"
--->
             <View
                 android:id="@+id/hor_line"
                 android:layout_width="wrap_content"
@@ -73,7 +62,7 @@
                 android:fontFamily="@font/lato"
                 android:text="date and time and time duration"
                 android:textColor="@color/recevierMessage"
-                android:textSize="6dp"
+                android:textSize="6sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -111,17 +100,6 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/title4" />
 
-                   <!-- <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignEnd="@+id/eventDetails"
-                        android:layout_alignBottom="@+id/eventDetails"
-                        android:background="@drawable/flag_transparent"
-                        android:text="Read more"
-                        android:textColor="#929DAE"
-                        android:gravity="bottom"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />-->
                 </RelativeLayout>
             </LinearLayout>
 
@@ -154,7 +132,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left|bottom"
+                android:layout_gravity="start|bottom"
                 android:orientation="horizontal">
 
                 <TextView
@@ -173,16 +151,14 @@
                     android:layout_marginStart="5dp"
                     android:text="name of organiser"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/title4"
-
-                    />
+                    android:textSize="@dimen/title4" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left|bottom"
+                android:layout_gravity="start|bottom"
                 android:orientation="horizontal">
 
                 <TextView
@@ -204,17 +180,6 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-            <!--
-                        <TextView
-                            android:id="@+id/edit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:elevation="20dp"
-                            android:text="Edit"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/title3"
-                            android:visibility="gone"
-                            -->
 
         </LinearLayout>
     </LinearLayout>
@@ -223,7 +188,7 @@
         android:id="@+id/bookBtn"
         android:layout_width="59dp"
         android:layout_height="18dp"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/margine_sub"
         android:layout_marginBottom="@dimen/margine_sub"
         android:background="@drawable/cb_rectangle_round"
@@ -237,7 +202,7 @@
         android:id="@+id/editBtn"
         android:layout_width="59dp"
         android:layout_height="18dp"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/margine_sub"
         android:layout_marginBottom="@dimen/margine_sub"
         android:background="@drawable/cb_rectangle_round"

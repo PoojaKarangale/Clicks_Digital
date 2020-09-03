@@ -123,7 +123,18 @@ public class CreateEventActivity extends AppCompatActivity {
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createEvent();
+                if (isProfileSelected) {
+                    // profileFlag=true;
+                    if (validateEvent()) {
+                        progressDialog.show();
+                        createEventStorage();
+                    }
+
+                } else {
+                    Toast.makeText(CreateEventActivity.this, "Select event picture", Toast.LENGTH_SHORT).show();
+                }
+
+                // createEvent();
             }
         });
 
@@ -215,34 +226,40 @@ public class CreateEventActivity extends AppCompatActivity {
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void createEventStorage(String eventId) {
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Events").child(eventId);
-        String extention=getFileExtention(picImageUri);
-        Log.d("TESTINGEXTENTION", "-------------------------------" + extention);
-        if (extention == null) {
-            Toast.makeText(this, "NUll return", Toast.LENGTH_SHORT).show();
-            // Log.d("TESTINGEXTENTION",extention);
-        }
+    private void createEventStorage() {
 
-        final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + extention);
+        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Events");
+        String extention=getFileExtention(picImageUri);
+
+        final StorageReference imgPath=sReference.child("" + System.currentTimeMillis());//+ "." + extention);
+        Log.d("TESTINGEXTENTION", "--------pic image url----before-------------------" + picImageUrlString);
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                Log.d("TESTINGEXTENTION", "--------pic image url--uploaded--before-download------------------" + picImageUrlString);
+                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         picImageUrlString=uri.toString();
+                        createEvent();
+                        Log.d("TESTINGEXTENTION", "--------pic image on success------------------" + picImageUrlString);
+                    }
+                });
+               /* imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        picImageUrlString=uri.toString();
+
                         Log.d("TESTINGEXTENTION", "--------pic image url-----------------------" + picImageUrlString);
                     }
-
-                });
+                });*/
             }
         });
     }
 
-    private void createEvent() {
+    boolean validateEvent() {
         boolean addressFlag=false, feeFlag=false, profileFlag=false;
         if (payable) {
             //check fee_amount
@@ -269,50 +286,76 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         }
 
-        if (isProfileSelected) {
-            profileFlag=true;
-        } else {
-            Toast.makeText(this, "Select event picture", Toast.LENGTH_SHORT).show();
-        }
-
-        if (profileFlag && addressFlag && feeFlag) {
+        if (addressFlag && feeFlag) {
             if (ValidateInput.field(event_name) && ValidateInput.field(description)) {
-                progressDialog.show();
-                String eventKey=eventRef.child(event_type).push().getKey();
-                createEventStorage(eventKey);
+                return true;
 
-                String eventName=event_name.getText().toString();
-                String eventDescription=description.getText().toString();
-
-                String venuStr="";
-                venuStr=venu.getText().toString();
-                String cityStr="";
-                cityStr=city.getText().toString();
-                String addressStr=address.getText().toString();
-
-                String startDate=choose_start_date.getText().toString();
-                String endDate=choose_end_date.getText().toString();
-                String startTime=choose_start_time.getText().toString();
-                String endTime=choose_end_time.getText().toString();
-                Long timeStamp=selectedStartDate;
-                int totalFee=Integer.parseInt(total_fee.getText().toString());
-                Event event;
-                event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
-               /* if (event_type.equals("Online")) {
-                    event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
-                } else {
-                    event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
-                }*/
-                eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                        finish();
-                    }
-                });
             }
         }
+        return false;
+    }
+
+    private void createEvent() {
+        /*boolean addressFlag=false, feeFlag=false, profileFlag=false;
+        if (payable) {
+            //check fee_amount
+            if (ValidateInput.field(fee_amount)) {
+                feeFlag=true;
+            } else {
+                feeFlag=false;
+            }
+        } else {
+            feeFlag=true;
+        }
+
+        if (event_type.equals("Both") || event_type.equals("Offline")) {
+            if (ValidateInput.field(venu) || ValidateInput.field(city) || ValidateInput.field(address)) {
+                addressFlag=true;
+            } else {
+                addressFlag=false;
+            }
+        } else {
+            if (ValidateInput.field(address)) {
+                addressFlag=true;
+            } else {
+                addressFlag=false;
+            }
+        }*/
+
+/*
+        if (addressFlag && feeFlag) {
+            if (ValidateInput.field(event_name) && ValidateInput.field(description)) {*/
+        // progressDialog.show();
+        String eventKey=eventRef.child(event_type).push().getKey();
+        Log.d("TESTINGEXTENTION", "--------pic image url----after-------------------" + picImageUrlString);
+
+        String eventName=event_name.getText().toString();
+        String eventDescription=description.getText().toString();
+
+        String venuStr="";
+        venuStr=venu.getText().toString();
+        String cityStr="";
+        cityStr=city.getText().toString();
+        String addressStr=address.getText().toString();
+
+        String startDate=choose_start_date.getText().toString();
+        String endDate=choose_end_date.getText().toString();
+        String startTime=choose_start_time.getText().toString();
+        String endTime=choose_end_time.getText().toString();
+        Long timeStamp=selectedStartDate;
+        int totalFee=Integer.parseInt(total_fee.getText().toString());
+        Event event;
+        event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
+        eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                finish();
+            }
+        });
+            /*}
+        }*/
     }
 
   /*  private void getCitySelected() {
@@ -421,8 +464,6 @@ public class CreateEventActivity extends AppCompatActivity {
                 // payable =
                 //calculateEventFee();
                 payable=true;
-                unpaidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                paidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
                 fee_layout.setVisibility(View.VISIBLE);
             }
         });
@@ -431,8 +472,6 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // payable = "Unpaid";
                 payable=false;
-                paidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                unpaidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
                 fee_layout.setVisibility(View.GONE);
             }
         });
@@ -440,10 +479,6 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 event_type="Offline";
-                //offlineChip.setChipBackgroundColor(ColorStateList.valueOf(Color.CYAN));
-                onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
 
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
@@ -455,13 +490,9 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 event_type="Online";
 
-                offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
-
-                venu.setVisibility(View.GONE);
+                venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.GONE);
-                address.setVisibility(View.VISIBLE);
+                address.setVisibility(View.GONE);
 
             }
         });
@@ -470,10 +501,6 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 event_type="Both";
-
-                offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
-                onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
 
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
@@ -563,8 +590,8 @@ public class CreateEventActivity extends AppCompatActivity {
                         //textView.setText(String.format(format, minute));
                         choose_time.setText(hourOfDay + ":" + String.format(format, minute));
 */
-                        NumberFormat f = new DecimalFormat("00");
-                        long time = minute;
+                        NumberFormat f=new DecimalFormat("00");
+                        long time=minute;
                         choose_time.setText(hourOfDay + ":" + f.format(time));
                     }
                 }, mHour, mMinute, false);

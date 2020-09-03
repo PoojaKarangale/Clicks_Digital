@@ -1,5 +1,6 @@
 package com.pakhi.clicksdigital.PaymentGatewayFiles;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class PaymentActivity extends AppCompatActivity {
     String TAG        ="PaymentActivity", txnid="txt12346", amount, phone,
             prodname, firstname, email,
             merchantId=ConstPayUmoney.MERCHANT_ID, merchantkey=ConstPayUmoney.MERCHANT_KEY;  //   first test key only
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +46,20 @@ public class PaymentActivity extends AppCompatActivity {
         getUserData();
         initializeStrings();
 
-        /*Intent intent = getIntent();
-        phone = intent.getExtras().getString("phone");
-        amount = intent.getExtras().getString("amount");*/
-
+        progressDialog.show();
         startpay();
     }
 
     private void initializeStrings() {
-        // amount = event.getTotalFee();
+        amount = String.valueOf(event.getTotalFee());
         phone=user.getNumber();
         prodname=event.getEventName();
         firstname=user.getUser_name();
         email=user.getUser_email();
+
+
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
     }
 
     void getUserData() {
@@ -167,23 +170,29 @@ public class PaymentActivity extends AppCompatActivity {
                     finish();
                 } else {
                     //Failure Transaction
-
                     Toast.makeText(PaymentActivity.this, "Transaction faild", Toast.LENGTH_SHORT).show();
                     finish();
                 }
-
                 // Response from Payumoney
                 String payuResponse=transactionResponse.getPayuResponse();
 
                 // Response from SURl and FURL
                 String merchantResponse=transactionResponse.getTransactionDetails();
                 Log.e(TAG, "tran " + payuResponse + "---" + merchantResponse);
-            } /* else if (resultModel != null && resultModel.getError() != null) {
-                Log.d(TAG, "Error response : " + resultModel.getError().getTransactionResponse());
-            } else {
-                Log.d(TAG, "Both objects are null!");
-            }*/
+            }
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(progressDialog!=null && progressDialog.isShowing())
+            progressDialog.dismiss();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        finish();
+    }
 }

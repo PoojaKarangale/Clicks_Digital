@@ -50,11 +50,11 @@ import java.util.Calendar;
 
 public class EditEventActivity extends AppCompatActivity {
 
-    private static int    PReqCode=1;
-    private        Event  event;
-    private        int    totalAmount;
-    private        Long   selectedStartDate;
-    private        String category="Artificial Intelligence", event_type="Offline", currentUserId, picImageUrlString;
+    private static int     PReqCode         =1;
+    private Event  event;
+    private int    totalAmount;
+    private Long   selectedStartDate;
+    private String category="Artificial Intelligence", event_type="Offline", currentUserId, picImageUrlString;
     private boolean payable          =false;
     private boolean isProfileSelected=false;
 
@@ -73,7 +73,7 @@ public class EditEventActivity extends AppCompatActivity {
     private Spinner        spinner;
     private ProgressDialog progressDialog;
 
-    private DatabaseReference userRef, eventRef, eventCategory;
+    private DatabaseReference        eventRef;
     private FirebaseDatabaseInstance rootRef;
 
     @Override
@@ -83,6 +83,8 @@ public class EditEventActivity extends AppCompatActivity {
 
         event=(Event) getIntent().getSerializableExtra("event");
 
+        rootRef=FirebaseDatabaseInstance.getInstance();
+        eventRef=rootRef.getEventRef();
         initializeFields();
         loadData();
         chipActionHandled();
@@ -154,6 +156,9 @@ public class EditEventActivity extends AppCompatActivity {
         calculateTotal=findViewById(R.id.calculateTotal);
         submit_btn=findViewById(R.id.submit_btn);
         cancel_btn=findViewById(R.id.cancel_btn);
+
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
     }
 
     private void loadData() {
@@ -176,29 +181,29 @@ public class EditEventActivity extends AppCompatActivity {
             totalAmount=event.getTotalFee();
             total_fee.setText(event.getTotalFee());
             // calculateEventFee();
+            paidChip.setSelected(true);
+
+        } else {
+
+            unpaidChip.setSelected(true);
         }
         if (event.getEventType().equals("Offline")) {
-            onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-            bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-            offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
 
+            offlineChip.setSelected(true);
             venu.setVisibility(View.VISIBLE);
             city.setVisibility(View.VISIBLE);
             address.setVisibility(View.VISIBLE);
 
         } else if (event.getEventType().equals("Online")) {
-            offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-            bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-            onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
 
+            onlineChip.setSelected(true);
             venu.setVisibility(View.GONE);
             city.setVisibility(View.GONE);
             address.setVisibility(View.VISIBLE);
         } else {
-            offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-            bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
-            onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-
+            /* offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
+             */
+            bothChip.setSelected(true);
             venu.setVisibility(View.VISIBLE);
             city.setVisibility(View.VISIBLE);
             address.setVisibility(View.VISIBLE);
@@ -364,8 +369,6 @@ public class EditEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 payable=true;
-                unpaidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                paidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
                 fee_layout.setVisibility(View.VISIBLE);
             }
         });
@@ -373,8 +376,6 @@ public class EditEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 payable=false;
-                paidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                unpaidChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
                 fee_layout.setVisibility(View.GONE);
             }
         });
@@ -382,11 +383,6 @@ public class EditEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 event_type="Offline";
-                //offlineChip.setChipBackgroundColor(ColorStateList.valueOf(Color.CYAN));
-                onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
-
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
                 address.setVisibility(View.VISIBLE);
@@ -397,13 +393,9 @@ public class EditEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 event_type="Online";
 
-                offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
-
-                venu.setVisibility(View.GONE);
+                venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.GONE);
-                address.setVisibility(View.VISIBLE);
+                address.setVisibility(View.GONE);
 
             }
         });
@@ -412,11 +404,6 @@ public class EditEventActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 event_type="Both";
-
-                offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-                bothChip.setChipBackgroundColor(getResources().getColorStateList(R.color.cyan));
-                onlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
-
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
                 address.setVisibility(View.VISIBLE);
@@ -512,11 +499,11 @@ public class EditEventActivity extends AppCompatActivity {
     private void calculateEventFee() {
         int feeAmount=Integer.parseInt(fee_amount.getText().toString());
         int convenienceFee=(int) Math.ceil(feeAmount * 0.08f);
-        convenience_fee_amount.setText(convenienceFee);
+        convenience_fee_amount.setText(String.valueOf(convenienceFee));
         int payumoneyFee=(int) Math.ceil((feeAmount + convenienceFee) * 0.02);
-        payumoney_amount.setText(payumoneyFee);
+        payumoney_amount.setText(String.valueOf(payumoneyFee));
         int total=feeAmount + convenienceFee + payumoneyFee;
-        total_fee.setText(total);
+        total_fee.setText(String.valueOf(total));
     }
 
     @Override
@@ -534,5 +521,35 @@ public class EditEventActivity extends AppCompatActivity {
                     Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void showDialog() {
+        new AlertDialog.Builder(getApplicationContext())
+
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Deleting event")
+                .setMessage("your event will be deleted permanently")
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        eventRef.child(event.getEventType()).child(event.getEventId()).removeValue();
+                        Toast.makeText(getApplicationContext(), "Event deleted", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
+
+    public void deleteEvent(View view) {
+        showDialog();
+        /*eventRef.child(event.getEventType()).child(event.getEventId()).removeValue();
+        Toast.makeText(view.getContext(), "event deleted", Toast.LENGTH_SHORT).show();*/
     }
 }

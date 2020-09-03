@@ -57,8 +57,6 @@ import java.util.HashMap;
 
 public class EditProfile extends AppCompatActivity implements View.OnClickListener {
 
-
-    final static int PICK_PDF_CODE               =2342;
     final static int REQUEST_CODE_FOR_CERTIFICATE=3, GET_CITY_CODE=100;
     private static final String TAG         ="ProfileActivity";
     static               int    REQUEST_CODE=1;
@@ -228,8 +226,6 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             }
         });
 
-
-
       /*  Picasso.get()
                 .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .resize(120, 120).placeholder(R.drawable.persone_profile)
@@ -375,7 +371,6 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                                 });
                     }
                 });
-
             }
         });
     }

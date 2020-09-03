@@ -40,12 +40,12 @@
             <ImageView
                 android:id="@+id/event_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="340dp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:background="@drawable/rectangle_box"
                 android:scaleType="fitCenter"
-                android:src="@drawable/event_banner"
+
                 app:layout_collapseMode="parallax" />
 
             <androidx.appcompat.widget.Toolbar
@@ -172,7 +172,7 @@
                         android:fontFamily="@font/lato"
                         android:text="Online"
                         android:textSize="@dimen/title1"
-                        app:chipBackgroundColor="@color/chipColor" />
+                        app:chipBackgroundColor="@color/selector" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/offlineChip"
@@ -181,6 +181,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato"
                         android:text="Offline"
+                        app:chipBackgroundColor="@color/selector"
                         android:textSize="@dimen/title1" />
 
                     <com.google.android.material.chip.Chip
@@ -191,7 +192,7 @@
                         android:fontFamily="@font/lato"
                         android:text="Online and Offline"
                         android:textSize="@dimen/title1"
-                        app:chipBackgroundColor="@color/chipColor" />
+                        app:chipBackgroundColor="@color/selector" />
 
                 </com.google.android.material.chip.ChipGroup>
 
@@ -241,7 +242,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato"
-                        android:hint="Address"
+                        android:hint="you can paste the address link from google map"
                         android:textSize="@dimen/title1"
                         app:met_baseColor="@android:color/black"
                         app:met_floatingLabel="highlight"
@@ -403,7 +404,7 @@
                     android:fontFamily="@font/lato"
                     android:text="Paid"
                     android:textSize="@dimen/title1"
-                    app:chipBackgroundColor="@color/chipColor" />
+                    app:chipBackgroundColor="@color/selector"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/unpaidChip"
@@ -413,7 +414,7 @@
                     android:fontFamily="@font/lato"
                     android:text="Free"
                     android:textSize="@dimen/title1"
-                    app:chipBackgroundColor="@color/chipColor"
+                    app:chipBackgroundColor="@color/selector"
                     app:layout_constraintStart_toEndOf="@+id/onlineChip"
                     app:layout_constraintTop_toBottomOf="@+id/dateTimeLayout"
                     app:layout_constraintTop_toTopOf="@+id/onlineChip" />

@@ -182,6 +182,9 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 requestForPremission();
                 popupMenuSettigns();
+
+
+               // sendNotifiaction(messageSenderID,"Pooja","this is notification");
             }
         });
 

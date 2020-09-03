@@ -35,11 +35,11 @@ import java.util.Locale;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
 
-    private String            currentUid;
-    private Context           context;
-    private List<Event>       events;
-    private SharedPreference  pref;
-    private DatabaseReference userRef, eventRef;
+    private String                   currentUid;
+    private Context                  context;
+    private List<Event>              events;
+    private SharedPreference         pref;
+    private DatabaseReference        userRef;
     private FirebaseDatabaseInstance rootRef;
 
     public EventAdapter(Context context, List<Event> events) {
@@ -65,7 +65,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 .inflate(R.layout.item_event, parent, false);
         rootRef=FirebaseDatabaseInstance.getInstance();
         userRef=rootRef.getUserRef();
-        eventRef=rootRef.getEventRef();
 
         pref=SharedPreference.getInstance();
         currentUid=pref.getData(SharedPreference.currentUserId, view.getContext());
@@ -101,10 +100,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.time_date_text.setText(event.getStartDate() + " to " + event.getEndDate() + ", " + event.getStartTime() + " to " + event.getEndTime());
 
         String text=event.getDescription();
-        if (text.length() > 96) {
-            text=text.substring(0, 96) + "...";
+        if (text.length() > 82) {
+            text=text.substring(0, 82) + "...";
             holder.event_description.setText(Html.fromHtml(text + "<font  color = '#092859'>Read More</font>"));
-        }else {
+        } else {
             holder.event_description.setText(text);
         }
         // holder.event_description.setText(event.getDescription());
@@ -172,6 +171,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             }
         });
 
+        holder.bookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEventDetailsActivity(event, organiser);
+            }
+        });
     }
 
     private void openEventDetailsActivity(Event event, User[] organiser) {
