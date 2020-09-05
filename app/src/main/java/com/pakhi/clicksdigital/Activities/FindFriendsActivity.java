@@ -106,6 +106,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                         UsersRef.child(visit_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                               if(dataSnapshot.exists()) {
                                 holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
                                 holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
                                 Log.d("findFriend", "--------------" + model.getUser_name() + " " + model.getUser_bio());
@@ -123,7 +124,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                                         v.getContext().startActivity(fullScreenIntent);
                                     }
                                 });
-                            }
+                            }}
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
