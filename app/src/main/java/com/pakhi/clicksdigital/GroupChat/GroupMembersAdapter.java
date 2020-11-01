@@ -180,9 +180,9 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     private void viewPhoto(String image_url) {
-        Intent fullScreenIntent=new Intent(mcontext, EnlargedImage.class);
-        fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
-        mcontext.startActivity(fullScreenIntent);
+
+        EnlargedImage.enlargeImage(image_url,mcontext);
+
     }
 
     private void makeGroupAdmin(String visit_user_id) {

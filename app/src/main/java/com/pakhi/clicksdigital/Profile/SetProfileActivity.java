@@ -99,7 +99,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         number=pref.getData(SharedPreference.phone, getApplicationContext());
 
-        if (number.equals("+918007997748")) {
+        if (number.equals("+918668381053")) {
             user_type="admin";
         } else {
             user_type="user";
@@ -185,7 +185,6 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         startActivityForResult(addMoreCertiIntent, REQUEST_CODE_FOR_CERTIFICATE);
     }
 
-
     private void uploadData() {
 
         String full_name_str="", email_str="", last_name_str="";
@@ -220,8 +219,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
                 speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
 
         ;//= new HashMap<>();
-        userItems=putDataIntoHashMap(userid, full_name_str, bio_str, imageUrl_string, user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
-                speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
+        userItems=putDataIntoHashMap(user);
         /*  if (runningTask != null) {
             runningTask.cancel(true);
         }*/
@@ -240,7 +238,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         reference.child(userid).child(Const.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                addCurrentUserToDatabase(userItems);
+                addCurrentUserSqliteData(userItems);
                 saveDataToSharedPref();
                 progressDialog.dismiss();
                 // finish();
@@ -276,43 +274,44 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         //addUserDetailsToDatabase();
     }
 
-    private HashMap<String, String> putDataIntoHashMap(String userid, String full_name_str, String bio_str, String imageUrl_string, String user_type, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String email_str, String weblink_str, String working, String last_name_str, String company_str) {
+    private HashMap<String, String> putDataIntoHashMap(User user) {
         final HashMap<String, String> userItems=new HashMap<>();
 
-        userItems.put(Const.USER_ID, userid);
-        userItems.put(Const.USER_NAME, full_name_str);
-        userItems.put(Const.USER_BIO, bio_str);
-        userItems.put(Const.IMAGE_URL, imageUrl_string);
-        userItems.put(Const.USER_TYPE, user_type);
-        userItems.put(Const.CITY, city);
-        userItems.put("expectations_from_us", expectations_from_us);
-        userItems.put("experiences", experiences);
-        userItems.put("gender", gender);
-        userItems.put("number", number);
-        userItems.put("offer_to_community", offer_to_community);
-        userItems.put("speaker_experience", speaker_experience);
-        userItems.put("email", email_str);
-        userItems.put("weblink", weblink_str);
-        userItems.put("working", working);
-        userItems.put("last_name", last_name_str);
-        userItems.put("company", company_str);
+        userItems.put(Const.USER_ID, user.getUser_id());
+        userItems.put(Const.USER_NAME, user.getUser_name());
+        userItems.put(Const.USER_BIO, user.getUser_id());
+        userItems.put(Const.IMAGE_URL, user.getImage_url());
+        userItems.put(Const.USER_TYPE, user.getUser_type());
+        userItems.put(Const.CITY, user.getCity());
+        userItems.put("expectations_from_us", user.getExpectations_from_us());
+        userItems.put("experiences", user.getExperiences());
+        userItems.put("gender", user.getGender());
+        userItems.put("number", user.getNumber());
+        userItems.put("offer_to_community", user.getOffer_to_community());
+        userItems.put("speaker_experience", user.getSpeaker_experience());
+        userItems.put("email", user.getUser_email());
+        userItems.put("weblink", user.getWeblink());
+        userItems.put("working", user.getWork_profession());
+        userItems.put("last_name", user.getLast_name());
+        userItems.put("company", user.getCompany());
         return userItems;
     }
 
     private void saveDataToSharedPref() {
-        pref.saveData(SharedPreference.userState, Const.profileStoredUserStored, getApplicationContext());
+        // pref.saveData(SharedPreference.userState, Const.profileStoredUserStored, getApplicationContext());
+
         pref.saveData(SharedPreference.isProfileSet, Const.profileSet, getApplicationContext());
     }
 
-    private void addCurrentUserToDatabase(HashMap<String, String> userItems) {
+    private void addCurrentUserSqliteData(HashMap<String, String> userItems) {
         SQLiteDatabase sqlDb=db.getWritableDatabase();
         db.onUpgrade(sqlDb, 0, 1);
         db.insertData(userItems);
-        //  db.close();
+        // db.close();
     }
 
     private void createUserProfile() {
-//).child(
+
         StorageReference sReference=FirebaseStorage.getInstance().getReference(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
         // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
         final StorageReference imgPath=sReference.child("profile_image");
@@ -405,7 +404,6 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
                 //permission not granted
                 //requestForPremission();
                 // logMessage(" permission  not granted-------------");
-
             }
         }
     }
@@ -494,7 +492,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onStart() {
         super.onStart();
-        VerifyUserExistance();
+        // VerifyUserExistance();
         //  updateUserStatus("online");
         // new AsyncOperation().execute("online");
     }

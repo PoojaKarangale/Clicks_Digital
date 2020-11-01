@@ -35,7 +35,7 @@ import java.util.List;
 public class VisitProfileActivity extends AppCompatActivity {
 
     boolean      isVisterIsAdmin     =false;
-    boolean      isProfileUserIsAdmin=false;
+    boolean      isProfileUserIsAdmin =false;
     UserDatabase db;
     private String    user_id;
     private ImageView profile_image;
@@ -264,9 +264,8 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void viewProfile(String image_url) {
-        Intent fullScreenIntent=new Intent(this, EnlargedImage.class);
-        fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
-        startActivity(fullScreenIntent);
+
+       EnlargedImage.enlargeImage(image_url,getApplicationContext());
     }
 
     public void makeAdmin(final View view) {

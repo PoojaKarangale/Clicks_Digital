@@ -178,9 +178,9 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     }
 
     private void enlargeImage(String image_url) {
-        Intent fullScreenIntent=new Intent(mcontext, EnlargedImage.class);
-        fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
-        mcontext.startActivity(fullScreenIntent);
+
+        EnlargedImage.enlargeImage(image_url,mcontext);
+
     }
 
     private void deleteUserRequest(String userId, int position) {

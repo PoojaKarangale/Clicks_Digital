@@ -17,20 +17,23 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Event;
+import com.pakhi.clicksdigital.Model.Image;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.squareup.picasso.Picasso;
 
@@ -38,35 +41,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventGalleryActivity extends AppCompatActivity {
-    static final int REQUESTCODE = 12;
-    static int REQUEST_CODE = 1;
-    GridView gridView;
-    List<String> imageUrls = new ArrayList<>();
-    List<String> imageNames = new ArrayList<>();
-    ImageView add_photo;
-    PermissionsHandling permissions;
-    Uri imageUri;
-    Event event;
-    DatabaseReference eventRef;
+    static final int REQUESTCODE =12;
+    static       int REQUEST_CODE=1;
+  //  GridView            gridView;
+   /* List<String> imageUrls =new ArrayList<>();
+    List<String> imageNames=new ArrayList<>();*/
+    List<Image>  images=new ArrayList<>();
 
+    ImageView           add_photo;
+    PermissionsHandling permissions;
+    Uri                 imageUri;
+    Event               event;
+    DatabaseReference   eventRef;
+    ImageAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_gallery);
-        eventRef = FirebaseDatabase.getInstance().getReference().child("Events").child(event.getEvent_type()).child(event.getCreater_id()).child("Photos");
+
+        event=(Event) getIntent().getSerializableExtra("event");
+        FirebaseDatabaseInstance rootRef=FirebaseDatabaseInstance.getInstance();
+        eventRef=rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child("Photos");
 
         initializeFields();
 
         getAllImages();
-        gridView.setAdapter(new ImageAdapter(imageUrls, imageNames, this));
+       /* gridView.setAdapter(new ImageAdapter(imageUrls, imageNames, this));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item_pos = imageUrls.get(position);
+                String item_pos=imageUrls.get(position);
                 ShowDialogBox(item_pos);
             }
         });
-
+        */
         add_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,11 +85,20 @@ public class EventGalleryActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        RecyclerView mRecyclerView=(RecyclerView) findViewById(R.id.list);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mRecyclerView.setHasFixedSize(true); // Helps improve performance
+
+
+        mAdapter=new ImageAdapter(this, images);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     void requestForPremission() {
         //checking for permissions
-        permissions = new PermissionsHandling(this);
+        permissions=new PermissionsHandling(this);
         if (!permissions.isPermissionGranted()) {
             //when permissions not granted
             if (permissions.isRequestPermissionable()) {
@@ -108,40 +125,38 @@ public class EventGalleryActivity extends AppCompatActivity {
                     )
             ) {
                 openGallery();
-                //popupMenuSettigns();
                 //permission granted
-                // logMessage(" permission granted-----------");
 
             } else {
 
                 //permission not granted
-                //requestForPremission();
-                // logMessage(" permission  not granted-------------");
-
             }
         }
     }
 
     private void openGallery() {
-        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent i=new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, REQUESTCODE);
     }
 
     private void initializeFields() {
-        gridView = findViewById(R.id.myGrid);
-        add_photo = findViewById(R.id.add_photo);
+       // gridView=findViewById(R.id.myGrid);
+        add_photo=findViewById(R.id.add_photo);
     }
 
     private void getAllImages() {
         eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                images.clear();
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        imageUrls.add(dataSnapshot.getValue().toString());
-                        imageNames.add(dataSnapshot.getKey());
+//                        imageUrls.add(dataSnapshot.getValue().toString());
+//                        imageNames.add(dataSnapshot.getKey());
+                        images.add(new Image(dataSnapshot.getKey(),dataSnapshot.getValue().toString()));
                     }
                 }
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -151,23 +166,26 @@ public class EventGalleryActivity extends AppCompatActivity {
         });
     }
 
+/*
     public void ShowDialogBox(final String item_pos) {
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog=new Dialog(this);
 
         dialog.setContentView(R.layout.custom_dialog_for_gallery);
 
         //Getting custom dialog views
         // TextView image_name = dialog.findViewById(R.id.txt_Image_name);
-        ImageView image = dialog.findViewById(R.id.img);
-        Button btn_Full = dialog.findViewById(R.id.btn_full);
-        Button btn_Close = dialog.findViewById(R.id.btn_close);
+        ImageView image=dialog.findViewById(R.id.img);
+        Button btn_Full=dialog.findViewById(R.id.btn_full);
+        Button btn_Close=dialog.findViewById(R.id.btn_close);
 
         // String title = imageNames(item_pos);
 
         //extracting name
-        /*int index = title.indexOf("/");
+        */
+/*int index = title.indexOf("/");
         String name = title.substring(index + 1, title.length());
-        image_name.setText(name);*/
+        image_name.setText(name);*//*
+
 
         // image.setImageResource(item_pos);
 
@@ -182,38 +200,38 @@ public class EventGalleryActivity extends AppCompatActivity {
         btn_Full.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent fullScreenIntent = new Intent(EventGalleryActivity.this, EnlargedImage.class);
-                fullScreenIntent.putExtra(Const.IMAGE_URL, item_pos);
-                v.getContext().startActivity(fullScreenIntent);
+
+                EnlargedImage.enlargeImage(item_pos,getApplicationContext());
+
             }
         });
         dialog.show();
 
     }
+*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUESTCODE && data != null) {
-            imageUri = data.getData();
+            imageUri=data.getData();
             uploadImage(imageUri);
-            //profile_img.setImageURI(picImageUri);
-            // isProfileSelected = true;
+
         } else {
             //showToast("Nothing is selected");
         }
     }
 
     String getFileExtention(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        ContentResolver contentResolver=getContentResolver();
+        MimeTypeMap mime=MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference = FirebaseStorage.getInstance().getReference().child("Event_photos").child(event.getEventId());
-        final String image_name = System.currentTimeMillis() + "." + getFileExtention(imageUri);
-        final StorageReference imgPath = sReference.child(image_name);
+        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Event_photos").child(event.getEventId());
+        final String image_name=System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
+        final StorageReference imgPath=sReference.child(image_name);
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -240,6 +258,7 @@ public class EventGalleryActivity extends AppCompatActivity {
                 Toast.makeText(EventGalleryActivity.this, "image added", Toast.LENGTH_SHORT);
 
                 //do somthing on data change
+
             }
         });
     }

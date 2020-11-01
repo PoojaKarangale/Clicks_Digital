@@ -86,15 +86,17 @@ public class OfflineEventsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 events.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                    if (event.getEventName().toLowerCase().contains(s)
-                            || event.getDescription().toLowerCase().contains(s)
-                            || event.getCategory().toLowerCase().contains(s)
-                            || event.getAddress().toLowerCase().contains(s)
-                            || event.getCity().toLowerCase().contains(s)
-                            || event.getVenu().toLowerCase().contains(s)
-                    ) {
-                        events.add(event);
+                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
+                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        if (event.getEventName().toLowerCase().contains(s)
+                                || event.getDescription().toLowerCase().contains(s)
+                                || event.getCategory().toLowerCase().contains(s)
+                                || event.getAddress().toLowerCase().contains(s)
+                                || event.getCity().toLowerCase().contains(s)
+                                || event.getVenu().toLowerCase().contains(s)
+                        ) {
+                            events.add(event);
+                        }
                     }
                 }
                 //eventAdapter.notifyDataSetChanged();
@@ -111,15 +113,17 @@ public class OfflineEventsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                    if (event.getEventName().toLowerCase().contains(s)
-                            || event.getDescription().toLowerCase().contains(s)
-                            || event.getCategory().toLowerCase().contains(s)
-                            || event.getAddress().toLowerCase().contains(s)
-                            || event.getCity().toLowerCase().contains(s)
-                            || event.getVenu().toLowerCase().contains(s)
-                    ) {
-                        events.add(event);
+                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
+                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        if (event.getEventName().toLowerCase().contains(s)
+                                || event.getDescription().toLowerCase().contains(s)
+                                || event.getCategory().toLowerCase().contains(s)
+                                || event.getAddress().toLowerCase().contains(s)
+                                || event.getCity().toLowerCase().contains(s)
+                                || event.getVenu().toLowerCase().contains(s)
+                        ) {
+                            events.add(event);
+                        }
                     }
                 }
                 eventAdapter.notifyDataSetChanged();

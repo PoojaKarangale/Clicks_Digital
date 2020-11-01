@@ -119,9 +119,8 @@ public class FindFriendsActivity extends AppCompatActivity {
                                 holder.profile_image.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent fullScreenIntent=new Intent(v.getContext(), EnlargedImage.class);
-                                        fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
-                                        v.getContext().startActivity(fullScreenIntent);
+
+                                        EnlargedImage.enlargeImage(image_url,v.getContext());
                                     }
                                 });
                             }}

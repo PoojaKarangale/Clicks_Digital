@@ -85,4 +85,64 @@ public class PermissionsHandling {
         );
 
     }
+    /*      if (ContextCompat.checkSelfPermission(GroupChatActivity.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) +
+                ContextCompat.checkSelfPermission(GroupChatActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) +
+                ContextCompat.checkSelfPermission(GroupChatActivity.this,
+                        Manifest.permission.READ_CONTACTS) +
+                ContextCompat.checkSelfPermission(GroupChatActivity.this,
+                        Manifest.permission.WRITE_CONTACTS) +
+                ContextCompat.checkSelfPermission(GroupChatActivity.this,
+                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            //when permissions not granted
+            if (ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.READ_CONTACTS) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.WRITE_CONTACTS) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.CAMERA)) {
+                //creating alertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupChatActivity.this);
+                builder.setTitle("Grant permissioms");
+                builder.setMessage("Camera, read & write Contacts, read & write Storage");
+                builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        ActivityCompat.requestPermissions(
+                                GroupChatActivity.this,
+                                new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.READ_CONTACTS,
+                                        Manifest.permission.WRITE_CONTACTS,
+                                        Manifest.permission.CAMERA
+                                },
+                                REQUEST_CODE
+                        );
+                    }
+                });
+
+                //builder.setNegativeButton("Cancel",null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+            } else {
+                ActivityCompat.requestPermissions(
+                        GroupChatActivity.this,
+                        new String[]{
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.WRITE_CONTACTS,
+                                Manifest.permission.CAMERA
+                        },
+                        REQUEST_CODE
+                );
+
+            }
+        } else {
+            //when those permissions are already granted
+            //popupMenuSettigns();
+            logMessage("when those permissions are already granted=----------");
+        }*/
 }

@@ -6,26 +6,39 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FirebaseDatabaseInstance {
     private static FirebaseDatabaseInstance single_instance=null;
     DatabaseReference rootRef=FirebaseDatabase.getInstance().getReference();
+    /*  DatabaseReference userRef;
+            DatabaseReference groupRef ;
+            DatabaseReference eventRef ;
+            DatabaseReference eventCatRef ;
+            DatabaseReference groupChatRef ;
+            DatabaseReference messagesRef ;
+            DatabaseReference messagesListRef;
+            DatabaseReference tokensRef ;
+            DatabaseReference groupRequests ;
+            DatabaseReference chatRequestsRef;*/
+    //DatabaseReference replyRef;
+    // DatabaseReference topicLikesRef, replyLikesRef;
 
     private FirebaseDatabaseInstance() {
     }
-
-    /*  DatabaseReference userRef;
-        DatabaseReference groupRef ;
-        DatabaseReference eventRef ;
-        DatabaseReference eventCatRef ;
-        DatabaseReference groupChatRef ;
-        DatabaseReference messagesRef ;
-        DatabaseReference messagesListRef;
-        DatabaseReference tokensRef ;
-        DatabaseReference groupRequests ;
-        DatabaseReference chatRequestsRef;*/
 
     // static method to create instance of Singleton class
     public static FirebaseDatabaseInstance getInstance() {
         if (single_instance == null)
             single_instance=new FirebaseDatabaseInstance();
         return single_instance;
+    }
+
+    public DatabaseReference getTopicLikesRef() {
+        return rootRef.child(ConstFirebase.topicLikesRef);
+    }
+
+    public DatabaseReference getReplyLikesRef() {
+        return rootRef.child(ConstFirebase.replyLikesRef);
+    }
+
+    public DatabaseReference getReplyRef() {
+        return rootRef.getRef().child(ConstFirebase.replyRef);
     }
 
     public DatabaseReference getChatRequestsRef() {

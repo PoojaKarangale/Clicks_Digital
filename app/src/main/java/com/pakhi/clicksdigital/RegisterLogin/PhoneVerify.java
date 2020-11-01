@@ -1,6 +1,7 @@
 package com.pakhi.clicksdigital.RegisterLogin;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
+import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -33,6 +35,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ToastClass;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class PhoneVerify extends AppCompatActivity implements View.OnClickListener {
@@ -42,6 +45,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     UserDatabase             ud;
     SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;
+    UserDatabase             db;
     private FirebaseAuth firebaseAuth;
     private String       number, verificationCode;
     private EditText get_code;
@@ -181,23 +185,36 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     }
 
     private void updateUi() {
-        if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
+       /* if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
                 && pref.getData(SharedPreference.userState, getApplicationContext()).equals(Const.verifiedUserState)) {
             checkUserOnline();
         } else if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
                 && pref.getData(SharedPreference.userState, getApplicationContext()).equals(Const.profileStoredUserStored)) {
             sendUserToStartActivity();
+        }*/
+
+        if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
+                && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(Const.profileSet)) {
+            //start activity
+            sendUserToStartActivity();
+        } else {
+            checkUserOnline();
         }
-        finish();
     }
 
     private void checkUserOnline() {
         // rootRef.getUserRef()
         String currentUserID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
-        rootRef.getUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(currentUserID).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child(Const.USER_NAME).exists())) {
+                    User user=dataSnapshot.getValue(User.class);
+                    addCurrentUserSqliteData(user);
+                    //profile is already set
+                    pref.saveData(SharedPreference.isProfileSet, Const.profileSet, getApplicationContext());
+                    pref.saveData(SharedPreference.user_type, dataSnapshot.child(Const.USER_TYPE).getValue().toString(), getApplicationContext());
+
                     sendUserToStartActivity();
                 } else {
                     setUserToSetProfileActivity();
@@ -209,6 +226,38 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
             }
         });
+    }
+
+    private HashMap<String, String> putDataIntoHashMap(User user) {
+        final HashMap<String, String> userItems=new HashMap<>();
+
+        userItems.put(Const.USER_ID, user.getUser_id());
+        userItems.put(Const.USER_NAME, user.getUser_name());
+        userItems.put(Const.USER_BIO, user.getUser_id());
+        userItems.put(Const.IMAGE_URL, user.getImage_url());
+        userItems.put(Const.USER_TYPE, user.getUser_type());
+        userItems.put(Const.CITY, user.getCity());
+        userItems.put("expectations_from_us", user.getExpectations_from_us());
+        userItems.put("experiences", user.getExperiences());
+        userItems.put("gender", user.getGender());
+        userItems.put("number", user.getNumber());
+        userItems.put("offer_to_community", user.getOffer_to_community());
+        userItems.put("speaker_experience", user.getSpeaker_experience());
+        userItems.put("email", user.getUser_email());
+        userItems.put("weblink", user.getWeblink());
+        userItems.put("working", user.getWeblink());
+        userItems.put("last_name", user.getLast_name());
+        userItems.put("company", user.getCompany());
+        return userItems;
+    }
+
+    private void addCurrentUserSqliteData(User user) {
+        db=new UserDatabase(this);
+        HashMap<String, String> userItems=putDataIntoHashMap(user);
+        SQLiteDatabase sqlDb=db.getWritableDatabase();
+        db.onUpgrade(sqlDb, 0, 1);
+        db.insertData(userItems);
+        //  db.close();
     }
 
     void showToast(String s) {
@@ -240,9 +289,14 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     private void saveDataToSharedPreferences() {
         SharedPreference pref=SharedPreference.getInstance();
         pref.saveData(SharedPreference.phone, number.replaceAll(" ", ""), getApplicationContext());
-        pref.saveData(SharedPreference.logging, Const.loggedIn, getApplicationContext());
         pref.saveData(SharedPreference.currentUserId, FirebaseAuth.getInstance().getUid(), getApplicationContext());
-        pref.saveData(SharedPreference.userState, Const.verifiedUserState, getApplicationContext());
+
+        pref.saveData(SharedPreference.isPhoneVerified, Const.isPhoneVerified, getApplicationContext());
+
+
+//        pref.saveData(SharedPreference.logging, Const.loggedIn, getApplicationContext());
+//        pref.saveData(SharedPreference.userState, Const.verifiedUserState, getApplicationContext());
+
     }
 
     void setUserToSetProfileActivity() {
@@ -250,6 +304,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         resIntent.putExtra("PreviousActivity", "PhoneVerify");
         resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resIntent);
+        finish();
     }
 
     private void sendUserToStartActivity() {

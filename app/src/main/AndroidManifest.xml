@@ -25,7 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".Event.EditEventActivity"></activity>
+        <activity android:name=".GroupChat.TopicRepliesActivity"></activity>
+        <activity android:name=".GroupChat.TopicRaiseFragment" />
+        <activity android:name=".Event.EditEventActivity" />
         <activity android:name=".Event.EventGalleryActivity" />
         <activity android:name=".Event.EventParticipantsActivity" />
         <activity android:name=".Activities.SettingActivity" />

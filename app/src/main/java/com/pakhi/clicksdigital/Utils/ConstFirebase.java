@@ -29,4 +29,7 @@ public class ConstFirebase {
     public static String eventOffline="Offline";
     public static String eventOnline ="Online";
     public static String participants="Participants";
+    public static String    replyRef = "TopicReply";
+    public static String    topicLikesRef = "TopicLikes";
+    public static String    replyLikesRef = "ReplyLikes";
 }

@@ -13,6 +13,7 @@ public class SharedPreference {
     public static       String           isProfileSet   ="isProfileSet";
     public static       String           currentUserId  ="currentUserId";
     public static       String           userState      ="userState";
+    public static       String           isPhoneVerified="isPhoneVerified";
     // static variable single_instance of type Singleton
     private static      SharedPreference single_instance=null;
 

@@ -206,9 +206,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void viewProfile(String image_url) {
-        Intent fullScreenIntent=new Intent(ProfileActivity.this, EnlargedImage.class);
-        fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
-        startActivity(fullScreenIntent);
+
+        EnlargedImage.enlargeImage(image_url,getApplicationContext());
     }
 
     private void getUserFromDb() {

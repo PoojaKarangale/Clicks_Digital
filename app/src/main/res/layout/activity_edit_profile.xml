@@ -180,6 +180,7 @@
                     android:fontFamily="@font/lato"
                     android:hint="Write about you"
                     android:maxLines="2"
+                    android:maxLength="300"
                     android:textSize="@dimen/title1"
                     app:met_baseColor="@android:color/black"
                     app:met_floatingLabel="highlight"

@@ -101,9 +101,8 @@ public class ConnectionRequests extends AppCompatActivity {
                                                 holder.profileImage.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
-                                                        Intent fullScreenIntent=new Intent(v.getContext(), EnlargedImage.class);
-                                                        fullScreenIntent.putExtra(Const.IMAGE_URL, requestProfileImage[0]);
-                                                        v.getContext().startActivity(fullScreenIntent);
+
+                                                        EnlargedImage.enlargeImage(requestProfileImage[0],v.getContext());
                                                     }
                                                 });
 

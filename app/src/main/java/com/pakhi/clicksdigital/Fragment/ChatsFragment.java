@@ -147,9 +147,8 @@ public class ChatsFragment extends Fragment {
                         holder.profileImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent fullScreenIntent=new Intent(v.getContext(), EnlargedImage.class);
-                                fullScreenIntent.putExtra(Const.IMAGE_URL, retImage[0]);
-                                v.getContext().startActivity(fullScreenIntent);
+                                EnlargedImage.enlargeImage(retImage[0],v.getContext());
+
                             }
                         });
                     }

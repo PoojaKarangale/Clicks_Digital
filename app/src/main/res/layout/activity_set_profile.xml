@@ -163,6 +163,7 @@
                     android:hint="Write about you"
                     android:maxLines="2"
                     android:textSize="@dimen/title1"
+                    android:maxLength="300"
                     app:met_baseColor="@android:color/black"
                     app:met_floatingLabel="highlight"
                     app:met_primaryColor="?colorAccent"

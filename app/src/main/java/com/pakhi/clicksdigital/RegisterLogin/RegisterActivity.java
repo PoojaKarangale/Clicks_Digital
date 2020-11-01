@@ -1,6 +1,7 @@
 package com.pakhi.clicksdigital.RegisterLogin;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,23 +16,26 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.hbb20.CountryCodePicker;
 import com.pakhi.clicksdigital.Activities.StartActivity;
+import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
+import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
+import java.util.HashMap;
+
 public class RegisterActivity extends AppCompatActivity {
-    FirebaseAuth     firebaseAuth;
+    FirebaseAuth             firebaseAuth;
     // DatabaseReference RootRef;
-    SharedPreference pref;
+    SharedPreference         pref;
+    FirebaseDatabaseInstance rootRef;
     private String            number;
     private CountryCodePicker ccp;
     private EditText          mobileNo_reg;
-
-    FirebaseDatabaseInstance rootRef;
-
+    UserDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         mobileNo_reg=(EditText) findViewById(R.id.mobileNo_reg);
         Button verify=findViewById(R.id.verify);
         ccp=findViewById(R.id.ccp);
+
 
 
         firebaseAuth=FirebaseAuth.getInstance();
@@ -89,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void VerifyUserExistance() {
 
-     /*   if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
+        /*if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
                 && pref.getData(SharedPreference.userState, getApplicationContext()).equals(Const.profileStoredUserStored)){
             sendUserToStartActivity();
         }else if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
@@ -97,8 +102,20 @@ public class RegisterActivity extends AppCompatActivity {
             checkUserOnline();
         }*/
 
+        if (pref.getData(SharedPreference.isPhoneVerified, getApplicationContext()) != null
+                && pref.getData(SharedPreference.isPhoneVerified, getApplicationContext()).equals(Const.isPhoneVerified)
+        ) {
+            if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
+                    && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(Const.profileSet)) {
+                //start Activity
+                sendUserToStartActivity();
+            }else {
+                //check online
+                checkUserOnline();
+            }
+        }
 
-        if (pref.getData(SharedPreference.logging, getApplicationContext()) != null
+       /* if (pref.getData(SharedPreference.logging, getApplicationContext()) != null
                 && pref.getData(SharedPreference.logging, getApplicationContext()).equals(Const.loggedIn)) {
 
             if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
@@ -109,18 +126,24 @@ public class RegisterActivity extends AppCompatActivity {
                 checkUserOnline();
                 // SendUserToSetProfileActivity();
             }
-        }
-
+        }*/
     }
 
     private void checkUserOnline() {
         // rootRef.getUserRef()
         String currentUserID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
-        rootRef.getUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(currentUserID).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child(Const.USER_NAME).exists())) {
+                    User user = dataSnapshot.getValue(User.class);
+                    addCurrentUserSqliteData(user);
+                    //save data of profile updated because we won't go to profile setting but profil is already set stored online
+                    pref.saveData(SharedPreference.isProfileSet, Const.profileSet, getApplicationContext());
+                    pref.saveData(SharedPreference.user_type, dataSnapshot.child(Const.USER_TYPE).getValue().toString(), getApplicationContext());
+
                     sendUserToStartActivity();
+
                 } else {
                     SendUserToSetProfileActivity();
                 }
@@ -132,12 +155,36 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+    private HashMap<String, String> putDataIntoHashMap(User user){
+        final HashMap<String, String> userItems=new HashMap<>();
 
-    private void sendUserToJoinGroupActivity() {
-        Intent intent=new Intent(RegisterActivity.this, JoinGroupActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+        userItems.put(Const.USER_ID, user.getUser_id());
+        userItems.put(Const.USER_NAME, user.getUser_name());
+        userItems.put(Const.USER_BIO, user.getUser_id());
+        userItems.put(Const.IMAGE_URL, user.getImage_url());
+        userItems.put(Const.USER_TYPE, user.getUser_type());
+        userItems.put(Const.CITY, user.getCity());
+        userItems.put("expectations_from_us", user.getExpectations_from_us());
+        userItems.put("experiences", user.getExperiences());
+        userItems.put("gender", user.getGender());
+        userItems.put("number", user.getNumber());
+        userItems.put("offer_to_community", user.getOffer_to_community());
+        userItems.put("speaker_experience", user.getSpeaker_experience());
+        userItems.put("email", user.getUser_email());
+        userItems.put("weblink", user.getWeblink());
+        userItems.put("working", user.getWeblink());
+        userItems.put("last_name", user.getLast_name());
+        userItems.put("company", user.getCompany());
+        return userItems;
+    }
+
+    private void addCurrentUserSqliteData(User user) {
+        db=new UserDatabase(this);
+        HashMap<String, String> userItems = putDataIntoHashMap(user);
+        SQLiteDatabase sqlDb=db.getWritableDatabase();
+        db.onUpgrade(sqlDb, 0, 1);
+        db.insertData(userItems);
+        //  db.close();
     }
 
     private void sendUserToStartActivity() {

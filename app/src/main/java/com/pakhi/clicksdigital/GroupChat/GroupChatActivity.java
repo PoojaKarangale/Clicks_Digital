@@ -1,7 +1,10 @@
 package com.pakhi.clicksdigital.GroupChat;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -62,13 +66,14 @@ public class GroupChatActivity extends AppCompatActivity {
     static final  int           REQUESTCODE          =12;
     static        int           REQUEST_CODE         =1;
     private final List<Message> messagesList         =new ArrayList<>();
-    ImageView attach_file_btn, image_profile, requesting_users, back_btn;
+    ImageView attach_file_btn, image_profile, requesting_users, back_btn, raise_topic;
     Uri imageUriGalary, imageUriCamera;
     UserDatabase             db;
     User                     user;
     PermissionsHandling      permissions;
-    FirebaseDatabaseInstance roothRef;
     SharedPreference         pref;
+    String                   topic_str;
+    FirebaseDatabaseInstance roothRef;
     private Toolbar           mToolbar;
     private ImageButton       SendMessageButton;
     private EditText          userMessageInput;
@@ -102,6 +107,7 @@ public class GroupChatActivity extends AppCompatActivity {
         getUserFromDb();
 
         InitializeFields();
+
 
         GroupIdRef.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -194,6 +200,45 @@ public class GroupChatActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        raise_topic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTopicRaiseFagmentForResult();
+                // Log.d("TESTINGTOPICSTART","---------------------topic 2"+topic_str);
+            }
+        });
+    }
+
+    private void startTopicRaiseFagmentForResult() {
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        /*builder.setTitle("Enter new Topic");*/
+
+        LayoutInflater inflater=((Activity) this).getLayoutInflater();
+        View v=inflater.inflate(R.layout.fragment_topic_raise, null);
+        final EditText topic=v.findViewById(R.id.topic);
+        //  v.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT));
+        builder.setView(v);
+
+        // Set up the buttons
+        builder.setPositiveButton("Publish", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                topic_str=topic.getText().toString();
+                SaveMessageInfoToDatabase("topic", topic_str);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
     }
 
     private void goToRequestsActivity() {
@@ -287,10 +332,11 @@ public class GroupChatActivity extends AppCompatActivity {
         image_profile=findViewById(R.id.image_profile);
         requesting_users=findViewById(R.id.requesting_users);
         back_btn=findViewById(R.id.back_btn);
+        raise_topic=findViewById(R.id.raise_topic);
         // banner_white = findViewById(R.id.banner);
         //  group_members = findViewById(R.id.group_members);
 
-        messageAdapter=new MessageAdapter(messagesList, "GroupChat", currentGroupId);
+        messageAdapter=new MessageAdapter(messagesList, "GroupChat");
         userMessagesList=(RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
         linearLayoutManager=new LinearLayoutManager(this);
@@ -298,6 +344,16 @@ public class GroupChatActivity extends AppCompatActivity {
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
 
+/*
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        toolbar.setBackground(getResources().getDrawable(R.drawable.icn_actionbar_background));
+        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        mTitle.setText(toolbar_text);
+        mTitle.setTypeface(Typeface.DEFAULT_BOLD);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }*/
     }
 
     private void GetUserInfo() {
@@ -336,22 +392,9 @@ public class GroupChatActivity extends AppCompatActivity {
         Message message1=new Message(currentUserID, message,
                 messageType, currentGroupId, messagekEY, currentTime, currentDate);
 
-       /* HashMap<String, Object> messageInfoMap = new HashMap<>();
-        messageInfoMap.put("name", currentUserName);
-        messageInfoMap.put("to", currentGroupId);
-        messageInfoMap.put("from", currentUserID);
-
-        messageInfoMap.put("message", message);
-        messageInfoMap.put("messageID", messagekEY);
-        messageInfoMap.put("date", currentDate);
-        messageInfoMap.put("time", currentTime);
-        messageInfoMap.put("type", messageType);*/
-
-        //  messageInfoMap.put("to", messageReceiverID);
-        //  messageInfoMap.put("messageID", messagePushID);
         groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
         progressDialog.dismiss();
-        // GroupMessageKeyRef.updateChildren(m);
+
     }
 
     private void popupMenuSettigns() {
@@ -423,66 +466,6 @@ public class GroupChatActivity extends AppCompatActivity {
             //popupMenuSettigns();
         }
 
-  /*      if (ContextCompat.checkSelfPermission(GroupChatActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) +
-                ContextCompat.checkSelfPermission(GroupChatActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) +
-                ContextCompat.checkSelfPermission(GroupChatActivity.this,
-                        Manifest.permission.READ_CONTACTS) +
-                ContextCompat.checkSelfPermission(GroupChatActivity.this,
-                        Manifest.permission.WRITE_CONTACTS) +
-                ContextCompat.checkSelfPermission(GroupChatActivity.this,
-                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            //when permissions not granted
-            if (ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.READ_CONTACTS) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.WRITE_CONTACTS) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(GroupChatActivity.this, Manifest.permission.CAMERA)) {
-                //creating alertDialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(GroupChatActivity.this);
-                builder.setTitle("Grant permissioms");
-                builder.setMessage("Camera, read & write Contacts, read & write Storage");
-                builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        ActivityCompat.requestPermissions(
-                                GroupChatActivity.this,
-                                new String[]{
-                                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                        Manifest.permission.READ_CONTACTS,
-                                        Manifest.permission.WRITE_CONTACTS,
-                                        Manifest.permission.CAMERA
-                                },
-                                REQUEST_CODE
-                        );
-                    }
-                });
-
-                //builder.setNegativeButton("Cancel",null);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
-            } else {
-                ActivityCompat.requestPermissions(
-                        GroupChatActivity.this,
-                        new String[]{
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_CONTACTS,
-                                Manifest.permission.WRITE_CONTACTS,
-                                Manifest.permission.CAMERA
-                        },
-                        REQUEST_CODE
-                );
-
-            }
-        } else {
-            //when those permissions are already granted
-            //popupMenuSettigns();
-            logMessage("when those permissions are already granted=----------");
-        }*/
 
     }
 

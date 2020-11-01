@@ -26,7 +26,9 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PaymentGatewayFiles.PaymentActivity;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ToastClass;
@@ -128,14 +130,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        /*gallery.setOnClickListener(new View.OnClickListener() {
+        gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent eventDetailsIntent = new Intent(EventDetailsActivity.this, EventGalleryActivity.class);
                 eventDetailsIntent.putExtra("event", event);
                 startActivity(eventDetailsIntent);
             }
-        });*/
+        });
     }
 
     private void checkUserIsAlreadyRegisterd() {
@@ -183,7 +185,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void initialiseFields() {
-        //gallery=findViewById(R.id.gallery);
+        gallery=findViewById(R.id.gallery);
 
         join_event_btn=findViewById(R.id.register);
         organiser_name=findViewById(R.id.organiser_name);
@@ -252,5 +254,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         browserIntent.setData(Uri.parse(event.getAddress()));
         startActivity(browserIntent);
     }
+
 
 }

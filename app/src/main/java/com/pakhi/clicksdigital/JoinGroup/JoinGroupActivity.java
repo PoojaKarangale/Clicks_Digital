@@ -35,7 +35,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
 
     //    AsyncOperation task = new AsyncOperation();
     ImageView                close;
-    EditText                 searchView;
+    SearchView                searchView;
     String                   current_user_id;
     SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;

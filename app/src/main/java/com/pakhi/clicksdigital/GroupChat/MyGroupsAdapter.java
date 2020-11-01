@@ -58,9 +58,8 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
         holder.image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent fullScreenIntent=new Intent(v.getContext(), EnlargedImage.class);
-                fullScreenIntent.putExtra(Const.IMAGE_URL, group.getImage_url());
-                v.getContext().startActivity(fullScreenIntent);
+
+                EnlargedImage.enlargeImage(group.getImage_url(),mcontext);
             }
         });
 

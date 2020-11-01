@@ -28,7 +28,7 @@
                 android:text="Contact Us"
                 android:textColor="@color/black"
                 android:textSize="@dimen/dimen_20dp"
-                android:textStyle="bold">
+                >
 
             </TextView>
         </androidx.appcompat.widget.Toolbar>

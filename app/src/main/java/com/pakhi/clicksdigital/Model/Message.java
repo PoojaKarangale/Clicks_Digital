@@ -1,6 +1,8 @@
 package com.pakhi.clicksdigital.Model;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable {
 
     private String from, message, type, to, messageID, time, date;
 
