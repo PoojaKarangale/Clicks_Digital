@@ -268,6 +268,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onStart() {
         super.onStart();
+        searchGroups("");
         // updateUserStatus("online");
     }
 

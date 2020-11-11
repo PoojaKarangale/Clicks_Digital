@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground"
+    tools:context=".GroupChat.ReplyFragment">
+
+    <!--  <com.google.android.material.appbar.AppBarLayout
+          android:id="@+id/appbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:background="?android:attr/windowBackground"
+          android:fitsSystemWindows="true">
+
+          <androidx.appcompat.widget.Toolbar
+              android:id="@+id/toolbar"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="?android:attr/windowBackground">
+
+              <RelativeLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="@dimen/margine_sub">
+
+                  <ImageView
+                      android:id="@+id/close"
+                      android:layout_width="@dimen/widget_size"
+                      android:layout_height="@dimen/widget_size"
+                      android:layout_alignParentStart="true"
+                      android:layout_alignParentTop="true"
+                      android:src="@drawable/ic_arrow_back_black_24dp" />
+
+                  <Button
+                      android:id="@+id/reply_btn"
+                      android:layout_width="wrap_content"
+                      android:layout_height="30dp"
+                      android:layout_alignParentTop="true"
+                      android:layout_alignParentEnd="true"
+                      android:layout_marginStart="10dp"
+                      android:background="@drawable/back_round_button"
+                      android:backgroundTint="@color/colorPrimary"
+                      android:text="Reply"
+                      android:textAllCaps="false"
+                      android:textColor="@color/white"
+                      android:textSize="10sp" />
+              </RelativeLayout>
+              &lt;!&ndash; <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Contact Us"
+                   android:textColor="@color/black"
+                   android:textSize="@dimen/dimen_20dp"
+                   android:textStyle="bold">
+               </TextView>&ndash;&gt;
+          </androidx.appcompat.widget.Toolbar>
+      </com.google.android.material.appbar.AppBarLayout>
+  -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margine_sub"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="@dimen/widget_size"
+            android:layout_height="@dimen/widget_size"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/close"
+            android:contentDescription="back" />
+
+        <Button
+            android:id="@+id/reply_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/back_round_button"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Reply"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/txt1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="Replying to"
+            android:textSize="@dimen/title2" />
+
+        <TextView
+            android:id="@+id/replyingTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/txt1"
+            android:layout_marginStart="2dp"
+            android:layout_toEndOf="@+id/txt1"
+            android:text="name"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/title2" />
+
+        <EditText
+            android:id="@+id/topic_reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt1"
+            android:layout_marginTop="@dimen/margine_sub"
+            android:background="@drawable/flag_transparent"
+            android:fontFamily="@font/lato"
+            android:gravity="top|start"
+            android:hint="Write your reply here..."
+            android:inputType="text|textMultiLine"
+            android:lineSpacingExtra="2dp"
+            android:lines="8"
+            android:maxLength="400"
+            android:maxLines="12"
+            android:minLines="2"
+            android:scrollbars="vertical"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:textAlignment="gravity"
+            android:autofillHints="" />
+    </RelativeLayout>
+</FrameLayout>

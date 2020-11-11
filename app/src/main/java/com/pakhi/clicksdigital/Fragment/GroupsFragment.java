@@ -158,7 +158,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fab_create_event:
+            case R.id.fab_join_group:
                 startActivity(new Intent(getContext(), JoinGroupActivity.class));
                 break;
             case R.id.fab_create_group:

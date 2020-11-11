@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_img"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/persone_profile"
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="2dp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/profile_img"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/profile_img"
+        android:text="Firstname Lastname"
+        android:textSize="@dimen/title2"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/date_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:text="Date and time"
+        android:textSize="@dimen/title4" />
+
+    <TextView
+        android:id="@+id/reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date_time"
+        android:layout_alignStart="@+id/name"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:inputType="text|textMultiLine"
+        android:lineSpacingExtra="2dp"
+        android:maxLength="400"
+        android:maxLines="12"
+        android:minLines="2"
+        android:scrollbars="vertical"
+        android:scrollHorizontally="false"
+        android:singleLine="false"
+        android:text="in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post."
+        android:textAlignment="gravity" />
+
+    <LinearLayout
+        android:id="@+id/like_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reply"
+        android:layout_alignStart="@+id/name"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:orientation="horizontal"
+        android:paddingTop="3dp">
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="@dimen/widget_size"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingEnd="5dp"
+            android:src="@drawable/like_border" />
+
+        <TextView
+            android:id="@+id/no_of_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/reply"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/reply"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="@dimen/title4" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/hor_line"
+        android:layout_width="wrap_content"
+        android:layout_height="3px"
+        android:layout_below="@+id/like_layout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:background="#CCCCCC" />
+</RelativeLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <!--tools:context=".GroupChat.TopicRaiseFragment"-->
+
+       <!-- <ImageView
+            android:id="@+id/close"
+            android:layout_width="@dimen/widget_size"
+            android:layout_height="@dimen/widget_size"
+            android:layout_marginTop="@dimen/margine_sub"
+            android:layout_marginEnd="@dimen/margine_sub"
+            android:src="@drawable/close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <EditText
+            android:id="@+id/topic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margine_main"
+            android:layout_toStartOf="@+id/attach_file_btn"
+            android:background="@drawable/flag_transparent"
+            android:fontFamily="@font/lato"
+            android:gravity="top|start"
+            android:hint="Start Topic Here..."
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:maxLength="300"
+            android:maxLines="10"
+            android:minLines="4"
+            android:padding="15dp"
+            android:scrollbars="vertical"
+            android:textSize="@dimen/title2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+       <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_publish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margine_main"
+            android:background="@color/colorPrimary"
+            android:baselineAlignBottom="true"
+            android:src="@drawable/arrow_up"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            />-->
+</FrameLayout>

@@ -99,7 +99,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         number=pref.getData(SharedPreference.phone, getApplicationContext());
 
-        if (number.equals("+918668381053")) {
+        if (number.equals("+918007997748")) {
             user_type="admin";
         } else {
             user_type="user";

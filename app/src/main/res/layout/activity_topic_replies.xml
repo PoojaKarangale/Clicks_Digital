@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GroupChat.TopicRepliesActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margine_main"
+        android:layout_marginTop="@dimen/margine_main"
+        android:layout_marginRight="@dimen/margine_main"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="233dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/personal_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_img"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/persone_profile"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_width="2dp" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margine_main"
+                    android:layout_toEndOf="@+id/profile_img"
+                    android:text="Firstname Lastname"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/title1" />
+
+                <TextView
+                    android:id="@+id/profession"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/name"
+                    android:layout_alignStart="@+id/name"
+                    android:text="profession"
+                    android:textSize="@dimen/title2" />
+
+                <TextView
+                    android:id="@+id/topic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profession"
+                    android:layout_alignStart="@+id/name"
+                    android:layout_marginTop="@dimen/margine_main"
+                    android:background="@drawable/flag_transparent"
+                    android:fontFamily="@font/lato"
+                    android:gravity="top|start"
+                    android:hint="Event Description"
+                    android:inputType="text|textMultiLine"
+                    android:lineSpacingExtra="2dp"
+                    android:lines="8"
+                    android:maxLength="400"
+                    android:maxLines="12"
+                    android:minLines="2"
+                    android:scrollbars="vertical"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
+                    android:text="PayUMoney is one of India’s most popular Payment Gateways and it is used by small as well as large companies for selling their products online and collecting payments in a easy way. The Android SDK provided by PayUMoney is very easy to implement and we are going to learn about it further in the post."
+                    android:textAlignment="gravity" />
+
+                <TextView
+                    android:id="@+id/date_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/topic"
+                    android:layout_alignStart="@+id/name"
+                    android:layout_marginTop="10dp"
+                    android:text="Date and time"
+                    android:textSize="@dimen/title3" />
+
+                <!--<TextView
+                    android:id="@+id/reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/date_time"
+                    android:layout_alignStart="@+id/name"
+                    android:layout_marginTop="@dimen/margine_sub"
+                    android:text="Reply"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/title2" />
+
+                <TextView
+                    android:id="@+id/no_of_replies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/reply"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/reply"
+                    android:text="128"
+                    android:textSize="@dimen/title2" />-->
+                <LinearLayout
+                    android:id="@+id/like_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/date_time"
+                    android:layout_alignStart="@+id/name"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="3dp">
+
+                    <ImageView
+                        android:id="@+id/like"
+                        android:layout_width="@dimen/widget_size"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:paddingEnd="5dp"
+                        android:src="@drawable/like_border" />
+
+                    <TextView
+                        android:id="@+id/no_of_likes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignTop="@+id/reply"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="10dp"
+                        android:layout_toEndOf="@+id/reply"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textSize="@dimen/title4" />
+
+                    <TextView
+                        android:id="@+id/reply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:text="Reply"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/title4" />
+
+                    <TextView
+                        android:id="@+id/no_of_replies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/reply"
+                        android:layout_marginStart="4dp"
+                        android:layout_toEndOf="@+id/reply"
+                        android:text="0"
+                        android:textSize="@dimen/title4" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/hor_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="3px"
+                    android:layout_below="@+id/like_layout"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:background="#CCCCCC" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/replies_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margine_main"
+                app:layout_constraintTop_toBottomOf="@+id/bar">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
