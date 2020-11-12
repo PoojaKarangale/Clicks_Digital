@@ -95,6 +95,9 @@ public class EventParticipantsActivity extends AppCompatActivity {
                         usersRef.child(visit_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+
+
                                 holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
                                 holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
                                 final String image_url=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
@@ -107,12 +110,12 @@ public class EventParticipantsActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View v) {
 
-                                        EnlargedImage.enlargeImage(image_url,getApplicationContext());
+                                        EnlargedImage.enlargeImage(image_url, getApplicationContext());
 
                                     }
                                 });
                             }
-
+                        }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
