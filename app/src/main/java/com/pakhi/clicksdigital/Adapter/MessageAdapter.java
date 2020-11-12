@@ -24,7 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
+//import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -268,9 +268,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 transaction.replace(R.id.fragmentContainer, fragment, "TAG_FRAGMENT");
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.commit();*/
-                Intent i=new Intent(v.getContext(), TopicRepliesActivity.class);
-                i.putExtra("message", message);
-                v.getContext().startActivity(i);
+               //shivam
+              //  Intent i=new Intent(v.getContext(), TopicRepliesActivity.class);
+               // i.putExtra("message", message);
+               // v.getContext().startActivity(i);
             }
         });
         final boolean[] isLiked={false};
@@ -440,7 +441,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String time=new SimpleDateFormat("yyyyMMDD_HHmmss", Locale.getDefault())
                 .format(System.currentTimeMillis());
         File path=Environment.getExternalStorageDirectory();
-        File dir=new File(path + "/DCIM/ClicksDigitalMedia/ClicksDigitalImages");
+        File dir=new File(path + "/ClicksDigitalMedia/ClicksDigitalImages");
         dir.mkdirs();
         String imageName=time + ".PNG";
         File file=new File(dir, imageName);

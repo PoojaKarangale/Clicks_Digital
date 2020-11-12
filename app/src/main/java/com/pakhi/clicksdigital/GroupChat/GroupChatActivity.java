@@ -57,6 +57,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class GroupChatActivity extends AppCompatActivity {
@@ -286,6 +287,7 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
 
+                    displayMessages(dataSnapshot);//shivam attempts to apply iterator
                     Message messages=dataSnapshot.getValue(Message.class);
 
                     messagesList.add(messages);
@@ -318,6 +320,14 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void displayMessages(DataSnapshot dataSnapshot) {
+        Iterator iterator = dataSnapshot.getChildren().iterator();
+
+        while(iterator.hasNext()){
+
+        }
     }
 
     private void InitializeFields() {
