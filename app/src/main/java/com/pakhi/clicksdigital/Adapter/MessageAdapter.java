@@ -440,7 +440,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String time=new SimpleDateFormat("yyyyMMDD_HHmmss", Locale.getDefault())
                 .format(System.currentTimeMillis());
         File path=Environment.getExternalStorageDirectory();
-        File dir=new File(path + "/DCIM/ClicksDigitalMedia/ClicksDigitalImages");
+        File dir=new File(path + "/ClicksDigitalMedia/ClicksDigitalImages");
         dir.mkdirs();
         String imageName=time + ".PNG";
         File file=new File(dir, imageName);
@@ -451,7 +451,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
-            Toast.makeText(v.getContext(), "Image is saved in DCIM/ClicksDigitalMedia/ClicksDigitalImages", Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "Image is saved in ClicksDigitalMedia/ClicksDigitalImages", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

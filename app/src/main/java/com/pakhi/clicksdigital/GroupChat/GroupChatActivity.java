@@ -30,8 +30,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -228,6 +230,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
                 topic_str=topic.getText().toString();
                 SaveMessageInfoToDatabase("topic", topic_str);
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -393,8 +396,16 @@ public class GroupChatActivity extends AppCompatActivity {
                 messageType, currentGroupId, messagekEY, currentTime, currentDate);
 
         groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
-        progressDialog.dismiss();
 
+        if(messageType == "topic"){
+            saveSeparateTopicNode(messagekEY);
+        }
+        progressDialog.dismiss();
+    }
+
+    private void saveSeparateTopicNode( String messagekEY) {
+       DatabaseReference topicRef=roothRef.getTopicRef();
+        topicRef.child(currentGroupId).child(messagekEY).setValue("");
     }
 
     private void popupMenuSettigns() {
