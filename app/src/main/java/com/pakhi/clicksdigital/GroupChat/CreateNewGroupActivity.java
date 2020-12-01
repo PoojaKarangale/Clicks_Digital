@@ -134,10 +134,14 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         final DatabaseReference reference=rootRef.getGroupRef();
         final String groupid=reference.push().getKey();
 
+        final DatabaseReference referenceToRecyclerviewGrpInfo=rootRef.getRecGroupRef();
+        final DatabaseReference referenceToGroupRequests = rootRef.geGroupRequest();
+
+
+
         calendar=Calendar.getInstance();
         saveCurrentDate=currentDate.format(calendar.getTime());
         saveCurrentTime=currentTime.format(calendar.getTime());
-
         HashMap<String, Object> hashMap=new HashMap<>();
 
         hashMap.put("group_name", groupName);
@@ -155,6 +159,26 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         reference.child(groupid).setValue(hashMap);
 
         addAdminToTheGroup(currentUserId, groupid);
+
+        HashMap<String, Object> hashMapForRecyclerView = new HashMap<>();
+        hashMapForRecyclerView.put("grp_name", groupName);
+        hashMapForRecyclerView.put("groupid", groupid);
+
+
+        if (isProfileSelected)
+            hashMap.put("image_url", picImageUri.toString());
+        else
+            hashMap.put("image_url", "default_profile");
+
+        referenceToRecyclerviewGrpInfo.child(groupid).setValue(hashMapForRecyclerView);
+
+        HashMap<String, Object> hashMapForGroupRequests = new HashMap<>();
+        hashMapForGroupRequests.put("groupid",groupid);
+        referenceToGroupRequests.child(groupid).setValue(hashMapForGroupRequests);
+
+
+
+
     }
 
     private void addAdminToTheGroup(String userid, String groupid) {

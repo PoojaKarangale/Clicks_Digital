@@ -294,6 +294,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         userItems.put("working", user.getWork_profession());
         userItems.put("last_name", user.getLast_name());
         userItems.put("company", user.getCompany());
+        userItems.put("profile_verification", user.getVerificationRequest());
         return userItems;
     }
 

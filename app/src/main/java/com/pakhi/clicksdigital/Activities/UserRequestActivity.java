@@ -57,7 +57,7 @@ public class UserRequestActivity extends AppCompatActivity {
     }
 
     private void readRequestingUsersId() {
-        DatabaseReference reference=rootRef.getUserRequestsRef().child(groupId);
+        DatabaseReference reference=rootRef.getUserRequestsRef();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -92,4 +92,12 @@ public class FirebaseDatabaseInstance {
     public DatabaseReference getContactRef() {
         return rootRef.child(ConstFirebase.contacts);
     }
+
+    public DatabaseReference getRecGroupRef() {
+        return rootRef.child("RecGrp");
+    }
+
+    public DatabaseReference geGroupRequest() {
+        return rootRef.child("GroupRequest");
+    }
 }

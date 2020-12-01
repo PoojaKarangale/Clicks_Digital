@@ -25,7 +25,20 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".GroupChat.TopicRepliesActivity"></activity>
+        <activity android:name=".splashScreenActivity"
+            android:theme="@style/SplashTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".FragmentsInSetting.ContactusFragmentReplacementActivity" />
+        <activity android:name=".FragmentsInSetting.AppInfoFragmentReplacementActivity" />
+        <activity android:name=".FragmentsInSetting.ChangeMyNumberFragmentReplacementActivity" />
+        <activity android:name=".FragmentsInSetting.NotificationFragmentReplaceActivity" />
+        <activity android:name=".GroupChat.TopicRepliesActivity" />
         <activity android:name=".GroupChat.TopicRaiseFragment" />
         <activity android:name=".Event.EditEventActivity" />
         <activity android:name=".Event.EventGalleryActivity" />
@@ -85,7 +98,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".Profile.SetProfileActivity">
