@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    >
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/message_profile_image"
@@ -20,7 +22,8 @@
         android:layout_marginLeft="3dp"
         android:layout_toEndOf="@+id/message_profile_image"
         android:background="@drawable/receiver_messages_layout"
-        android:gravity="bottom"
+        android:gravity="bottom|left"
+        android:layout_gravity="left"
         android:orientation="vertical"
         android:paddingStart="@dimen/margine_sub"
         android:paddingTop="10dp"
@@ -95,7 +98,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:background="@drawable/sender_messages_layout"
-        android:gravity="bottom"
+        android:gravity="bottom|right"
+        android:layout_gravity="right"
         android:orientation="vertical"
         android:paddingStart="@dimen/margine_sub"
         android:paddingTop="10dp"
@@ -284,4 +288,5 @@
                 android:textSize="@dimen/title4" />
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>

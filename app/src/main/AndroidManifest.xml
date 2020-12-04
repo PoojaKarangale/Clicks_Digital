@@ -25,7 +25,15 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".splashScreenActivity"></activity>
+        <activity android:name=".splashScreenActivity"
+                  android:theme="@style/SplashTheme"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".FragmentsInSetting.ContactusFragmentReplacementActivity" />
         <activity android:name=".FragmentsInSetting.AppInfoFragmentReplacementActivity" />
         <activity android:name=".FragmentsInSetting.ChangeMyNumberFragmentReplacementActivity" />

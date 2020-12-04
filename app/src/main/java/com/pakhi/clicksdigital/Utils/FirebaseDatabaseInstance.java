@@ -92,4 +92,8 @@ public class FirebaseDatabaseInstance {
     public DatabaseReference getContactRef() {
         return rootRef.child(ConstFirebase.contacts);
     }
+
+    public DatabaseReference getTopicRef() {
+        return rootRef.child(ConstFirebase.topic);
+    }
 }

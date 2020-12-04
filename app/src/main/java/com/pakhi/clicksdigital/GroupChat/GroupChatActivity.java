@@ -30,8 +30,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,7 +59,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class GroupChatActivity extends AppCompatActivity {
@@ -229,6 +230,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
                 topic_str=topic.getText().toString();
                 SaveMessageInfoToDatabase("topic", topic_str);
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -287,7 +289,6 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
 
-                    displayMessages(dataSnapshot);//shivam attempts to apply iterator
                     Message messages=dataSnapshot.getValue(Message.class);
 
                     messagesList.add(messages);
@@ -320,14 +321,6 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void displayMessages(DataSnapshot dataSnapshot) {
-        Iterator iterator = dataSnapshot.getChildren().iterator();
-
-        while(iterator.hasNext()){
-
-        }
     }
 
     private void InitializeFields() {
@@ -375,10 +368,8 @@ public class GroupChatActivity extends AppCompatActivity {
                     currentUserName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     */
@@ -403,8 +394,16 @@ public class GroupChatActivity extends AppCompatActivity {
                 messageType, currentGroupId, messagekEY, currentTime, currentDate);
 
         groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
-        progressDialog.dismiss();
 
+        if(messageType == "topic"){
+            saveSeparateTopicNode(messagekEY);
+        }
+        progressDialog.dismiss();
+    }
+
+    private void saveSeparateTopicNode( String messagekEY) {
+        DatabaseReference topicRef=roothRef.getTopicRef();
+        topicRef.child(currentGroupId).child(messagekEY).setValue("");
     }
 
     private void popupMenuSettigns() {
@@ -429,13 +428,10 @@ public class GroupChatActivity extends AppCompatActivity {
             openFileGetDoc();
         }
       /*  if (item.getItemId() == R.id.audio_menu) {
-
         }
         if (item.getItemId() == R.id.contact_menu) {
-
         }
         if (item.getItemId() == R.id.location_menu) {
-
         }*/
 
         return true;
@@ -451,7 +447,6 @@ public class GroupChatActivity extends AppCompatActivity {
             startActivity(intent);
             return;
         }
-
       */
         //creating an intent for file chooser
         Intent intent=new Intent();
@@ -516,7 +511,6 @@ public class GroupChatActivity extends AppCompatActivity {
 
       /*  CropImage.activity().setAspectRatio(1, 1)
                 .start(GroupChatActivity.this);
-
        */
         Intent i=new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, REQUESTCODE);
@@ -540,7 +534,6 @@ public class GroupChatActivity extends AppCompatActivity {
                     imageUriGalary = result.getUri();
                     uploadImage(imageUriGalary);
                     break;
-
               */
                 case REQUESTCODE:
                     imageUriGalary=data.getData();

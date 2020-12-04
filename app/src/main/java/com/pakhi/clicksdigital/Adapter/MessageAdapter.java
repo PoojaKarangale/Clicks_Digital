@@ -24,7 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-//import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
+import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -268,10 +268,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 transaction.replace(R.id.fragmentContainer, fragment, "TAG_FRAGMENT");
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.commit();*/
-               //shivam
-              //  Intent i=new Intent(v.getContext(), TopicRepliesActivity.class);
-               // i.putExtra("message", message);
-               // v.getContext().startActivity(i);
+                Intent i=new Intent(v.getContext(), TopicRepliesActivity.class);
+                i.putExtra("message", message);
+                v.getContext().startActivity(i);
             }
         });
         final boolean[] isLiked={false};
@@ -298,7 +297,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                   messageViewHolder.no_of_likes.setText(String.valueOf(snapshot.getChildrenCount()));
+                    messageViewHolder.no_of_likes.setText(String.valueOf(snapshot.getChildrenCount()));
                 }
             }
 
@@ -310,17 +309,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(isLiked[0]){
-                isLiked[0]=false;
-                // dislike the topic make hart black
-                topicLikesRef.child(message.getMessageID()).child(currentUserId).removeValue();
-                messageViewHolder.like.setImageResource(R.drawable.like_border);
-            }else {
-                isLiked[0]=true;
-                // like the topic reden the heart
-                topicLikesRef.child(message.getMessageID()).child(currentUserId).setValue("");
-                messageViewHolder.like.setImageResource(R.drawable.liked);
-            }
+                if(isLiked[0]){
+                    isLiked[0]=false;
+                    // dislike the topic make hart black
+                    topicLikesRef.child(message.getMessageID()).child(currentUserId).removeValue();
+                    messageViewHolder.like.setImageResource(R.drawable.like_border);
+                }else {
+                    isLiked[0]=true;
+                    // like the topic reden the heart
+                    topicLikesRef.child(message.getMessageID()).child(currentUserId).setValue("");
+                    messageViewHolder.like.setImageResource(R.drawable.liked);
+                }
             }
         });
     }
@@ -452,7 +451,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
-            Toast.makeText(v.getContext(), "Image is saved in DCIM/ClicksDigitalMedia/ClicksDigitalImages", Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "Image is saved in ClicksDigitalMedia/ClicksDigitalImages", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -83,36 +83,40 @@ public class EventParticipantsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //updateUserStatus("online");
-        FirebaseRecyclerOptions<User> options=
-                new FirebaseRecyclerOptions.Builder<User>()
-                        .setQuery(currentEventRef, User.class)
+        FirebaseRecyclerOptions<String> options=
+                new FirebaseRecyclerOptions.Builder<String>()
+                        .setQuery(currentEventRef.child("Participants"), String.class)
                         .build();
-        FirebaseRecyclerAdapter<User, EventParticipantsActivity.EventParticipantsViewHolder> adapter=
-                new FirebaseRecyclerAdapter<User, EventParticipantsViewHolder>(options) {
+        FirebaseRecyclerAdapter<String, EventParticipantsActivity.EventParticipantsViewHolder> adapter=
+                new FirebaseRecyclerAdapter<String, EventParticipantsViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull final EventParticipantsViewHolder holder, final int position, @NonNull final User model) {
+                    protected void onBindViewHolder(@NonNull final EventParticipantsViewHolder holder, final int position, @NonNull final String model) {
+
+
                         final String visit_user_id=getRef(position).getKey();
                         usersRef.child(visit_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
-                                holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
-                                final String image_url=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
-                                Picasso.get()
-                                        .load(image_url).placeholder(R.drawable.profile_image)
-                                        .resize(120, 120)
-                                        .into(holder.profile_image);
+                                if (dataSnapshot.exists()) {
 
-                                holder.profile_image.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
+                                    holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
+                                    holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
+                                    final String image_url=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                    Picasso.get()
+                                            .load(image_url).placeholder(R.drawable.profile_image)
+                                            .resize(120, 120)
+                                            .into(holder.profile_image);
 
-                                        EnlargedImage.enlargeImage(image_url,getApplicationContext());
+                                    holder.profile_image.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
 
-                                    }
-                                });
+                                            EnlargedImage.enlargeImage(image_url, getApplicationContext());
+
+                                        }
+                                    });
+                                }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -135,6 +139,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                                 startActivity(profileIntent);
                             }
                         });
+
                     }
 
                     @NonNull
