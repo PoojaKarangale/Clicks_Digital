@@ -31,8 +31,8 @@ public class UserRequestActivity extends AppCompatActivity {
     String                   groupId, groupName;
     private RecyclerView       recyclerView;
     private UserRequestAdapter userRequestAdapter;
-    private List<User_request> user_requests  =new ArrayList<>();
-    private List<String>       requestingUsers=new ArrayList<>();
+    private List<User_request> user_requests  = new ArrayList<>();
+    private List<String>       requestingUsers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

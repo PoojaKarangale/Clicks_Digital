@@ -15,7 +15,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.Model.User_request;
 import com.pakhi.clicksdigital.R;
@@ -32,7 +35,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder> implements View.OnClickListener {
+public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder>  {
 
     String                   current_user_id;
     SharedPreference         pref;
@@ -80,14 +83,48 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             }
         });
 
+        rootRef.getUserRef().child(current_user_id).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){
+                    holder.join_btn.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        // first we'll check if the group is present in users group list then visible or hide join button
+        rootRef.getUserRef().child(current_user_id).child("groups").child(group.getGroupid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    holder.join_btn.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         holder.join_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //task.execute("saveDataToDatabase", group.getGroupid(), group.getGroup_name());
                 // sentRequestToJoinGroup(group.getGroupid(),group.getGroup_name());
-                sendRequest(group.getGroupid());
+                addUserToGroup(group.getGroupid(), current_user_id);
+                //sendRequest(group.getGroupid());
             }
         });
+    }
+
+    private void addUserToGroup(String groupId, String userId) {
+        rootRef.getGroupRef().child(groupId).child("Users").child(userId).setValue("");
+        rootRef.getUserRef().child(userId).child("groups").child(groupId).setValue("");
+        //databaseReference.child("User_requests").child("request_status").setValue("accepted");
     }
 
     private void sendRequest(String groupid) {
@@ -117,7 +154,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
                 .show();
     }
 
-    private void sentRequestToJoinGroup(String group_id, final String displayName) {
+    /*    private void sentRequestToJoinGroup(String group_id, final String displayName) {
         final DatabaseReference reference=rootRef.getUserRequestsRef();
 
         String saveCurrentTime, saveCurrentDate;
@@ -137,14 +174,14 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
         rootRef.getUserRef().child(current_user_id).child(ConstFirebase.groupRequests).child(group_id).setValue(group_request_id);
 
-    }
+    }*/
 
     @Override
     public int getItemCount() {
         return groups.size();
     }
 
-    @Override
+   /* @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.join_btn:
@@ -152,7 +189,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             case R.id.image_profile:
                 break;
         }
-    }
+    }*/
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView displayName, description, status_of_request;

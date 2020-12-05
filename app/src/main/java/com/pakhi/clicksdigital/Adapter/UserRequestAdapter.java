@@ -118,11 +118,17 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUserToGroup(groupId, userId);
+               // addUserToGroup(groupId, userId);
+                approveUser(userId);
                 deleteUserRequest(userId, position);
                 sendUserTheWelcomeMessage(groupName, groupId);
             }
         });
+    }
+
+    private void approveUser(String userId) {
+       // one field in user details showing request is approved
+        rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).child("approved").setValue(true);
     }
 
   /*  private void createDialog(String s) {
@@ -190,11 +196,6 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     }
 
-    private void addUserToGroup(String groupId, String userId) {
-        rootRef.getGroupRef().child(groupId).child("Users").child(userId).setValue("");
-        rootRef.getUserRef().child(userId).child("groups").child(groupId).setValue("");
-        //databaseReference.child("User_requests").child("request_status").setValue("accepted");
-    }
 
     @Override
     public int getItemCount() {
