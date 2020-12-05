@@ -2,9 +2,7 @@ package com.pakhi.clicksdigital.JoinGroup;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
-import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -41,13 +38,13 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
     SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;
     DatabaseReference        groupRef, usersRef;
-    private RecyclerView     recyclerView;
-//    private RecyclerView     recycler_requested_groups;
-    private JoinGroupAdapter groupAdapter/*, requestedGroupAdapter*/;
-    private List<Group> groups         =new ArrayList<>();
-//    private List<Group> requestedGroups=new ArrayList<>();
-   // private List<Group> usersGroups    =new ArrayList<>();
+    //    private List<Group> requestedGroups=new ArrayList<>();
+    // private List<Group> usersGroups    =new ArrayList<>();
     TextView txt_requested;
+    private RecyclerView     recyclerView;
+    //    private RecyclerView     recycler_requested_groups;
+    private JoinGroupAdapter groupAdapter /*, requestedGroupAdapter*/;
+    private List<Group>      groups=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +83,10 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         rootRef.getUserRef().child(current_user_id).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!snapshot.exists()){
+                if (!snapshot.exists()) {
                     //holder.join_btn.setVisibility(View.GONE);
                     txt_requested.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     txt_requested.setVisibility(View.GONE);
                 }
             }
@@ -99,8 +96,6 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
-
-
     }
 
     private void setUpRecycleView() {
