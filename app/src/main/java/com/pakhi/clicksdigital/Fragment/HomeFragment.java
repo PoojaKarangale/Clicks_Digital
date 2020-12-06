@@ -27,6 +27,7 @@ import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.GroupTopic;
 import com.pakhi.clicksdigital.Model.Message;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -41,7 +42,7 @@ public class HomeFragment extends Fragment {
     Context context;
     DatabaseReference topicReference;
     ArrayList<String> arayOfTopicID = new ArrayList<>();
-    String publisherKey,currentUserID;
+   // String publisherKey,currentUserID;
     RecyclerView display;
     Message message;
     FirebaseDatabase shortCut,shortCut2;
@@ -139,20 +140,26 @@ public class HomeFragment extends Fragment {
                                     currentGroupId = grpID;
                                     publisher = snapshot.child("from").getValue().toString();
 
-
                                     Log.i("The topic Text - ",String.valueOf(snapshot.child("message").getValue().toString()));
-                                    publisherKey = snapshot.child("from").getKey();
+                                  //  publisherKey = snapshot.child("from").getKey();
                                     holder.dateAndTime.setText(snapshot.child("date").getValue().toString() + " " +  snapshot.child("time").getValue().toString());
 
-                                    FirebaseDatabase.getInstance().getReference().child("Users").child(publisherKey).addValueEventListener(new ValueEventListener() {
+                                    FirebaseDatabase.getInstance().getReference().child("Users").child(publisher).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            //holder.publisherName.setText(snapshot.child("DETAILS").child("user_name").getValue().toString() + " " + snapshot.child("DETAILS").child("last_name").getValue().toString());
+                                            holder.publisherName.setText(snapshot.child("DETAILS").child("user_name").getValue().toString() + " " + snapshot.child("DETAILS").child("last_name").getValue().toString());
                                         }
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError error) {
 
+                                        }
+                                    });
+
+                                    holder.publisherName.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            visitUsersProfile(publisher);
                                         }
                                     });
 
@@ -211,6 +218,11 @@ public class HomeFragment extends Fragment {
         adapter.startListening();
     }
 
+    private void visitUsersProfile(String userId) {
+        Intent profileActivity=new Intent(getContext(), VisitProfileActivity.class);
+        profileActivity.putExtra("visit_user_id", userId);
+        getContext().startActivity(profileActivity);
+    }
 
     public void backPressed() {
         new AlertDialog.Builder(getContext())
