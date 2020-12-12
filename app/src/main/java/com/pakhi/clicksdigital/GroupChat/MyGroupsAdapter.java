@@ -89,7 +89,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        /*holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Log.i("user type ",user_type);
@@ -98,6 +98,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
                     // delete group
                     // groups occurences in db 1.Groups 2.GroupChat 3.User-id-groups
                     // for deleting groups under users pic uid from Groups-users
+                    // topics to be deleted hence replies hence likes
 
                     DatabaseReference groupRef=rootRef.getGroupRef();
                     final DatabaseReference userRef=rootRef.getUserRef();
@@ -129,9 +130,11 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
                     groupRef.child(groupId).removeValue();
                 }
 
+                //deleting group topics
+
                 return false;
             }
-        });
+        });*/
     }
 
     @Override

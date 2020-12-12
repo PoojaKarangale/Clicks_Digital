@@ -31,6 +31,7 @@ import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
+import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.text.SimpleDateFormat;
@@ -187,6 +188,11 @@ public class StartActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.settings) {
             startActivity(new Intent(this, SettingActivity.class));
+        }
+
+        if (item.getItemId() == R.id.share_app) {
+           // startActivity(new Intent(this, SettingActivity.class));
+            ShareApp.shareApp(getApplicationContext());
         }
 
         return true;
