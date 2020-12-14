@@ -68,7 +68,7 @@ public class GroupChatActivity extends AppCompatActivity {
     static final  int           REQUESTCODE          =12;
     static        int           REQUEST_CODE         =1;
     private final List<Message> messagesList         =new ArrayList<>();
-    ImageView attach_file_btn, image_profile, requesting_users, back_btn, raise_topic;
+    ImageView attach_file_btn, image_profile /*,requesting_users*/, back_btn, raise_topic;
     Uri imageUriGalary, imageUriCamera;
     UserDatabase             db;
     User                     user;
@@ -186,7 +186,8 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
         String user_type=pref.getData(SharedPreference.user_type, getApplicationContext());
-        if (user_type.equals("admin")) {
+
+       /* if (user_type.equals("admin")) {
             requesting_users.setVisibility(View.VISIBLE);
         }
         requesting_users.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +195,7 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 goToRequestsActivity();
             }
-        });
+        });*/
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -333,7 +334,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         attach_file_btn=findViewById(R.id.attach_file_btn);
         image_profile=findViewById(R.id.image_profile);
-        requesting_users=findViewById(R.id.requesting_users);
+        // requesting_users=findViewById(R.id.requesting_users);
         back_btn=findViewById(R.id.back_btn);
         raise_topic=findViewById(R.id.raise_topic);
         // banner_white = findViewById(R.id.banner);
@@ -388,7 +389,6 @@ public class GroupChatActivity extends AppCompatActivity {
 
         groupChatRefForCurrentGroup.updateChildren(groupMessageKey);
         String messagekEY=groupChatRefForCurrentGroup.push().getKey();
-
 
         Message message1=new Message(currentUserID, message,
                 messageType, currentGroupId, messagekEY, currentTime, currentDate);

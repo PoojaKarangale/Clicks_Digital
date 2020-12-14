@@ -33,4 +33,5 @@ public class ConstFirebase {
     public static String    topicLikesRef = "TopicLikes";
     public static String    replyLikesRef = "ReplyLikes";
     public  static String topic = "Topic";
+    public  static String slider = "Slider";
 }

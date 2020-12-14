@@ -2,10 +2,9 @@ package com.pakhi.clicksdigital.JoinGroup;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
-import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -35,17 +33,18 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
 
     //    AsyncOperation task = new AsyncOperation();
     ImageView                close;
-    SearchView                searchView;
+    SearchView               searchView;
     String                   current_user_id;
     SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;
     DatabaseReference        groupRef, usersRef;
+    //    private List<Group> requestedGroups=new ArrayList<>();
+    // private List<Group> usersGroups    =new ArrayList<>();
+    TextView txt_requested;
     private RecyclerView     recyclerView;
-    private RecyclerView     recycler_requested_groups;
-    private JoinGroupAdapter groupAdapter, requestedGroupAdapter;
-    private List<Group> groups         =new ArrayList<>();
-    private List<Group> requestedGroups=new ArrayList<>();
-    private List<Group> usersGroups    =new ArrayList<>();
+    //    private RecyclerView     recycler_requested_groups;
+    private JoinGroupAdapter groupAdapter /*, requestedGroupAdapter*/;
+    private List<Group>      groups=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +60,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
 
         searchView=findViewById(R.id.search_bar);
         close=findViewById(R.id.close);
+        txt_requested=findViewById(R.id.txt_requested);
         close.setOnClickListener(this);
         setUpRecycleView();
 
@@ -77,6 +77,23 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
             public boolean onQueryTextChange(String newText) {
                 searchGroups(newText.toString().trim().toLowerCase());
                 return false;
+            }
+        });
+
+        rootRef.getUserRef().child(current_user_id).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    //holder.join_btn.setVisibility(View.GONE);
+                    txt_requested.setVisibility(View.VISIBLE);
+                } else {
+                    txt_requested.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -107,13 +124,10 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
           queryref.addValueEventListener(new ValueEventListener() {
               @Override
               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                   requestedGroups.clear();
                   for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                       String groupId = snapshot.getKey();
-
                       //  User_request request = snapshot.getValue(User_request.class);
-
                       DatabaseReference groupRef = rootRef.getGroupRef();
                       groupRef.child(groupId).addValueEventListener(new ValueEventListener() {
                           @Override
@@ -121,20 +135,15 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                               Group group = snapshot.getValue(Group.class);
                               requestedGroups.add(group);
                           }
-
                           @Override
                           public void onCancelled(@NonNull DatabaseError error) {
-
                           }
                       });
-
                   }
                   requestedGroupAdapter.notifyDataSetChanged();
               }
-
               @Override
               public void onCancelled(@NonNull DatabaseError databaseError) {
-
               }
           });
       }*/
@@ -161,6 +170,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+/*
     private void readGroup() {
         groupRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -174,22 +184,20 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                     Log.d("JOINGROUpTESTING", "---------group size before" + groups.size());
                     groups.removeAll(requestedGroups);
                     groups.removeAll(usersGroups);
-
                     Log.d("JOINGROUpTESTING", "---------req grp size before" + requestedGroups.size());
                     Log.d("JOINGROUpTESTING", "---------user grp size before" + usersGroups.size());
                     Log.d("JOINGROUpTESTING", "---------group size before" + groups.size());
                     groupAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
+*/
 
-    private void readRequestedGroups() {
+  /*  private void readRequestedGroups() {
         DatabaseReference reference=groupRef.child(current_user_id).child(ConstFirebase.groupRequests);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -199,37 +207,30 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String groupId=snapshot.getKey();
-
                         groupRef.child(groupId).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 Group group=snapshot.getValue(Group.class);
                                 requestedGroups.add(group);
-
                                 Log.d("JOINGROUpTESTING", "---------requested size before" + requestedGroups.size());
                                 groups.removeAll(requestedGroups);
                                 // groups.add(group);
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
-
                     }
                     //  requestedGroupAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
-
-    private void readUsersGroups() {
+*/
+ /*   private void readUsersGroups() {
         DatabaseReference reference=usersRef.child(current_user_id).child("groups");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -238,32 +239,26 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String groupId=snapshot.getKey();
-
                         groupRef.child(groupId).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 Group group=snapshot.getValue(Group.class);
                                 usersGroups.add(group);
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
-
                     }
                     //requestedGroupAdapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
-
+*/
 
     @Override
     protected void onStart() {
@@ -329,19 +324,3 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

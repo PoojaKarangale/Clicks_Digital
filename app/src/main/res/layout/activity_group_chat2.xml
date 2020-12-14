@@ -19,7 +19,6 @@
              android:layout_height="match_parent"
              android:layout_alignParentStart="true"
              android:layout_alignParentTop="true">
-
              <ImageView
                  android:id="@+id/back_btn"
                  android:layout_width="@dimen/widget_size"
@@ -27,7 +26,6 @@
                  android:layout_alignParentStart="true"
                  android:layout_centerVertical="true"
                  android:src="@drawable/back" />
-
              <de.hdodenhof.circleimageview.CircleImageView
                  android:id="@+id/image_profile"
                  android:layout_width="47dp"
@@ -66,15 +64,15 @@
                     android:layout_toEndOf="@+id/back_btn"
                     android:src="@mipmap/ic_launcher" />
 
-                <ImageView
-                    android:id="@+id/requesting_users"
-                    android:layout_width="@dimen/widget_size"
-                    android:layout_height="@dimen/widget_size"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@color/white"
-                    android:src="@drawable/default_profile_for_groups"
-                    android:visibility="gone" />
+                <!--   <ImageView
+                       android:id="@+id/requesting_users"
+                       android:layout_width="@dimen/widget_size"
+                       android:layout_height="@dimen/widget_size"
+                       android:layout_alignParentEnd="true"
+                       android:layout_centerVertical="true"
+                       android:background="@color/white"
+                       android:src="@drawable/default_profile_for_groups"
+                       android:visibility="gone" />-->
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -88,7 +86,6 @@
              android:background="@color/white"
              android:src="@drawable/default_profile_for_groups"
              android:visibility="gone" />
-
      </RelativeLayout>-->
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -104,9 +101,7 @@
                 android:layout_marginTop="-15dp"
                 android:elevation="20dp"
                 android:src="@drawable/bg_rounded_white" />
-
         </RelativeLayout>
-
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_profile"
             android:layout_width="50dp"
@@ -150,7 +145,6 @@
           android:orientation="horizontal"
           android:paddingStart="@dimen/margine_main"
           android:paddingEnd="@dimen/margine_main">
-
           <EditText
               android:id="@+id/input_group_message"
               android:layout_width="fill_parent"
@@ -161,14 +155,12 @@
               android:hint="write your message here..."
               android:layout_centerVertical="true"
               android:textSize="@dimen/title1" />
-
           &lt;!&ndash;  <ImageView
                 android:id="@+id/raise_question"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_toLeftOf="@+id/attach_file_btn"
                 android:src="@drawable/people" />&ndash;&gt;
-
           <ImageView
               android:id="@+id/attach_file_btn"
               android:layout_width="@dimen/widget_size36"
@@ -177,7 +169,6 @@
               android:layout_margin="@dimen/dimen_12dp"
               android:layout_toLeftOf="@+id/send_message_button"
               android:src="@drawable/attach" />
-
           <ImageButton
               android:id="@+id/send_message_button"
               android:layout_width="@dimen/widget_size36"
@@ -187,7 +178,6 @@
               android:layout_marginEnd="16dp"
               android:background="@color/white"
               android:src="@drawable/send_message" />
-
       </RelativeLayout>-->
     <RelativeLayout
         android:id="@+id/myLinearLayout"
@@ -254,9 +244,9 @@
             android:src="@drawable/send_message" />
 
     </RelativeLayout>
-<!--
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />-->
+    <!--
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />-->
 </RelativeLayout>

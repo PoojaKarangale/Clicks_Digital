@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentsInSetting.ContactusFragmentReplacementActivity">
+    tools:context=".FragmentsInSetting.ContactusFragmentReplacementActivity"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/txtVisit"

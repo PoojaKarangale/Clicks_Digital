@@ -38,6 +38,7 @@ import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EventGalleryActivity extends AppCompatActivity {
@@ -52,8 +53,12 @@ public class EventGalleryActivity extends AppCompatActivity {
     PermissionsHandling permissions;
     Uri                 imageUri;
     Event               event;
-    DatabaseReference   eventRef;
+    DatabaseReference   eventRef,sliderImageRef;
     ImageAdapter mAdapter;
+    String eventName;
+    int number;
+    ArrayList<String> imageName = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +67,18 @@ public class EventGalleryActivity extends AppCompatActivity {
         event=(Event) getIntent().getSerializableExtra("event");
         FirebaseDatabaseInstance rootRef=FirebaseDatabaseInstance.getInstance();
         eventRef=rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child("Photos");
+        sliderImageRef = rootRef.getsliderRef();
+        rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child("EventDetails").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                eventName= snapshot.child("eventName").getValue().toString();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         initializeFields();
 
         getAllImages();
@@ -232,7 +248,18 @@ public class EventGalleryActivity extends AppCompatActivity {
         StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Event_photos").child(event.getEventId());
         final String image_name=System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
         final StorageReference imgPath=sReference.child(image_name);
-
+        final StorageReference sliderRef = FirebaseStorage.getInstance().getReference().child("Slider_Images").child(image_name);
+        sliderRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                sliderRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        addToRTDB(uri.toString(), image_name);
+                    }
+                });
+            }
+        });
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -248,6 +275,28 @@ public class EventGalleryActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void addToRTDB(final String imageUrl, final String image_name){
+        final FirebaseDatabaseInstance rootRefAdd=FirebaseDatabaseInstance.getInstance();
+
+        rootRefAdd.getsliderRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                number= (int) snapshot.getChildrenCount();
+                    imageName.add(image_name);
+                    rootRefAdd.getsliderRef().child(image_name).child("NameOfEvent").setValue(eventName);
+                    rootRefAdd.getsliderRef().child(image_name).child("URL").setValue(imageUrl);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void SaveUrlToDatabase(String imageUrl, String image_name) {

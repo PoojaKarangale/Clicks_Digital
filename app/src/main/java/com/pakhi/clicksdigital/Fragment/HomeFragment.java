@@ -16,6 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.interfaces.ItemChangeListener;
+import com.denzcoskun.imageslider.interfaces.ItemClickListener;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -28,11 +33,13 @@ import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.GroupTopic;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,6 +54,8 @@ public class HomeFragment extends Fragment {
     FirebaseDatabase shortCut,shortCut2;
     SharedPreference pref;
     String messageType, messagekEY, currentTime,currentDate, messagePass, currentGroupId,publisher;
+    ImageSlider imageSlider;
+    FirebaseDatabaseInstance rootRef;
 
     public HomeFragment(){
 
@@ -57,6 +66,31 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View homeView = inflater.inflate(R.layout.fragment_home, container, false);
         pref= SharedPreference.getInstance();
+        imageSlider = homeView.findViewById(R.id.image_slider);
+        final List<SlideModel> images = new ArrayList<>();
+
+        rootRef=FirebaseDatabaseInstance.getInstance();
+        rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot mysnap : snapshot.getChildren()){
+                    images.add(new SlideModel(mysnap.child("URL").getValue().toString(), mysnap.child("NameOfEvent").getValue().toString(), ScaleTypes.FIT));
+                }
+                imageSlider.setImageList(images, ScaleTypes.FIT);
+
+                imageSlider.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onItemSelected(int i) {
+                        EnlargedImage.enlargeImage(images.get(i).getImageUrl(), getContext());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
         topicReference = FirebaseDatabase.getInstance().getReference().child("Topic");
@@ -68,10 +102,13 @@ public class HomeFragment extends Fragment {
         return homeView;
     }
 
+
     @Override
     public void onStart() {
 
+
         super.onStart();
+
 
         FirebaseRecyclerOptions<GroupTopic> options=
                 new FirebaseRecyclerOptions.Builder<GroupTopic>()
@@ -166,6 +203,7 @@ public class HomeFragment extends Fragment {
 
 
                             arayOfTopicID.add(mysnap.getKey());
+
                             holder.replyButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

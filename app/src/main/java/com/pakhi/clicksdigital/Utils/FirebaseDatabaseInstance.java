@@ -96,4 +96,8 @@ public class FirebaseDatabaseInstance {
     public DatabaseReference getTopicRef() {
         return rootRef.child(ConstFirebase.topic);
     }
+
+    public DatabaseReference getsliderRef() {
+        return rootRef.child(ConstFirebase.slider);
+    }
 }

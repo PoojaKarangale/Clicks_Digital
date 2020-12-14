@@ -30,6 +30,6 @@ public class EnlargedImage extends AppCompatActivity {
         Picasso.get().load(image).placeholder(R.drawable.profile_image)
                 .into(myimage);
 
-        myimage.setScaleType(ImageView.ScaleType.MATRIX);
+        myimage.setScaleType(ImageView.ScaleType.FIT_CENTER);
     }
 }

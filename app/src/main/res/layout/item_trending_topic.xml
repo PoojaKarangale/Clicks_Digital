@@ -43,7 +43,7 @@
             <View
                 android:id="@+id/hor_line"
                 android:layout_width="wrap_content"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="8dp"
                 android:background="#092859"
