@@ -162,12 +162,21 @@ public class HomeFragment extends Fragment {
                                     holder.replyButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-
-
                                             Intent replyIntent = new Intent(getContext(), TopicRepliesActivity.class);
                                             replyIntent.putExtra("message", m);
                                             startActivity(replyIntent);
 
+
+
+
+                                        }
+                                    });
+                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent replyIntent = new Intent(getContext(), TopicRepliesActivity.class);
+                                            replyIntent.putExtra("message", m);
+                                            startActivity(replyIntent);
                                         }
                                     });
                                     //Log.i("The message ", String.valueOf(snapshot.child("message").getValue().toString()));
