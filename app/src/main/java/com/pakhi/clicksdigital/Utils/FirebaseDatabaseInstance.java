@@ -34,6 +34,9 @@ public class FirebaseDatabaseInstance {
             single_instance=new FirebaseDatabaseInstance();
         return single_instance;
     }
+    public DatabaseReference getUserDetails(){
+        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS);
+    }
 
     public DatabaseReference getTopicLikesRef() {
         return rootRef.child(ConstFirebase.topicLikesRef);
@@ -97,5 +100,21 @@ public class FirebaseDatabaseInstance {
 
     public DatabaseReference getContactRef() {
         return rootRef.child(ConstFirebase.contacts);
+    }
+
+    public DatabaseReference getTopicRef() {
+        return rootRef.child(ConstFirebase.topic);
+    }
+
+    public DatabaseReference getsliderRef() {
+        return rootRef.child(ConstFirebase.slider);
+    }
+
+    public DatabaseReference getUserName() {
+        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS).child(Const.USER_NAME);
+    }
+
+    public DatabaseReference getLastName() {
+        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS).child(Const.LAST_NAME);
     }
 }

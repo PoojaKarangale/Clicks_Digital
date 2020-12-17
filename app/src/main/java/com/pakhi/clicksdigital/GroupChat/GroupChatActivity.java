@@ -34,8 +34,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -367,7 +365,6 @@ ChildEventListener mChildEventListener ;
 
                 topic_str=topic.getText().toString();
                 SaveMessageInfoToDatabase("topic", topic_str);
-
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -378,6 +375,7 @@ ChildEventListener mChildEventListener ;
         });
 
         builder.show();
+
     }
 
     private void goToRequestsActivity() {
@@ -457,7 +455,6 @@ ChildEventListener mChildEventListener ;
 
             }
         });
-
     }
 
     private void InitializeFields() {
@@ -514,6 +511,7 @@ ChildEventListener mChildEventListener ;
 
         groupChatRefForCurrentGroup.updateChildren(groupMessageKey);
         String messagekEY=groupChatRefForCurrentGroup.push().getKey();
+
 
         Message message1=new Message(currentUserID, message,
                 messageType, currentGroupId, messagekEY, currentTime, currentDate);
@@ -776,7 +774,7 @@ ChildEventListener mChildEventListener ;
 
     }
 
-    public class MessageViewHolder extends RecyclerView.ViewHolder {
+   /* public class MessageViewHolder extends RecyclerView.ViewHolder {
         public TextView no_of_likes, senderMessageText, receiverMessageText, senderDate, receiverDate, receiver_name, isSeen, publisher_name, topic_text, topic_date_time, reply, no_of_replies;
         public CircleImageView receiverProfileImage;
 
@@ -821,5 +819,5 @@ ChildEventListener mChildEventListener ;
             like=itemView.findViewById(R.id.like);
             no_of_likes=itemView.findViewById(R.id.no_of_likes);
         }
-    }
+    }*/
 }

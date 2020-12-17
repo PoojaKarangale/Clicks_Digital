@@ -181,15 +181,6 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         return groups.size();
     }
 
-   /* @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.join_btn:
-                break;
-            case R.id.image_profile:
-                break;
-        }
-    }*/
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView displayName, description, status_of_request;

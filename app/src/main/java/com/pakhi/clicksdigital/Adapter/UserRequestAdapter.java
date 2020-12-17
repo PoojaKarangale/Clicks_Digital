@@ -196,6 +196,11 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     }
 
+    private void addUserToGroup(String groupId, String userId) {
+        rootRef.getGroupRef().child(groupId).child("Users").child(userId).setValue("");
+        rootRef.getUserRef().child(userId).child("groups").child(groupId).setValue("");
+        //databaseReference.child("User_requests").child("request_status").setValue("accepted");
+    }
 
     @Override
     public int getItemCount() {

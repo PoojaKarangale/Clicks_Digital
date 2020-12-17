@@ -35,8 +35,8 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
     private String      user_type,in_current_user_groups="";
     private Context     mcontext;
     private List<Group> groups;
-    private boolean sentRequestFlag=false;
 
+    private boolean sentRequestFlag=false;
 
     public MyGroupsAdapter(Context mcontext, List<Group> groups) {
         this.mcontext=mcontext;
@@ -80,61 +80,15 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
+
                 Intent groupChatActivity=new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
                 groupChatActivity.putExtra("groupName", group.getGroup_name());
-                groupChatActivity.putExtra("groupId", groupId);
+                groupChatActivity.putExtra("groupId", group.getGroupid());
                 mcontext.startActivity(groupChatActivity);
 
 
             }
         });
-
-        /*holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Log.i("user type ",user_type);
-                if(user_type.equals("admin")) {
-
-                    // delete group
-                    // groups occurences in db 1.Groups 2.GroupChat 3.User-id-groups
-                    // for deleting groups under users pic uid from Groups-users
-                    // topics to be deleted hence replies hence likes
-
-                    DatabaseReference groupRef=rootRef.getGroupRef();
-                    final DatabaseReference userRef=rootRef.getUserRef();
-                    DatabaseReference groupChatRef=rootRef.getGroupChatRef();
-
-                    groupChatRef.child(groupId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                        }
-                    });
-                    groupRef.child(groupId).child("Users").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                    String uid=dataSnapshot.getKey();
-                                    userRef.child(uid).child("groups").child(groupId).removeValue();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                    groupRef.child(groupId).removeValue();
-                }
-
-                //deleting group topics
-
-                return false;
-            }
-        });*/
     }
 
     @Override

@@ -96,7 +96,9 @@
          app:civ_border_width="2dp"
          app:civ_border_color="@color/white"
          android:src="@mipmap/ic_launcher" />-->
-
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/scroll_view"
+    >
     <LinearLayout
         android:id="@+id/messageLayout"
         android:layout_width="match_parent"
@@ -118,7 +120,7 @@
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
-
+</androidx.core.widget.NestedScrollView>>
     <RelativeLayout
         android:id="@+id/chat_linear_layout"
         android:layout_width="match_parent"

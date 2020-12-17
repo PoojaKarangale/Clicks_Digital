@@ -297,7 +297,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                   messageViewHolder.no_of_likes.setText(String.valueOf(snapshot.getChildrenCount()));
+                    messageViewHolder.no_of_likes.setText(String.valueOf(snapshot.getChildrenCount()));
                 }
             }
 
@@ -309,17 +309,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(isLiked[0]){
-                isLiked[0]=false;
-                // dislike the topic make hart black
-                topicLikesRef.child(message.getMessageID()).child(currentUserId).removeValue();
-                messageViewHolder.like.setImageResource(R.drawable.like_border);
-            }else {
-                isLiked[0]=true;
-                // like the topic reden the heart
-                topicLikesRef.child(message.getMessageID()).child(currentUserId).setValue("");
-                messageViewHolder.like.setImageResource(R.drawable.liked);
-            }
+                if(isLiked[0]){
+                    isLiked[0]=false;
+                    // dislike the topic make hart black
+                    topicLikesRef.child(message.getMessageID()).child(currentUserId).removeValue();
+                    messageViewHolder.like.setImageResource(R.drawable.like_border);
+                }else {
+                    isLiked[0]=true;
+                    // like the topic reden the heart
+                    topicLikesRef.child(message.getMessageID()).child(currentUserId).setValue("");
+                    messageViewHolder.like.setImageResource(R.drawable.liked);
+                }
             }
         });
     }

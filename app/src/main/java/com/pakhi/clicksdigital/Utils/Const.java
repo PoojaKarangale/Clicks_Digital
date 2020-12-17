@@ -1,6 +1,8 @@
 package com.pakhi.clicksdigital.Utils;
 
 public class Const {
+    public static final String LAST_NAME    ="last_name";
+
     public static final String USER_DETAILS    ="DETAILS";
     public final static String USER_NAME       ="user_name";
     public final static String USER_EMAIL      ="user_email";

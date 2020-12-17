@@ -1,33 +1,26 @@
 package com.pakhi.clicksdigital.FragmentsInSetting;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
 
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Notification;
 
-public class NotificationsFragment extends Fragment {
-
-
-    private View                                                      view;
+public class NotificationFragmentReplaceActivity extends AppCompatActivity {
+    private View view;
     private com.google.android.material.switchmaterial.SwitchMaterial simpleSwitch;
-    private TextView                                                  subText;
-
-    public NotificationsFragment() {
-        // Required empty public constructor
-    }
-
+    private TextView subText;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_notifications, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_notification_fragment_replace);
+
+        //getSupportActionBar().setTitle("Notifications");
         initializingFields();
         simpleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -44,11 +37,11 @@ public class NotificationsFragment extends Fragment {
             }
         });
         // simpleSwitch.setChecked(true);
-        return view;
+
     }
 
-    private void initializingFields() {
-        simpleSwitch=view.findViewById(R.id.switch_notify);
-        subText=view.findViewById(R.id.subtext);
+    public void initializingFields() {
+        simpleSwitch=findViewById(R.id.switch_notify);
+        subText=findViewById(R.id.subtext);
     }
 }

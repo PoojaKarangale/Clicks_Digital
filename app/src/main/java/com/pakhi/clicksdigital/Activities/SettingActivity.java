@@ -1,5 +1,6 @@
 package com.pakhi.clicksdigital.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -12,10 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.pakhi.clicksdigital.Adapter.SettingListAdapter;
-import com.pakhi.clicksdigital.FragmentsInSetting.AppInfoFragment;
-import com.pakhi.clicksdigital.FragmentsInSetting.ChangeMyNumberFragment;
-import com.pakhi.clicksdigital.FragmentsInSetting.ContactUsFragment;
-import com.pakhi.clicksdigital.FragmentsInSetting.NotificationsFragment;
+import com.pakhi.clicksdigital.FragmentsInSetting.AppInfoFragmentReplacementActivity;
+import com.pakhi.clicksdigital.FragmentsInSetting.ChangeMyNumberFragmentReplacementActivity;
+import com.pakhi.clicksdigital.FragmentsInSetting.ContactusFragmentReplacementActivity;
+import com.pakhi.clicksdigital.FragmentsInSetting.NotificationFragmentReplaceActivity;
 import com.pakhi.clicksdigital.R;
 
 public class SettingActivity extends AppCompatActivity {
@@ -76,22 +77,31 @@ public class SettingActivity extends AppCompatActivity {
 
     private void setUpListItems() {
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Fragment fragment=null;
+                //Fragment fragment=null;
                 switch (position) {
                     case 0:
-                        fragment=new NotificationsFragment();
+                        //fragment=new NotificationsFragment();
+                        Intent intent = new Intent(SettingActivity.this, NotificationFragmentReplaceActivity.class);
+                        startActivity(intent);
                         break;
                     case 1:
-                        fragment=new ChangeMyNumberFragment();
+                        //fragment=new ChangeMyNumberFragment();
+                        Intent intent2 = new Intent(SettingActivity.this, ChangeMyNumberFragmentReplacementActivity.class);
+                        startActivity(intent2);
+
+                        //startActivity(new Intent(SettingActivity.this, ChangeMyNumberFragmentReplacementActivity.class));
                         break;
                     case 2:
-                        fragment=new ContactUsFragment();
+                        //fragment=new ContactUsFragment();
+                        startActivity(new Intent(SettingActivity.this, ContactusFragmentReplacementActivity.class));
                         break;
                     case 3:
-                        fragment=new AppInfoFragment();
+                        //fragment=new AppInfoFragment();
+                        startActivity(new Intent(SettingActivity.this, AppInfoFragmentReplacementActivity.class));
                         break;
                     case 4:
                         break;
@@ -99,7 +109,7 @@ public class SettingActivity extends AppCompatActivity {
                         break;
                 }
                 //listView.setOnItemClickListener(null);
-                updatePage(fragment);
+
             }
         });
 

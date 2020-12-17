@@ -113,4 +113,6 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
             userStatus.setVisibility(View.VISIBLE);
         }
     }
+
 }
+

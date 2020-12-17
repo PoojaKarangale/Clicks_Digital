@@ -65,4 +65,6 @@ public class User_request {
     public void setRequest_status(String request_status) {
         this.request_status=request_status;
     }
+
+
 }

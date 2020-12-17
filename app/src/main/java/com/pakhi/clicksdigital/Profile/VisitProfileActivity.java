@@ -83,6 +83,8 @@ public class VisitProfileActivity extends AppCompatActivity {
         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
             // make him admin btn set visible
             make_admin.setVisibility(View.VISIBLE);
+        }else{
+            make_admin.setVisibility(View.INVISIBLE);
         }
         if (isVisterIsAdmin && isProfileUserIsAdmin) {
             removeAdmin.setVisibility(View.VISIBLE);

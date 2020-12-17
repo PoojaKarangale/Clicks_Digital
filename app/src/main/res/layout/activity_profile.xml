@@ -150,39 +150,51 @@
             android:orientation="vertical"
             tools:context=".Profile.ProfileActivity">
 
-            <TextView
-                android:id="@+id/tv_user_name_heading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/dimen_16dp"
-                android:fontFamily="@font/lato"
-                android:text="User Name"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <RelativeLayout
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_img"
-                android:layout_width="108dp"
-                android:layout_height="108dp"
-                android:layout_below="@+id/tv_user_name_heading"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/dimen_16dp"
-                android:src="@drawable/profile_image"
-                app:civ_border_color="@color/white"
-                app:civ_border_width="3dp" />
+                android:id="@+id/re"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="40dp"
+                android:background="@color/blue">
+
+                <TextView
+                    android:id="@+id/tv_user_name_heading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dimen_16dp"
+                    android:fontFamily="@font/lato"
+                    android:text="User Name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_img"
+                    android:layout_width="108dp"
+                    android:layout_height="108dp"
+                    android:layout_below="@+id/tv_user_name_heading"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dimen_16dp"
+                    android:src="@drawable/profile_image"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="3dp" />
+
+            </RelativeLayout>
 
             <LinearLayout
+
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profile_img"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="vertical">
+                android:layout_below="@id/re"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:background="@drawable/profile_layout_design"
+
+                >
 
                 <Button
                     android:id="@+id/edit_profile"
@@ -246,7 +258,8 @@
                         android:fontFamily="@font/lato"
                         android:text="User Name"
                         android:textColor="#272727"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:padding="10dp"/>
 
                     <ImageView
                         android:id="@+id/iv_user_email"
@@ -272,7 +285,8 @@
                     android:text="Male"
                     android:textAllCaps="false"
                     android:textColor="#272727"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:padding="10dp" />
 
                 <TextView
                     android:id="@+id/tv_profession"
@@ -283,7 +297,8 @@
                     android:text="Android Developer"
                     android:textAllCaps="false"
                     android:textColor="#272727"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:padding="10dp"/>
 
                 <TextView
                     android:id="@+id/tv_user_bio"
@@ -294,7 +309,8 @@
                     android:text="alsdklaskdjf asdlfkasdf lkj\nakjsdlkf"
                     android:textAllCaps="false"
                     android:textColor="#272727"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:padding="10dp"/>
 
                 <TextView
                     android:id="@+id/tv_speaker_experience"
@@ -305,7 +321,8 @@
                     android:text="Speaker Experience"
                     android:textAllCaps="false"
                     android:textColor="#272727"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:padding="10dp"/>
 
                 <TextView
                     android:id="@+id/tv_experiences"
@@ -316,7 +333,8 @@
                     android:text="Experiences"
                     android:textAllCaps="false"
                     android:textColor="#272727"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:padding="10dp"/>
 
                 <LinearLayout
                     android:id="@+id/certification_layout"
@@ -333,7 +351,8 @@
                         android:text="Certifications"
                         android:textAllCaps="false"
                         android:textColor="#272727"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:padding="10dp"/>
 
                     <ImageView
                         android:id="@+id/certi_1"
