@@ -262,6 +262,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                     Log.e("main", "error "+e.toString());
                     }
                 myPdfDocument.close();
+                Toast.makeText(getApplicationContext(),"The file is stored at "+targetPdf,Toast.LENGTH_LONG).show();
 
 
 
