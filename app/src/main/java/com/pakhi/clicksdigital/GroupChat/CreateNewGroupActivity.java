@@ -93,7 +93,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                 } else {
                     if (progressDialog != null)
                         progressDialog.show();
-                    createGroup();
+                    //createGroup();
                     updateGroupInfo(groupName, description_str);
 
                 }
@@ -127,7 +127,6 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 */
 
-
     private void updateGroupInfo(final String groupName, final String description_str) {
         // final String userid = currentUserId;
 
@@ -137,6 +136,8 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         calendar=Calendar.getInstance();
         saveCurrentDate=currentDate.format(calendar.getTime());
         saveCurrentTime=currentTime.format(calendar.getTime());
+
+        createGroup(groupid);
 
         HashMap<String, Object> hashMap=new HashMap<>();
 
@@ -200,10 +201,10 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void createGroup() {
+    private void createGroup(String groupid) {
         StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
 
-        final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
+        final StorageReference imgPath=sReference.child(groupid ); //+ "." + getFileExtention(picImageUri)
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -218,11 +219,8 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                         // Log.d("createNewGroupActivity","----after-----pic img uri-----"+picImageUri.toString());
                         showToast("new group created");
                         updateUI();
-
                     }
-
                 });
-
             }
         });
     }

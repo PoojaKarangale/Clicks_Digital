@@ -70,7 +70,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_details);
 
-        group_image_url=getIntent().getStringExtra("image_url");
+        //group_image_url=getIntent().getStringExtra("image_url");
         group_name_str=getIntent().getStringExtra("group_name");
         currentGroupId=getIntent().getStringExtra("group_id");
 
@@ -86,7 +86,19 @@ public class GroupDetailsActivity extends AppCompatActivity {
         initiateFields();
 
         //seting group info
-        Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
+       // Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
+
+        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
+        final StorageReference imgPath=sReference.child(currentGroupId ); //+ "." + getFileExtention(picImageUri)
+        imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                Picasso.get().load(uri).into(app_bar_image);
+
+            }
+
+        });
 
         final String[] date=new String[1];
         final String[] group_creater_id=new String[1];
