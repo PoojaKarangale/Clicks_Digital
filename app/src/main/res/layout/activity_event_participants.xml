@@ -30,5 +30,16 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"></androidx.appcompat.widget.Toolbar>
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download Participants list"
+        android:padding="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:background="@color/blue"/>
+
 
 </RelativeLayout>
