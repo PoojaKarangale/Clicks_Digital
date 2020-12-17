@@ -7,55 +7,81 @@
     tools:context=".FragmentsInSetting.NotificationFragmentReplaceActivity"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/txt_noti"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topcons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="153dp"
-        android:layout_marginEnd="206dp"
-        android:layout_marginBottom="15dp"
-        android:fontFamily="sans-serif"
-        android:text="Allow notifications"
-        android:textSize="@dimen/dimen_16dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/subtext"
-        app:layout_constraintEnd_toStartOf="@+id/switch_notify"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/subtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="131dp"
-        android:layout_marginBottom="510dp"
-        android:fontFamily="sans-serif"
-        android:text="If you uncheck you won't receive any notifications \nfrom this application"
-        android:textColor="@color/pale_grey"
-        android:textSize="@dimen/dimen_12dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="658dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_noti" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switch_notify"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/txt_noti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="197dp"
+            android:fontFamily="sans-serif"
+            android:text="Allow notifications"
+            android:textSize="@dimen/dimen_16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/switch_notify"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_notify"
+            android:layout_width="31dp"
+            android:layout_height="0dp"
+            android:layout_alignParentEnd="true"
+
+            android:layout_marginStart="250dp"
+            android:layout_marginEnd="58dp"
+            android:checked="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomcons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="628dp"
+        app:layout_constraintTop_toBottomOf="@+id/topcons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        android:layout_marginStart="206dp"
-        android:layout_marginTop="153dp"
-        android:layout_marginBottom="551dp"
-        android:checked="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txt_noti"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="131dp"
+            android:layout_marginBottom="510dp"
+            android:fontFamily="sans-serif"
+            android:text="If you uncheck you won't receive any notifications \nfrom this application"
+            android:textColor="@color/pale_grey"
+            android:textSize="@dimen/dimen_12dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

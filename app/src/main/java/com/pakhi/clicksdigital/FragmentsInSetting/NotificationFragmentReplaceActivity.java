@@ -40,8 +40,8 @@ public class NotificationFragmentReplaceActivity extends AppCompatActivity {
 
     }
 
-    private void initializingFields() {
-        simpleSwitch=view.findViewById(R.id.switch_notify);
-        subText=view.findViewById(R.id.subtext);
+    public void initializingFields() {
+        simpleSwitch=findViewById(R.id.switch_notify);
+        subText=findViewById(R.id.subtext);
     }
 }

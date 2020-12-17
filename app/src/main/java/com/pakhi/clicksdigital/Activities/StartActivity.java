@@ -31,6 +31,7 @@ import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
+import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.text.SimpleDateFormat;
@@ -189,6 +190,11 @@ public class StartActivity extends AppCompatActivity {
             startActivity(new Intent(this, SettingActivity.class));
         }
 
+        if (item.getItemId() == R.id.share_app) {
+            // startActivity(new Intent(this, SettingActivity.class));
+            ShareApp.shareApp(getApplicationContext());
+        }
+
         return true;
     }
 
@@ -208,7 +214,6 @@ public class StartActivity extends AppCompatActivity {
 
     private void VerifyUserExistance() {
     /*    String currentUserID = mAuth.getCurrentUser().getUid();
-
          rootRef.getUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -218,10 +223,8 @@ public class StartActivity extends AppCompatActivity {
                     SendUserToSetProfileActivity();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });*/
     }

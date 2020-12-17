@@ -13,8 +13,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -32,8 +36,9 @@ import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.GroupTopic;
 import com.pakhi.clicksdigital.Model.Message;
-import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.ScreenSlidePageFragment;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -49,14 +54,15 @@ public class HomeFragment extends Fragment {
     Context context;
     DatabaseReference topicReference;
     ArrayList<String> arayOfTopicID = new ArrayList<>();
-   // String publisherKey,currentUserID;
+    String publisherKey,currentUserID;
     RecyclerView display;
-    Message message;
-    FirebaseDatabase shortCut,shortCut2;
     SharedPreference pref;
     String messageType, messagekEY, currentTime,currentDate, messagePass, currentGroupId,publisher;
-    ImageSlider imageSlider;
     FirebaseDatabaseInstance rootRef;
+    DatabaseReference userRef, grpChatRef, grpNameRef,topicReplyRef;
+    private static final int NUM_PAGES = 5;
+    private ViewPager mPager;
+    private PagerAdapter pagerAdapter;
 
     public HomeFragment(){
 
@@ -67,41 +73,26 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View homeView = inflater.inflate(R.layout.fragment_home, container, false);
         pref= SharedPreference.getInstance();
-        imageSlider = homeView.findViewById(R.id.image_slider);
-        final List<SlideModel> images = new ArrayList<>();
 
         rootRef=FirebaseDatabaseInstance.getInstance();
-        rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot mysnap : snapshot.getChildren()){
-                    images.add(new SlideModel(mysnap.child("URL").getValue().toString(), mysnap.child("NameOfEvent").getValue().toString(), ScaleTypes.FIT));
-                }
-                imageSlider.setImageList(images, ScaleTypes.FIT);
+        userRef=rootRef.getUserRef();
+        grpChatRef=rootRef.getGroupChatRef();
+        grpNameRef=rootRef.getGroupRef();
+        topicReplyRef=rootRef.getReplyRef();
 
-                imageSlider.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onItemSelected(int i) {
-                        EnlargedImage.enlargeImage(images.get(i).getImageUrl(), getContext());
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-        topicReference = FirebaseDatabase.getInstance().getReference().child("Topic");
+        topicReference = rootRef.getTopicRef();
         Log.i("topicReference", String.valueOf(topicReference));
         display = (RecyclerView) homeView.findViewById(R.id.display);
         display.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Inflate the layout for this fragment
+
+        /*mPager = (ViewPager) homeView.findViewById(R.id.pager);
+        pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
+        mPager.setAdapter(pagerAdapter);*/
         return homeView;
     }
+
 
 
     @Override
@@ -134,7 +125,7 @@ public class HomeFragment extends Fragment {
 
                             Log.i("topic id -----------", String.valueOf(mysnap.getKey()));
 
-                            FirebaseDatabase.getInstance().getReference().child("TopicReply").child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
+                            topicReplyRef.child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(snapshot.exists()){
@@ -149,7 +140,7 @@ public class HomeFragment extends Fragment {
                                 }
                             });
 
-                            FirebaseDatabase.getInstance().getReference().child("Groups").child(grpID).addValueEventListener(new ValueEventListener() {
+                            grpNameRef.child(grpID).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     holder.groupName.setText(snapshot.child("group_name").getValue().toString());
@@ -163,12 +154,24 @@ public class HomeFragment extends Fragment {
                                 }
                             });
 
-                            FirebaseDatabase.getInstance().getReference().child("GroupChat").child(grpID).child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
+                            grpChatRef.child(grpID).child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                                    final Message m = snapshot.getValue(Message.class);
+                                    holder.replyButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+
+                                            Intent replyIntent = new Intent(getContext(), TopicRepliesActivity.class);
+                                            replyIntent.putExtra("message", m);
+                                            startActivity(replyIntent);
+
+                                        }
+                                    });
                                     //Log.i("The message ", String.valueOf(snapshot.child("message").getValue().toString()));
-                                    holder.topicText.setText(snapshot.child("message").getValue().toString());
+                                    /*holder.topicText.setText(snapshot.child("message").getValue().toString());
                                     messageType = snapshot.child("type").getValue().toString();
                                     messagePass = snapshot.child("message").getValue().toString();
                                     messagekEY = snapshot.child("messageID").getValue().toString();
@@ -177,26 +180,20 @@ public class HomeFragment extends Fragment {
                                     currentGroupId = grpID;
                                     publisher = snapshot.child("from").getValue().toString();
 
-                                    Log.i("The topic Text - ",String.valueOf(snapshot.child("message").getValue().toString()));
-                                  //  publisherKey = snapshot.child("from").getKey();
-                                    holder.dateAndTime.setText(snapshot.child("date").getValue().toString() + " " +  snapshot.child("time").getValue().toString());
 
-                                    FirebaseDatabase.getInstance().getReference().child("Users").child(publisher).addValueEventListener(new ValueEventListener() {
+                                    Log.i("The topic Text - ",String.valueOf(snapshot.child("message").getValue().toString()));
+
+                                    holder.dateAndTime.setText(snapshot.child("date").getValue().toString() + " " +  snapshot.child("time").getValue().toString());
+*/                                  publisherKey = snapshot.child("from").getKey();
+                                    userRef.child(publisherKey).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            holder.publisherName.setText(snapshot.child("DETAILS").child("user_name").getValue().toString() + " " + snapshot.child("DETAILS").child("last_name").getValue().toString());
+                                            //holder.publisherName.setText(snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getUserName().toString()).getValue().toString() + " " + snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getLastName().toString()).getValue().toString());
                                         }
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError error) {
 
-                                        }
-                                    });
-
-                                    holder.publisherName.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            visitUsersProfile(publisher);
                                         }
                                     });
 
@@ -211,18 +208,7 @@ public class HomeFragment extends Fragment {
 
                             arayOfTopicID.add(mysnap.getKey());
 
-                            holder.replyButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Message message1=new Message(publisher, messagePass ,
-                                            messageType, currentGroupId, messagekEY, currentTime, currentDate);
 
-                                    Intent replyIntent = new Intent(getContext(), TopicRepliesActivity.class);
-                                    replyIntent.putExtra("message", message1);
-                                    startActivity(replyIntent);
-
-                                }
-                            });
                         }
                         Log.i("Length of arrayOfTopic", String.valueOf(arayOfTopicID.size()));
 
@@ -256,11 +242,6 @@ public class HomeFragment extends Fragment {
         adapter.startListening();
     }
 
-    private void visitUsersProfile(String userId) {
-        Intent profileActivity=new Intent(getContext(), VisitProfileActivity.class);
-        profileActivity.putExtra("visit_user_id", userId);
-        getContext().startActivity(profileActivity);
-    }
 
     public void backPressed() {
         new AlertDialog.Builder(getContext())
@@ -276,6 +257,22 @@ public class HomeFragment extends Fragment {
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+    //Adapter class for slider
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return new ScreenSlidePageFragment();
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
     }
     public class TopicDisplayHome extends RecyclerView.ViewHolder{
 

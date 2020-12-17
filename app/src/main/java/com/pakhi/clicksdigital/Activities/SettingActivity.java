@@ -13,14 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.pakhi.clicksdigital.Adapter.SettingListAdapter;
-import com.pakhi.clicksdigital.FragmentsInSetting.AppInfoFragment;
 import com.pakhi.clicksdigital.FragmentsInSetting.AppInfoFragmentReplacementActivity;
-import com.pakhi.clicksdigital.FragmentsInSetting.ChangeMyNumberFragment;
 import com.pakhi.clicksdigital.FragmentsInSetting.ChangeMyNumberFragmentReplacementActivity;
-import com.pakhi.clicksdigital.FragmentsInSetting.ContactUsFragment;
 import com.pakhi.clicksdigital.FragmentsInSetting.ContactusFragmentReplacementActivity;
 import com.pakhi.clicksdigital.FragmentsInSetting.NotificationFragmentReplaceActivity;
-import com.pakhi.clicksdigital.FragmentsInSetting.NotificationsFragment;
 import com.pakhi.clicksdigital.R;
 
 public class SettingActivity extends AppCompatActivity {
