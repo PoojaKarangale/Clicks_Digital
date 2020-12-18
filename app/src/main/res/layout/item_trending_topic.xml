@@ -113,6 +113,21 @@
                     android:layout_marginStart="4dp"
                     android:text="0"
                     android:textSize="@dimen/title4" />
+                <TextView
+                    android:id="@+id/likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Likes"
+                    android:textColor="@color/blue"
+                    android:textSize="10sp"
+                    android:layout_marginLeft="4dp"/>
+                <TextView
+                    android:id="@+id/no_of_likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="0"
+                    android:textSize="10sp" />
 
                 <TextView
 

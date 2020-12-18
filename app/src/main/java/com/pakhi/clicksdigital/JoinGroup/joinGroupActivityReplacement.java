@@ -28,7 +28,7 @@ public class joinGroupActivityReplacement extends AppCompatActivity {
         setContentView(R.layout.activity_join_group_replacement);
 
         rootRef=FirebaseDatabaseInstance.getInstance();
-        groupRef=rootRef.geGroupRequest();
+        groupRef=rootRef.getGroupRequests();
         usersRef=rootRef.getUserRef();
 
 
