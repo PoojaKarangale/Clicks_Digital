@@ -31,9 +31,9 @@ public class PaymentActivity extends AppCompatActivity {
     //declare paymentParam object
     PayUmoneySdkInitializer.PaymentParam         paymentParam=null;
 
-    String TAG        ="PaymentActivity", txnid="txt12346", amount, phone,
+    String TAG                              ="PaymentActivity", txnid="txt12346", amount, phone,
             prodname, firstname, email,
-            merchantId=ConstPayUmoney.MERCHANT_ID, merchantkey=ConstPayUmoney.MERCHANT_KEY;  //   first test key only
+            merchantId                      =ConstPayUmoney.MERCHANT_ID, merchantkey=ConstPayUmoney.MERCHANT_KEY;  //   first test key only
     private ProgressDialog progressDialog;
 
     @Override
@@ -51,11 +51,11 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void initializeStrings() {
-        amount = String.valueOf(event.getTotalFee());
+        amount=String.valueOf(event.getTotalFee());
         phone=user.getNumber();
-        prodname=event.getEventName();
-        firstname=user.getUser_name();
-        email=user.getUser_email();
+        prodname=event.getEventName().trim();
+        firstname=user.getUser_name().trim();
+        email=user.getUser_email().trim();
 
 
         progressDialog=new ProgressDialog(this);
@@ -105,20 +105,22 @@ public class PaymentActivity extends AppCompatActivity {
 
         try {
             paymentParam=builder.build();
-            // generateHashFromServer(paymentParam );
             getHashkey();
 
         } catch (Exception e) {
-            Log.e(TAG, " error s " + e.toString());
+            Log.e(TAG, " error " + e.toString());
         }
-
     }
+
 
     public void getHashkey() {
         ServiceWrapper service=new ServiceWrapper(null);
         Call<String> call=service.newHashCall(merchantkey, txnid, amount, prodname,
                 firstname, email);
 
+ /*       Log.i("Checking Param", "\nparameters used to generate hash : merchantkey "+merchantkey +" txnid "+ txnid + " amount "+amount +" prodname "+ prodname +
+              " firstname "+  firstname + " email "+email + " \npayment param passed : " + paymentParam.getParams().toString() +"\n");
+*/
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -128,11 +130,11 @@ public class PaymentActivity extends AppCompatActivity {
                     Toast.makeText(PaymentActivity.this, "Could not generate hash", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "hash empty");
                 } else {
-                    // mPaymentParams.setMerchantHash(merchantHash);
                     paymentParam.setMerchantHash(merchantHash);
                     // Invoke the following function to open the checkout page.
-                    // PayUmoneyFlowManager.startPayUMoneyFlow(paymentParam, StartPaymentActivity.this,-1, true);
-                    PayUmoneyFlowManager.startPayUMoneyFlow(paymentParam, PaymentActivity.this, R.style.AppTheme_default, false);
+                    // PayUmoneyFlowManager.startPayUMoneyFlow(paymentParam, StartPaymentActivity.this,-1, false);
+
+                    PayUmoneyFlowManager.startPayUMoneyFlow(paymentParam, PaymentActivity.this, R.style.AppTheme_default, true);
                 }
             }
 
@@ -141,7 +143,6 @@ public class PaymentActivity extends AppCompatActivity {
                 Log.e(TAG, "hash error " + t.toString());
             }
         });
-
     }
 
     private void addUserToEventDataBase() {
@@ -166,7 +167,6 @@ public class PaymentActivity extends AppCompatActivity {
                 if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
                     //Success Transaction
                     addUserToEventDataBase();
-                    //Toast.makeText(PaymentActivity.this, "Susccessfully registered to the Event", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     //Failure Transaction
@@ -186,7 +186,7 @@ public class PaymentActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(progressDialog!=null && progressDialog.isShowing())
+        if (progressDialog != null && progressDialog.isShowing())
             progressDialog.dismiss();
     }
 
