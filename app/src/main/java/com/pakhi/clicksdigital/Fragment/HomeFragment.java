@@ -26,29 +26,37 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.GroupTopic;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.ScreenSlidePageFragment;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class HomeFragment extends Fragment {
-    private static final int NUM_PAGES=5;
+    private static final int          NUM_PAGES=5;
     Context           context;
-    DatabaseReference topicReference, userRequestRef;
+    DatabaseReference topicReference;
     ArrayList<String> arayOfTopicID=new ArrayList<>();
     String            publisherKey, currentUserID;
     RecyclerView     display;
     SharedPreference pref;
     String           messageType, messagekEY, currentTime, currentDate, messagePass, currentGroupId, publisher;
     FirebaseDatabaseInstance rootRef;
-    DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef;
+    DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef, likeRef;
     Button requestBtn;
     private ViewPager    mPager;
     private PagerAdapter pagerAdapter;
@@ -69,6 +77,7 @@ public class HomeFragment extends Fragment {
         grpNameRef=rootRef.getGroupRef();
         topicReplyRef=rootRef.getReplyRef();
         userRequestRef=rootRef.getUserRequestsRef();
+        likeRef=rootRef.getTopicLikesRef();
 
         topicReference=rootRef.getTopicRef();
         Log.i("topicReference", String.valueOf(topicReference));
@@ -135,6 +144,22 @@ public class HomeFragment extends Fragment {
 
                             Log.i("topic id -----------", String.valueOf(mysnap.getKey()));
 
+                            likeRef.child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        Log.i("No. of Likes -------", String.valueOf(snapshot.getChildrenCount()));
+                                        holder.noOfLikes.setText(String.valueOf(snapshot.getChildrenCount()));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                             topicReplyRef.child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -167,13 +192,13 @@ public class HomeFragment extends Fragment {
                             grpChatRef.child(grpID).child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                    final Message m=snapshot.getValue(Message.class);
+                                    final Message m = snapshot.getValue(Message.class);
+                                    holder.topicText.setText(m.getMessage());
 
                                     holder.replyButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Intent replyIntent=new Intent(getContext(), TopicRepliesActivity.class);
+                                            Intent replyIntent = new Intent(getContext(), TopicRepliesActivity.class);
                                             replyIntent.putExtra("message", m);
                                             startActivity(replyIntent);
 
@@ -188,8 +213,11 @@ public class HomeFragment extends Fragment {
                                         }
                                     });
 
-                                    publisherKey=m.getFrom();
-                                    userRef.child(publisherKey).child("DETAILS").addValueEventListener(new ValueEventListener() {
+
+                                    holder.dateAndTime.setText(snapshot.child("date").getValue().toString() + " " +  snapshot.child("time").getValue().toString());
+                                    publisherKey = snapshot.child("from").getValue().toString();
+                                    Log.i("Publisher : ",publisherKey );
+                                    userRef.child(m.getFrom()).child("DETAILS").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             //holder.publisherName.setText(snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getUserName().toString()).getValue().toString() + " " + snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getLastName().toString()).getValue().toString());
@@ -271,20 +299,21 @@ public class HomeFragment extends Fragment {
             return NUM_PAGES;
         }
     }
+    public class TopicDisplayHome extends RecyclerView.ViewHolder{
 
-    public class TopicDisplayHome extends RecyclerView.ViewHolder {
-
-        TextView groupName, topicText, dateAndTime, NoOfReplies, publisherName, replyButton;
-
+        TextView groupName, topicText, dateAndTime, NoOfReplies, publisherName, replyButton, likeButton, noOfLikes;
         public TopicDisplayHome(@NonNull View itemView) {
             super(itemView);
 
-            groupName=itemView.findViewById(R.id.group_name);
-            topicText=itemView.findViewById(R.id.topic);
-            dateAndTime=itemView.findViewById(R.id.date_time);
-            NoOfReplies=itemView.findViewById(R.id.no_of_replies);
-            publisherName=itemView.findViewById(R.id.publisher_name);
-            replyButton=itemView.findViewById(R.id.reply);
+            groupName = itemView.findViewById(R.id.group_name);
+            topicText = itemView.findViewById(R.id.topic);
+            dateAndTime = itemView.findViewById(R.id.date_time);
+            NoOfReplies = itemView.findViewById(R.id.no_of_replies);
+            publisherName = itemView.findViewById(R.id.publisher_name);
+            replyButton = itemView.findViewById(R.id.reply);
+            likeButton = itemView.findViewById(R.id.likes);
+            noOfLikes = itemView.findViewById(R.id.no_of_likes);
+
 
         }
     }
