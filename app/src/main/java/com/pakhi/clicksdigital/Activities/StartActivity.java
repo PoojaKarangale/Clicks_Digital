@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -196,7 +197,13 @@ public class StartActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.user_request) {
             // startActivity(new Intent(this, SettingActivity.class));
-           startActivity(new Intent(this,UserRequestActivity.class));
+            if (user_type == "admin") {
+                startActivity(new Intent(this,UserRequestActivity.class));
+            }
+            else{
+                Toast.makeText(getApplicationContext(),"Since you are not admin, you don't have access to this part of the app",Toast.LENGTH_LONG).show();
+            }
+
         }
 
         return true;
