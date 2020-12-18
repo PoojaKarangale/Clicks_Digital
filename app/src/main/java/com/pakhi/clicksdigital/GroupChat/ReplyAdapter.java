@@ -1,6 +1,7 @@
 package com.pakhi.clicksdigital.GroupChat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Message;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -63,6 +66,22 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ViewHolder> 
                             .resize(120, 120)
                             .into(holder.profile_img);
                     holder.name.setText(snapshot.child(Const.USER_NAME).getValue().toString());
+                    holder.name.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mcontext, VisitProfileActivity.class);
+                            intent.putExtra("visit_user_id",reply.getFrom());
+                            mcontext.startActivity(intent);
+                        }
+                    });
+
+                    holder.profile_img.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            EnlargedImage.enlargeImage(Const.IMAGE_URL,mcontext);
+                        }
+                    });
+
                 }
             }
 
@@ -106,6 +125,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ViewHolder> 
 
             }
         });
+
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

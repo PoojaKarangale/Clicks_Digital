@@ -270,7 +270,7 @@ public class HomeFragment extends Fragment {
             @Override
             public TopicDisplayHome onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trending_topic, parent, false);
-                // HomeFragment.TopicDisplayHome viewHolder=new HomeFragment.TopicDisplayHome(view);
+                //HomeFragment.TopicDisplayHome viewHolder=new HomeFragment.TopicDisplayHome(view);
                 return new TopicDisplayHome(view);
 
             }

@@ -197,7 +197,7 @@ public class StartActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.user_request) {
             // startActivity(new Intent(this, SettingActivity.class));
-            if (user_type == "admin") {
+            if (user_type.equals("admin")) {
                 startActivity(new Intent(this,UserRequestActivity.class));
             }
             else{

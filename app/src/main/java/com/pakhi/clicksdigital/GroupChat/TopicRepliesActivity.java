@@ -1,5 +1,6 @@
 package com.pakhi.clicksdigital.GroupChat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Message;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
@@ -163,6 +165,14 @@ public class TopicRepliesActivity extends AppCompatActivity {
                             .into(profile_img);
                     name.setText(snapshot.child(Const.USER_NAME).getValue().toString());
                     profession.setText(snapshot.child("work_profession").getValue().toString());
+                    name.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(TopicRepliesActivity.this, VisitProfileActivity.class);
+                            intent.putExtra("visit_user_id",topic.getFrom());
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
 
