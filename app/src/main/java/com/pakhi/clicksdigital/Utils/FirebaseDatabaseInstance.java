@@ -3,28 +3,22 @@ package com.pakhi.clicksdigital.Utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
 public class FirebaseDatabaseInstance {
     private static FirebaseDatabaseInstance single_instance=null;
     DatabaseReference rootRef=FirebaseDatabase.getInstance().getReference();
-
-    public DatabaseReference getTopicRef() {
-        return rootRef.child(ConstFirebase.topic);
-    }
-
     /*  DatabaseReference userRef;
-                DatabaseReference groupRef ;
-                DatabaseReference eventRef ;
-                DatabaseReference eventCatRef ;
-                DatabaseReference groupChatRef ;
-                DatabaseReference messagesRef ;
-                DatabaseReference messagesListRef;
-                DatabaseReference tokensRef ;
-                DatabaseReference groupRequests ;
-                DatabaseReference chatRequestsRef;*/
+            DatabaseReference groupRef ;
+            DatabaseReference eventRef ;
+            DatabaseReference eventCatRef ;
+            DatabaseReference groupChatRef ;
+            DatabaseReference messagesRef ;
+            DatabaseReference messagesListRef;
+            DatabaseReference tokensRef ;
+            DatabaseReference groupRequests ;
+            DatabaseReference chatRequestsRef;*/
     //DatabaseReference replyRef;
     // DatabaseReference topicLikesRef, replyLikesRef;
-    //DatabaseReference topicRef;
+
     private FirebaseDatabaseInstance() {
     }
 
@@ -33,6 +27,9 @@ public class FirebaseDatabaseInstance {
         if (single_instance == null)
             single_instance=new FirebaseDatabaseInstance();
         return single_instance;
+    }
+    public DatabaseReference getUserDetails(){
+        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS);
     }
 
     public DatabaseReference getTopicLikesRef() {
@@ -44,7 +41,7 @@ public class FirebaseDatabaseInstance {
     }
 
     public DatabaseReference getReplyRef() {
-        return rootRef.getRef().child(ConstFirebase.replyRef);
+        return rootRef.child(ConstFirebase.replyRef);
     }
 
     public DatabaseReference getChatRequestsRef() {
@@ -99,11 +96,19 @@ public class FirebaseDatabaseInstance {
         return rootRef.child(ConstFirebase.contacts);
     }
 
-    public DatabaseReference getRecGroupRef() {
-        return rootRef.child("RecGrp");
+    public DatabaseReference getTopicRef() {
+        return rootRef.child(ConstFirebase.topic);
     }
 
-    public DatabaseReference geGroupRequest() {
-        return rootRef.child("GroupRequest");
+    /*public DatabaseReference getsliderRef() {
+        return rootRef.child(ConstFirebase.slider);
+    }*/
+
+    public DatabaseReference getUserName() {
+        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS).child(Const.USER_NAME);
     }
+
+    /*public DatabaseReference getLastName() {
+        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS).child(Const.LAST_NAME);
+    }*/
 }
