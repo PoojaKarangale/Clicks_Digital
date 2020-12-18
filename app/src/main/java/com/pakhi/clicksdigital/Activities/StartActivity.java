@@ -27,7 +27,6 @@ import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
-import com.pakhi.clicksdigital.JoinGroup.joinGroupActivityReplacement;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
@@ -184,7 +183,7 @@ public class StartActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.join_new_groups) {
-            startActivity(new Intent(this, joinGroupActivityReplacement.class));
+            startActivity(new Intent(this, JoinGroupActivity.class));
         }
 
         if (item.getItemId() == R.id.settings) {

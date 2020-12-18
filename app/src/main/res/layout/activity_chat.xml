@@ -97,19 +97,21 @@
          app:civ_border_color="@color/white"
          android:src="@mipmap/ic_launcher" />-->
 <androidx.core.widget.NestedScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
     android:id="@+id/scroll_view"
+    android:layout_below="@+id/bar"
+    android:layout_above="@+id/chat_linear_layout"
     >
     <LinearLayout
         android:id="@+id/messageLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/chat_linear_layout"
-        android:layout_below="@+id/bar"
-        android:background="@color/chatBackground"
+
+
         android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bar">
+
+        >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/private_messages_list_of_users"

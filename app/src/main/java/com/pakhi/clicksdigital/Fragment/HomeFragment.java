@@ -39,9 +39,9 @@ import com.pakhi.clicksdigital.Utils.SharedPreference;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
-    private static final int          NUM_PAGES=5;
+    private static final int NUM_PAGES=5;
     Context           context;
-    DatabaseReference topicReference,userRequestRef;
+    DatabaseReference topicReference, userRequestRef;
     ArrayList<String> arayOfTopicID=new ArrayList<>();
     String            publisherKey, currentUserID;
     RecyclerView     display;
@@ -49,9 +49,10 @@ public class HomeFragment extends Fragment {
     String           messageType, messagekEY, currentTime, currentDate, messagePass, currentGroupId, publisher;
     FirebaseDatabaseInstance rootRef;
     DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef;
-    private              ViewPager    mPager;
-    private              PagerAdapter pagerAdapter;
-Button requestBtn;
+    Button requestBtn;
+    private ViewPager    mPager;
+    private PagerAdapter pagerAdapter;
+
     public HomeFragment() {
 
     }
@@ -67,14 +68,15 @@ Button requestBtn;
         grpChatRef=rootRef.getGroupChatRef();
         grpNameRef=rootRef.getGroupRef();
         topicReplyRef=rootRef.getReplyRef();
-userRequestRef=rootRef.getUserRequestsRef();
+        userRequestRef=rootRef.getUserRequestsRef();
 
         topicReference=rootRef.getTopicRef();
         Log.i("topicReference", String.valueOf(topicReference));
         display=(RecyclerView) homeView.findViewById(R.id.display);
         requestBtn=homeView.findViewById(R.id.request_button);
         display.setLayoutManager(new LinearLayoutManager(getContext()));
-currentUserID=pref.getData(SharedPreference.currentUserId,getContext());
+        currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
+
         // Inflate the layout for this fragment
         /*mPager = (ViewPager) homeView.findViewById(R.id.pager);
         pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
@@ -89,6 +91,7 @@ currentUserID=pref.getData(SharedPreference.currentUserId,getContext());
                     requestBtn.setVisibility(View.GONE);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
