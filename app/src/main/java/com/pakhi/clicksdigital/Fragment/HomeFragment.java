@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     SharedPreference pref;
     String           messageType, messagekEY, currentTime, currentDate, messagePass, currentGroupId, publisher;
     FirebaseDatabaseInstance rootRef;
-    DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef, likeRef;
+    DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef, likeRef,userRequestRef;
     Button requestBtn;
     private ViewPager    mPager;
     private PagerAdapter pagerAdapter;

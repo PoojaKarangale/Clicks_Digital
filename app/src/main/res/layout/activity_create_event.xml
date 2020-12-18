@@ -336,7 +336,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato"
-                        android:text="Start Date"
+                        android:text="Start Time"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/title2" />
 
@@ -357,7 +357,7 @@
                         android:layout_below="@id/txtStartTime"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/lato"
-                        android:text="End Date"
+                        android:text="End Time"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/title2" />
 
