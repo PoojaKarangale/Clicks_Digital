@@ -16,7 +16,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.StartActivity;
-import com.pakhi.clicksdigital.Model.User_request;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -32,8 +31,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.ViewHolder> {
 
     FirebaseDatabaseInstance rootRef;
-    private Context            mcontext;
-    private List<String>       requestingUsers;
+    private Context      mcontext;
+    private List<String> requestingUsers;
 
     public UserRequestAdapter(Context mcontext, List<String> requestingUsers) {
         this.mcontext=mcontext;
@@ -67,20 +66,20 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    //   user_name[0] = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                    holder.displayName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
+                    //if (dataSnapshot.hasChild("image_url")) {}
+                    final String image_url=dataSnapshot.child("image_url").getValue().toString();
+                    Picasso.get().load(image_url).placeholder(R.drawable.profile_image).into(holder.image_profile);
 
-                //   user_name[0] = dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                holder.displayName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
-
-                //if (dataSnapshot.hasChild("image_url")) {}
-                final String image_url=dataSnapshot.child("image_url").getValue().toString();
-                Picasso.get().load(image_url).placeholder(R.drawable.profile_image).into(holder.image_profile);
-
-                holder.image_profile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        enlargeImage(image_url);
-                    }
-                });
+                    holder.image_profile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            enlargeImage(image_url);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -101,7 +100,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             @Override
             public void onClick(View v) {
                 deleteUserRequest(userId, position);
-               // sendUserTheRejectionMessage(groupName);
+                // sendUserTheRejectionMessage(groupName);
                 // createDialog("");
             }
         });
@@ -110,7 +109,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // addUserToGroup(groupId, userId);
+                // addUserToGroup(groupId, userId);
                 approveUser(userId);
                 deleteUserRequest(userId, position);
                 //sendUserTheWelcomeMessage(groupName, groupId);
@@ -119,7 +118,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     }
 
     private void approveUser(String userId) {
-       // one field in user details showing request is approved
+        // one field in user details showing request is approved
         rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).child("approved").setValue(true);
     }
 
@@ -177,7 +176,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     private void enlargeImage(String image_url) {
 
-        EnlargedImage.enlargeImage(image_url,mcontext);
+        EnlargedImage.enlargeImage(image_url, mcontext);
 
     }
 
