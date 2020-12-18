@@ -1,5 +1,7 @@
 package com.pakhi.clicksdigital.Model;
 
+import com.pakhi.clicksdigital.Utils.SharedPreference;
+
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
@@ -8,6 +10,9 @@ public class User implements Serializable {
     private String image_url;
     private String user_id;
     private String city;
+    public SharedPreference pref;
+    public String current_user_id;
+
 
 
     private String  last_name;
@@ -210,5 +215,9 @@ public class User implements Serializable {
 
     public void setWork_profession(String work_profession) {
         this.work_profession=work_profession;
+    }
+
+    public String getVerificationRequest() {
+        return "not verified";
     }
 }

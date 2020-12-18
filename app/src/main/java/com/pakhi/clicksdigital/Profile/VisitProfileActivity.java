@@ -60,15 +60,19 @@ public class VisitProfileActivity extends AppCompatActivity {
         UserRef.child(user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user=dataSnapshot.getValue(User.class);
-                Picasso.get()
-                        .load(user.getImage_url())
-                        .resize(120, 120)
-                        .into(profile_image);
-                if (user.getUser_type().equals("admin")) {
-                    isProfileUserIsAdmin=true;
+                if (dataSnapshot.exists()){
+                    user=dataSnapshot.getValue(User.class);
+                    Picasso.get()
+                            .load(user.getImage_url())
+                            .resize(120, 120)
+                            .into(profile_image);
+                    if (user.getUser_type().equals("admin")) {
+                        isProfileUserIsAdmin=true;
+                    }
+                    loadData();
+
                 }
-                loadData();
+
             }
 
             @Override
