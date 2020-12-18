@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
     private static final int          NUM_PAGES=5;
     Context           context;
-    DatabaseReference topicReference;
+    DatabaseReference topicReference,userRequestRef;
     ArrayList<String> arayOfTopicID=new ArrayList<>();
     String            publisherKey, currentUserID;
     RecyclerView     display;
@@ -50,7 +51,7 @@ public class HomeFragment extends Fragment {
     DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef;
     private              ViewPager    mPager;
     private              PagerAdapter pagerAdapter;
-
+Button requestBtn;
     public HomeFragment() {
 
     }
@@ -66,16 +67,41 @@ public class HomeFragment extends Fragment {
         grpChatRef=rootRef.getGroupChatRef();
         grpNameRef=rootRef.getGroupRef();
         topicReplyRef=rootRef.getReplyRef();
+userRequestRef=rootRef.getUserRequestsRef();
 
         topicReference=rootRef.getTopicRef();
         Log.i("topicReference", String.valueOf(topicReference));
         display=(RecyclerView) homeView.findViewById(R.id.display);
+        requestBtn=homeView.findViewById(R.id.request_button);
         display.setLayoutManager(new LinearLayoutManager(getContext()));
-
+currentUserID=pref.getData(SharedPreference.currentUserId,getContext());
         // Inflate the layout for this fragment
         /*mPager = (ViewPager) homeView.findViewById(R.id.pager);
         pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
         mPager.setAdapter(pagerAdapter);*/
+
+        rootRef.getUserRef().child(currentUserID).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    requestBtn.setVisibility(View.VISIBLE);
+                } else {
+                    requestBtn.setVisibility(View.GONE);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        requestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userRequestRef.child(currentUserID).setValue("");
+            }
+        });
+
         return homeView;
     }
 
