@@ -104,6 +104,85 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PdfDocument myPdfDocument = new PdfDocument();
+                Paint myPaint = new Paint();
+                Paint titlePaint = new Paint();
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(1200,2010,1).create();
+                PdfDocument.Page myPage = myPdfDocument.startPage(pageInfo);
+                Canvas canvas = myPage.getCanvas();
+
+                canvas.drawBitmap(scaledbmp, 100, 50,myPaint);
+
+                titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+                titlePaint.setTextSize(50);
+                canvas.drawText("World Digital Conclave", 420, 200, titlePaint);
+
+                titlePaint.setTextAlign(Paint.Align.CENTER);
+                titlePaint.setTextSize(40);
+                canvas.drawText(eventtitle, 600, 400, titlePaint);
+
+                titlePaint.setTextSize(30);
+                canvas.drawText("Participant List", 600, 470, titlePaint);
+
+                titlePaint.setTextAlign(Paint.Align.LEFT);
+                titlePaint.setTextSize(20);
+                canvas.drawText("|", 30,510,titlePaint);
+                canvas.drawText("Sr.no", 40, 510, titlePaint);
+                canvas.drawText("|", 190,510,titlePaint);
+                canvas.drawText("Name", 200 , 510, titlePaint);
+                canvas.drawText("|", 550,510,titlePaint);
+                canvas.drawText("Mobile Number", 560, 510, titlePaint);
+                canvas.drawText("|", 790,510,titlePaint);
+                canvas.drawText("Email ID", 800, 510, titlePaint);
+                canvas.drawText("|", 1170,510,titlePaint);
+                canvas.drawText("________________________________________________________________________________________________________", 30,520,titlePaint);
+                canvas.drawText("________________________________________________________________________________________________________", 30,483,titlePaint);
+
+                titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.NORMAL));
+                int y = 545;
+                for(int i=1; i<=myParticipantName.size(); ++i){
+                    canvas.drawText("|", 30,y,titlePaint);
+                    canvas.drawText("|", 190,y,titlePaint);
+                    canvas.drawText("|", 550,y,titlePaint);
+                    canvas.drawText("|", 790,y,titlePaint);
+                    canvas.drawText("|", 1170,y,titlePaint);
+                    canvas.drawText("________________________________________________________________________________________________________", 30,y+4,titlePaint);
+
+                    canvas.drawText(String.valueOf(i), 40, y, titlePaint);
+                    canvas.drawText(myParticipantName.get(i-1), 200 , y, titlePaint);
+                    canvas.drawText(myParticipantNumber.get(i-1), 560, y, titlePaint);
+                    canvas.drawText(myParticipantEmail.get(i-1), 800, y, titlePaint);
+                    y=y+35;
+
+                }
+                myPdfDocument.finishPage(myPage);
+                String directory_path = Environment.getExternalStorageDirectory().getPath() + "/WDC_PDF_TEST/";
+                File file = new File(directory_path);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                String targetPdf = directory_path+ eventtitle + ".pdf";
+                File filePath = new File(targetPdf);
+                try {
+                    myPdfDocument.writeTo(new FileOutputStream(filePath));
+                } catch (IOException e) {
+                    Log.e("main", "error "+e.toString());
+                }
+                myPdfDocument.close();
+
+                Toast.makeText(getApplicationContext(),"The list is stored at "+targetPdf,Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+
+
     }
 
     private void initializeFields() {
@@ -194,82 +273,8 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
         user_recycler_list.setAdapter(adapter);
         adapter.startListening();
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PdfDocument myPdfDocument = new PdfDocument();
-                Paint myPaint = new Paint();
-                Paint titlePaint = new Paint();
-                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(1200,2010,1).create();
-                PdfDocument.Page myPage = myPdfDocument.startPage(pageInfo);
-                Canvas canvas = myPage.getCanvas();
-
-                canvas.drawBitmap(scaledbmp, 100, 50,myPaint);
-
-                titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
-                titlePaint.setTextSize(50);
-                canvas.drawText("World Digital Conclave", 420, 200, titlePaint);
-
-                titlePaint.setTextAlign(Paint.Align.CENTER);
-                titlePaint.setTextSize(40);
-                canvas.drawText(eventtitle, 600, 400, titlePaint);
-
-                titlePaint.setTextSize(30);
-                canvas.drawText("Participant List", 600, 470, titlePaint);
-
-                titlePaint.setTextAlign(Paint.Align.LEFT);
-                titlePaint.setTextSize(20);
-                canvas.drawText("|", 30,510,titlePaint);
-                canvas.drawText("Sr.no", 40, 510, titlePaint);
-                canvas.drawText("|", 190,510,titlePaint);
-                canvas.drawText("Name", 200 , 510, titlePaint);
-                canvas.drawText("|", 550,510,titlePaint);
-                canvas.drawText("Mobile Number", 560, 510, titlePaint);
-                canvas.drawText("|", 790,510,titlePaint);
-                canvas.drawText("Email ID", 800, 510, titlePaint);
-                canvas.drawText("|", 1170,510,titlePaint);
-                canvas.drawText("________________________________________________________________________________________________________", 30,520,titlePaint);
-                canvas.drawText("________________________________________________________________________________________________________", 30,483,titlePaint);
-
-                titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.NORMAL));
-                int y = 545;
-                for(int i=1; i<=myParticipantName.size(); ++i){
-                    canvas.drawText("|", 30,y,titlePaint);
-                    canvas.drawText("|", 190,y,titlePaint);
-                    canvas.drawText("|", 550,y,titlePaint);
-                    canvas.drawText("|", 790,y,titlePaint);
-                    canvas.drawText("|", 1170,y,titlePaint);
-                    canvas.drawText("________________________________________________________________________________________________________", 30,y+4,titlePaint);
-
-                    canvas.drawText(String.valueOf(i), 40, y, titlePaint);
-                    canvas.drawText(myParticipantName.get(i-1), 200 , y, titlePaint);
-                    canvas.drawText(myParticipantNumber.get(i-1), 560, y, titlePaint);
-                    canvas.drawText(myParticipantEmail.get(i-1), 800, y, titlePaint);
-                    y=y+35;
-
-                }
-                myPdfDocument.finishPage(myPage);
-                String directory_path = Environment.getExternalStorageDirectory().getPath() + "/WDC_PDF_TEST/";
-                File file = new File(directory_path);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                String targetPdf = directory_path+ eventtitle + ".pdf";
-                File filePath = new File(targetPdf);
-                try {
-                    myPdfDocument.writeTo(new FileOutputStream(filePath));
-                    } catch (IOException e) {
-                    Log.e("main", "error "+e.toString());
-                    }
-                myPdfDocument.close();
-
-                Toast.makeText(getApplicationContext(),"The list is stored at "+targetPdf,Toast.LENGTH_LONG).show();
 
 
-
-
-            }
-        });
     }
 
     public static class EventParticipantsViewHolder extends RecyclerView.ViewHolder {

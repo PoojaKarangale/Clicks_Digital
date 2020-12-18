@@ -76,8 +76,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="4dp"
-        android:layout_toEndOf="@+id/display_name"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+
+        >
 
         <Button
             android:id="@+id/request_cancel_btn"
@@ -87,20 +88,22 @@
             android:text="Cancel"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="10sp"
-            android:visibility="gone" />
+            android:textSize="8sp"
+            android:visibility="gone"
+            />
 
         <Button
             android:id="@+id/request_accept_btn"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:background="@color/colorPrimary"
             android:text="Accept"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="10sp"
-            android:visibility="gone" />
+            android:textSize="8sp"
+            android:visibility="gone"
+           />
 
     </LinearLayout>
 

@@ -110,12 +110,14 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
             }
         });
+
         holder.join_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //task.execute("saveDataToDatabase", group.getGroupid(), group.getGroup_name());
                 // sentRequestToJoinGroup(group.getGroupid(),group.getGroup_name());
                 addUserToGroup(group.getGroupid(), current_user_id);
+                holder.join_btn.setVisibility(View.GONE);
                 //sendRequest(group.getGroupid());
             }
         });
