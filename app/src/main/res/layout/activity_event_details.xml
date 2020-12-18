@@ -29,12 +29,23 @@
             android:layout_height="match_parent"
             >
 
-            <ImageView
+          <!--  <ImageView
                 android:id="@+id/event_image"
                 android:layout_width="match_parent"
                 android:layout_height="340dp"
                 android:scaleType="fitCenter"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="parallax" />-->
+            <ImageView
+                android:id="@+id/event_image"
+                android:layout_width="match_parent"
+                android:layout_height="340dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@drawable/rectangle_box"
+                android:scaleType="fitCenter"
+                app:layout_collapseMode="parallax"
+                 />
+
             <ImageButton
                 android:id="@+id/close_btn"
                 android:layout_width="wrap_content"

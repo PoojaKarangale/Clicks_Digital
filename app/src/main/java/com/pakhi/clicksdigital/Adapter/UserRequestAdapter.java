@@ -32,21 +32,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.ViewHolder> {
 
     FirebaseDatabaseInstance rootRef;
-    String                   groupId, groupName;
     private Context            mcontext;
-    private List<User_request> userRequests;
     private List<String>       requestingUsers;
 
-    public UserRequestAdapter(Context mcontext, List<User_request> userRequests) {
-        this.mcontext=mcontext;
-        this.userRequests=userRequests;
-    }
-
-    public UserRequestAdapter(Context mcontext, List<String> requestingUsers, String groupId, String groupName) {
+    public UserRequestAdapter(Context mcontext, List<String> requestingUsers) {
         this.mcontext=mcontext;
         this.requestingUsers=requestingUsers;
-        this.groupId=groupId;
-        this.groupName=groupName;
+
     }
 
     @NonNull
@@ -97,7 +89,6 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             }
         });
 
-        holder.group_name.setText(groupName);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,10 +101,11 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             @Override
             public void onClick(View v) {
                 deleteUserRequest(userId, position);
-                sendUserTheRejectionMessage(groupName);
+               // sendUserTheRejectionMessage(groupName);
                 // createDialog("");
             }
         });
+
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +113,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
                // addUserToGroup(groupId, userId);
                 approveUser(userId);
                 deleteUserRequest(userId, position);
-                sendUserTheWelcomeMessage(groupName, groupId);
+                //sendUserTheWelcomeMessage(groupName, groupId);
             }
         });
     }
@@ -191,9 +183,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     private void deleteUserRequest(String userId, int position) {
         requestingUsers.remove(position);
-        /*  rootRef.getUserRequestsRef().child(request_id).removeValue();*/
-        rootRef.getUserRequestsRef().child(groupId).child(userId).removeValue();
-
+        rootRef.getUserRequestsRef().child(userId).removeValue();
     }
 
     private void addUserToGroup(String groupId, String userId) {

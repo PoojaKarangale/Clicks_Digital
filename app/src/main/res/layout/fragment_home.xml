@@ -6,6 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.HomeFragment">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+                >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/display"
@@ -14,14 +18,16 @@
             android:scrollbarAlwaysDrawVerticalTrack="true"
              >
 
-
         </androidx.recyclerview.widget.RecyclerView>
 
-        <!-- activity_screen_slide.xml
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteY="391dp" />
--->
+        <Button
+            android:id="@+id/request_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Request for profile approval"
+            android:visibility="gone">
+
+        </Button>
+        </RelativeLayout>
 </FrameLayout>

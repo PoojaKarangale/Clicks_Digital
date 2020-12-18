@@ -195,6 +195,10 @@ public class StartActivity extends AppCompatActivity {
            // startActivity(new Intent(this, SettingActivity.class));
             ShareApp.shareApp(getApplicationContext());
         }
+        if (item.getItemId() == R.id.user_request) {
+            // startActivity(new Intent(this, SettingActivity.class));
+           startActivity(new Intent(this,UserRequestActivity.class));
+        }
 
         return true;
     }

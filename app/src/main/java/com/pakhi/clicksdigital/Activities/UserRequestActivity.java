@@ -28,10 +28,10 @@ import java.util.List;
 public class UserRequestActivity extends AppCompatActivity {
 
     FirebaseDatabaseInstance rootRef;
-    String                   groupId, groupName;
+  //  String                   groupId, groupName;
     private RecyclerView       recyclerView;
     private UserRequestAdapter userRequestAdapter;
-    private List<User_request> user_requests  = new ArrayList<>();
+  //  private List<User_request> user_requests  = new ArrayList<>();
     private List<String>       requestingUsers = new ArrayList<>();
 
     @Override
@@ -39,8 +39,6 @@ public class UserRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_request);
 
-        groupId=getIntent().getStringExtra(Const.groupId);
-        groupName=getIntent().getStringExtra(Const.groupName);
         rootRef=FirebaseDatabaseInstance.getInstance();
 
         recyclerView=findViewById(R.id.recycler_requesting_users);
@@ -49,7 +47,7 @@ public class UserRequestActivity extends AppCompatActivity {
 
         /* userRequestAdapter = new UserRequestAdapter(getApplicationContext(), user_requests);
         recyclerView.setAdapter(userRequestAdapter);*/
-        userRequestAdapter=new UserRequestAdapter(getApplicationContext(), requestingUsers, groupId, groupName);
+        userRequestAdapter=new UserRequestAdapter(getApplicationContext(), requestingUsers);
         recyclerView.setAdapter(userRequestAdapter);
 
         //showRequestingUsers();
@@ -75,7 +73,7 @@ public class UserRequestActivity extends AppCompatActivity {
         });
     }
 
-    private void showRequestingUsers() {
+  /*  private void showRequestingUsers() {
         DatabaseReference reference=rootRef.getUserRequestsRef();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -93,7 +91,7 @@ public class UserRequestActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 
     @Override
     protected void onStart() {

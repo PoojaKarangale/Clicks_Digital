@@ -196,8 +196,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         });
     }
 */
-
-  /*  private void readRequestedGroups() {
+/*  private void readRequestedGroups() {
         DatabaseReference reference=groupRef.child(current_user_id).child(ConstFirebase.groupRequests);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -230,7 +229,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         });
     }
 */
- /*   private void readUsersGroups() {
+/*   private void readUsersGroups() {
         DatabaseReference reference=usersRef.child(current_user_id).child("groups");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
