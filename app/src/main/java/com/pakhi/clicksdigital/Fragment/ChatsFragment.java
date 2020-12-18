@@ -59,6 +59,7 @@ public class ChatsFragment extends Fragment {
 
         chatsList=(RecyclerView) PrivateChatsView.findViewById(R.id.recycler_chats);
         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
+
         updateToken(FirebaseInstanceId.getInstance().getToken());
 
         FloatingActionButton fab_create_event=PrivateChatsView.findViewById(R.id.fab_create_event);

@@ -75,10 +75,13 @@ public class HomeFragment extends Fragment {
 
         topicReference=rootRef.getTopicRef();
         Log.i("topicReference", String.valueOf(topicReference));
-        display=(RecyclerView) homeView.findViewById(R.id.display);
-        requestBtn=homeView.findViewById(R.id.request_button);
-        display.setLayoutManager(new LinearLayoutManager(getContext()));
         currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
+        requestBtn=homeView.findViewById(R.id.request_button);
+
+        display=(RecyclerView) homeView.findViewById(R.id.display);
+        //display.setHasFixedSize(true);
+        display.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
         // Inflate the layout for this fragment
         /*mPager = (ViewPager) homeView.findViewById(R.id.pager);

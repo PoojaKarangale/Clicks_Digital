@@ -152,6 +152,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
 
     private void loadData() {
 
+        topic_detail.setText(topic.getMessage());
         UsersRef.child(topic.getFrom()).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -170,6 +171,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
 
             }
         });
+
 
         date_time.setText(topic.getTime() + " " + topic.getDate());
 
