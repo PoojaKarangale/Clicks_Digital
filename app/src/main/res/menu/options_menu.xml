@@ -8,4 +8,8 @@
         android:id="@+id/settings"
         android:title="Settings" />
 
+    <item
+        android:id="@+id/share_app"
+        android:title="Share me" />
+
 </menu>

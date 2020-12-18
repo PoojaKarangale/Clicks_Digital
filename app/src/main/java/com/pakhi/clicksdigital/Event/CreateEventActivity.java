@@ -77,7 +77,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private Spinner        spinner;
     private ProgressDialog progressDialog;
 
-    private DatabaseReference userRef, eventRef, eventCategory;
+    private DatabaseReference userRef, eventRef/*, eventCategory*/;
     private FirebaseDatabaseInstance rootRef;
 
     @Override
@@ -88,7 +88,7 @@ public class CreateEventActivity extends AppCompatActivity {
         rootRef=FirebaseDatabaseInstance.getInstance();
         userRef=rootRef.getUserRef();
         eventRef=rootRef.getEventRef();
-        eventCategory=rootRef.getEventCatRef();
+        //eventCategory=rootRef.getEventCatRef();
 
         SharedPreference pref=SharedPreference.getInstance();
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -381,7 +381,11 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private void spinnerImplementationForTopic() {
         spinner=findViewById(R.id.event_cat_spinner);
-        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
+      //  final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
+        final String[] countries=getResources().getStringArray(R.array.array_categories);
+
+        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,android.R.id.text1, countries);
+
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
@@ -398,28 +402,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        eventCategory.child("Artificial Inteligence").setValue("");
-        eventCategory.child("Cyber Security").setValue("");
-        eventCategory.child("Virtual Reality").setValue("");
-        eventCategory.child("Block Chain").setValue("");
-        eventCategory.child("Other").setValue("");
-
-        eventCategory.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                spinnerAdapter.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String cat=dataSnapshot.getKey();
-                    spinnerAdapter.add(cat);
-                }
-                spinnerAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
@@ -440,9 +422,6 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 category=input.getText().toString();
-                // spinnerAdapter.add(category);
-                //eventCategory.child(category).setValue("");
-                // spinnerAdapter.insert(category, position);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
