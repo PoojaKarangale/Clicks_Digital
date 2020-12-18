@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
     SharedPreference pref;
     String messageType, messagekEY, currentTime,currentDate, messagePass, currentGroupId,publisher;
     FirebaseDatabaseInstance rootRef;
-    DatabaseReference userRef, grpChatRef, grpNameRef,topicReplyRef;
+    DatabaseReference userRef, grpChatRef, grpNameRef,topicReplyRef, likeRef;
     private static final int NUM_PAGES = 5;
     private ViewPager mPager;
     private PagerAdapter pagerAdapter;
@@ -79,6 +79,7 @@ public class HomeFragment extends Fragment {
         grpChatRef=rootRef.getGroupChatRef();
         grpNameRef=rootRef.getGroupRef();
         topicReplyRef=rootRef.getReplyRef();
+        likeRef=rootRef.getTopicLikesRef();
 
         topicReference = rootRef.getTopicRef();
         Log.i("topicReference", String.valueOf(topicReference));
@@ -121,14 +122,31 @@ public class HomeFragment extends Fragment {
                 topicReference.child(grpID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(final DataSnapshot mysnap : snapshot.getChildren()){
+                        for( DataSnapshot mysnap : snapshot.getChildren()){
 
                             Log.i("topic id -----------", String.valueOf(mysnap.getKey()));
+
+                            likeRef.child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        Log.i("No. of Likes -------", String.valueOf(snapshot.getChildrenCount()));
+                                        holder.noOfLikes.setText(String.valueOf(snapshot.getChildrenCount()));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
                             topicReplyRef.child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(snapshot.exists()){
+                                        Log.i("No. of Replies -------", String.valueOf(snapshot.getChildrenCount()));
                                         holder.NoOfReplies.setText(String.valueOf(snapshot.getChildrenCount()));
                                     }
 
@@ -143,6 +161,8 @@ public class HomeFragment extends Fragment {
                             grpNameRef.child(grpID).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                    Log.i("The grp name is ", snapshot.child("group_name").getValue().toString());
                                     holder.groupName.setText(snapshot.child("group_name").getValue().toString());
                                     final String image_url=snapshot.child("image_url").getValue().toString();
 
@@ -153,11 +173,10 @@ public class HomeFragment extends Fragment {
 
                                 }
                             });
-
                             grpChatRef.child(grpID).child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                                    holder.topicText.setText(snapshot.child("message").getValue().toString());
                                     final Message m = snapshot.getValue(Message.class);
                                     holder.replyButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -191,13 +210,15 @@ public class HomeFragment extends Fragment {
 
 
                                     Log.i("The topic Text - ",String.valueOf(snapshot.child("message").getValue().toString()));
-
+*/
                                     holder.dateAndTime.setText(snapshot.child("date").getValue().toString() + " " +  snapshot.child("time").getValue().toString());
-*/                                  publisherKey = snapshot.child("from").getKey();
-                                    userRef.child(publisherKey).addValueEventListener(new ValueEventListener() {
+                                    publisherKey = snapshot.child("from").getValue().toString();
+                                    Log.i("Publisher : ",publisherKey );
+                                    userRef.child(snapshot.child("from").getValue().toString()).addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            //holder.publisherName.setText(snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getUserName().toString()).getValue().toString() + " " + snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getLastName().toString()).getValue().toString());
+                                            //Log.i("The Publisher is ",snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getUserName().toString()).getValue().toString() + " " + snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getLastName().toString()).getValue().toString());
+                                            holder.publisherName.setText(snapshot.child("DETAILS").child("user_name").getValue().toString() + " "+snapshot.child("DETAILS").child("last_name").getValue().toString());
                                         }
 
                                         @Override
@@ -206,6 +227,7 @@ public class HomeFragment extends Fragment {
                                         }
                                     });
 
+
                                 }
 
                                 @Override
@@ -213,6 +235,8 @@ public class HomeFragment extends Fragment {
 
                                 }
                             });
+                            /**/
+
 
 
                             arayOfTopicID.add(mysnap.getKey());
@@ -264,6 +288,8 @@ public class HomeFragment extends Fragment {
                         //finish();
                     }
                 })
+
+
                 .setNegativeButton("No", null)
                 .show();
     }
@@ -285,7 +311,7 @@ public class HomeFragment extends Fragment {
     }
     public class TopicDisplayHome extends RecyclerView.ViewHolder{
 
-        TextView groupName, topicText, dateAndTime, NoOfReplies, publisherName, replyButton;
+        TextView groupName, topicText, dateAndTime, NoOfReplies, publisherName, replyButton, likeButton, noOfLikes;
         public TopicDisplayHome(@NonNull View itemView) {
             super(itemView);
 
@@ -295,6 +321,8 @@ public class HomeFragment extends Fragment {
             NoOfReplies = itemView.findViewById(R.id.no_of_replies);
             publisherName = itemView.findViewById(R.id.publisher_name);
             replyButton = itemView.findViewById(R.id.reply);
+            likeButton = itemView.findViewById(R.id.likes);
+            noOfLikes = itemView.findViewById(R.id.no_of_likes);
 
 
         }

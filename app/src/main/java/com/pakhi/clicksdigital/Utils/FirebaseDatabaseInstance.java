@@ -41,7 +41,7 @@ public class FirebaseDatabaseInstance {
     }
 
     public DatabaseReference getReplyRef() {
-        return rootRef.getRef().child(ConstFirebase.replyRef);
+        return rootRef.child(ConstFirebase.replyRef);
     }
 
     public DatabaseReference getChatRequestsRef() {
