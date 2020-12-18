@@ -174,6 +174,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
 
 
         date_time.setText(topic.getTime() + " " + topic.getDate());
+        topic_detail.setText(topic.getMessage());
 
 
     }
