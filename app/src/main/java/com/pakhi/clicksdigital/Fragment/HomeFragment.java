@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment {
     Button requestBtn;
     private ViewPager    mPager;
     private PagerAdapter pagerAdapter;
+    Message m;
 
     public HomeFragment() {
 
@@ -200,7 +201,7 @@ public class HomeFragment extends Fragment {
                             grpChatRef.child(grpID).child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    final Message m=snapshot.getValue(Message.class);
+                                     m=snapshot.getValue(Message.class);
                                     holder.topicText.setText(m.getMessage());
 
                                     holder.replyButton.setOnClickListener(new View.OnClickListener() {
@@ -212,11 +213,13 @@ public class HomeFragment extends Fragment {
 
                                         }
                                     });
+
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             Intent replyIntent=new Intent(getContext(), TopicRepliesActivity.class);
                                             replyIntent.putExtra("message", m);
+
                                             startActivity(replyIntent);
                                         }
                                     });
@@ -224,7 +227,7 @@ public class HomeFragment extends Fragment {
 
                                     holder.dateAndTime.setText(snapshot.child("date").getValue().toString() + " " + snapshot.child("time").getValue().toString());
                                     publisherKey=snapshot.child("from").getValue().toString();
-                                    Log.i("Publisher : ", publisherKey);
+                                    //Log.i("Publisher : ", publisherKey);
                                     userRef.child(m.getFrom()).child("DETAILS").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -249,7 +252,7 @@ public class HomeFragment extends Fragment {
 
                         }
 
-                        Log.i("Length of arrayOfTopic", String.valueOf(arayOfTopicID.size()));
+                        //Log.i("Length of arrayOfTopic", String.valueOf(arayOfTopicID.size()));
                     }
 
                     @Override
