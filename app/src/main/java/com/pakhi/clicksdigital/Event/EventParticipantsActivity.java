@@ -263,6 +263,8 @@ public class EventParticipantsActivity extends AppCompatActivity {
                     }
                 myPdfDocument.close();
 
+                Toast.makeText(getApplicationContext(),"The list is stored at "+targetPdf,Toast.LENGTH_LONG).show();
+
 
 
 
