@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="658dp"
+        android:layout_marginBottom="578dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,14 +57,9 @@
         android:id="@+id/bottomcons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="628dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintTop_toBottomOf="@+id/topcons"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:layout_editor_absoluteX="16dp">
 
         <TextView
             android:id="@+id/subtext"
@@ -73,13 +68,15 @@
             android:layout_alignParentStart="true"
 
             android:layout_marginStart="16dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="131dp"
-            android:layout_marginBottom="510dp"
+            android:layout_marginEnd="67dp"
             android:fontFamily="sans-serif"
             android:text="If you uncheck you won't receive any notifications \nfrom this application"
             android:textColor="@color/pale_grey"
-            android:textSize="@dimen/dimen_12dp" />
+            android:textSize="@dimen/dimen_12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

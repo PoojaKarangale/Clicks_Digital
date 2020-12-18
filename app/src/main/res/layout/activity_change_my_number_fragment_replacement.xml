@@ -34,7 +34,7 @@
         android:layout_below="@+id/ccp"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="135dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="34dp"
         android:layout_marginEnd="136dp"
         android:layout_marginBottom="518dp"
         android:background="@drawable/button_bg"
