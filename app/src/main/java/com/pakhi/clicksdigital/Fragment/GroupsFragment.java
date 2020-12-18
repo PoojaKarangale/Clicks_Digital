@@ -116,7 +116,6 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         join_group_layout=groupFragmentView.findViewById(R.id.join_group_layout);
         fab_create_group=groupFragmentView.findViewById(R.id.fab_create_group);
         fab_join_group=groupFragmentView.findViewById(R.id.fab_join_group);
-
     }
 
     private void RetrieveAndDisplayGroups() {
@@ -125,6 +124,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         userGroupRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     String group_key=snapshot.getKey();
@@ -132,13 +132,13 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                     GroupRef.child(group_key).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                            if(dataSnapshot.exists()){
                             Group group=dataSnapshot.getValue(Group.class);
 
                             groups.add(group);
 
                             groupAdapter.notifyDataSetChanged();
-                        }
+                        }}
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -146,7 +146,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                         }
                     });
                 }
-            }
+            }}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
