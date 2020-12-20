@@ -66,7 +66,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
                 .resize(120, 120)
                 .into(holder.image_profile);
 
-        // Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
+         Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
 
         holder.image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +83,10 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
 
                 Intent groupChatActivity=new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
                 groupChatActivity.putExtra("groupName", group.getGroup_name());
+                Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
+
                 groupChatActivity.putExtra("groupId", group.getGroupid());
                 mcontext.startActivity(groupChatActivity);
-
 
             }
         });

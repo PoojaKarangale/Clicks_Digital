@@ -56,7 +56,7 @@
             <LinearLayout
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@id/rel1"
                 android:orientation="vertical"
                 android:padding="20dp"

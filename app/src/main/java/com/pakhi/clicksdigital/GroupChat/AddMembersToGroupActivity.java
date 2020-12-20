@@ -72,6 +72,7 @@ public class AddMembersToGroupActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if(snapshot.child(Const.USER_DETAILS).exists())
                     allUsers.add(snapshot.child(Const.USER_DETAILS).getValue(User.class));
                 }
                 addMembersToGroupAdapter.notifyDataSetChanged();

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
@@ -20,7 +19,6 @@ import java.util.List;
 
 public class AddMembersToGroupAdapter extends RecyclerView.Adapter<AddMembersToGroupAdapter.ViewHolder> {
 
-    DatabaseReference databaseReference;
     private Context    mcontext;
     private List<User> allUsers;
 

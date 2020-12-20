@@ -21,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -70,7 +69,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         Picasso.get().load(groupMember.getImage_url()).into(holder.profileImage);
         holder.userName.setText(groupMember.getUser_name());
         holder.userStatus.setText(groupMember.getUser_bio());
-
+        holder.is_admin.setVisibility(View.GONE);
         holder.profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,7 +145,6 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
                         } else {
                             makeGroupAdmin(visit_user_id);
                         }
-
                         break;
                 }
             }
@@ -172,7 +170,6 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         });
     }
 
-
     private void viewProfile(String visit_user_id) {
         Intent profileIntent=new Intent(mcontext, VisitProfileActivity.class);
         profileIntent.putExtra("visit_user_id", visit_user_id);
@@ -181,7 +178,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
     private void viewPhoto(String image_url) {
 
-        EnlargedImage.enlargeImage(image_url,mcontext);
+        EnlargedImage.enlargeImage(image_url, mcontext);
 
     }
 

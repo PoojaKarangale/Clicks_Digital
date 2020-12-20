@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Certificates;
@@ -26,6 +25,7 @@ import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -35,32 +35,34 @@ import java.util.List;
 public class VisitProfileActivity extends AppCompatActivity {
 
     boolean      isVisterIsAdmin     =false;
-    boolean      isProfileUserIsAdmin =false;
+    boolean      isProfileUserIsAdmin=false;
     UserDatabase db;
+    FirebaseDatabaseInstance rootRef;
     private String    user_id;
     private ImageView profile_image;
     private TextView  user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
     private User user, currentUser;
     private String receiverUserID, senderUserID, Current_State;
     private Button make_admin, removeAdmin, message_btn;
-    private DatabaseReference UserRef, ChatRequestRef, ContactsRef, NotificationRef;
+    private DatabaseReference userRef, ChatRequestRef, ContactsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_profile);
 
-        UserRef=FirebaseDatabase.getInstance().getReference().child("Users");
+        rootRef=FirebaseDatabaseInstance.getInstance();
+        userRef=rootRef.getUserRef();
         user_id=getIntent().getStringExtra("visit_user_id");
         db=new UserDatabase(this);
         getCurrentUserFromDb();
 
         initializeMsgRequestFields();
 
-        UserRef.child(user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        userRef.child(user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     user=dataSnapshot.getValue(User.class);
                     Picasso.get()
                             .load(user.getImage_url())
@@ -87,7 +89,7 @@ public class VisitProfileActivity extends AppCompatActivity {
         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
             // make him admin btn set visible
             make_admin.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             make_admin.setVisibility(View.INVISIBLE);
         }
         if (isVisterIsAdmin && isProfileUserIsAdmin) {
@@ -113,7 +115,6 @@ public class VisitProfileActivity extends AppCompatActivity {
             }
         });
         // ManageChatRequests();
-
     }
 
     private void getCurrentUserFromDb() {
@@ -134,9 +135,9 @@ public class VisitProfileActivity extends AppCompatActivity {
 
     private void initializeMsgRequestFields() {
 
-        ChatRequestRef=FirebaseDatabase.getInstance().getReference().child("Chat Requests");
-        ContactsRef=FirebaseDatabase.getInstance().getReference().child("Contacts");
-        NotificationRef=FirebaseDatabase.getInstance().getReference().child("Notifications");
+        ChatRequestRef=rootRef.getChatRequestsRef();
+        ContactsRef=rootRef.getContactRef();
+        //   NotificationRef=FirebaseDatabase.getInstance().getReference().child("Notifications");
         senderUserID=currentUser.getUser_id();
         receiverUserID=user_id;
 
@@ -218,7 +219,7 @@ public class VisitProfileActivity extends AppCompatActivity {
         final List<Certificates> certificates=new ArrayList<Certificates>();
         //Loading the data
 
-        DatabaseReference databaseReference=UserRef.child(user_id).child("cerificates");
+        DatabaseReference databaseReference=userRef.child(user_id).child("cerificates");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -270,12 +271,11 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void viewProfile(String image_url) {
-
-       EnlargedImage.enlargeImage(image_url,getApplicationContext());
+        EnlargedImage.enlargeImage(image_url, getApplicationContext());
     }
 
     public void makeAdmin(final View view) {
-        DatabaseReference databaseReference=UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=userRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -287,7 +287,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(final View view) {
-        DatabaseReference databaseReference=UserRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=userRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
         databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

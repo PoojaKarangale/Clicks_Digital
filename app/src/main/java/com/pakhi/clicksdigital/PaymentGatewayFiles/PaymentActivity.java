@@ -147,7 +147,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void addUserToEventDataBase() {
         FirebaseDatabaseInstance rootRef=FirebaseDatabaseInstance.getInstance();
-        DatabaseReference currentEventRef=rootRef.getEventRef().child(event.getEventId());
+        DatabaseReference currentEventRef=rootRef.getEventRef().child(event.getEventType()).child(event.getEventId());
         Toast.makeText(this, "you have registerd successully", Toast.LENGTH_SHORT).show();
         currentEventRef.child("Participants").child(user.getUser_id()).setValue("");
     }

@@ -119,7 +119,7 @@ public class GroupChatActivity extends AppCompatActivity {
         GetUserInfo();
 
         InitializeFields();
-
+        //currentGroupName = "Name Here";
         group_name.setText(currentGroupName);
 
         GroupIdRef.child("Users").addValueEventListener(new ValueEventListener() {
@@ -224,7 +224,8 @@ ChildEventListener mChildEventListener ;
                         messageAdapter.notifyDataSetChanged();
                         linearLayoutManager.setStackFromEnd(true);
 
-                      *//*  if(time_fired > 2 && !mSentMessage){
+                      */
+/*  if(time_fired > 2 && !mSentMessage){
                           //  userMessageInput.setVisibility(View.VISIBLE);
                           //  mFab.show();
                         }
@@ -233,7 +234,8 @@ ChildEventListener mChildEventListener ;
                            // userMessageInput.setVisibility(View.GONE);
                           //  mFab.hide();
                         }*//*
-*//*
+*/
+        /*
                         if(mSentMessage){
                             mSentMessage = false;
                         }
