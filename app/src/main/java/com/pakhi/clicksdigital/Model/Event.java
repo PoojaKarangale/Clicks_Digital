@@ -2,7 +2,7 @@ package com.pakhi.clicksdigital.Model;
 
 import java.io.Serializable;
 
-public class Event implements Serializable {
+public class Event implements Serializable, Comparable<Event> {
 
     String  eventId;
     String  eventName;
@@ -199,6 +199,13 @@ public class Event implements Serializable {
 
     public void setCreater_id(String creater_id) {
         this.creater_id=creater_id;
+    }
+
+    @Override
+    public int compareTo(Event o) {
+        if (getTimeStamp() == null || o.getTimeStamp() == null)
+            return 0;
+        return getTimeStamp().compareTo(o.getTimeStamp());
     }
 
 }

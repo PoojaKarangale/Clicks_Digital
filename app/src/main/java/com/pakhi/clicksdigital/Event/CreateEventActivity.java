@@ -45,6 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
@@ -296,35 +297,7 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void createEvent() {
-        /*boolean addressFlag=false, feeFlag=false, profileFlag=false;
-        if (payable) {
-            //check fee_amount
-            if (ValidateInput.field(fee_amount)) {
-                feeFlag=true;
-            } else {
-                feeFlag=false;
-            }
-        } else {
-            feeFlag=true;
-        }
 
-        if (event_type.equals("Both") || event_type.equals("Offline")) {
-            if (ValidateInput.field(venu) || ValidateInput.field(city) || ValidateInput.field(address)) {
-                addressFlag=true;
-            } else {
-                addressFlag=false;
-            }
-        } else {
-            if (ValidateInput.field(address)) {
-                addressFlag=true;
-            } else {
-                addressFlag=false;
-            }
-        }*/
-
-/*
-        if (addressFlag && feeFlag) {
-            if (ValidateInput.field(event_name) && ValidateInput.field(description)) {*/
         // progressDialog.show();
         String eventKey=eventRef.child(event_type).push().getKey();
         Log.d("TESTINGEXTENTION", "--------pic image url----after-------------------" + picImageUrlString);
@@ -346,6 +319,7 @@ public class CreateEventActivity extends AppCompatActivity {
         int totalFee=Integer.parseInt(total_fee.getText().toString());
         Event event;
         event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
+
         eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -354,8 +328,29 @@ public class CreateEventActivity extends AppCompatActivity {
                 finish();
             }
         });
-            /*}
-        }*/
+
+       /* if(event.getEventType().equals(ConstFirebase.eventOnline)){
+          eventRef.child(ConstFirebase.eventOnline).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+              @Override
+              public void onSuccess(Void aVoid) {
+                  Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
+                  progressDialog.dismiss();
+                  finish();
+              }
+          });
+      }
+        else {
+          eventRef.child(ConstFirebase.eventOffline).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+              @Override
+              public void onSuccess(Void aVoid) {
+                  Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
+                  progressDialog.dismiss();
+                  finish();
+              }
+          });
+
+      }*/
+
     }
 
   /*  private void getCitySelected() {

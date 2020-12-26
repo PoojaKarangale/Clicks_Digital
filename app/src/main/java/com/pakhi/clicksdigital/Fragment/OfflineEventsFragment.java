@@ -25,6 +25,8 @@ import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -65,13 +67,23 @@ public class OfflineEventsFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchEvents(query.toString().trim().toLowerCase());
+                if(query.equals("")){
+                    showEvents(city);
+                }else {
+                    searchEvents(query.toString().trim().toLowerCase());
+                }
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchEvents(newText.toString().trim().toLowerCase());
+               if(newText.equals("")){
+                   showEvents(city);
+               }else {
+                   searchEvents(newText.toString().trim().toLowerCase());
+               }
+
                 return false;
             }
         });
@@ -126,6 +138,11 @@ public class OfflineEventsFragment extends Fragment {
                         }
                     }
                 }
+                Collections.sort(events, new Comparator<Event>() {
+                    public int compare(Event o1, Event o2) {
+                        return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+                    }
+                });
                 eventAdapter.notifyDataSetChanged();
             }
 
@@ -134,6 +151,12 @@ public class OfflineEventsFragment extends Fragment {
 
             }
         });
+
+       /* Collections.sort(events, new Comparator<Event>() {
+            public int compare(Event o1, Event o2) {
+                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+            }
+        });*/
     }
 
     private void showEvents(final String s) {
@@ -161,7 +184,7 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child("Both").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+      eventRef.child("Both").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
@@ -175,6 +198,11 @@ public class OfflineEventsFragment extends Fragment {
                         events.add(event);
                     }
                 }
+                Collections.sort(events, new Comparator<Event>() {
+                    public int compare(Event o1, Event o2) {
+                        return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+                    }
+                });
                 eventAdapter.notifyDataSetChanged();
             }
 
@@ -183,6 +211,13 @@ public class OfflineEventsFragment extends Fragment {
 
             }
         });
+
+       /* Collections.sort(events, new Comparator<Event>() {
+            public int compare(Event o1, Event o2) {
+                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+            }
+        });*/
+     // Collections.sort(events);
     }
 
     private void readUserData() {

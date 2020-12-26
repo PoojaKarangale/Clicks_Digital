@@ -1,16 +1,13 @@
 package com.pakhi.clicksdigital.Fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,17 +16,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
-import com.pakhi.clicksdigital.Model.GroupTopic;
+import com.pakhi.clicksdigital.Adapter.HomePageTopicAdapter;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.ScreenSlidePageFragment;
@@ -42,19 +34,16 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     private static final int NUM_PAGES=5;
-    Context           context;
-    DatabaseReference topicReference;
-    ArrayList<String> arayOfTopicID=new ArrayList<>();
-    String            publisherKey, currentUserID;
-    RecyclerView     display;
-    SharedPreference pref;
-    String           messageType, messagekEY, currentTime, currentDate, messagePass, currentGroupId, publisher;
+    DatabaseReference  topicReference;
+    ArrayList<Message> trendingTopics=new ArrayList<>();
+    String             publisherKey, currentUserID;
+    RecyclerView             topicRecyclerView;
+    SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;
     DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef, likeRef, userRequestRef;
-    Button requestBtn;
-    private ViewPager    mPager;
-    private PagerAdapter pagerAdapter;
-    Message m;
+    Button               requestBtn;
+    HomePageTopicAdapter topicAdapter;
+    Message              m;
 
     public HomeFragment() {
 
@@ -67,27 +56,10 @@ public class HomeFragment extends Fragment {
         pref=SharedPreference.getInstance();
 
         rootRef=FirebaseDatabaseInstance.getInstance();
-        userRef=rootRef.getUserRef();
-        grpChatRef=rootRef.getGroupChatRef();
-        grpNameRef=rootRef.getGroupRef();
-        topicReplyRef=rootRef.getReplyRef();
-        userRequestRef=rootRef.getUserRequestsRef();
-        likeRef=rootRef.getTopicLikesRef();
 
-        topicReference=rootRef.getTopicRef();
-        Log.i("topicReference", String.valueOf(topicReference));
         currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
         requestBtn=homeView.findViewById(R.id.request_button);
-
-        display=(RecyclerView) homeView.findViewById(R.id.display);
-        //display.setHasFixedSize(true);
-        display.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-        // Inflate the layout for this fragment
-        /*mPager = (ViewPager) homeView.findViewById(R.id.pager);
-        pagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
-        mPager.setAdapter(pagerAdapter);*/
+        setupRecyclerView(homeView);
 
         rootRef.getUserRef().child(currentUserID).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,165 +93,110 @@ public class HomeFragment extends Fragment {
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userRequestRef.child(currentUserID).setValue("");
+                rootRef.getUserRequestsRef().child(currentUserID).setValue("");
                 Toast.makeText(getContext(), "Request is sent to admin wait for approval ", Toast.LENGTH_LONG).show();
             }
         });
-
+        readTopics();
         return homeView;
+    }
+
+    private void setupRecyclerView(View v) {
+        topicRecyclerView=(RecyclerView) v.findViewById(R.id.display);
+        topicRecyclerView.setHasFixedSize(true);
+        topicRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        topicAdapter=new HomePageTopicAdapter(getContext(), trendingTopics);
+        topicRecyclerView.setAdapter(topicAdapter);
+    }
+
+
+    public void readTopics() {
+        Log.i("Topic reading", "in read topic");
+
+        // trendingTopics.clear();
+
+        rootRef.getTopicRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                trendingTopics.clear();
+                Log.i("Topic reading", "in topic ref" + rootRef.getTopicRef());
+                for (DataSnapshot topicSnap : snapshot.getChildren()) {
+
+                    Log.i("Topic reading", "in for");
+                    rootRef.getGroupChatRef().child(topicSnap.getValue().toString()).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            Log.i("Topic reading", "in group chat" + rootRef.getGroupChatRef());
+                            trendingTopics.add(0, snapshot.getValue(Message.class));
+                            Log.i("Topic reading", "in group chat size ---  " + trendingTopics.size());
+                            //  topicRecyclerView.clearOnScrollListeners();
+                            topicAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+                topicAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+       /* rootRef.getTopicRef().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+               // trendingTopics.clear();
+                for (DataSnapshot topicSnap : snapshot.getChildren()) {
+                    rootRef.getGroupChatRef().child(topicSnap.getValue().toString()).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            trendingTopics.add(0,snapshot.getValue(Message.class));
+                            topicAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+               // topicAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
     }
 
     @Override
     public void onStart() {
-
         super.onStart();
-
-        FirebaseRecyclerOptions<GroupTopic> options=
-                new FirebaseRecyclerOptions.Builder<GroupTopic>()
-                        .setQuery(topicReference, GroupTopic.class)
-                        .build();
-
-        FirebaseRecyclerAdapter<GroupTopic, HomeFragment.TopicDisplayHome> adapter
-                =new FirebaseRecyclerAdapter<GroupTopic, TopicDisplayHome>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull final TopicDisplayHome holder, final int position, @NonNull GroupTopic model) {
-
-                Log.i("group id ------------", String.valueOf(getRef(position).getKey()));
-
-                final String grpID=getRef(position).getKey();
-                //GroupTopic groupTopic = (GroupTopic) getRef(position);
-                Log.i("group id ------------", String.valueOf(grpID));
-                topicReference.child(grpID).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (final DataSnapshot mysnap : snapshot.getChildren()) {
-
-                            Log.i("topic id -----------", String.valueOf(mysnap.getKey()));
-
-                            likeRef.child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        Log.i("No. of Likes -------", String.valueOf(snapshot.getChildrenCount()));
-                                        holder.noOfLikes.setText(String.valueOf(snapshot.getChildrenCount()));
-                                    }
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
-                            topicReplyRef.child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        holder.NoOfReplies.setText(String.valueOf(snapshot.getChildrenCount()));
-                                    }
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
-                            grpNameRef.child(grpID).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    holder.groupName.setText(snapshot.child("group_name").getValue().toString());
-                                    //   final String image_url=snapshot.child("image_url").getValue().toString();
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
-                            grpChatRef.child(grpID).child(mysnap.getKey()).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                     m=snapshot.getValue(Message.class);
-                                    holder.topicText.setText(m.getMessage());
-
-                                    holder.replyButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent replyIntent=new Intent(getContext(), TopicRepliesActivity.class);
-                                            replyIntent.putExtra("message", m);
-                                            startActivity(replyIntent);
-
-                                        }
-                                    });
-
-                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent replyIntent=new Intent(getContext(), TopicRepliesActivity.class);
-                                            replyIntent.putExtra("message", m);
-
-                                            startActivity(replyIntent);
-                                        }
-                                    });
-
-
-                                    holder.dateAndTime.setText(snapshot.child("date").getValue().toString() + " " + snapshot.child("time").getValue().toString());
-                                    publisherKey=snapshot.child("from").getValue().toString();
-                                    //Log.i("Publisher : ", publisherKey);
-                                    userRef.child(m.getFrom()).child("DETAILS").addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            //holder.publisherName.setText(snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getUserName().toString()).getValue().toString() + " " + snapshot.child(rootRef.getUserDetails().toString()).child(rootRef.getLastName().toString()).getValue().toString());
-                                            holder.publisherName.setText(snapshot.child(Const.USER_NAME).getValue() + " " + snapshot.child("last_name").getValue());
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-
-                            arayOfTopicID.add(mysnap.getKey());
-
-                        }
-
-                        //Log.i("Length of arrayOfTopic", String.valueOf(arayOfTopicID.size()));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-
-            @NonNull
-            @Override
-            public TopicDisplayHome onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trending_topic, parent, false);
-                // HomeFragment.TopicDisplayHome viewHolder=new HomeFragment.TopicDisplayHome(view);
-                return new TopicDisplayHome(view);
-
-            }
-        };
-
-        display.setAdapter(adapter);
-        adapter.startListening();
+        //  readTopics();
     }
-
 
     public void backPressed() {
         new AlertDialog.Builder(getContext())
@@ -314,23 +231,5 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public class TopicDisplayHome extends RecyclerView.ViewHolder {
 
-        TextView groupName, topicText, dateAndTime, NoOfReplies, publisherName, replyButton, likeButton, noOfLikes;
-
-        public TopicDisplayHome(@NonNull View itemView) {
-            super(itemView);
-
-            groupName=itemView.findViewById(R.id.group_name);
-            topicText=itemView.findViewById(R.id.topic);
-            dateAndTime=itemView.findViewById(R.id.date_time);
-            NoOfReplies=itemView.findViewById(R.id.no_of_replies);
-            publisherName=itemView.findViewById(R.id.publisher_name);
-            replyButton=itemView.findViewById(R.id.reply);
-            likeButton=itemView.findViewById(R.id.likes);
-            noOfLikes=itemView.findViewById(R.id.no_of_likes);
-
-
-        }
-    }
 }

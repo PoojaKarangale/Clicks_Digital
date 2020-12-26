@@ -528,7 +528,7 @@ ChildEventListener mChildEventListener ;
 
     private void saveSeparateTopicNode(String messagekEY) {
         DatabaseReference topicRef=rootRef.getTopicRef();
-        topicRef.child(currentGroupId).child(messagekEY).setValue("");
+        topicRef.child(messagekEY).setValue(currentGroupId);
     }
 
     private void popupMenuSettigns() {

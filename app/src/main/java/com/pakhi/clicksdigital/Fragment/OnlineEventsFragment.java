@@ -22,6 +22,8 @@ import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class OnlineEventsFragment extends Fragment {
@@ -90,6 +92,7 @@ public class OnlineEventsFragment extends Fragment {
                         }
                     }
                 }
+
                 //eventAdapter.notifyDataSetChanged();
             }
 
@@ -115,6 +118,11 @@ public class OnlineEventsFragment extends Fragment {
                         }
                     }
                 }
+                Collections.sort(events, new Comparator<Event>() {
+                    public int compare(Event o1, Event o2) {
+                        return o1.getTimeStamp().compareTo(o2.getTimeStamp());
+                    }
+                });
                 eventAdapter.notifyDataSetChanged();
             }
 
