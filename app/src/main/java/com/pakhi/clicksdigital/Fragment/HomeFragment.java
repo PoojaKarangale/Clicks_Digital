@@ -198,6 +198,7 @@ public class HomeFragment extends Fragment {
         //  readTopics();
     }
 
+
     public void backPressed() {
         new AlertDialog.Builder(getContext())
 

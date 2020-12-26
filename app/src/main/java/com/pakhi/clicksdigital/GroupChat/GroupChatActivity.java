@@ -100,7 +100,7 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat2);
 
-        currentGroupName=getIntent().getExtras().get("groupName").toString();
+        //currentGroupName=getIntent().getExtras().get("groupName").toString();
         currentGroupId=getIntent().getExtras().get("groupId").toString();
 
         pref=SharedPreference.getInstance();
