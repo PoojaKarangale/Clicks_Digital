@@ -19,6 +19,7 @@ public class Const {
     public final static String MO_NUMBER       ="number";
     public final static String WEBLINK         ="weblink";
     public final static String GENDER          ="gender";
+    public static final String APPROVED_REQUESTS  ="Approved_requests";
     final static        int    PICK_PDF_CODE   =2342;
     public static       String prevActivity    ="previousActivity";
     public static       String registerActivity="RegisterActivity";

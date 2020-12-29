@@ -3,39 +3,38 @@ package com.pakhi.clicksdigital.JoinGroup;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.pakhi.clicksdigital.Model.Group;
-import com.pakhi.clicksdigital.Model.User_request;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.Utils.Const;
-import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder>  {
+public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder> {
 
     String                   current_user_id;
     SharedPreference         pref;
@@ -70,23 +69,53 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         holder.description.setVisibility(View.VISIBLE);
         holder.description.setText(group.getDescription());
 
-        Picasso.get()
+        /*Picasso.get()
                 .load(group.getImage_url()).placeholder(R.drawable.profile_image)
                 .resize(120, 120)
                 .into(holder.image_profile);
+        */
+
+        final String[] image_url=new String[1];
+        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
+        final StorageReference imgPath=sReference.child(group.getGroupid() ); //+ "." + getFileExtention(picImageUri)
+        imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                image_url[0]=uri.toString();
+                Picasso.get().load(uri).placeholder(R.drawable.profile_image).into(holder.image_profile);
+
+            }
+
+        });
+
+
+
 
         holder.image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EnlargedImage.enlargeImage(group.getImage_url(),v.getContext());
-
+                EnlargedImage.enlargeImage(group.getImage_url(), v.getContext());
             }
         });
 
-        rootRef.getUserRef().child(current_user_id).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
+        rootRef.getApprovedUserRef().child(current_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!snapshot.exists()){
+                if (!snapshot.exists()) {
+                    holder.join_btn.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        // first we'll check if the group is present in users group list then visible or hide join button
+        rootRef.getUserRef().child(current_user_id).child("groups").child(group.getGroupid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
                     holder.join_btn.setVisibility(View.GONE);
                 }
             }
@@ -96,13 +125,14 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
             }
         });
-        // first we'll check if the group is present in users group list then visible or hide join button
-        rootRef.getUserRef().child(current_user_id).child("groups").child(group.getGroupid()).addValueEventListener(new ValueEventListener() {
+        rootRef.getGroupRef().child(group.getGroupid()).child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    holder.join_btn.setVisibility(View.GONE);
-                }
+                if (snapshot.exists())
+                    holder.number_of_participants.setText(String.valueOf(snapshot.getChildrenCount()));
+                else
+                    holder.number_of_participants.setText(0);
+
             }
 
             @Override
@@ -115,7 +145,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             @Override
             public void onClick(View v) {
                 //task.execute("saveDataToDatabase", group.getGroupid(), group.getGroup_name());
-                // sentRequestToJoinGroup(group.getGroupid(),group.getGroup_name());
+                //sentRequestToJoinGroup(group.getGroupid(),group.getGroup_name());
                 addUserToGroup(group.getGroupid(), current_user_id);
                 holder.join_btn.setVisibility(View.GONE);
                 //sendRequest(group.getGroupid());
@@ -185,9 +215,10 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView displayName, description, status_of_request;
+        TextView displayName, description, status_of_request, number_of_participants;
         CircleImageView image_profile;
         Button          join_btn;
+        ImageView people;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -196,9 +227,13 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             image_profile=itemView.findViewById(R.id.image_profile);
             status_of_request=itemView.findViewById(R.id.status_of_request);
             join_btn=itemView.findViewById(R.id.join_btn);
+            number_of_participants=itemView.findViewById(R.id.number_of_participants);
+            people=itemView.findViewById(R.id.people);
 
             join_btn.setVisibility(View.VISIBLE);
             description.setVisibility(View.VISIBLE);
+            people.setVisibility(View.VISIBLE);
+            number_of_participants.setVisibility(View.VISIBLE);
         }
     }
 
@@ -209,7 +244,6 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             String param=params[0];
             return "";
         }
-
         @Override
         protected void onPostExecute(String result) {
         }

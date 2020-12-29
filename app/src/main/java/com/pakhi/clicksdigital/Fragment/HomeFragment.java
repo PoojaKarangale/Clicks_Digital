@@ -3,7 +3,6 @@ package com.pakhi.clicksdigital.Fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,31 +18,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Adapter.HomePageTopicAdapter;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.ScreenSlidePageFragment;
-import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.util.ArrayList;
 
-
 public class HomeFragment extends Fragment {
+
     private static final int NUM_PAGES=5;
-    DatabaseReference  topicReference;
-    ArrayList<Message> trendingTopics=new ArrayList<>();
-    String             publisherKey, currentUserID;
+    ArrayList<Message>       trendingTopics=new ArrayList<>();
+    String                   currentUserID;
     RecyclerView             topicRecyclerView;
     SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;
-    DatabaseReference        userRef, grpChatRef, grpNameRef, topicReplyRef, likeRef, userRequestRef;
-    Button               requestBtn;
-    HomePageTopicAdapter topicAdapter;
-    Message              m;
+    Button                   requestBtn;
+    HomePageTopicAdapter     topicAdapter;
 
     public HomeFragment() {
 
@@ -56,17 +50,22 @@ public class HomeFragment extends Fragment {
         pref=SharedPreference.getInstance();
 
         rootRef=FirebaseDatabaseInstance.getInstance();
-
+        final String user_type=pref.getData(SharedPreference.user_type, getContext());
         currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
         requestBtn=homeView.findViewById(R.id.request_button);
         setupRecyclerView(homeView);
 
-        rootRef.getUserRef().child(currentUserID).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
+        rootRef.getApprovedUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
+
                     requestBtn.setVisibility(View.VISIBLE);
+                  /*  if (user_type.equals("admin")) {
+                        requestBtn.setVisibility(View.GONE);
+                    }*/
                 } else {
+
                     requestBtn.setVisibility(View.GONE);
                 }
             }
@@ -109,29 +108,34 @@ public class HomeFragment extends Fragment {
         topicRecyclerView.setAdapter(topicAdapter);
     }
 
-
     public void readTopics() {
-        Log.i("Topic reading", "in read topic");
-
-        // trendingTopics.clear();
+        //..... we can save groups of user in sqlite db to fetch in less time ......
+        //here fetch the groups of user from User->user_id->groups
+        //if group id id present in groups then only topic will be visible
 
         rootRef.getTopicRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 trendingTopics.clear();
-                Log.i("Topic reading", "in topic ref" + rootRef.getTopicRef());
-                for (DataSnapshot topicSnap : snapshot.getChildren()) {
-
-                    Log.i("Topic reading", "in for");
-                    rootRef.getGroupChatRef().child(topicSnap.getValue().toString()).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
+                for (final DataSnapshot topicSnap : snapshot.getChildren()) {
+                    final String groupId=(String) topicSnap.getValue();
+                    rootRef.getUserRef().child(currentUserID).child("groups").child(groupId).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                rootRef.getGroupChatRef().child(groupId).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        trendingTopics.add(0, snapshot.getValue(Message.class));
+                                        topicAdapter.notifyDataSetChanged();
+                                    }
 
-                            Log.i("Topic reading", "in group chat" + rootRef.getGroupChatRef());
-                            trendingTopics.add(0, snapshot.getValue(Message.class));
-                            Log.i("Topic reading", "in group chat size ---  " + trendingTopics.size());
-                            //  topicRecyclerView.clearOnScrollListeners();
-                            topicAdapter.notifyDataSetChanged();
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
                         }
 
                         @Override
@@ -139,7 +143,6 @@ public class HomeFragment extends Fragment {
 
                         }
                     });
-
                 }
                 topicAdapter.notifyDataSetChanged();
             }
@@ -149,47 +152,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-       /* rootRef.getTopicRef().addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-               // trendingTopics.clear();
-                for (DataSnapshot topicSnap : snapshot.getChildren()) {
-                    rootRef.getGroupChatRef().child(topicSnap.getValue().toString()).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            trendingTopics.add(0,snapshot.getValue(Message.class));
-                            topicAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-               // topicAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
     }
 
     @Override
@@ -197,7 +159,6 @@ public class HomeFragment extends Fragment {
         super.onStart();
         //  readTopics();
     }
-
 
     public void backPressed() {
         new AlertDialog.Builder(getContext())
@@ -231,6 +192,4 @@ public class HomeFragment extends Fragment {
             return NUM_PAGES;
         }
     }
-
-
 }

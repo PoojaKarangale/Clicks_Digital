@@ -2,6 +2,7 @@ package com.pakhi.clicksdigital.JoinGroup;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,19 +32,16 @@ import java.util.List;
 
 public class JoinGroupActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //    AsyncOperation task = new AsyncOperation();
+    // AsyncOperation task = new AsyncOperation();
     ImageView                close;
     SearchView               searchView;
     String                   current_user_id;
     SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;
     DatabaseReference        groupRef, usersRef;
-    //    private List<Group> requestedGroups=new ArrayList<>();
-    // private List<Group> usersGroups    =new ArrayList<>();
     TextView txt_requested;
     private RecyclerView     recyclerView;
-    //    private RecyclerView     recycler_requested_groups;
-    private JoinGroupAdapter groupAdapter /*, requestedGroupAdapter*/;
+    private JoinGroupAdapter groupAdapter;
     private List<Group>      groups=new ArrayList<>();
 
     @Override
@@ -80,7 +78,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        rootRef.getUserRef().child(current_user_id).child(Const.USER_DETAILS).child("approved").addValueEventListener(new ValueEventListener() {
+        rootRef.getApprovedUserRef().child(current_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
@@ -104,61 +102,36 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         groupAdapter=new JoinGroupAdapter(this, groups);
         recyclerView.setAdapter(groupAdapter);
-
-        /*recycler_requested_groups = findViewById(R.id.recycler_requested_groups);
-        recycler_requested_groups.setHasFixedSize(true);
-        recycler_requested_groups.setLayoutManager(new LinearLayoutManager(this));
-        requestedGroupAdapter = new JoinGroupAdapter(this, groups);
-        recycler_requested_groups.setAdapter(requestedGroupAdapter);*/
-
     }
 
-    /* private void readRequestedGroups() {
-          String uid = FirebaseAuth.getInstance().getUid();
-  //    Query query = FirebaseDatabase.getInstance().getReference("Groups")
-  //                .orderByChild(Const.GROUP_NAME)
-  //                .orderByChild("requesting_user")
-  //                .equalTo(uid)
-  //                .endAt("\uf8ff");
-          DatabaseReference queryref = usersRef.child(uid).child("GroupRequests");
-          queryref.addValueEventListener(new ValueEventListener() {
-              @Override
-              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                  requestedGroups.clear();
-                  for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                      String groupId = snapshot.getKey();
-                      //  User_request request = snapshot.getValue(User_request.class);
-                      DatabaseReference groupRef = rootRef.getGroupRef();
-                      groupRef.child(groupId).addValueEventListener(new ValueEventListener() {
-                          @Override
-                          public void onDataChange(@NonNull DataSnapshot snapshot) {
-                              Group group = snapshot.getValue(Group.class);
-                              requestedGroups.add(group);
-                          }
-                          @Override
-                          public void onCancelled(@NonNull DatabaseError error) {
-                          }
-                      });
-                  }
-                  requestedGroupAdapter.notifyDataSetChanged();
-              }
-              @Override
-              public void onCancelled(@NonNull DatabaseError databaseError) {
-              }
-          });
-      }*/
-
     private void searchGroups(final String s) {
-        Query query=rootRef.getGroupRef().orderByChild(Const.GROUP_NAME)
+       /* Query query=rootRef.getGroupRef().orderByChild(Const.GROUP_NAME)
                 .startAt(s)
-                .endAt(s + "\uf8ff");
-        query.addValueEventListener(new ValueEventListener() {
+                .endAt(s + "\uf8ff");*/
+        rootRef.getGroupRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 groups.clear();
-                for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                    Group group=snapshot1.getValue(Group.class);
-                    groups.add(group);
+                for (final DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                    Log.d("SEARCH GROUP","--------------"+snapshot1.getKey()+" "+snapshot1.getValue());
+
+                       rootRef.getUserRef().child(current_user_id).child("groups").child(snapshot1.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Log.d("GROUPS","----------snapshot"+snapshot.getValue());
+                            if(!snapshot.exists()){
+                                Group group=snapshot1.getValue(Group.class);
+                                if(group.getGroup_name().toLowerCase().contains(s))
+                                groups.add(group);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                   /* Group group=snapshot1.getValue(Group.class);
+                    groups.add(group);*/
                 }
                 groupAdapter.notifyDataSetChanged();
             }
@@ -169,95 +142,6 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
             }
         });
     }
-
-/*
-    private void readGroup() {
-        groupRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //groups.clear();
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Group group=snapshot.getValue(Group.class);
-                        groups.add(group);
-                    }
-                    Log.d("JOINGROUpTESTING", "---------group size before" + groups.size());
-                    groups.removeAll(requestedGroups);
-                    groups.removeAll(usersGroups);
-                    Log.d("JOINGROUpTESTING", "---------req grp size before" + requestedGroups.size());
-                    Log.d("JOINGROUpTESTING", "---------user grp size before" + usersGroups.size());
-                    Log.d("JOINGROUpTESTING", "---------group size before" + groups.size());
-                    groupAdapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-*/
-/*  private void readRequestedGroups() {
-        DatabaseReference reference=groupRef.child(current_user_id).child(ConstFirebase.groupRequests);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                requestedGroups.clear();
-                // groups.clear();
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String groupId=snapshot.getKey();
-                        groupRef.child(groupId).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Group group=snapshot.getValue(Group.class);
-                                requestedGroups.add(group);
-                                Log.d("JOINGROUpTESTING", "---------requested size before" + requestedGroups.size());
-                                groups.removeAll(requestedGroups);
-                                // groups.add(group);
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
-                    }
-                    //  requestedGroupAdapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-*/
-/*   private void readUsersGroups() {
-        DatabaseReference reference=usersRef.child(current_user_id).child("groups");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                usersGroups.clear();
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String groupId=snapshot.getKey();
-                        groupRef.child(groupId).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Group group=snapshot.getValue(Group.class);
-                                usersGroups.add(group);
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
-                    }
-                    //requestedGroupAdapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-*/
 
     @Override
     protected void onStart() {

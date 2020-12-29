@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.pakhi.clicksdigital.Fragment.ChatsFragment;
 import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
@@ -106,7 +107,8 @@ public class StartActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.home).select();;
+        tabLayout.getTabAt(0).setIcon(R.drawable.home).select();
+        ;
         tabLayout.getTabAt(1).setIcon(R.drawable.people);
         tabLayout.getTabAt(2).setIcon(R.drawable.chat);
         tabLayout.getTabAt(3).setIcon(R.drawable.event);
@@ -192,16 +194,16 @@ public class StartActivity extends AppCompatActivity {
         }
 
         if (item.getItemId() == R.id.share_app) {
-           // startActivity(new Intent(this, SettingActivity.class));
+
             ShareApp.shareApp(getApplicationContext());
         }
         if (item.getItemId() == R.id.user_request) {
-            // startActivity(new Intent(this, SettingActivity.class));
+
+            //  Log.d("User_type","................"+user_type);
             if (user_type.equals("admin")) {
-                startActivity(new Intent(this,UserRequestActivity.class));
-            }
-            else{
-                Toast.makeText(getApplicationContext(),"Since you are not admin, you don't have access to this part of the app",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, UserRequestActivity.class));
+            } else {
+                Toast.makeText(getApplicationContext(), "Since you are not admin, you don't have access to this part of the app", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -212,15 +214,18 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            updateUserStatus("online");
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-      /*  if (currentUser != null) {
-            // updateUserStatus("offline");
-        }*/
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            updateUserStatus("offline");
+        }
     }
 
     private void VerifyUserExistance() {

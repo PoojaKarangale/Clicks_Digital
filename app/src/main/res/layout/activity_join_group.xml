@@ -17,8 +17,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margine_main"
-                android:layout_marginEnd="@dimen/margine_main">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -29,20 +28,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/heading" />
 
-                <!-- <androidx.appcompat.widget.SearchView
-                     android:id="@+id/search_bar"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_alignParentEnd="true"
-                     android:layout_marginStart="@dimen/margine_main"
-                     android:layout_marginEnd="@dimen/margine_main"
-                     android:layout_centerVertical="true"
-                     android:hint="search here..." />-->
-                <androidx.appcompat.widget.SearchView
-                    android:id="@id/search_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/close" />
 
                 <ImageView
                     android:id="@+id/close"
@@ -50,68 +35,42 @@
                     android:layout_height="@dimen/widget_size"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/margine_sub"
                     android:src="@drawable/close" />
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- <EditText
-         android:id="@+id/search_bar"
-         android:layout_width="match_parent"
-         android:layout_height="48dp"
-         android:layout_below="@id/bar"
-         android:layout_alignParentStart="true"
-         android:layout_alignParentEnd="true"
-         android:layout_marginStart="@dimen/margine_main"
-         android:layout_marginEnd="@dimen/margine_main"
-         android:hint="search here..." />-->
+    <androidx.appcompat.widget.SearchView
+        android:id="@id/search_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/txt_requested"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bar"
-        android:layout_marginStart="@dimen/margine_main"
-        android:layout_marginEnd="@dimen/margine_main"
+        android:layout_marginStart="@dimen/margine_sub"
+        android:layout_marginEnd="@dimen/margine_sub"
         android:fontFamily="@font/lato"
-        android:textColor="@color/colorPrimary"
         android:text="Your Profile has been sent to admin for approval, untill then you cannot join any group"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/title1"
-        android:visibility="gone"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_requested_groups"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_requested"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="@dimen/margine_main"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="@dimen/margine_main"
-        android:scrollbarAlwaysDrawVerticalTrack="true" />
-
-    <!-- <TextView
-         android:id="@+id/txt_new_groups"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_below="@id/recycler_requested_groups"
-         android:layout_marginStart="@dimen/margine_main"
-         android:layout_marginEnd="@dimen/margine_main"
-         android:fontFamily="@font/lato"
-         android:text="New groups"
-         android:textSize="@dimen/title1" />-->
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_groups"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recycler_requested_groups"
+        android:layout_below="@+id/search_bar"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="@dimen/margine_main"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="@dimen/margine_main"
+        android:layout_marginStart="@dimen/margine_sub"
+        android:layout_marginEnd="@dimen/margine_sub"
         android:scrollbarAlwaysDrawVerticalTrack="true" />
 
 </RelativeLayout>

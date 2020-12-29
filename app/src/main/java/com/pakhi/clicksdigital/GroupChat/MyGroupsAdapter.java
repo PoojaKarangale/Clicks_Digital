@@ -3,6 +3,7 @@ package com.pakhi.clicksdigital.GroupChat;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
@@ -61,10 +65,24 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
         holder.displayName.setText(group.getGroup_name());
         holder.displayName.setTextColor(Color.BLACK);
         //  Log.d("joinGroupAdapter", "---image url-----------------" + group.getImage_url());
-        Picasso.get()
+        /*     Picasso.get()
                 .load(group.getImage_url()).placeholder(R.drawable.profile_image)
                 .resize(120, 120)
                 .into(holder.image_profile);
+        */
+        final String[] image_url=new String[1];
+        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
+        final StorageReference imgPath=sReference.child(group.getGroupid() ); //+ "." + getFileExtention(picImageUri)
+        imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                image_url[0]=uri.toString();
+                Picasso.get().load(uri).placeholder(R.drawable.profile_image).into(holder.image_profile);
+
+            }
+
+        });
+
 
          Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
 
@@ -79,7 +97,6 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 Intent groupChatActivity=new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
                 groupChatActivity.putExtra("groupName", group.getGroup_name());

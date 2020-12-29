@@ -6,18 +6,21 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FirebaseDatabaseInstance {
     private static FirebaseDatabaseInstance single_instance=null;
     DatabaseReference rootRef=FirebaseDatabase.getInstance().getReference();
+
+
     /*  DatabaseReference userRef;
-            DatabaseReference groupRef ;
-            DatabaseReference eventRef ;
-            DatabaseReference eventCatRef ;
-            DatabaseReference groupChatRef ;
-            DatabaseReference messagesRef ;
-            DatabaseReference messagesListRef;
-            DatabaseReference tokensRef ;
-            DatabaseReference groupRequests ;
-            DatabaseReference chatRequestsRef;*/
+                DatabaseReference groupRef ;
+                DatabaseReference eventRef ;
+                DatabaseReference eventCatRef ;
+                DatabaseReference groupChatRef ;
+                DatabaseReference messagesRef ;
+                DatabaseReference messagesListRef;
+                DatabaseReference tokensRef ;
+                DatabaseReference groupRequests ;
+                DatabaseReference chatRequestsRef;*/
     //DatabaseReference replyRef;
     // DatabaseReference topicLikesRef, replyLikesRef;
+     DatabaseReference approvedUserRef;
 
     private FirebaseDatabaseInstance() {
     }
@@ -28,6 +31,10 @@ public class FirebaseDatabaseInstance {
             single_instance=new FirebaseDatabaseInstance();
         return single_instance;
     }
+    public DatabaseReference getApprovedUserRef() {
+        return rootRef.child(Const.APPROVED_REQUESTS);
+    }
+
     public DatabaseReference getUserDetails(){
         return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS);
     }

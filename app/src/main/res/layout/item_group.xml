@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:padding="8dp">
+    >
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_profile"
@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginStart="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_profile"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,7 +29,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/lato"
-            android:layout_marginStart="@dimen/margine_3"
             android:maxLines="1"
             android:text="Name"
             android:textColor="@color/colorPrimaryDark"
@@ -75,6 +75,36 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/join_btn"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/people"
+            android:layout_width="@dimen/widget_size"
+            android:layout_height="@dimen/widget_size"
+            android:src="@drawable/people"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/number_of_participants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="30"
+            android:textColor="@color/primary_blue"
+            android:textSize="@dimen/title2"
+            android:visibility="gone"
+            />
+    </LinearLayout>
 
     <CheckBox
         android:id="@+id/checkbox_add"

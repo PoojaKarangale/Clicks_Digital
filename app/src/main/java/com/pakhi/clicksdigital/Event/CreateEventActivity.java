@@ -78,7 +78,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private Spinner        spinner;
     private ProgressDialog progressDialog;
 
-    private DatabaseReference userRef, eventRef/*, eventCategory*/;
+    private DatabaseReference userRef, eventRef /*,eventCategory*/ ;
     private FirebaseDatabaseInstance rootRef;
 
     @Override

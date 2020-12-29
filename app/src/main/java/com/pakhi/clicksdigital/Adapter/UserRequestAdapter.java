@@ -1,6 +1,5 @@
 package com.pakhi.clicksdigital.Adapter;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -37,7 +36,6 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     public UserRequestAdapter(Context mcontext, List<String> requestingUsers) {
         this.mcontext=mcontext;
         this.requestingUsers=requestingUsers;
-
     }
 
     @NonNull
@@ -53,21 +51,20 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     public void onBindViewHolder(@NonNull final UserRequestAdapter.ViewHolder holder, final int position) {
         final String userId=requestingUsers.get(position);
 
-      /*  final User_request userRequest = userRequests.get(position);
+        /*  final User_request userRequest = userRequests.get(position);
         final String userId;
         final String groupId;
         final String group_name;
         final String[] user_name = new String[1];
         userId = userRequest.getRequesting_user();
         final String image[] = new String[1];
-*/
-
+       */
 
         rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    //   user_name[0] = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                    //user_name[0] = dataSnapshot.child(Const.USER_NAME).getValue().toString();
                     holder.displayName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
                     //if (dataSnapshot.hasChild("image_url")) {}
                     final String image_url=dataSnapshot.child("image_url").getValue().toString();
@@ -88,7 +85,6 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             }
         });
 
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +101,6 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             }
         });
 
-
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +114,12 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     private void approveUser(String userId) {
         // one field in user details showing request is approved
-        rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).child("approved").setValue(true);
+      //  rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).child("approved").setValue(true);
+        rootRef.getApprovedUserRef().child(userId).setValue(true);
+
     }
 
-  /*  private void createDialog(String s) {
+    /*  private void createDialog(String s) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         builder.setTitle("Enter new Category");
         final String[] message = {s};
