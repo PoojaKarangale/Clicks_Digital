@@ -21,9 +21,15 @@ import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class OnlineEventsFragment extends Fragment {
@@ -35,6 +41,27 @@ public class OnlineEventsFragment extends Fragment {
     private DatabaseReference eventRef;
 
     public OnlineEventsFragment() {
+    }
+
+    public static String previousDateString(String dateString)
+            throws ParseException {
+        // Create a date formatter using your format string
+        DateFormat dateFormat=new SimpleDateFormat("yyyyMMdd");
+
+        // Parse the given date string into a Date object.
+        // Note: This can throw a ParseException.
+        Date myDate=dateFormat.parse(dateString);
+
+        // Use the Calendar class to subtract one day
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(myDate);
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        calendar.add(Calendar.MONTH, -2);
+        // Use the date formatter to produce a formatted date string
+        Date previousDate=calendar.getTime();
+        String result=dateFormat.format(previousDate);
+
+        return result;
     }
 
     @Override
@@ -72,7 +99,102 @@ public class OnlineEventsFragment extends Fragment {
             }
         });
 
+        removeOldEvents();
         return view;
+    }
+
+/*    private long fieldToTimestamp(int year, int month, int day) {
+        Calendar calendar=Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        return (long) (calendar.getTimeInMillis() / 1000L);
+    }*/
+
+    private void removeOldEvents() {
+
+        final Calendar calendar=Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -2);
+        /*final int mYear=calendar.get(Calendar.YEAR);
+        final int mMonth=calendar.get(Calendar.MONTH);
+        final int mDay=calendar.get(Calendar.DAY_OF_MONTH);*/
+
+       // Long dateTwoMonthsAgo=fieldToTimestamp(mYear, mMonth, mDay);
+        Timestamp ts=new Timestamp(calendar.getTimeInMillis() / 1000L);
+        final Date twoMonthAgo=new Date(ts.getTime());
+
+        DatabaseReference eventRef=rootRef.getEventRef();
+        eventRef.child(ConstFirebase.eventOffline).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
+
+                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+
+                        Timestamp ts=new Timestamp(event.getTimeStamp());
+                        Date eventDate=new Date(ts.getTime());
+                        if (eventDate.before(twoMonthAgo)) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        eventRef.child("Both").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
+
+                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+
+                        Timestamp ts=new Timestamp(event.getTimeStamp());
+                        Date eventDate=new Date(ts.getTime());
+                        if (eventDate.before(twoMonthAgo)) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        eventRef.child(ConstFirebase.eventOnline).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
+
+                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+
+                        Timestamp ts=new Timestamp(event.getTimeStamp());
+                        Date eventDate=new Date(ts.getTime());
+                        if (eventDate.before(twoMonthAgo)) {
+                            dataSnapshot.getRef().removeValue();
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void searchEvents(final String s) {

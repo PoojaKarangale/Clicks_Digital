@@ -280,7 +280,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 addressFlag=false;
             }
         } else {
-            if (ValidateInput.field(address)) {
+            if (ValidateInput.field(venu)) {
                 addressFlag=true;
             } else {
                 addressFlag=false;
