@@ -3,6 +3,7 @@ package com.pakhi.clicksdigital.Fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,11 @@ import com.pakhi.clicksdigital.ScreenSlidePageFragment;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class HomeFragment extends Fragment {
 
@@ -96,8 +101,61 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Request is sent to admin wait for approval ", Toast.LENGTH_LONG).show();
             }
         });
+        removeTopicOlderThanTwoMonths();
         readTopics();
+
         return homeView;
+    }
+
+    private void removeTopicOlderThanTwoMonths() {
+        final Calendar calendar=Calendar.getInstance();
+        rootRef.getTopicRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (final DataSnapshot topicSnap : snapshot.getChildren()) {
+
+                    Log.d("REMOVE TOPIC", "---in for -----------" + topicSnap.getValue());
+
+                    rootRef.getGroupChatRef().child(topicSnap.getValue().toString()).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+
+                                //Log.d("REMOVE TOPIC", "---in group chat -----------" + snapshot.getValue());
+
+                                Date topicDate=null;
+                                SimpleDateFormat formatter=new SimpleDateFormat("MMM dd, yyyy");
+                                try {
+                                    topicDate=formatter.parse(snapshot.child("date").getValue().toString());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                calendar.add(Calendar.MONTH, -2);
+                                Date twoMonthAgo=new Date(formatter.format(calendar.getTime()));
+
+                                if (topicDate.before(twoMonthAgo)) {
+//                                    Log.d("REMOVE TOPIC", "---in group chat -----------" + snapshot.getValue());
+//                                    Log.d("REMOVE TOPIC", "---in group chat -----------" + rootRef.getTopicRef().child(topicSnap.getKey()));
+                                    rootRef.getTopicRef().child(topicSnap.getKey()).removeValue();
+                                    //remove the topicwith replies and likes.....
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void setupRecyclerView(View v) {
@@ -126,8 +184,8 @@ public class HomeFragment extends Fragment {
                                 rootRef.getGroupChatRef().child(groupId).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        trendingTopics.add(0, snapshot.getValue(Message.class));
-                                        topicAdapter.notifyDataSetChanged();
+                                         trendingTopics.add(0, snapshot.getValue(Message.class));
+                                          topicAdapter.notifyDataSetChanged();
                                     }
 
                                     @Override
