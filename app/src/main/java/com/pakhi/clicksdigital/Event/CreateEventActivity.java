@@ -47,6 +47,7 @@ import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -54,6 +55,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity {
@@ -229,7 +231,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private void createEventStorage() {
 
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Events");
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Events");
         String extention=getFileExtention(picImageUri);
 
         final StorageReference imgPath=sReference.child("" + System.currentTimeMillis());//+ "." + extention);
@@ -489,8 +491,11 @@ public class CreateEventActivity extends AppCompatActivity {
         final int mMonth=c.get(Calendar.MONTH);
         final int mDay=c.get(Calendar.DAY_OF_MONTH);
 
-        choose_start_date.setText(mDay + "-" + (mMonth + 1) + "-" + mYear);
-        choose_end_date.setText(mDay + "-" + (mMonth + 1) + "-" + mYear);
+        SimpleDateFormat currentDateFormat=new SimpleDateFormat("dd MMM yyyy");
+        String currentDate=currentDateFormat.format(c.getTime());
+
+        choose_start_date.setText(currentDate);
+        choose_end_date.setText(currentDate);
 
         final int mHour=c.get(Calendar.HOUR_OF_DAY);
         final int mMinute=c.get(Calendar.MINUTE);
@@ -536,7 +541,13 @@ public class CreateEventActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        choose_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        final Calendar cal=Calendar.getInstance();
+                        cal.set(year,monthOfYear,dayOfMonth);
+                        SimpleDateFormat currentDateFormat=new SimpleDateFormat("dd MMM yyyy");
+                        String currentDate=currentDateFormat.format(cal.getTime());
+
+
+                        choose_date.setText(currentDate); //dayOfMonth + "-" + (monthOfYear + 1) + "-" + year
                         if (start)
                             selectedStartDate=fieldToTimestamp(year, (monthOfYear), dayOfMonth);
                     }

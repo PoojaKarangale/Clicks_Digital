@@ -41,6 +41,7 @@ import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
@@ -293,7 +294,7 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     private void createEventStorage(String eventId) {
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Events").child(eventId);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Events").child(eventId);
 
         final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
 

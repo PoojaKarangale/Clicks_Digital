@@ -84,7 +84,7 @@ public class OnlineEventsFragment extends Fragment {
         events_recycler.setAdapter(eventAdapter);
 
         SearchView searchView=view.findViewById(R.id.search_bar);
-
+        searchEvents("");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -115,11 +115,7 @@ public class OnlineEventsFragment extends Fragment {
 
         final Calendar calendar=Calendar.getInstance();
         calendar.add(Calendar.MONTH, -2);
-        /*final int mYear=calendar.get(Calendar.YEAR);
-        final int mMonth=calendar.get(Calendar.MONTH);
-        final int mDay=calendar.get(Calendar.DAY_OF_MONTH);*/
 
-       // Long dateTwoMonthsAgo=fieldToTimestamp(mYear, mMonth, mDay);
         Timestamp ts=new Timestamp(calendar.getTimeInMillis() / 1000L);
         final Date twoMonthAgo=new Date(ts.getTime());
 
@@ -258,6 +254,6 @@ public class OnlineEventsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        searchEvents("");
+        //searchEvents("");
     }
 }

@@ -64,6 +64,7 @@ public class OfflineEventsFragment extends Fragment {
         readUserData();
         //RetrieveAndDisplayEvents();
         SearchView searchView=view.findViewById(R.id.search_bar);
+        showEvents(city);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -244,6 +245,6 @@ public class OfflineEventsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         //searchEvents("");
-        showEvents(city);
+       // showEvents(city);
     }
 }

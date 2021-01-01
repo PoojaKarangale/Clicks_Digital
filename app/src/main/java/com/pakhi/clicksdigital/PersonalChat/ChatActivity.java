@@ -51,6 +51,7 @@ import com.pakhi.clicksdigital.Notifications.Token;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -587,7 +588,7 @@ public class ChatActivity extends AppCompatActivity {
         Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
 
         // progressDialog.show();
-        StorageReference storageRootReference=FirebaseStorage.getInstance().getReference();
+        StorageReference storageRootReference=FirebaseStorageInstance.getInstance().getRootRef();
         StorageReference sRef=storageRootReference.child(Const.USER_MEDIA_PATH).child(messageSenderID).child(Const.FILES_PATH).child("Sent_Pdf").child(messageReceiverID).child(System.currentTimeMillis() + "");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -622,7 +623,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void uploadImage(final Uri imageUri) {
         Log.d("ChatActivity", "-----------uploading image----------------------");
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("User_Media").child(messageSenderID).child(Const.PHOTOS).child("Sent_Photos").child(messageReceiverID);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("User_Media").child(messageSenderID).child(Const.PHOTOS).child("Sent_Photos").child(messageReceiverID);
         final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

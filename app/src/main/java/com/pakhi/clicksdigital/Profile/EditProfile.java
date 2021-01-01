@@ -43,6 +43,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
@@ -96,7 +97,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
         rootRef=FirebaseDatabaseInstance.getInstance();
-        mStorageReference=FirebaseStorage.getInstance().getReference();
+        mStorageReference=FirebaseStorageInstance.getInstance().getRootRef();
 
         // rootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -344,7 +345,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     }
 
     private void createUserProfile() {
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
         // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
         final StorageReference imgPath=sReference.child("profile_image");
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

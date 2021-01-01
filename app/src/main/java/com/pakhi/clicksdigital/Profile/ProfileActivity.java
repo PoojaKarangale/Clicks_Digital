@@ -43,6 +43,7 @@ import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -426,7 +427,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void createUserProfile() {
 
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child(Const.USER_MEDIA_PATH).child(user_id).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(Const.USER_MEDIA_PATH).child(user_id).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
         final StorageReference imgPath=sReference.child("profile_image");
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

@@ -34,6 +34,7 @@ import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.squareup.picasso.Picasso;
 
@@ -245,10 +246,10 @@ public class EventGalleryActivity extends AppCompatActivity {
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Event_photos").child(event.getEventId());
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Event_photos").child(event.getEventId());
         final String image_name=System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
         final StorageReference imgPath=sReference.child(image_name);
-        final StorageReference sliderRef = FirebaseStorage.getInstance().getReference().child("Slider_Images").child(image_name);
+        final StorageReference sliderRef = FirebaseStorageInstance.getInstance().getRootRef().child("Slider_Images").child(image_name);
         sliderRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

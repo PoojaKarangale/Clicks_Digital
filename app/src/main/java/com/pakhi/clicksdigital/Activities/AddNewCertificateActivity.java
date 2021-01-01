@@ -26,6 +26,7 @@ import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -48,7 +49,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
         SharedPreference pref=SharedPreference.getInstance();
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
-        storageRootReference=FirebaseStorage.getInstance().getReference();
+        storageRootReference=FirebaseStorageInstance.getInstance().getRootRef();
 
         name_of_certificate=findViewById(R.id.name_of_certificate);
         name_of_institute=findViewById(R.id.name_of_institute);

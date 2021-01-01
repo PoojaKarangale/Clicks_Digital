@@ -53,6 +53,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -140,8 +141,9 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
         final String[] image_url=new String[1];
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
-        final StorageReference imgPath=sReference.child(currentGroupId ); //+ "." + getFileExtention(picImageUri)
+        FirebaseStorageInstance storageRootRef=FirebaseStorageInstance.getInstance();
+        final StorageReference imgPath=storageRootRef.getGroupProfileRef().child(currentGroupId ); //+ "." + getFileExtention(picImageUri)
+
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -693,7 +695,7 @@ ChildEventListener mChildEventListener ;
         Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
 
         // progressDialog.show();
-        StorageReference storageRootReference=FirebaseStorage.getInstance().getReference();
+        StorageReference storageRootReference=FirebaseStorageInstance.getInstance().getRootRef();
         StorageReference sRef=storageRootReference.child(Const.USER_MEDIA_PATH).child(currentUserID).child(Const.FILES_PATH).child("Sent_Pdf").child(currentGroupId).child(System.currentTimeMillis() + "");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -727,7 +729,7 @@ ChildEventListener mChildEventListener ;
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child(currentGroupId).child("photos");
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child(currentGroupId).child("photos");
         final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

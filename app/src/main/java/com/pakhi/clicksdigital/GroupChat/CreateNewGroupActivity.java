@@ -28,6 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -202,7 +203,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 
     private void createGroup(String groupid) {
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
 
         final StorageReference imgPath=sReference.child(groupid ); //+ "." + getFileExtention(picImageUri)
 

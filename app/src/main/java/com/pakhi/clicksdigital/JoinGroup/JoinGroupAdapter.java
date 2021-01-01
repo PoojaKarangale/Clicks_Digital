@@ -21,12 +21,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
@@ -36,12 +36,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.ViewHolder> {
 
-    String                   current_user_id;
-    SharedPreference         pref;
-    FirebaseDatabaseInstance rootRef;
+    private String                   current_user_id;
+    private SharedPreference         pref;
+    private FirebaseDatabaseInstance rootRef;
     //AsyncOperation task = new AsyncOperation();
-    private Context     mcontext;
-    private List<Group> groups;
+    private Context                  mcontext;
+    private List<Group>              groups;
 
     public JoinGroupAdapter(Context mcontext, List<Group> groups) {
         this.mcontext=mcontext;
@@ -75,20 +75,18 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
                 .into(holder.image_profile);
         */
 
-        final String[] image_url=new String[1];
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
-        final StorageReference imgPath=sReference.child(group.getGroupid() ); //+ "." + getFileExtention(picImageUri)
+        //  final String[] image_url=new String[1];
+        FirebaseStorageInstance storageRootRef=FirebaseStorageInstance.getInstance();
+        final StorageReference imgPath=storageRootRef.getGroupProfileRef().child(group.getGroupid()); //+ "." + getFileExtention(picImageUri)
+
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                image_url[0]=uri.toString();
+                //   image_url[0]=uri.toString();
                 Picasso.get().load(uri).placeholder(R.drawable.profile_image).into(holder.image_profile);
-
             }
 
         });
-
-
 
 
         holder.image_profile.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +216,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         TextView displayName, description, status_of_request, number_of_participants;
         CircleImageView image_profile;
         Button          join_btn;
-        ImageView people;
+        ImageView       people;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -244,6 +242,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             String param=params[0];
             return "";
         }
+
         @Override
         protected void onPostExecute(String result) {
         }

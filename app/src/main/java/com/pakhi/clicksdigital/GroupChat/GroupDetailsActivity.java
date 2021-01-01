@@ -37,6 +37,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -88,7 +89,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         //seting group info
        // Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
 
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
         final StorageReference imgPath=sReference.child(currentGroupId ); //+ "." + getFileExtention(picImageUri)
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -320,7 +321,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference=FirebaseStorage.getInstance().getReference().child("Group_photos").child("Group_profile");
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
         final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
