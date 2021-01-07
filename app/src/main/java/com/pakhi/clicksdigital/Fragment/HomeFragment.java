@@ -64,28 +64,6 @@ public class HomeFragment extends Fragment {
 
         rootRef=FirebaseDatabaseInstance.getInstance();
 
-     /*   rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    images.add(snap.child("URL").getValue().toString());
-                    eventName.add(snap.child("NameOfEvent").getValue().toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-
-      /*  ViewPager mViewPager;
-        mViewPager=homeView.findViewById(R.id.viewPagerMain);
-
-        ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
-        mViewPager.setAdapter(mViewPagerAdapter);
-*/
-
         final String user_type=pref.getData(SharedPreference.user_type, getContext());
         currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
         requestBtn=homeView.findViewById(R.id.request_button);
@@ -266,16 +244,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(View homeView) {
-    /*    for (int i=0; i<img.length; i++)
-            ImgArray.add(img[i]);*/
 
         final ViewPager mViewPager;
         mViewPager=homeView.findViewById(R.id.viewPagerMain);
 
         final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
         mViewPager.setAdapter(mViewPagerAdapter);
-      //  mViewPagerAdapter.notifyDataSetChanged();
 
+        images.clear();
+        eventName.clear();
         rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -292,23 +269,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
-      /*  final ViewPager mViewPager;
-        mViewPager=homeView.findViewById(R.id.viewPagerMain);
-
-        final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
-        mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPagerAdapter.notifyDataSetChanged();*/
-       /* CircleIndicator indicator = (CircleIndicator)findViewById(R.id.indicator);
-        indicator.setViewPager(mPager);*/
-
         final Handler handler=new Handler();
         final Runnable Update=new Runnable() {
             @Override
             public void run() {
-                if (currentPage == images.size() ) {
+                if (currentPage == images.size()) {
                     currentPage=0;
                 }
-               // mViewPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(currentPage++, true);
 
             }

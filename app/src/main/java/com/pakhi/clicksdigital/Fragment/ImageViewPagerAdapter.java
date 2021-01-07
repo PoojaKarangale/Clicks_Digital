@@ -55,7 +55,6 @@ class ImageViewPagerAdapter extends PagerAdapter {
         doNotifyDataSetChangedOnce = true;
         //  Objects.requireNonNull(container).addView(itemView);
         container.addView(itemView, 0);
-       // notifyDataSetChanged();
         return itemView;
     }
 
@@ -63,6 +62,5 @@ class ImageViewPagerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
 
         container.removeView((View) object);
-        // notifyDataSetChanged();
     }
 }
