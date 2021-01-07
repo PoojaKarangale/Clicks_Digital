@@ -108,7 +108,7 @@ public class StartActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.home).select();
-        ;
+
         tabLayout.getTabAt(1).setIcon(R.drawable.people);
         tabLayout.getTabAt(2).setIcon(R.drawable.chat);
         tabLayout.getTabAt(3).setIcon(R.drawable.event);
@@ -146,8 +146,9 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        finish();
 
-        if (viewPager.getCurrentItem() == 0) {
+       /* if (viewPager.getCurrentItem() == 0) {
 
             if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
                 new AlertDialog.Builder(this)
@@ -169,7 +170,7 @@ public class StartActivity extends AppCompatActivity {
             fm.popBackStack();
         } else {
 
-        }
+        }*/
     }
 
     @Override

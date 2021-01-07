@@ -1,20 +1,14 @@
 package com.pakhi.clicksdigital.Model;
 
-import com.pakhi.clicksdigital.Utils.SharedPreference;
-
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class User implements Serializable {
 
+    public String current_user_id;
     private String image_url;
     private String user_id;
     private String city;
-    public SharedPreference pref;
-    public String current_user_id;
-
-
-
     private String  last_name;
     private String  company;
     private boolean isSelected;

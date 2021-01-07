@@ -3,6 +3,7 @@ package com.pakhi.clicksdigital.Fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +13,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Context;
 import com.pakhi.clicksdigital.Adapter.HomePageTopicAdapter;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.ScreenSlidePageFragment;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -32,10 +33,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HomeFragment extends Fragment {
 
-    private static final int NUM_PAGES=5;
+    private static final int NUM_PAGES  =5;
+    private static       int currentPage=0;
     ArrayList<Message>       trendingTopics=new ArrayList<>();
     String                   currentUserID;
     RecyclerView             topicRecyclerView;
@@ -43,6 +47,10 @@ public class HomeFragment extends Fragment {
     FirebaseDatabaseInstance rootRef;
     Button                   requestBtn;
     HomePageTopicAdapter     topicAdapter;
+    ArrayList<String>        images        =new ArrayList<>();
+    ArrayList<String>        eventName     =new ArrayList<>();
+    DatabaseReference        sliderRef;
+    Context                  context;
 
     public HomeFragment() {
 
@@ -55,6 +63,29 @@ public class HomeFragment extends Fragment {
         pref=SharedPreference.getInstance();
 
         rootRef=FirebaseDatabaseInstance.getInstance();
+
+     /*   rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    images.add(snap.child("URL").getValue().toString());
+                    eventName.add(snap.child("NameOfEvent").getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+
+      /*  ViewPager mViewPager;
+        mViewPager=homeView.findViewById(R.id.viewPagerMain);
+
+        ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
+        mViewPager.setAdapter(mViewPagerAdapter);
+*/
+
         final String user_type=pref.getData(SharedPreference.user_type, getContext());
         currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
         requestBtn=homeView.findViewById(R.id.request_button);
@@ -64,13 +95,11 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
-
                     requestBtn.setVisibility(View.VISIBLE);
-                  /*  if (user_type.equals("admin")) {
+                    /* if (user_type.equals("admin")) {
                         requestBtn.setVisibility(View.GONE);
                     }*/
                 } else {
-
                     requestBtn.setVisibility(View.GONE);
                 }
             }
@@ -101,8 +130,10 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Request is sent to admin wait for approval ", Toast.LENGTH_LONG).show();
             }
         });
+
         removeTopicOlderThanTwoMonths();
         readTopics();
+        init(homeView);
 
         return homeView;
     }
@@ -184,8 +215,8 @@ public class HomeFragment extends Fragment {
                                 rootRef.getGroupChatRef().child(groupId).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                         trendingTopics.add(0, snapshot.getValue(Message.class));
-                                          topicAdapter.notifyDataSetChanged();
+                                        trendingTopics.add(0, snapshot.getValue(Message.class));
+                                        topicAdapter.notifyDataSetChanged();
                                     }
 
                                     @Override
@@ -234,20 +265,62 @@ public class HomeFragment extends Fragment {
                 .show();
     }
 
-    //Adapter class for slider
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+    private void init(View homeView) {
+    /*    for (int i=0; i<img.length; i++)
+            ImgArray.add(img[i]);*/
 
-        @Override
-        public Fragment getItem(int position) {
-            return new ScreenSlidePageFragment();
-        }
+        final ViewPager mViewPager;
+        mViewPager=homeView.findViewById(R.id.viewPagerMain);
 
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
+        final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
+        mViewPager.setAdapter(mViewPagerAdapter);
+      //  mViewPagerAdapter.notifyDataSetChanged();
+
+        rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    images.add(snap.child("URL").getValue().toString());
+                    eventName.add(snap.child("NameOfEvent").getValue().toString());
+                }
+                mViewPagerAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+      /*  final ViewPager mViewPager;
+        mViewPager=homeView.findViewById(R.id.viewPagerMain);
+
+        final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
+        mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPagerAdapter.notifyDataSetChanged();*/
+       /* CircleIndicator indicator = (CircleIndicator)findViewById(R.id.indicator);
+        indicator.setViewPager(mPager);*/
+
+        final Handler handler=new Handler();
+        final Runnable Update=new Runnable() {
+            @Override
+            public void run() {
+                if (currentPage == images.size() ) {
+                    currentPage=0;
+                }
+               // mViewPagerAdapter.notifyDataSetChanged();
+                mViewPager.setCurrentItem(currentPage++, true);
+
+            }
+        };
+        //Auto start
+        Timer swipeTimer=new Timer();
+        swipeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, 2500, 2500);
     }
 }
+
