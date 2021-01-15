@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end"
+    android:layout_marginTop="5dp"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sender_messsage_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:fontFamily="@font/lato"
+        android:longClickable="true"
+        android:text="sender messages"
+        android:textColor="@color/recevierMessage"
+        android:textIsSelectable="true"
+        android:textSize="@dimen/title1"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/message_sender_image_view"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_gravity="end"
+        android:layout_margin="5dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/layout_sender_pdf"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@drawable/bg_rounded_grey_border"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/message_sender_pdf_view"
+            android:layout_width="@dimen/widget_size36"
+            android:layout_height="@dimen/widget_size36"
+            android:layout_gravity="start"
+            android:scaleType="centerCrop"
+            android:src="@drawable/documents" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sender_messsage_date_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/lato"
+        android:text="1:30 PM-May 1, 2020"
+        android:textColor="@color/grey"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/isSeen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="seen"
+        android:textSize="8sp" />
+
+    <!--   <LinearLayout
+           android:id="@+id/sender_message_layout"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentEnd="true"
+           android:layout_gravity="right"
+           android:background="@drawable/sender_messages_layout"
+           android:gravity="bottom|right"
+           android:orientation="vertical"
+           android:paddingStart="@dimen/margine_sub"
+           android:paddingTop="10dp"
+           android:paddingEnd="@dimen/margine_sub"
+           android:paddingBottom="10dp"
+           android:visibility="">
+
+           <TextView
+               android:id="@+id/sender_messsage_text"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:fontFamily="@font/lato"
+               android:longClickable="true"
+               android:text="sender messages"
+               android:textColor="@color/recevierMessage"
+               android:textIsSelectable="true"
+               android:textSize="@dimen/title1" />
+
+           <TextView
+               android:id="@+id/sender_messsage_date_time"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="2dp"
+               android:fontFamily="@font/lato"
+               android:text="1:30 PM-May 1, 2020"
+               android:textColor="@color/grey"
+               android:textSize="8sp" />
+
+           <TextView
+               android:id="@+id/isSeen"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="end"
+               android:text="seen"
+               android:textSize="8sp" />
+
+       </LinearLayout>
+   -->
+
+</LinearLayout>

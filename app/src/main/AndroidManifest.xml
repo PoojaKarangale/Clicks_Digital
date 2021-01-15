@@ -39,8 +39,8 @@
         <activity android:name=".FragmentsInSetting.AppInfoFragmentReplacementActivity" />
         <activity android:name=".FragmentsInSetting.ChangeMyNumberFragmentReplacementActivity" />
         <activity android:name=".FragmentsInSetting.NotificationFragmentReplaceActivity" />
-        <activity android:name=".GroupChat.TopicRepliesActivity" />
-        <activity android:name=".GroupChat.TopicRaiseFragment" />
+        <activity android:name=".Topic.TopicRepliesActivity" />
+        <activity android:name=".Topic.TopicRaiseFragment" />
         <activity android:name=".Event.EditEventActivity" />
         <activity android:name=".Event.EventGalleryActivity" />
         <activity android:name=".Event.EventParticipantsActivity" />

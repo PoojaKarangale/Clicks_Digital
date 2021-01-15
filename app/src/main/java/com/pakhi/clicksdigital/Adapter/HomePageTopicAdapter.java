@@ -2,7 +2,6 @@ package com.pakhi.clicksdigital.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.GroupChat.TopicRepliesActivity;
+import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;

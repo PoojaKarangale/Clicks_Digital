@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:focusableInTouchMode="true"
+    android:layout_gravity="start"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/receiver_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato"
+        android:text="name"
+        android:textColor="#0889EC"
+        android:textSize="@dimen/title4" />
+
+    <TextView
+        android:id="@+id/receiver_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato"
+        android:longClickable="true"
+        android:paddingBottom="2dp"
+        android:text="receiver messages here"
+        android:visibility="gone"
+        android:textColor="@color/recevierMessage"
+        android:textIsSelectable="true"
+        android:textSize="@dimen/title1" />
+
+    <TextView
+        android:id="@+id/receiver_message_date_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato"
+        android:paddingTop="2dp"
+        android:paddingBottom="4dp"
+        android:text="1:30 PM-May 1, 2020"
+        android:textColor="@color/recevierDateTime"
+        android:textSize="8dp" />
+    <!--
+        <LinearLayout
+            android:id="@+id/receiver_message_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="3dp"
+            android:layout_toEndOf="@+id/message_profile_image"
+            android:background="@drawable/receiver_messages_layout"
+            android:gravity="bottom|left"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/margine_sub"
+            android:paddingTop="10dp"
+            android:paddingEnd="@dimen/margine_sub"
+            android:paddingBottom="10dp"
+            android:visibility="">
+
+            <TextView
+                android:id="@+id/receiver_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato"
+                android:text=""
+                android:textColor="#0889EC"
+                android:textSize="@dimen/text_inputs" />
+
+            <TextView
+                android:id="@+id/receiver_message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato"
+                android:longClickable="true"
+                android:paddingBottom="2dp"
+                android:text="receiver messages here"
+                android:textColor="@color/recevierMessage"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/title1" />
+
+            <TextView
+                android:id="@+id/receiver_message_date_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato"
+                android:paddingTop="2dp"
+                android:paddingBottom="4dp"
+                android:text="1:30 PM-May 1, 2020"
+                android:textColor="@color/recevierDateTime"
+                android:textSize="8dp" />
+
+        </LinearLayout>
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/receiver_image_layout"
+        >
+
+        <ImageView
+            android:id="@+id/message_receiver_image_view"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/message_profile_image"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/download_image_receiver"
+            android:layout_width="@dimen/widget_size36"
+            android:layout_height="@dimen/widget_size36"
+            android:layout_margin="5dp"
+            android:layout_toRightOf="@+id/message_receiver_image_view"
+            android:src="@drawable/download" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_recevier_pdf"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/bg_rounded_grey_border"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/message_receiver_pdf_view"
+            android:layout_width="@dimen/widget_size36"
+            android:layout_height="@dimen/widget_size36"
+            android:layout_gravity="start"
+            android:scaleType="centerCrop"
+            android:src="@drawable/documents" />
+
+        <ImageView
+            android:id="@+id/download_pdf"
+            android:layout_width="@dimen/widget_size36"
+            android:layout_height="@dimen/widget_size36"
+            android:src="@drawable/download" />
+
+    </LinearLayout>
+
+</LinearLayout>

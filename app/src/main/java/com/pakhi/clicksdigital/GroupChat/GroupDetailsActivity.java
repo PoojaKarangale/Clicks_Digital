@@ -350,10 +350,10 @@ public class GroupDetailsActivity extends AppCompatActivity {
     }
 
     public void backToGroupChat(View view) {
-        Intent groupMembersIntent=new Intent(GroupDetailsActivity.this, GroupChatActivity.class);
+        finish();
+      /*  Intent groupMembersIntent=new Intent(GroupDetailsActivity.this, GroupChatActivity.class);
         groupMembersIntent.putExtra("group_id", currentGroupId);
-        groupMembersIntent.putExtra("group_name", group_name_str);
-        startActivity(groupMembersIntent);
+        startActivity(groupMembersIntent);*/
     }
 
     public void exitGroup(View view) {

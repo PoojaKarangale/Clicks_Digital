@@ -24,11 +24,13 @@ import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
-
 
 public class OfflineEventsFragment extends Fragment {
     FirebaseDatabaseInstance rootRef;
@@ -68,9 +70,9 @@ public class OfflineEventsFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(query.equals("")){
+                if (query.equals("")) {
                     showEvents(city);
-                }else {
+                } else {
                     searchEvents(query.toString().trim().toLowerCase());
                 }
 
@@ -79,11 +81,11 @@ public class OfflineEventsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-               if(newText.equals("")){
-                   showEvents(city);
-               }else {
-                   searchEvents(newText.toString().trim().toLowerCase());
-               }
+                if (newText.equals("")) {
+                    showEvents(city);
+                } else {
+                    searchEvents(newText.toString().trim().toLowerCase());
+                }
 
                 return false;
             }
@@ -93,6 +95,11 @@ public class OfflineEventsFragment extends Fragment {
     }
 
     private void searchEvents(final String s) {
+        final Calendar calendar=Calendar.getInstance();
+        //  calendar.add(Calendar.DAY_OF_MONTH,1);
+        Timestamp ts=new Timestamp(calendar.getTimeInMillis() / 1000L);
+
+        final Date current=calendar.getTime();
 
         eventRef.child(ConstFirebase.eventOffline).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
@@ -101,14 +108,18 @@ public class OfflineEventsFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
                         Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        if (event.getEventName().toLowerCase().contains(s)
-                                || event.getDescription().toLowerCase().contains(s)
-                                || event.getCategory().toLowerCase().contains(s)
-                                || event.getAddress().toLowerCase().contains(s)
-                                || event.getCity().toLowerCase().contains(s)
-                                || event.getVenu().toLowerCase().contains(s)
-                        ) {
-                            events.add(event);
+                        Timestamp ts=new Timestamp(event.getTimeStamp());
+                        Date eventDate=new Date(ts.getTime());
+                        if (!eventDate.before(current)) {
+                            if (event.getEventName().toLowerCase().contains(s)
+                                    || event.getDescription().toLowerCase().contains(s)
+                                    || event.getCategory().toLowerCase().contains(s)
+                                    || event.getAddress().toLowerCase().contains(s)
+                                    || event.getCity().toLowerCase().contains(s)
+                                    || event.getVenu().toLowerCase().contains(s)
+                            ) {
+                                events.add(event);
+                            }
                         }
                     }
                 }
@@ -128,14 +139,18 @@ public class OfflineEventsFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
                         Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        if (event.getEventName().toLowerCase().contains(s)
-                                || event.getDescription().toLowerCase().contains(s)
-                                || event.getCategory().toLowerCase().contains(s)
-                                || event.getAddress().toLowerCase().contains(s)
-                                || event.getCity().toLowerCase().contains(s)
-                                || event.getVenu().toLowerCase().contains(s)
-                        ) {
-                            events.add(event);
+                        Timestamp ts=new Timestamp(event.getTimeStamp());
+                        Date eventDate=new Date(ts.getTime());
+                        if (!eventDate.before(current)) {
+                            if (event.getEventName().toLowerCase().contains(s)
+                                    || event.getDescription().toLowerCase().contains(s)
+                                    || event.getCategory().toLowerCase().contains(s)
+                                    || event.getAddress().toLowerCase().contains(s)
+                                    || event.getCity().toLowerCase().contains(s)
+                                    || event.getVenu().toLowerCase().contains(s)
+                            ) {
+                                events.add(event);
+                            }
                         }
                     }
                 }
@@ -185,18 +200,20 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
 
-      eventRef.child("Both").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.child("Both").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                    if (event.getCity().toLowerCase().contains(s)
-                            || event.getAddress().toLowerCase().contains(s)
-                            || event.getVenu().toLowerCase().contains(s)
-                            || event.getDescription().toLowerCase().contains(s)
-                    ) {
-                        events.add(event);
+                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
+                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        if (event.getCity().toLowerCase().contains(s)
+                                || event.getAddress().toLowerCase().contains(s)
+                                || event.getVenu().toLowerCase().contains(s)
+                                || event.getDescription().toLowerCase().contains(s)
+                        ) {
+                            events.add(event);
+                        }
                     }
                 }
                 Collections.sort(events, new Comparator<Event>() {
@@ -218,7 +235,7 @@ public class OfflineEventsFragment extends Fragment {
                 return o1.getTimeStamp().compareTo(o2.getTimeStamp());
             }
         });*/
-     // Collections.sort(events);
+        // Collections.sort(events);
     }
 
     private void readUserData() {
@@ -245,6 +262,6 @@ public class OfflineEventsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         //searchEvents("");
-       // showEvents(city);
+        // showEvents(city);
     }
 }

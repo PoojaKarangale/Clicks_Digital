@@ -2,12 +2,11 @@ package com.pakhi.clicksdigital.Model;
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public class Message implements Serializable, Comparable<Message> {
 
-    private String from, message, type, to, messageID, time, date;
-
-
+    Long timestamp;
     boolean isSeen;
+    private String from, message, type, to, messageID, time, date;
 
     public Message(String from, String message, String type, String to, String messageID, String time, String date, boolean isSeen) {
         this.from=from;
@@ -23,6 +22,17 @@ public class Message implements Serializable {
     public Message() {
     }
 
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, Long timestamp) {
+        this.from=from;
+        this.message=message;
+        this.type=type;
+        this.to=to;
+        this.messageID=messageID;
+        this.time=time;
+        this.date=date;
+        this.timestamp=timestamp;
+    }
+
     public Message(String from, String message, String type, String to, String messageID, String time, String date) {
         this.from=from;
         this.message=message;
@@ -31,6 +41,15 @@ public class Message implements Serializable {
         this.messageID=messageID;
         this.time=time;
         this.date=date;
+
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp=timestamp;
     }
 
     public boolean isSeen() {
@@ -97,4 +116,10 @@ public class Message implements Serializable {
         this.date=date;
     }
 
+    @Override
+    public int compareTo(Message o) {
+        if (getTimestamp() == null || o.getTimestamp() == null)
+            return 0;
+        return getTimestamp().compareTo(o.getTimestamp());
+    }
 }

@@ -136,6 +136,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent eventDetailsIntent = new Intent(EventDetailsActivity.this, EventGalleryActivity.class);
                 eventDetailsIntent.putExtra("event", event);
+                eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(eventDetailsIntent);
             }
         });

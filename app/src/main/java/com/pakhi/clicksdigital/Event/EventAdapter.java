@@ -183,6 +183,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         Intent eventDetailsIntent=new Intent(context, EventDetailsActivity.class);
         eventDetailsIntent.putExtra("event", event);
         eventDetailsIntent.putExtra("organiser", organiser[0]);
+        eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(eventDetailsIntent);
     }
 

@@ -17,18 +17,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,13 +37,9 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.pakhi.clicksdigital.Activities.UserRequestActivity;
-import com.pakhi.clicksdigital.Adapter.MessageAdapter;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
@@ -59,63 +52,63 @@ import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class GroupChatActivity extends AppCompatActivity {
 
-    static final  int           REQUEST_IMAGE_CAPTURE=1;
-    final static  int           PICK_PDF_CODE        =2342;
-    static final  int           REQUESTCODE          =12;
-    static        int           REQUEST_CODE         =1;
-    int limitation =15,num_of_messages =15;
-    private final List<Message> messagesList         =new ArrayList<>();
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    final static int PICK_PDF_CODE = 2342;
+    static final int REQUESTCODE = 12;
+    static int REQUEST_CODE = 1;
+    private final List<Message> messagesList = new ArrayList<>();
+    int limitation = 15, num_of_messages = 15;
     ImageView attach_file_btn, image_profile /*,requesting_users*/, back_btn, raise_topic;
     Uri imageUriGalary, imageUriCamera;
-    UserDatabase             db;
-    User                     user;
-    PermissionsHandling      permissions;
-    SharedPreference         pref;
-    String                   topic_str;
+    UserDatabase db;
+    User user;
+    PermissionsHandling permissions;
+    SharedPreference pref;
+    String topic_str;
     FirebaseDatabaseInstance rootRef;
-    private Toolbar           mToolbar;
-    private ImageButton       SendMessageButton;
-    private EditText          userMessageInput;
+    boolean limitReached = false;
+    int time_fired = 3;
+    private Toolbar mToolbar;
+    private ImageButton SendMessageButton;
+    private EditText userMessageInput;
     private DatabaseReference UsersRef, GroupMessageKeyRef, GroupIdRef, groupChatRefForCurrentGroup;
     private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, currentGroupId;
-    private MessageAdapter      messageAdapter;
-    private RecyclerView        userMessagesList;
+    private MessageAdapter messageAdapter;
+    private RecyclerView userMessagesList;
     private LinearLayoutManager linearLayoutManager;
-    private ProgressDialog      progressDialog;
-    private TextView            group_name;
-    boolean limitReached = false;
-    int time_fired =3;
+    private ProgressDialog progressDialog;
+    private TextView group_name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat2);
 
         //currentGroupName=getIntent().getExtras().get("groupName").toString();
-        currentGroupId=getIntent().getExtras().get("groupId").toString();
+        currentGroupId = getIntent().getExtras().get("groupId").toString();
 
-        pref=SharedPreference.getInstance();
-        currentUserID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        pref = SharedPreference.getInstance();
+        currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
-        UsersRef=rootRef.getUserRef();
-        GroupIdRef=rootRef.getGroupRef().child(currentGroupId);
-        groupChatRefForCurrentGroup=rootRef.getGroupChatRef().child(currentGroupId);
+        rootRef = FirebaseDatabaseInstance.getInstance();
+        UsersRef = rootRef.getUserRef();
+        GroupIdRef = rootRef.getGroupRef().child(currentGroupId);
+        groupChatRefForCurrentGroup = rootRef.getGroupChatRef().child(currentGroupId);
 
-        progressDialog=new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
 
-        db=new UserDatabase(this);
+        db = new UserDatabase(this);
         getUserFromDb();
         GetUserInfo();
 
@@ -140,14 +133,14 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
-        final String[] image_url=new String[1];
-        FirebaseStorageInstance storageRootRef=FirebaseStorageInstance.getInstance();
-        final StorageReference imgPath=storageRootRef.getGroupProfileRef().child(currentGroupId ); //+ "." + getFileExtention(picImageUri)
+        final String[] image_url = new String[1];
+        FirebaseStorageInstance storageRootRef = FirebaseStorageInstance.getInstance();
+        final StorageReference imgPath = storageRootRef.getGroupProfileRef().child(currentGroupId); //+ "." + getFileExtention(picImageUri)
 
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                image_url[0]=uri.toString();
+                image_url[0] = uri.toString();
                 Picasso.get().load(uri).into(image_profile);
 
             }
@@ -164,7 +157,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String message=userMessageInput.getText().toString();
+                String message = userMessageInput.getText().toString();
 
                 if (TextUtils.isEmpty(message)) {
                     //Toast.makeText(GroupChatActivity.this, "Please write message first...", Toast.LENGTH_SHORT).show();
@@ -175,7 +168,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 }
             }
         });
-        permissions=new PermissionsHandling(this);
+        permissions = new PermissionsHandling(this);
         attach_file_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,7 +177,7 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
-        String user_type=pref.getData(SharedPreference.user_type, getApplicationContext());
+        String user_type = pref.getData(SharedPreference.user_type, getApplicationContext());
 
        /* if (user_type.equals("admin")) {
             requesting_users.setVisibility(View.VISIBLE);
@@ -235,14 +228,15 @@ ChildEventListener mChildEventListener ;
                         if(!userMessagesList.canScrollVertically(1)){
                            // userMessageInput.setVisibility(View.GONE);
                           //  mFab.hide();
-                        }*//*
-*/
+                        }*/
+
         /*
                         if(mSentMessage){
                             mSentMessage = false;
                         }
 
-                        time_fired++;*//*
+                        time_fired++;
+
 
                     }
 
@@ -272,14 +266,6 @@ ChildEventListener mChildEventListener ;
                 });
 
 
-
-
-
-
-
-
-
-
         //When user scrolls up new data gets added
 
         userMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -291,8 +277,10 @@ ChildEventListener mChildEventListener ;
                     if(!limitReached) {
                         limitation += 12;
 
-                        *//*DatabaseReference tempRef = FirebaseDatabase.getInstance().getReference().child("Messages");
-                        tempRef.child(mMessageSenderID).child(mMessageReceiverID)*//*
+                        */
+        /*
+        DatabaseReference tempRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+                        tempRef.child(mMessageSenderID).child(mMessageReceiverID)
                                 groupChatRefForCurrentGroup.limitToLast((int) limitation).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -300,8 +288,9 @@ ChildEventListener mChildEventListener ;
                                     limitation = num_of_messages;
                                     limitReached = true;
 
-                                    *//*DatabaseReference temp = FirebaseDatabase.getInstance().getReference().child("Messages");
-                                    temp.child(mMessageSenderID).child(mMessageReceiverID)*//*
+                                    DatabaseReference temp = FirebaseDatabase.getInstance().getReference().child("Messages");
+                                    temp.child(mMessageSenderID).child(mMessageReceiverID);
+
                                     groupChatRefForCurrentGroup.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -348,17 +337,16 @@ ChildEventListener mChildEventListener ;
                 }
             }
         });*/
-
     }
 
     private void startTopicRaiseFagmentForResult() {
 
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         /*builder.setTitle("Enter new Topic");*/
 
-        LayoutInflater inflater=((Activity) this).getLayoutInflater();
-        View v=inflater.inflate(R.layout.fragment_topic_raise, null);
-        final EditText topic=v.findViewById(R.id.topic);
+        LayoutInflater inflater = ((Activity) this).getLayoutInflater();
+        View v = inflater.inflate(R.layout.fragment_topic_raise, null);
+        final EditText topic = v.findViewById(R.id.topic);
         //  v.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT));
         builder.setView(v);
 
@@ -367,7 +355,7 @@ ChildEventListener mChildEventListener ;
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                topic_str=topic.getText().toString();
+                topic_str = topic.getText().toString();
                 SaveMessageInfoToDatabase("topic", topic_str);
             }
         });
@@ -382,15 +370,8 @@ ChildEventListener mChildEventListener ;
 
     }
 
-    private void goToRequestsActivity() {
-        Intent intent=new Intent(this, UserRequestActivity.class);
-        intent.putExtra(Const.groupId, currentGroupId);
-        intent.putExtra(Const.groupName, currentGroupName);
-        startActivity(intent);
-    }
-
     private void sendUserToGroupDetails(String s) {
-        Intent groupMembersIntent=new Intent(GroupChatActivity.this, GroupDetailsActivity.class);
+        Intent groupMembersIntent = new Intent(GroupChatActivity.this, GroupDetailsActivity.class);
         groupMembersIntent.putExtra("group_id", currentGroupId);
         //groupMembersIntent.putExtra("image_url", s);
         groupMembersIntent.putExtra("group_name", currentGroupName);
@@ -400,12 +381,12 @@ ChildEventListener mChildEventListener ;
 
     private void getUserFromDb() {
         db.getReadableDatabase();
-        Cursor res=db.getAllData();
+        Cursor res = db.getAllData();
         if (res.getCount() == 0) {
 
         } else {
             res.moveToFirst();
-            user=new User(res.getString(0), res.getString(1),
+            user = new User(res.getString(0), res.getString(1),
                     res.getString(2), res.getString(3), res.getString(4),
                     res.getString(5), res.getString(6), res.getString(7),
                     res.getString(8), res.getString(9), res.getString(10),
@@ -427,9 +408,15 @@ ChildEventListener mChildEventListener ;
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
 
-                    Message messages=dataSnapshot.getValue(Message.class);
+                    Message messages = dataSnapshot.getValue(Message.class);
 
-                    messagesList.add(messages);
+                    messagesList.add(messages); ////-----------
+
+                    Collections.sort(messagesList, new Comparator<Message>() {
+                        public int compare(Message o1, Message o2) {
+                            return o1.getTimestamp().compareTo(o2.getTimestamp());
+                        }
+                    });
 
                     messageAdapter.notifyDataSetChanged();
 
@@ -462,31 +449,30 @@ ChildEventListener mChildEventListener ;
     }
 
     private void InitializeFields() {
-        mToolbar=findViewById(R.id.group_chat_bar_layout);
+        mToolbar = findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(currentGroupName);
 
-        SendMessageButton=findViewById(R.id.send_message_button);
-        userMessageInput=findViewById(R.id.input_group_message);
+        SendMessageButton = findViewById(R.id.send_message_button);
+        userMessageInput = findViewById(R.id.input_group_message);
 
-        attach_file_btn=findViewById(R.id.attach_file_btn);
-        image_profile=findViewById(R.id.image_profile);
-        group_name=findViewById(R.id.group_name);
-        // requesting_users=findViewById(R.id.requesting_users);
-        back_btn=findViewById(R.id.back_btn);
-        raise_topic=findViewById(R.id.raise_topic);
-        // banner_white = findViewById(R.id.banner);
-        // group_members = findViewById(R.id.group_members);
+        attach_file_btn = findViewById(R.id.attach_file_btn);
+        image_profile = findViewById(R.id.image_profile);
+        group_name = findViewById(R.id.group_name);
+        back_btn = findViewById(R.id.back_btn);
+        raise_topic = findViewById(R.id.raise_topic);
 
-        messageAdapter=new MessageAdapter(messagesList, "GroupChat");
-        userMessagesList=(RecyclerView) findViewById(R.id.private_messages_list_of_users);
+        messageAdapter = new MessageAdapter(messagesList, "GroupChat", getApplicationContext());
+        userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
-        linearLayoutManager=new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager = new LinearLayoutManager(this);
+        // linearLayoutManager.setStackFromEnd(true);
+        // linearLayoutManager.setReverseLayout(true); ////-----------
         userMessagesList.setLayoutManager(linearLayoutManager);
+
         userMessagesList.setAdapter(messageAdapter);
 
-/*
+        /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         toolbar.setBackground(getResources().getDrawable(R.drawable.icn_actionbar_background));
         TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -496,29 +482,90 @@ ChildEventListener mChildEventListener ;
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }*/
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+      /*  new Handler().post(new Runnable() {
+
+            @Override
+            public void run() {
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                overridePendingTransition(0, 0);
+                finish();
+
+                overridePendingTransition(0, 0);
+                startActivity(intent);
+            }
+        });*/
+        /*  if (Build.VERSION.SDK_INT >= 11) {
+            recreate();
+        } else {
+            Intent intent = getIntent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            overridePendingTransition(0, 0);
+
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }*/
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /*  new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                overridePendingTransition(0, 0);
+                finish();
+
+                overridePendingTransition(0, 0);
+                startActivity(intent);
+            }
+        });*/
+
+        /* if (Build.VERSION.SDK_INT >= 11) {
+            recreate();
+        } else {
+            Intent intent = getIntent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            overridePendingTransition(0, 0);
+
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }*/
     }
 
     private void GetUserInfo() {
-        currentUserName=user.getUser_name();
+        currentUserName = user.getUser_name();
     }
 
     private void SaveMessageInfoToDatabase(String messageType, String message) {
 
-        Calendar calForDate=Calendar.getInstance();
-        SimpleDateFormat currentDateFormat=new SimpleDateFormat("MMM dd, yyyy");
-        currentDate=currentDateFormat.format(calForDate.getTime());
+        Calendar calForDate = Calendar.getInstance();
+        SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+        currentDate = currentDateFormat.format(calForDate.getTime());
 
-        SimpleDateFormat currentTimeFormat=new SimpleDateFormat("hh:mm a");
-        currentTime=currentTimeFormat.format(calForDate.getTime());
+        SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
+        currentTime = currentTimeFormat.format(calForDate.getTime());
 
-        HashMap<String, Object> groupMessageKey=new HashMap<>();
+        HashMap<String, Object> groupMessageKey = new HashMap<>();
 
         groupChatRefForCurrentGroup.updateChildren(groupMessageKey);
-        String messagekEY=groupChatRefForCurrentGroup.push().getKey();
+        String messagekEY = groupChatRefForCurrentGroup.push().getKey();
+        Long timestamp = calForDate.getTimeInMillis() / 1000L;
 
-
-        Message message1=new Message(currentUserID, message,
-                messageType, currentGroupId, messagekEY, currentTime, currentDate);
+        Message message1 = new Message(currentUserID, message,
+                messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp);
 
         groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
 
@@ -529,12 +576,12 @@ ChildEventListener mChildEventListener ;
     }
 
     private void saveSeparateTopicNode(String messagekEY) {
-        DatabaseReference topicRef=rootRef.getTopicRef();
+        DatabaseReference topicRef = rootRef.getTopicRef();
         topicRef.child(messagekEY).setValue(currentGroupId);
     }
 
     private void popupMenuSettigns() {
-        PopupMenu popup=new PopupMenu(GroupChatActivity.this, attach_file_btn);
+        PopupMenu popup = new PopupMenu(GroupChatActivity.this, attach_file_btn);
         popup.getMenuInflater().inflate(R.menu.attach_file_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
@@ -580,7 +627,7 @@ ChildEventListener mChildEventListener ;
 
       */
         //creating an intent for file chooser
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.setType("application/pdf");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PDF_CODE);
@@ -644,12 +691,12 @@ ChildEventListener mChildEventListener ;
                 .start(GroupChatActivity.this);
 
        */
-        Intent i=new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, REQUESTCODE);
     }
 
     void openCamera() {
-        Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
@@ -669,16 +716,16 @@ ChildEventListener mChildEventListener ;
 
               */
                 case REQUESTCODE:
-                    imageUriGalary=data.getData();
+                    imageUriGalary = data.getData();
                     uploadImage(imageUriGalary);
                     break;
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras=data.getExtras();
-                    Bitmap imageBitmap=(Bitmap) extras.get("data");
-                    ByteArrayOutputStream bytes=new ByteArrayOutputStream();
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                    String path=MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), imageBitmap, "Title", null);
-                    imageUriCamera=Uri.parse(path);
+                    String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), imageBitmap, "Title", null);
+                    imageUriCamera = Uri.parse(path);
                     uploadImage(imageUriCamera);
                     break;
                 case PICK_PDF_CODE:
@@ -695,8 +742,8 @@ ChildEventListener mChildEventListener ;
         Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
 
         // progressDialog.show();
-        StorageReference storageRootReference=FirebaseStorageInstance.getInstance().getRootRef();
-        StorageReference sRef=storageRootReference.child(Const.USER_MEDIA_PATH).child(currentUserID).child(Const.FILES_PATH).child("Sent_Pdf").child(currentGroupId).child(System.currentTimeMillis() + "");
+        StorageReference storageRootReference = FirebaseStorageInstance.getInstance().getRootRef();
+        StorageReference sRef = storageRootReference.child(Const.USER_MEDIA_PATH).child(currentUserID).child(Const.FILES_PATH).child("Sent_Pdf").child(currentGroupId).child(System.currentTimeMillis() + "");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
@@ -723,14 +770,14 @@ ChildEventListener mChildEventListener ;
     }
 
     String getFileExtention(Uri uri) {
-        ContentResolver contentResolver=getContentResolver();
-        MimeTypeMap mime=MimeTypeMap.getSingleton();
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child(currentGroupId).child("photos");
-        final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
+        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child(currentGroupId).child("photos");
+        final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -760,15 +807,15 @@ ChildEventListener mChildEventListener ;
     private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
-        Calendar calendar=Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate=currentDate.format(calendar.getTime());
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        saveCurrentTime=currentTime.format(calendar.getTime());
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
 
-        HashMap<String, Object> onlineStateMap=new HashMap<>();
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
         onlineStateMap.put("time", saveCurrentTime);
         onlineStateMap.put("date", saveCurrentDate);
         onlineStateMap.put("state", state);
