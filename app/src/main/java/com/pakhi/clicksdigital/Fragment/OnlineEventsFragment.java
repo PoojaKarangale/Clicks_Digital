@@ -103,7 +103,7 @@ public class OnlineEventsFragment extends Fragment {
         return view;
     }
 
-/*    private long fieldToTimestamp(int year, int month, int day) {
+    /*    private long fieldToTimestamp(int year, int month, int day) {
         Calendar calendar=Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
@@ -188,12 +188,17 @@ public class OnlineEventsFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+
             }
         });
 
     }
 
     private void searchEvents(final String s) {
+        final Calendar calendar=Calendar.getInstance();
+      //  calendar.add(Calendar.DAY_OF_MONTH,1);
+        Timestamp ts=new Timestamp(calendar.getTimeInMillis() / 1000L);
+        final Date current=new Date(ts.getTime());
 
         eventRef.child(ConstFirebase.eventOnline).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
@@ -202,11 +207,15 @@ public class OnlineEventsFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
                         Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        if (event.getEventName().toLowerCase().contains(s)
-                                || event.getDescription().toLowerCase().contains(s)
-                                || event.getCategory().toLowerCase().contains(s)
-                        ) {
-                            events.add(event);
+                        Timestamp ts=new Timestamp(event.getTimeStamp());
+                        Date eventDate=new Date(ts.getTime());
+                        if (!eventDate.before(current)) {
+                            if (event.getEventName().toLowerCase().contains(s)
+                                    || event.getDescription().toLowerCase().contains(s)
+                                    || event.getCategory().toLowerCase().contains(s)
+                            ) {
+                                events.add(event);
+                            }
                         }
                     }
                 }
@@ -227,13 +236,15 @@ public class OnlineEventsFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
                         Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-
+                        Timestamp ts=new Timestamp(event.getTimeStamp());
+                        Date eventDate=new Date(ts.getTime());
+                        if (!eventDate.before(current)) {
                         if (event.getEventName().toLowerCase().contains(s)
                                 || event.getDescription().toLowerCase().contains(s)
                                 || event.getCategory().toLowerCase().contains(s)
                         ) {
                             events.add(event);
-                        }
+                        }}
                     }
                 }
                 Collections.sort(events, new Comparator<Event>() {

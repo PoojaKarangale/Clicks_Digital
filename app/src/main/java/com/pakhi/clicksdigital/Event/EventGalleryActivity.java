@@ -287,8 +287,6 @@ public class EventGalleryActivity extends AppCompatActivity {
                     imageName.add(image_name);
                     rootRefAdd.getsliderRef().child(image_name).child("NameOfEvent").setValue(eventName);
                     rootRefAdd.getsliderRef().child(image_name).child("URL").setValue(imageUrl);
-
-
             }
 
             @Override
@@ -296,8 +294,6 @@ public class EventGalleryActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     private void SaveUrlToDatabase(String imageUrl, String image_name) {

@@ -84,7 +84,6 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
 
         });
 
-
          Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
 
         holder.image_profile.setOnClickListener(new View.OnClickListener() {
