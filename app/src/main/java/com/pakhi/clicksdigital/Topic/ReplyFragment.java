@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.GroupChat;
+package com.pakhi.clicksdigital.Topic;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -36,11 +36,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.APIService;
-import com.pakhi.clicksdigital.Adapter.MessageAdapter;
+import com.pakhi.clicksdigital.GroupChat.MessageAdapter;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Notifications.Client;
@@ -212,7 +211,7 @@ public class ChatActivity extends AppCompatActivity {
         SendMessageButton=(ImageButton) findViewById(R.id.send_message_btn);
         MessageInputText=(EditText) findViewById(R.id.input_message);
 
-        messageAdapter=new MessageAdapter(messagesList, Const.personalChat);
+        messageAdapter=new MessageAdapter(messagesList, Const.personalChat,getApplicationContext());
         userMessagesList=(RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
         linearLayoutManager=new LinearLayoutManager(this);

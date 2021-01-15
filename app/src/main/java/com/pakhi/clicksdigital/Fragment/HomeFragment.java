@@ -170,9 +170,14 @@ public class HomeFragment extends Fragment {
     private void setupRecyclerView(View v) {
         topicRecyclerView=(RecyclerView) v.findViewById(R.id.display);
         topicRecyclerView.setHasFixedSize(true);
-        topicRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+      //  topicRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        topicRecyclerView.setLayoutManager(linearLayoutManager);
+      //  linearLayoutManager.setReverseLayout(true);
+
         topicAdapter=new HomePageTopicAdapter(getContext(), trendingTopics);
         topicRecyclerView.setAdapter(topicAdapter);
+
     }
 
     public void readTopics() {
@@ -194,7 +199,7 @@ public class HomeFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         trendingTopics.add(0, snapshot.getValue(Message.class));
-                                        topicAdapter.notifyDataSetChanged();
+                                     //   topicAdapter.notifyDataSetChanged();
                                     }
 
                                     @Override
@@ -211,7 +216,7 @@ public class HomeFragment extends Fragment {
                         }
                     });
                 }
-                topicAdapter.notifyDataSetChanged();
+               // topicAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -249,18 +254,23 @@ public class HomeFragment extends Fragment {
         mViewPager=homeView.findViewById(R.id.viewPagerMain);
 
         final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
-        mViewPager.setAdapter(mViewPagerAdapter);
+        //        mViewPager.setAdapter(mViewPagerAdapter);
 
         images.clear();
         eventName.clear();
         rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    images.add(snap.child("URL").getValue().toString());
-                    eventName.add(snap.child("NameOfEvent").getValue().toString());
+                if (snapshot.exists()) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (snap.child("URL").exists() && snap.child("NameOfEvent").exists()) {
+                            images.add(0, snap.child("URL").getValue().toString());
+                            eventName.add(0, snap.child("NameOfEvent").getValue().toString());
+                            //  mViewPagerAdapter.notifyDataSetChanged();
+                        }
+                    }
                 }
-                mViewPagerAdapter.notifyDataSetChanged();
+                 mViewPagerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -269,6 +279,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        mViewPager.setAdapter(mViewPagerAdapter);
+
         final Handler handler=new Handler();
         final Runnable Update=new Runnable() {
             @Override
@@ -276,7 +288,9 @@ public class HomeFragment extends Fragment {
                 if (currentPage == images.size()) {
                     currentPage=0;
                 }
+                mViewPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(currentPage++, true);
+                mViewPagerAdapter.notifyDataSetChanged();
 
             }
         };
@@ -290,4 +304,3 @@ public class HomeFragment extends Fragment {
         }, 2500, 2500);
     }
 }
-
