@@ -3,7 +3,6 @@ package com.pakhi.clicksdigital.Fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -23,8 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Context;
 import com.pakhi.clicksdigital.Adapter.HomePageTopicAdapter;
+import com.pakhi.clicksdigital.Internet;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.ScreenSlidePageFragment;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -33,13 +36,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class HomeFragment extends Fragment {
 
-    private static final int NUM_PAGES  =5;
-    private static       int currentPage=0;
+    private static final int NUM_PAGES=5;
     ArrayList<Message>       trendingTopics=new ArrayList<>();
     String                   currentUserID;
     RecyclerView             topicRecyclerView;
@@ -47,10 +47,11 @@ public class HomeFragment extends Fragment {
     FirebaseDatabaseInstance rootRef;
     Button                   requestBtn;
     HomePageTopicAdapter     topicAdapter;
-    ArrayList<String>        images        =new ArrayList<>();
-    ArrayList<String>        eventName     =new ArrayList<>();
-    DatabaseReference        sliderRef;
-    Context                  context;
+    ArrayList<String> images = new ArrayList<String>();
+    ArrayList<String> eventName = new ArrayList<>();
+    DatabaseReference sliderRef;
+    Context context;
+    Internet internet;
 
     public HomeFragment() {
 
@@ -62,57 +63,88 @@ public class HomeFragment extends Fragment {
         View homeView=inflater.inflate(R.layout.fragment_home, container, false);
         pref=SharedPreference.getInstance();
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
+        internet = new Internet();
+        if(internet.checkConnection()==true){
+            ViewPager mViewPager;
+            ViewPagerAdapter mViewPagerAdapter;
+            rootRef=FirebaseDatabaseInstance.getInstance();
 
-        final String user_type=pref.getData(SharedPreference.user_type, getContext());
-        currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
-        requestBtn=homeView.findViewById(R.id.request_button);
-        setupRecyclerView(homeView);
+            rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot snap : snapshot.getChildren() ){
+                        images.add(snap.child("URL").getValue().toString());
+                        eventName.add(snap.child("NameOfEvent").getValue().toString());
 
-        rootRef.getApprovedUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists()) {
-                    requestBtn.setVisibility(View.VISIBLE);
-                    /* if (user_type.equals("admin")) {
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+            mViewPager = homeView.findViewById(R.id.viewPagerMain);
+
+            mViewPagerAdapter = new ViewPagerAdapter(getContext(), images, eventName);
+
+            //mViewPager.setAdapter(mViewPagerAdapter);
+
+
+            final String user_type=pref.getData(SharedPreference.user_type, getContext());
+            currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
+            requestBtn=homeView.findViewById(R.id.request_button);
+            setupRecyclerView(homeView);
+
+            rootRef.getApprovedUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (!snapshot.exists()) {
+
+                        requestBtn.setVisibility(View.VISIBLE);
+                  /*  if (user_type.equals("admin")) {
                         requestBtn.setVisibility(View.GONE);
                     }*/
-                } else {
-                    requestBtn.setVisibility(View.GONE);
+                    } else {
+
+                        requestBtn.setVisibility(View.GONE);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-        rootRef.getUserRequestsRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    requestBtn.setText("requested");
-                    requestBtn.setEnabled(false);
                 }
-            }
+            });
+            rootRef.getUserRequestsRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        requestBtn.setText("requested");
+                        requestBtn.setEnabled(false);
+                    }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-        requestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rootRef.getUserRequestsRef().child(currentUserID).setValue("");
-                Toast.makeText(getContext(), "Request is sent to admin wait for approval ", Toast.LENGTH_LONG).show();
-            }
-        });
+                }
+            });
+            requestBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rootRef.getUserRequestsRef().child(currentUserID).setValue("");
+                    Toast.makeText(getContext(), "Request is sent to admin wait for approval ", Toast.LENGTH_LONG).show();
+                }
+            });
+            removeTopicOlderThanTwoMonths();
+            readTopics();
 
-        removeTopicOlderThanTwoMonths();
-        readTopics();
-        init(homeView);
 
+        }
+        else {
+            Toast.makeText(getContext(), internet.connectionString(),Toast.LENGTH_LONG).show();
+        }
         return homeView;
     }
 
@@ -193,8 +225,8 @@ public class HomeFragment extends Fragment {
                                 rootRef.getGroupChatRef().child(groupId).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        trendingTopics.add(0, snapshot.getValue(Message.class));
-                                        topicAdapter.notifyDataSetChanged();
+                                         trendingTopics.add(0, snapshot.getValue(Message.class));
+                                          topicAdapter.notifyDataSetChanged();
                                     }
 
                                     @Override
@@ -242,52 +274,4 @@ public class HomeFragment extends Fragment {
                 .setNegativeButton("No", null)
                 .show();
     }
-
-    private void init(View homeView) {
-
-        final ViewPager mViewPager;
-        mViewPager=homeView.findViewById(R.id.viewPagerMain);
-
-        final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
-        mViewPager.setAdapter(mViewPagerAdapter);
-
-        images.clear();
-        eventName.clear();
-        rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    images.add(snap.child("URL").getValue().toString());
-                    eventName.add(snap.child("NameOfEvent").getValue().toString());
-                }
-                mViewPagerAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        final Handler handler=new Handler();
-        final Runnable Update=new Runnable() {
-            @Override
-            public void run() {
-                if (currentPage == images.size()) {
-                    currentPage=0;
-                }
-                mViewPager.setCurrentItem(currentPage++, true);
-
-            }
-        };
-        //Auto start
-        Timer swipeTimer=new Timer();
-        swipeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(Update);
-            }
-        }, 2500, 2500);
-    }
 }
-

@@ -17,11 +17,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,6 +87,7 @@ public class ChatActivity extends AppCompatActivity {
     boolean                  notify=false;
     SharedPreference         pref;
     FirebaseDatabaseInstance rootRef;
+    private ScrollView messageScroll;
     private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID, messageSenderName;
     private TextView userName, userLastSeen;
     private CircleImageView userImage;
@@ -203,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View actionBarView = layoutInflater.inflate(R.layout.custom_chat_bar, null);
         actionBar.setCustomView(actionBarView);*/
-
+        messageScroll=findViewById(R.id.scroll_view);
         back_btn=findViewById(R.id.back_btn);
         userName=(TextView) findViewById(R.id.custom_profile_name);
         userLastSeen=(TextView) findViewById(R.id.custom_user_last_seen);
@@ -283,6 +286,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
         updateUserStatus("online");
         messagesList.clear();
         messageAdapter.notifyDataSetChanged();
@@ -313,6 +317,7 @@ public class ChatActivity extends AppCompatActivity {
                         //  messageAdapter.notifyDataSetChanged();
 
                         userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
+                        messageScroll.fullScroll(NestedScrollView.FOCUS_DOWN);
                     }
 
                     @Override
@@ -338,6 +343,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void SendMessage(String messageType, String message) {
+
+        messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
 
         String messageSenderRef="MessagesList/" + messageSenderID + "/" + messageReceiverID;
         String messageReceiverRef="MessagesList/" + messageReceiverID + "/" + messageSenderID;

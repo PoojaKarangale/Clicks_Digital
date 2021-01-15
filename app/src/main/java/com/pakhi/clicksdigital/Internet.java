@@ -2,23 +2,31 @@ package com.pakhi.clicksdigital;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 
 public class Internet {
     Context context;
-
+    ConnectivityManager cm;
+    NetworkInfo activeNetwork;
+    boolean isConnected;
     public Internet(){
 
     }
 
     public boolean checkConnection(){
 
-        ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+         cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-        return isConnected;
+         activeNetwork = cm.getActiveNetworkInfo();
+         if(activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting()){
+             return true;
+         }else {
+             return isConnected;}
+    }
+    public String connectionString(){
+        return "Please Check your Internet Connection to continue";
+
     }
 }

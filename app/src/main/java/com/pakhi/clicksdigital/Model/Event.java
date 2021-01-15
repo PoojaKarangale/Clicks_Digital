@@ -22,6 +22,7 @@ public class Event implements Serializable, Comparable<Event> {
     String  category;
     String  creater_id;
 
+
     public Event() {
     }
 

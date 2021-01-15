@@ -64,6 +64,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private String category="Artificial Intelligence", event_type="Offline", currentUserId, picImageUrlString;
     private boolean payable          =false;
     private boolean isProfileSelected=false;
+    int startMonth, endMonth;
 
     private TextView choose_start_date, choose_end_date, choose_start_time, choose_end_time;
     private TextView total_fee, cancel_btn;
@@ -330,6 +331,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 finish();
             }
         });
+        eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").child("startMonth").setValue(startMonth);
+        eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").child("endMonth").setValue(endMonth);
 
        /* if(event.getEventType().equals(ConstFirebase.eventOnline)){
           eventRef.child(ConstFirebase.eventOnline).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -508,12 +511,14 @@ public class CreateEventActivity extends AppCompatActivity {
         choose_start_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startMonth = mMonth;
                 openDatePickerDialog(mYear, mMonth, mDay, choose_start_date, true);
             }
         });
         choose_end_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                endMonth = mMonth;
                 openDatePickerDialog(mYear, mMonth, mDay, choose_end_date, false);
             }
         });
