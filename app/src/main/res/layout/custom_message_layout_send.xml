@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="end"
     android:layout_marginTop="5dp"
+    android:layout_marginStart="45dp"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
@@ -15,6 +16,7 @@
         android:fontFamily="@font/lato"
         android:longClickable="true"
         android:text="sender messages"
+        android:textAlignment="gravity"
         android:textColor="@color/recevierMessage"
         android:textIsSelectable="true"
         android:textSize="@dimen/title1"

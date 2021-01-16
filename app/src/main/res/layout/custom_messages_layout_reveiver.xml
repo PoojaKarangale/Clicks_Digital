@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:focusableInTouchMode="true"
     android:layout_gravity="start"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="45dp"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <TextView
@@ -22,12 +23,13 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/lato"
         android:longClickable="true"
+        android:textAlignment="gravity"
         android:paddingBottom="2dp"
         android:text="receiver messages here"
-        android:visibility="gone"
         android:textColor="@color/recevierMessage"
         android:textIsSelectable="true"
-        android:textSize="@dimen/title1" />
+        android:textSize="@dimen/title1"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/receiver_message_date_time"
@@ -39,6 +41,7 @@
         android:text="1:30 PM-May 1, 2020"
         android:textColor="@color/recevierDateTime"
         android:textSize="8dp" />
+
     <!--
         <LinearLayout
             android:id="@+id/receiver_message_layout"
@@ -90,13 +93,13 @@
 
         </LinearLayout>
     -->
+
     <LinearLayout
+        android:id="@+id/receiver_image_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:id="@+id/receiver_image_layout"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/message_receiver_image_view"
