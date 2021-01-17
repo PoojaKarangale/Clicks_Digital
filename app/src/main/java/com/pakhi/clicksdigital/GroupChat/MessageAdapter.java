@@ -94,7 +94,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 break;
         }
 
-
         assert viewHolder != null;
         return viewHolder;
     }
@@ -113,9 +112,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else {
             configureMessageViewHolderOther((MessageViewHolderOther) messageViewHolder, position, message);
         }
+
     }
 
     private void configureMessageViewHolder(MessageViewHolder messageViewHolder, int position, final Message message) {
+        messageViewHolder.senderMessageText.setVisibility(View.GONE);
+        messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
+        messageViewHolder.senderLayoutPdf.setVisibility(View.GONE);
         switch (message.getType()) {
             case "text":
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
@@ -437,7 +440,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return userMessagesList.size();
-        //    return 0;
     }
 
     @Override
