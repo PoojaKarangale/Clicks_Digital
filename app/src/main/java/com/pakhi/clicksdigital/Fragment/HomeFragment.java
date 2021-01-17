@@ -48,6 +48,8 @@ public class HomeFragment extends Fragment {
     Button                   requestBtn;
     HomePageTopicAdapter     topicAdapter;
     ArrayList<String>        images        =new ArrayList<>();
+
+    ArrayList<String>        uploader        =new ArrayList<>();
     ArrayList<String>        eventName     =new ArrayList<>();
     DatabaseReference        sliderRef;
     Context                  context;
@@ -253,7 +255,7 @@ public class HomeFragment extends Fragment {
         final ViewPager mViewPager;
         mViewPager=homeView.findViewById(R.id.viewPagerMain);
 
-        final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName);
+        final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName, uploader);
         //        mViewPager.setAdapter(mViewPagerAdapter);
 
         images.clear();
@@ -263,9 +265,10 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot snap : snapshot.getChildren()) {
-                        if (snap.child("URL").exists() && snap.child("NameOfEvent").exists()) {
+                        if (snap.child("URL").exists() && snap.child("NameOfEvent").exists() && snap.child("sender").exists()) {
                             images.add(0, snap.child("URL").getValue().toString());
                             eventName.add(0, snap.child("NameOfEvent").getValue().toString());
+                            uploader.add(0, snap.child("sender").getValue().toString());
                             //  mViewPagerAdapter.notifyDataSetChanged();
                         }
                     }
