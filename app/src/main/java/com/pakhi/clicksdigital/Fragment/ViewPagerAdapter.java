@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,11 +24,12 @@ class ViewPagerAdapter extends PagerAdapter {
 
     ArrayList<String> images;
     ArrayList<String> eventName;
+    ArrayList<String> uploader;
 
     LayoutInflater mLayoutInflater;
 
 
-    public ViewPagerAdapter(Context context, ArrayList<String> images, ArrayList<String> eventName) {
+    public ViewPagerAdapter(Context context, ArrayList<String> images, ArrayList<String> eventName, ArrayList<String> uploader) {
         this.context = context;
         this.images = images;
         this.eventName = eventName;
@@ -52,8 +54,16 @@ class ViewPagerAdapter extends PagerAdapter {
 
         ImageView imageView =  itemView.findViewById(R.id.imageViewMain);
         TextView nameOfEvent = itemView.findViewById(R.id.name_of_event);
+        TextView uploaderName = imageView.findViewById(R.id.upload_value);
         nameOfEvent.setText(eventName.get(position));
+        uploaderName.setText(uploader.get(position));
         Picasso.get().load(images.get(position)).into(imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnlargedImage.enlargeImage(images.get(position),context);
+            }
+        });
 
         Objects.requireNonNull(container).addView(itemView);
 

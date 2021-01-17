@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -18,13 +19,15 @@ class ImageViewPagerAdapter extends PagerAdapter {
     android.content.Context context;
     ArrayList<String>       images;
     ArrayList<String>       eventName;
+    ArrayList<String>       uploader;
     LayoutInflater          mLayoutInflater;
     private boolean doNotifyDataSetChangedOnce=false;
 
-    public ImageViewPagerAdapter(android.content.Context context, ArrayList<String> images, ArrayList<String> eventName) {
+    public ImageViewPagerAdapter(android.content.Context context, ArrayList<String> images, ArrayList<String> eventName, ArrayList<String> uploader) {
         this.context=context;
         this.images=images;
         this.eventName=eventName;
+        this.uploader=uploader;
         //  mLayoutInflater=(LayoutInflater) context.getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
         mLayoutInflater=LayoutInflater.from(context);
     }
@@ -50,8 +53,16 @@ class ImageViewPagerAdapter extends PagerAdapter {
 
         ImageView imageView=itemView.findViewById(R.id.imageViewMain);
         TextView nameOfEvent=itemView.findViewById(R.id.name_of_event);
+        TextView upload = imageView.findViewById(R.id.upload_value);
         nameOfEvent.setText(eventName.get(position));
+        upload.setText(uploader.get(position));
         Picasso.get().load(images.get(position)).into(imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnlargedImage.enlargeImage( images.get(position),context);
+            }
+        });
         doNotifyDataSetChangedOnce = true;
         //  Objects.requireNonNull(container).addView(itemView);
         container.addView(itemView, 0);

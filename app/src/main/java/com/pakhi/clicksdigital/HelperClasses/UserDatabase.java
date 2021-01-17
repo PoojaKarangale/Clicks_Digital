@@ -77,6 +77,7 @@ public class UserDatabase extends SQLiteOpenHelper {
         Cursor res=db.rawQuery("select * from " + TABLE_NAME, null);
         //+" where "+Const.USER_ID+" = "+currentUserID
         //db.close();
+
         return res;
     }
 
