@@ -19,6 +19,7 @@ import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -57,20 +58,20 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ViewHolder> 
         final Message reply=replies.get(position);
         holder.replyText.setText(reply.getMessage());
         holder.date_time.setText(reply.getTime() + " " + reply.getDate());
-        UsersRef.child(reply.getFrom()).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        UsersRef.child(reply.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     Picasso.get()
-                            .load(snapshot.child(Const.IMAGE_URL).getValue(String.class))
+                            .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue(String.class))
                             .resize(120, 120)
                             .into(holder.profile_img);
-                    holder.name.setText(snapshot.child(Const.USER_NAME).getValue().toString());
+                    holder.name.setText(snapshot.child(ConstFirebase.USER_NAME).getValue().toString());
                     holder.name.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mcontext, VisitProfileActivity.class);
-                            intent.putExtra("visit_user_id",reply.getFrom());
+                            intent.putExtra(ConstFirebase.visitUser,reply.getFrom());
                             mcontext.startActivity(intent);
                         }
                     });
@@ -78,7 +79,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ViewHolder> 
                     holder.profile_img.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            EnlargedImage.enlargeImage(Const.IMAGE_URL,mcontext);
+                            EnlargedImage.enlargeImage(ConstFirebase.IMAGE_URL,mcontext);
                         }
                     });
 

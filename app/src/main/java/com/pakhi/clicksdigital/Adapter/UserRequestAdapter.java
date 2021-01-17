@@ -18,6 +18,7 @@ import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
@@ -60,12 +61,12 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         final String image[] = new String[1];
        */
 
-        rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(userId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    //user_name[0] = dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                    holder.displayName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
+                    //user_name[0] = dataSnapshot.child(Constfirebase.USER_NAME).getValue().toString();
+                    holder.displayName.setText(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString());
                     //if (dataSnapshot.hasChild("image_url")) {}
                     final String image_url=dataSnapshot.child("image_url").getValue().toString();
                     Picasso.get().load(image_url).placeholder(R.drawable.profile_image).into(holder.image_profile);
@@ -114,7 +115,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     private void approveUser(String userId) {
         // one field in user details showing request is approved
-      //  rootRef.getUserRef().child(userId).child(Const.USER_DETAILS).child("approved").setValue(true);
+      //  rootRef.getUserRef().child(userId).child(Constfirebase.USER_DETAILS).child("approved").setValue(true);
         rootRef.getApprovedUserRef().child(userId).setValue(true);
 
     }
@@ -151,8 +152,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         String s=mcontext.getString(R.string.requestAcceptMessage) + " " + groupName;
         String title="Request Accepted";
         Intent resultIntent=new Intent(mcontext, StartActivity.class);
-        resultIntent.putExtra("groupName", groupName);
-        resultIntent.putExtra("groupId", groupId);
+        resultIntent.putExtra(ConstFirebase.groupName, groupName);
+        resultIntent.putExtra(ConstFirebase.groupId, groupId);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Notification.autoCancel(mcontext, title, s, resultIntent, 0);
     }
@@ -167,7 +168,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     private void visitUsersProfile(String userId) {
         Intent profileActivity=new Intent(mcontext, VisitProfileActivity.class);
-        profileActivity.putExtra("visit_user_id", userId);
+        profileActivity.putExtra(ConstFirebase.visitUser, userId);
         mcontext.startActivity(profileActivity);
     }
 

@@ -1,5 +1,10 @@
 package com.pakhi.clicksdigital.Fragment;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +14,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 class ImageViewPagerAdapter extends PagerAdapter {
@@ -21,6 +35,7 @@ class ImageViewPagerAdapter extends PagerAdapter {
     ArrayList<String>       eventName;
     ArrayList<String>       uploader;
     LayoutInflater          mLayoutInflater;
+    FirebaseDatabaseInstance rootRef;
     private boolean doNotifyDataSetChangedOnce=false;
 
     public ImageViewPagerAdapter(android.content.Context context, ArrayList<String> images, ArrayList<String> eventName, ArrayList<String> uploader) {
@@ -53,9 +68,26 @@ class ImageViewPagerAdapter extends PagerAdapter {
 
         ImageView imageView=itemView.findViewById(R.id.imageViewMain);
         TextView nameOfEvent=itemView.findViewById(R.id.name_of_event);
-        TextView upload = imageView.findViewById(R.id.upload_value);
+        final TextView upload = itemView.findViewById(R.id.upload_value);
         nameOfEvent.setText(eventName.get(position));
-        upload.setText(uploader.get(position));
+        Log.i("Length of uploader -- ", String.valueOf(uploader.size()));
+        Log.i("Uploader ---- ", uploader.get(position));
+        rootRef = FirebaseDatabaseInstance.getInstance();
+        rootRef.getUserRef().child(uploader.get(position)).child("DETAILS").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                upload.setText(snapshot.child("user_name").getValue().toString()+" "+snapshot.child("last_name").getValue().toString());
+                //Log.i("snap ----", snapshot.child("user_name").getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        //upload.setText(uploader.get(position));
+
+
         Picasso.get().load(images.get(position)).into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +95,15 @@ class ImageViewPagerAdapter extends PagerAdapter {
                 EnlargedImage.enlargeImage( images.get(position),context);
             }
         });
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, VisitProfileActivity.class);
+                intent.putExtra(ConstFirebase.visitUser, uploader.get(position));
+                context.startActivity(intent);
+            }
+        });
+
         doNotifyDataSetChangedOnce = true;
         //  Objects.requireNonNull(container).addView(itemView);
         container.addView(itemView, 0);
@@ -73,4 +114,5 @@ class ImageViewPagerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
+
 }

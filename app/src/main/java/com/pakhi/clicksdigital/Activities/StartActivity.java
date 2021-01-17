@@ -149,10 +149,8 @@ public class StartActivity extends AppCompatActivity {
         finish();
 
        /* if (viewPager.getCurrentItem() == 0) {
-
             if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
                 new AlertDialog.Builder(this)
-
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Closing Activity")
                         .setMessage("Are you sure you want to close this activity?")
@@ -169,7 +167,6 @@ public class StartActivity extends AppCompatActivity {
             FragmentManager fm=getSupportFragmentManager();
             fm.popBackStack();
         } else {
-
         }*/
     }
 
@@ -231,7 +228,6 @@ public class StartActivity extends AppCompatActivity {
 
     private void VerifyUserExistance() {
     /*    String currentUserID = mAuth.getCurrentUser().getUid();
-
          rootRef.getUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -241,10 +237,8 @@ public class StartActivity extends AppCompatActivity {
                     SendUserToSetProfileActivity();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });*/
     }

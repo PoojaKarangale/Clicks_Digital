@@ -29,6 +29,7 @@ import com.pakhi.clicksdigital.Notifications.Token;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.squareup.picasso.Picasso;
 
@@ -99,14 +100,14 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    if (dataSnapshot.child(Const.USER_DETAILS).hasChild(Const.IMAGE_URL)) {
-                                        retImage[0]=dataSnapshot.child(Const.USER_DETAILS).child(Const.IMAGE_URL).getValue().toString();
+                                    if (dataSnapshot.child(ConstFirebase.USER_DETAILS).hasChild(ConstFirebase.IMAGE_URL)) {
+                                        retImage[0]=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.IMAGE_URL).getValue().toString();
                                         Picasso.get().load(retImage[0]).into(holder.profileImage);
                                         // after adding image uri to users database
                                     }
 
-                                    final String retName=dataSnapshot.child(Const.USER_DETAILS).child("user_name").getValue().toString();
-                                    final String retStatus=dataSnapshot.child(Const.USER_DETAILS).child("user_bio").getValue().toString();
+                                    final String retName=dataSnapshot.child(ConstFirebase.USER_DETAILS).child("user_name").getValue().toString();
+                                    final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child("user_bio").getValue().toString();
 
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText(retStatus);
@@ -130,8 +131,8 @@ public class ChatsFragment extends Fragment {
                                         @Override
                                         public void onClick(View view) {
                                             Intent chatIntent=new Intent(getContext(), ChatActivity.class);
-                                            chatIntent.putExtra("visit_user_id", usersIDs);
-                                            chatIntent.putExtra("visit_user_name", retName);
+                                            chatIntent.putExtra(ConstFirebase.visitUser, usersIDs);
+                                            chatIntent.putExtra(ConstFirebase.visitUser, retName);
                                             //  chatIntent.putExtra("visit_image", retImage[0]);
                                             startActivity(chatIntent);
                                         }

@@ -42,6 +42,7 @@ import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
@@ -91,7 +92,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
 
         Intent intent=getIntent();
-        user=(User) intent.getSerializableExtra("userdata");
+        user=(User) intent.getSerializableExtra(ConstFirebase.userdata);
 
         pref=SharedPreference.getInstance();
         userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -209,13 +210,14 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
     private void loadData() {
 
-        rootRef.getUserRef().child(userid).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(userid).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child(Const.IMAGE_URL).exists()) {
-                    // picImageUri=(Uri)snapshot.child(Const.IMAGE_URL).getValue().toString();
+                if (snapshot.child(ConstFirebase.IMAGE_URL).exists()) {
+                    // picImageUri=(Uri)snapshot.child(Constf
+                    // .IMAGE_URL).getValue().toString();
                     Picasso.get()
-                            .load(snapshot.child(Const.IMAGE_URL).getValue().toString())
+                            .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString())
                             .resize(120, 120)
                             .into(profile_img);
                 }
@@ -285,12 +287,12 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
 
         final HashMap<String, String> userItems=new HashMap<>();
-        userItems.put(Const.USER_ID, userid);
-        userItems.put(Const.USER_NAME, full_name_str);
-        userItems.put(Const.USER_BIO, bio_str);
-        userItems.put(Const.IMAGE_URL, picImageUri.toString());
-        userItems.put(Const.USER_TYPE, user_type);
-        userItems.put(Const.CITY, city);
+        userItems.put(ConstFirebase.USER_ID, userid);
+        userItems.put(ConstFirebase.USER_NAME, full_name_str);
+        userItems.put(ConstFirebase.USER_BIO, bio_str);
+        userItems.put(ConstFirebase.IMAGE_URL, picImageUri.toString());
+        userItems.put(ConstFirebase.USER_TYPE, user_type);
+        userItems.put(ConstFirebase.CITY, city);
         userItems.put("expectations_from_us", expectations_from_us);
         userItems.put("experiences", experiences);
         userItems.put("gender", gender);
@@ -327,7 +329,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             });
         }
 
-        reference.child(userid).child(Const.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child(userid).child(ConstFirebase.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 addCurrentUserToDatabase(userItems);
@@ -345,7 +347,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     }
 
     private void createUserProfile() {
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(Const.USER_MEDIA_PATH).child(userid).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.USER_MEDIA_PATH).child(userid).child(ConstFirebase.PHOTOS).child(ConstFirebase.PROFILE_IMAGE);
         // final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
         final StorageReference imgPath=sReference.child("profile_image");
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

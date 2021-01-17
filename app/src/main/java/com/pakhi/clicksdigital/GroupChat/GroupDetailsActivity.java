@@ -36,6 +36,7 @@ import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -72,8 +73,8 @@ public class GroupDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_details);
 
         //group_image_url=getIntent().getStringExtra("image_url");
-        group_name_str=getIntent().getStringExtra("group_name");
-        currentGroupId=getIntent().getStringExtra("group_id");
+        group_name_str=getIntent().getStringExtra(ConstFirebase.group_name);
+        currentGroupId=getIntent().getStringExtra(ConstFirebase.group_id);
 
         pref=SharedPreference.getInstance();
         rootRef=FirebaseDatabaseInstance.getInstance();
@@ -398,7 +399,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     members.clear();
-                    UsersRef.child(snapshot.getKey()).child(Const.USER_DETAILS).addListenerForSingleValueEvent(new ValueEventListener() {
+                    UsersRef.child(snapshot.getKey()).child(ConstFirebase.USER_DETAILS).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             User user=dataSnapshot.getValue(User.class);
@@ -424,7 +425,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
     public void add_member(View view) {
         Intent addMembersIntent=new Intent(this, AddMembersToGroupActivity.class);
-        addMembersIntent.putExtra("current_group_id", currentGroupId);
+        addMembersIntent.putExtra(ConstFirebase.current_group_id, currentGroupId);
         startActivity(addMembersIntent);
     }
 }

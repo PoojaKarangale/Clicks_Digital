@@ -28,4 +28,5 @@ public class Const {
     public static       String personalChat    ="PersonalChat";
     public static       String isPhoneVerified ="true";
     public static       String profileSet      ="true";
+
 }

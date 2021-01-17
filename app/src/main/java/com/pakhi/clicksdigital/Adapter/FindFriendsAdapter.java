@@ -23,6 +23,7 @@ import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.squareup.picasso.Picasso;
 
@@ -75,7 +76,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
             @Override
             public void onClick(View v) {
                 Intent chatActivity=new Intent(mcontext, ChatActivity.class);
-                chatActivity.putExtra("visit_user_id", user.getUser_id());
+                chatActivity.putExtra(ConstFirebase.visitUser, user.getUser_id());
                 mcontext.startActivity(chatActivity);
             }
         });
@@ -84,7 +85,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
             public void onClick(View view) {
                 // String visit_user_id = getRef(position).getKey();
                 Intent profileIntent=new Intent(mcontext, VisitProfileActivity.class);
-                profileIntent.putExtra("visit_user_id", user.getUser_id());
+                profileIntent.putExtra(ConstFirebase.visitUser, user.getUser_id());
                 mcontext.startActivity(profileIntent);
             }
         });

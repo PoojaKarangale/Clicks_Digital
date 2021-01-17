@@ -32,6 +32,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ToastClass;
@@ -104,8 +105,8 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
 
-        number = getIntent().getStringExtra(Const.MO_NUMBER);
-        previousActivity = getIntent().getStringExtra(Const.prevActivity);
+        number = getIntent().getStringExtra(ConstFirebase.MO_NUMBER);
+        previousActivity = getIntent().getStringExtra(ConstFirebase.prevActivity);
         String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]", "");
         pref = SharedPreference.getInstance();
         rootRef = FirebaseDatabaseInstance.getInstance();
@@ -195,7 +196,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         }*/
 
         if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
-                && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(Const.profileSet)) {
+                && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(ConstFirebase.profileSet)) {
             //start activity
             sendUserToStartActivity();
         } else {
@@ -206,15 +207,15 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     private void checkUserOnline() {
         // rootRef.getUserRef()
         String currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
-        rootRef.getUserRef().child(currentUserID).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child(Const.USER_NAME).exists())) {
+                if ((dataSnapshot.child(ConstFirebase.USER_NAME).exists())) {
                     User user = dataSnapshot.getValue(User.class);
                     addCurrentUserSqliteData(user);
                     //profile is already set
-                    pref.saveData(SharedPreference.isProfileSet, Const.profileSet, getApplicationContext());
-                    pref.saveData(SharedPreference.user_type, dataSnapshot.child(Const.USER_TYPE).getValue().toString(), getApplicationContext());
+                    pref.saveData(SharedPreference.isProfileSet, ConstFirebase.profileSet, getApplicationContext());
+                    pref.saveData(SharedPreference.user_type, dataSnapshot.child(ConstFirebase.USER_TYPE).getValue().toString(), getApplicationContext());
 
                     sendUserToStartActivity();
                 } else {
@@ -232,12 +233,12 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     private HashMap<String, String> putDataIntoHashMap(User user) {
         final HashMap<String, String> userItems = new HashMap<>();
 
-        userItems.put(Const.USER_ID, user.getUser_id());
-        userItems.put(Const.USER_NAME, user.getUser_name());
-        userItems.put(Const.USER_BIO, user.getUser_id());
-        userItems.put(Const.IMAGE_URL, user.getImage_url());
-        userItems.put(Const.USER_TYPE, user.getUser_type());
-        userItems.put(Const.CITY, user.getCity());
+        userItems.put(ConstFirebase.USER_ID, user.getUser_id());
+        userItems.put(ConstFirebase.USER_NAME, user.getUser_name());
+        userItems.put(ConstFirebase.USER_BIO, user.getUser_id());
+        userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
+        userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
+        userItems.put(ConstFirebase.CITY, user.getCity());
         userItems.put("expectations_from_us", user.getExpectations_from_us());
         userItems.put("experiences", user.getExperiences());
         userItems.put("gender", user.getGender());
@@ -267,8 +268,8 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
     private void updateUserData() {
         rootRef.getUserRef().child(userId).
-                child(Const.USER_DETAILS).
-                child(Const.MO_NUMBER).
+                child(ConstFirebase.USER_DETAILS).
+                child(ConstFirebase.MO_NUMBER).
                 setValue(number).
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -292,7 +293,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         pref.saveData(SharedPreference.phone, number.replaceAll(" ", ""), getApplicationContext());
         pref.saveData(SharedPreference.currentUserId, FirebaseAuth.getInstance().getUid(), getApplicationContext());
 
-        pref.saveData(SharedPreference.isPhoneVerified, Const.isPhoneVerified, getApplicationContext());
+        pref.saveData(SharedPreference.isPhoneVerified, ConstFirebase.isPhoneVerified, getApplicationContext());
 
 
 //        pref.saveData(SharedPreference.logging, Const.loggedIn, getApplicationContext());
@@ -302,7 +303,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
     void setUserToSetProfileActivity() {
         Intent resIntent = new Intent(PhoneVerify.this, SetProfileActivity.class);
-        resIntent.putExtra("PreviousActivity", "PhoneVerify");
+        resIntent.putExtra(ConstFirebase.PreviousActivity, "PhoneVerify");
         resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resIntent);
         finish();

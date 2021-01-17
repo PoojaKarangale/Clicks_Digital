@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.util.List;
@@ -113,7 +114,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             String body=remoteMessage.getData().get("body");
             // Intent resultIntent = remoteMessage.getNotification().get
             Intent resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
-            resultIntent.putExtra("visit_user_id", user);
+            resultIntent.putExtra(ConstFirebase.visitUser, user);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),
                     0 /* Request code */, resultIntent,

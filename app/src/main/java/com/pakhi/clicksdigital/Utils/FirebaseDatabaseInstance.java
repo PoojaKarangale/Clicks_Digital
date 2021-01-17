@@ -32,11 +32,11 @@ public class FirebaseDatabaseInstance {
         return single_instance;
     }
     public DatabaseReference getApprovedUserRef() {
-        return rootRef.child(Const.APPROVED_REQUESTS);
+        return rootRef.child(ConstFirebase.APPROVED_REQUESTS);
     }
 
     public DatabaseReference getUserDetails(){
-        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS);
+        return rootRef.child(ConstFirebase.users).child(ConstFirebase.USER_DETAILS);
     }
 
     public DatabaseReference getTopicLikesRef() {
@@ -112,10 +112,10 @@ public class FirebaseDatabaseInstance {
     }
 
     public DatabaseReference getUserName() {
-        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS).child(Const.USER_NAME);
+        return rootRef.child(ConstFirebase.users).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_NAME);
     }
 
     public DatabaseReference getLastName() {
-        return rootRef.child(ConstFirebase.users).child(Const.USER_DETAILS).child(Const.LAST_NAME);
+        return rootRef.child(ConstFirebase.users).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.LAST_NAME);
     }
 }

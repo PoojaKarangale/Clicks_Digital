@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.pakhi.clicksdigital.Model.Contact;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +49,10 @@ public class ContactUserAdapter extends RecyclerView.Adapter<ContactUserAdapter.
             public void onClick(View v) {
                 String uid=userList.get(position).getUid();
                 Intent chatActivityIntent=new Intent(mcontext, ChatActivity.class);
-                chatActivityIntent.putExtra("user_id", uid);
+                chatActivityIntent.putExtra(ConstFirebase.userID, uid);
 
-                chatActivityIntent.putExtra("visit_user_id", uid);
-                chatActivityIntent.putExtra("visit_user_name", userList.get(position).getUser_name());
+                chatActivityIntent.putExtra(ConstFirebase.visitUser, uid);
+                chatActivityIntent.putExtra(ConstFirebase.visitUser, userList.get(position).getUser_name());
                 //  chatIntent.putExtra("visit_image", retImage[0]);
                 mcontext.startActivity(chatActivityIntent);
             }

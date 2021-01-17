@@ -36,6 +36,7 @@ import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
@@ -69,7 +70,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
         rootRef=FirebaseDatabaseInstance.getInstance();
 
-        event=(Event) getIntent().getSerializableExtra("Event");
+        event=(Event) getIntent().getSerializableExtra(ConstFirebase.Event);
         eventRef=rootRef.getEventRef();
         usersRef=rootRef.getUserRef();
 
@@ -227,19 +228,19 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
 
                         final String visit_user_id=getRef(position).getKey();
-                        usersRef.child(visit_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                        usersRef.child(visit_user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
 
-                                    holder.userName.setText(dataSnapshot.child(Const.USER_NAME).getValue().toString());
+                                    holder.userName.setText(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString());
 
-                                    myParticipantName.add(dataSnapshot.child(Const.USER_NAME).getValue().toString()+" "+dataSnapshot.child("last_name").getValue().toString());
-                                    myParticipantNumber.add(dataSnapshot.child(Const.MO_NUMBER).getValue().toString());
-                                    myParticipantEmail.add(dataSnapshot.child(Const.USER_EMAIL).getValue().toString());
+                                    myParticipantName.add(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString()+" "+dataSnapshot.child("last_name").getValue().toString());
+                                    myParticipantNumber.add(dataSnapshot.child(ConstFirebase.MO_NUMBER).getValue().toString());
+                                    myParticipantEmail.add(dataSnapshot.child(ConstFirebase.USER_EMAIL).getValue().toString());
 
-                                    holder.userStatus.setText(dataSnapshot.child(Const.USER_BIO).getValue().toString());
-                                    final String image_url=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                    holder.userStatus.setText(dataSnapshot.child(ConstFirebase.USER_BIO).getValue().toString());
+                                    final String image_url=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
                                     Picasso.get()
                                             .load(image_url).placeholder(R.drawable.profile_image)
                                             .resize(120, 120)
@@ -265,7 +266,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent chatActivity=new Intent(EventParticipantsActivity.this, ChatActivity.class);
-                                chatActivity.putExtra("visit_user_id", getRef(position).getKey());
+                                chatActivity.putExtra(ConstFirebase.visitUser, getRef(position).getKey());
                                 startActivity(chatActivity);
                             }
                         });
@@ -274,7 +275,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                             public void onClick(View view) {
                                 // String visit_user_id = getRef(position).getKey();
                                 Intent profileIntent=new Intent(EventParticipantsActivity.this, VisitProfileActivity.class);
-                                profileIntent.putExtra("visit_user_id", visit_user_id);
+                                profileIntent.putExtra(ConstFirebase.visitUser, visit_user_id);
                                 startActivity(profileIntent);
                             }
                         });

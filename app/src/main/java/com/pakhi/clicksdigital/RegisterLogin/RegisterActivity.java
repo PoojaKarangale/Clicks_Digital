@@ -22,6 +22,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -74,8 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void sendUserToPhoneVerify() {
         Intent i=new Intent(RegisterActivity.this, PhoneVerify.class);
-        i.putExtra(Const.MO_NUMBER, number);
-        i.putExtra(Const.prevActivity, Const.registerActivity);
+        i.putExtra(ConstFirebase.MO_NUMBER, number);
+        i.putExtra(ConstFirebase.prevActivity, ConstFirebase.registerActivity);
         startActivity(i);
     }
 
@@ -103,10 +104,10 @@ public class RegisterActivity extends AppCompatActivity {
         }*/
 
         if (pref.getData(SharedPreference.isPhoneVerified, getApplicationContext()) != null
-                && pref.getData(SharedPreference.isPhoneVerified, getApplicationContext()).equals(Const.isPhoneVerified)
+                && pref.getData(SharedPreference.isPhoneVerified, getApplicationContext()).equals(ConstFirebase.isPhoneVerified)
         ) {
             if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
-                    && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(Const.profileSet)) {
+                    && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(ConstFirebase.profileSet)) {
                 //start Activity
                 sendUserToStartActivity();
             }else {
@@ -132,15 +133,15 @@ public class RegisterActivity extends AppCompatActivity {
     private void checkUserOnline() {
         // rootRef.getUserRef()
         String currentUserID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
-        rootRef.getUserRef().child(currentUserID).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child(Const.USER_NAME).exists())) {
+                if ((dataSnapshot.child(ConstFirebase.USER_NAME).exists())) {
                     User user = dataSnapshot.getValue(User.class);
                     addCurrentUserSqliteData(user);
                     //save data of profile updated because we won't go to profile setting but profil is already set stored online
-                    pref.saveData(SharedPreference.isProfileSet, Const.profileSet, getApplicationContext());
-                    pref.saveData(SharedPreference.user_type, dataSnapshot.child(Const.USER_TYPE).getValue().toString(), getApplicationContext());
+                    pref.saveData(SharedPreference.isProfileSet, ConstFirebase.profileSet, getApplicationContext());
+                    pref.saveData(SharedPreference.user_type, dataSnapshot.child(ConstFirebase.USER_TYPE).getValue().toString(), getApplicationContext());
 
                     sendUserToStartActivity();
 
@@ -158,12 +159,12 @@ public class RegisterActivity extends AppCompatActivity {
     private HashMap<String, String> putDataIntoHashMap(User user){
         final HashMap<String, String> userItems=new HashMap<>();
 
-        userItems.put(Const.USER_ID, user.getUser_id());
-        userItems.put(Const.USER_NAME, user.getUser_name());
-        userItems.put(Const.USER_BIO, user.getUser_id());
-        userItems.put(Const.IMAGE_URL, user.getImage_url());
-        userItems.put(Const.USER_TYPE, user.getUser_type());
-        userItems.put(Const.CITY, user.getCity());
+        userItems.put(ConstFirebase.USER_ID, user.getUser_id());
+        userItems.put(ConstFirebase.USER_NAME, user.getUser_name());
+        userItems.put(ConstFirebase.USER_BIO, user.getUser_id());
+        userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
+        userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
+        userItems.put(ConstFirebase.CITY, user.getCity());
         userItems.put("expectations_from_us", user.getExpectations_from_us());
         userItems.put("experiences", user.getExperiences());
         userItems.put("gender", user.getGender());
@@ -198,7 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void SendUserToSetProfileActivity() {
         Intent intent=new Intent(RegisterActivity.this, SetProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("PreviousActivity", "RegisterActivity");
+        intent.putExtra(ConstFirebase.PreviousActivity, "RegisterActivity");
         startActivity(intent);
         finish();
     }

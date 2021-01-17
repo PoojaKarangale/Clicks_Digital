@@ -11,6 +11,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,12 +28,12 @@ public class UserDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_NAME
-                + " (" + Const.USER_ID + " TEXT PRIMARY KEY,"
-                + Const.USER_NAME + " TEXT,"
-                + Const.USER_BIO + " TEXT,"
-                + Const.IMAGE_URL + " TEXT,"
-                + Const.USER_TYPE + " TEXT,"
-                + Const.CITY + " TEXT,"
+                + " (" + ConstFirebase.USER_ID + " TEXT PRIMARY KEY,"
+                + ConstFirebase.USER_NAME + " TEXT,"
+                + ConstFirebase.USER_BIO + " TEXT,"
+                + ConstFirebase.IMAGE_URL + " TEXT,"
+                + ConstFirebase.USER_TYPE + " TEXT,"
+                + ConstFirebase.CITY + " TEXT,"
                 + "expectations_from_us" + " TEXT,"
                 + "experiences" + " TEXT,"
                 + "gender" + " TEXT,"
@@ -97,7 +98,7 @@ public class UserDatabase extends SQLiteOpenHelper {
     public boolean updateData(String[] key, String[] value, String Id) {
 
         SQLiteDatabase myDB=this.getWritableDatabase();
-        String strFilter=Const.USER_ID + "=" + Id;
+        String strFilter=ConstFirebase.USER_ID + "=" + Id;
         ContentValues args=new ContentValues();
         for (int i=0; i < key.length; i++) {
             args.put(key[i], value[i]);

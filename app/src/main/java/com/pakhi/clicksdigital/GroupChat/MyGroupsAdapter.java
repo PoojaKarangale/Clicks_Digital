@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
@@ -99,10 +100,10 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
             public void onClick(View v) {
 
                 Intent groupChatActivity=new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
-                groupChatActivity.putExtra("groupName", group.getGroup_name());
+                groupChatActivity.putExtra(ConstFirebase.groupName, group.getGroup_name());
                 Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
 
-                groupChatActivity.putExtra("groupId", group.getGroupid());
+                groupChatActivity.putExtra(ConstFirebase.groupId, group.getGroupid());
                 mcontext.startActivity(groupChatActivity);
 
             }

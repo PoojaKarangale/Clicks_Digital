@@ -22,6 +22,7 @@ import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -47,7 +48,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_replies);
-        topic=(Message) getIntent().getSerializableExtra("message");
+        topic=(Message) getIntent().getSerializableExtra(ConstFirebase.message);
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         UsersRef=rootRef.getUserRef();
@@ -157,21 +158,21 @@ public class TopicRepliesActivity extends AppCompatActivity {
     private void loadData() {
 
         topic_detail.setText(topic.getMessage());
-        UsersRef.child(topic.getFrom()).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        UsersRef.child(topic.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     Picasso.get()
-                            .load(snapshot.child(Const.IMAGE_URL).getValue(String.class))
+                            .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue(String.class))
                             .resize(120, 120)
                             .into(profile_img);
-                    name.setText(snapshot.child(Const.USER_NAME).getValue().toString());
+                    name.setText(snapshot.child(ConstFirebase.USER_NAME).getValue().toString());
                     profession.setText(snapshot.child("work_profession").getValue().toString());
                     name.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(TopicRepliesActivity.this, VisitProfileActivity.class);
-                            intent.putExtra("visit_user_id",topic.getFrom());
+                            intent.putExtra(ConstFirebase.visitUser,topic.getFrom());
                             startActivity(intent);
                         }
                     });

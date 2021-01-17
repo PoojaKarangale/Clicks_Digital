@@ -45,6 +45,7 @@ import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
@@ -95,7 +96,7 @@ public class GroupChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_chat2);
 
         //currentGroupName=getIntent().getExtras().get("groupName").toString();
-        currentGroupId = getIntent().getExtras().get("groupId").toString();
+        currentGroupId = getIntent().getExtras().get(ConstFirebase.groupId).toString();
 
         pref = SharedPreference.getInstance();
         currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -372,9 +373,9 @@ ChildEventListener mChildEventListener ;
 
     private void sendUserToGroupDetails(String s) {
         Intent groupMembersIntent = new Intent(GroupChatActivity.this, GroupDetailsActivity.class);
-        groupMembersIntent.putExtra("group_id", currentGroupId);
+        groupMembersIntent.putExtra(ConstFirebase.group_id, currentGroupId);
         //groupMembersIntent.putExtra("image_url", s);
-        groupMembersIntent.putExtra("group_name", currentGroupName);
+        groupMembersIntent.putExtra(ConstFirebase.group_name, currentGroupName);
 
         startActivity(groupMembersIntent);
     }
@@ -743,7 +744,7 @@ ChildEventListener mChildEventListener ;
 
         // progressDialog.show();
         StorageReference storageRootReference = FirebaseStorageInstance.getInstance().getRootRef();
-        StorageReference sRef = storageRootReference.child(Const.USER_MEDIA_PATH).child(currentUserID).child(Const.FILES_PATH).child("Sent_Pdf").child(currentGroupId).child(System.currentTimeMillis() + "");
+        StorageReference sRef = storageRootReference.child(ConstFirebase.USER_MEDIA_PATH).child(currentUserID).child(ConstFirebase.FILES_PATH).child("Sent_Pdf").child(currentGroupId).child(System.currentTimeMillis() + "");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 

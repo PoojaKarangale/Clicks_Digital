@@ -1,18 +1,24 @@
 package com.pakhi.clicksdigital.Event;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,24 +26,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.Image;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
+import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,24 +63,46 @@ public class EventGalleryActivity extends AppCompatActivity {
    /* List<String> imageUrls =new ArrayList<>();
     List<String> imageNames=new ArrayList<>();*/
     List<Image>  images=new ArrayList<>();
-
+    String name;
     ImageView           add_photo;
     PermissionsHandling permissions;
     Uri                 imageUri;
     Event               event;
     DatabaseReference   eventRef,sliderImageRef;
     ImageAdapter mAdapter;
-    String eventName;
+    String eventName, messageSenderID;
     int number;
     ArrayList<String> imageName = new ArrayList<>();
+    SharedPreference pref;
+    private byte[] mUploadBytes;
+    private Uri mlectedUri;
+    private double mProgress=0;
+    ProgressDialog loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_gallery);
 
-        event=(Event) getIntent().getSerializableExtra("event");
+        pref=SharedPreference.getInstance();
+        messageSenderID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+
+
+
+
+        event=(Event) getIntent().getSerializableExtra(ConstFirebase.event);
         FirebaseDatabaseInstance rootRef=FirebaseDatabaseInstance.getInstance();
+        rootRef.getUserRef().child(messageSenderID).child("DETAILS").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                name = snapshot.child("user_name").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         eventRef=rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child("Photos");
         sliderImageRef = rootRef.getsliderRef();
         rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child("EventDetails").addValueEventListener(new ValueEventListener() {
@@ -103,7 +139,7 @@ public class EventGalleryActivity extends AppCompatActivity {
             }
         });
 
-
+        loadingBar = new ProgressDialog(this);
         RecyclerView mRecyclerView=(RecyclerView) findViewById(R.id.list);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mRecyclerView.setHasFixedSize(true); // Helps improve performance
@@ -244,12 +280,84 @@ public class EventGalleryActivity extends AppCompatActivity {
         MimeTypeMap mime=MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
+    public void executeUploadtask(){
 
-    private void uploadImage(final Uri imageUri) {
         StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Event_photos").child(event.getEventId());
         final String image_name=System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
         final StorageReference imgPath=sReference.child(image_name);
+
+        //final StorageReference sliderRef = FirebaseStorageInstance.getInstance().getRootRef().child("Slider_Images").child(image_name);
+
+        /*UploadTask uploadTask = sliderRef.putBytes(mUploadBytes);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_LONG).show();
+                String fireBaseUri = taskSnapshot.getUploadSessionUri().toString();
+                addToRTDB(fireBaseUri, image_name);
+                }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Couldnt upload", Toast.LENGTH_LONG).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                double currentprogress = (100*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                if(currentprogress>(mProgress+15)){
+                    mProgress = 100*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount();
+                Toast.makeText(getApplicationContext(), String.valueOf(mProgress),Toast.LENGTH_LONG).show();}
+            }
+        });*/
+
+        final UploadTask uploadTask1 = imgPath.putBytes(mUploadBytes);
+
+        uploadTask1.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                final String[] fireBaseUri = new String[1];
+
+                final Task<Uri>  res = taskSnapshot.getStorage().getDownloadUrl();
+
+
+                res.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        fireBaseUri[0] = uri.toString();
+                    }
+                });
+                //String fireBaseUri = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                SaveUrlToDatabase(fireBaseUri[0], image_name);
+                addToRTDB(fireBaseUri[0], image_name);
+
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                double currentprogress = (100*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+
+                    mProgress = 100*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount();
+                    loadingBar.setMessage("Uploading ... "+ (int) mProgress + "%");
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+    private void uploadImage(final Uri imageUri) {
+
+        BackGroundImageResize resize = new BackGroundImageResize(null);
+        resize.execute(imageUri);
+        /*StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Event_photos").child(event.getEventId());
+        final String image_name=System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
+        final StorageReference imgPath=sReference.child(image_name);
         final StorageReference sliderRef = FirebaseStorageInstance.getInstance().getRootRef().child("Slider_Images").child(image_name);
+        UploadTask uploadTask = sliderRef.putBytes(mUploadBytes);
         sliderRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -275,8 +383,60 @@ public class EventGalleryActivity extends AppCompatActivity {
                 });
 
             }
-        });
+        }); */
     }
+
+
+
+
+    public class BackGroundImageResize extends AsyncTask<Uri, Integer, byte[]>{
+        Bitmap mbitmap;
+
+        public BackGroundImageResize(Bitmap bitmap) {
+            this.mbitmap = bitmap;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingBar.setTitle("Compressing and Uploading your image");
+            loadingBar.setMessage("Compressing ...");
+            loadingBar.show();
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+            mUploadBytes=bytes;
+            executeUploadtask();
+
+        }
+
+        @Override
+        protected byte[] doInBackground(Uri... params) {
+            if(mbitmap==null){
+                try {
+                    mbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), params[0]);
+                }catch (IOException e){
+                    Log.i("The exception --- ", e.getMessage());
+                }
+            }
+            byte[] bytes =null;
+            bytes = getBytesFromBitmap(mbitmap,65);
+            return  bytes;
+        }
+    }
+
+    public static  byte[] getBytesFromBitmap(Bitmap bitmap, int quality){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality,stream);
+        return stream.toByteArray();
+    }
+
+
+
+
+
     public void addToRTDB(final String imageUrl, final String image_name){
         final FirebaseDatabaseInstance rootRefAdd=FirebaseDatabaseInstance.getInstance();
 
@@ -287,12 +447,16 @@ public class EventGalleryActivity extends AppCompatActivity {
                     imageName.add(image_name);
                     rootRefAdd.getsliderRef().child(image_name).child("NameOfEvent").setValue(eventName);
                     rootRefAdd.getsliderRef().child(image_name).child("URL").setValue(imageUrl);
+                    rootRefAdd.getsliderRef().child(image_name).child("sender").setValue(messageSenderID);
+
+                loadingBar.setMessage("The Image is successfully uploaded");
+                loadingBar.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-            }
+            }//gs://clicksdigital-ad067.appspot.com/Events/-MEmdYeqcVMFRzeUTTgH/1597503847356.jpg
         });
     }
 
@@ -301,7 +465,6 @@ public class EventGalleryActivity extends AppCompatActivity {
         eventRef.child(image_name).setValue(imageUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(EventGalleryActivity.this, "image added", Toast.LENGTH_SHORT);
 
                 //do somthing on data change
 

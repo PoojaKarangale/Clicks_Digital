@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class AddMembersToGroupActivity extends AppCompatActivity {
         userRef=rootRef.getUserRef();
         groupRef=rootRef.getGroupRef();
 
-        groupId=getIntent().getStringExtra("current_group_id");
+        groupId=getIntent().getStringExtra(ConstFirebase.current_group_id);
 
         send=findViewById(R.id.send);
 
@@ -72,8 +73,8 @@ public class AddMembersToGroupActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 allUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(snapshot.child(Const.USER_DETAILS).exists())
-                    allUsers.add(snapshot.child(Const.USER_DETAILS).getValue(User.class));
+                    if(snapshot.child(ConstFirebase.USER_DETAILS).exists())
+                    allUsers.add(snapshot.child(ConstFirebase.USER_DETAILS).getValue(User.class));
                 }
                 addMembersToGroupAdapter.notifyDataSetChanged();
             }

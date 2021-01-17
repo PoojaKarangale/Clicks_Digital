@@ -21,6 +21,7 @@ import com.pakhi.clicksdigital.Adapter.FindFriendsAdapter;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -51,7 +52,7 @@ public class FindFriendsActivity extends AppCompatActivity {
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         UsersRef=rootRef.getUserRef();
-        query1=UsersRef.orderByChild(Const.USER_NAME).equalTo("");
+        query1=UsersRef.orderByChild(ConstFirebase.USER_NAME).equalTo("");
         FindFriendsRecyclerList=(RecyclerView) findViewById(R.id.find_friends_recycler_list);
         FindFriendsRecyclerList.setLayoutManager(new LinearLayoutManager(this));
         findFriendsAdapter=new FindFriendsAdapter(getApplicationContext(), userList);
@@ -99,9 +100,9 @@ public class FindFriendsActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     userList.clear();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        if (dataSnapshot.child(Const.USER_DETAILS).exists()) {
+                        if (dataSnapshot.child(ConstFirebase.USER_DETAILS).exists()) {
                             Log.i("------datasnap user ", dataSnapshot.getValue().toString());
-                            User user=dataSnapshot.child(Const.USER_DETAILS).getValue(User.class);
+                            User user=dataSnapshot.child(ConstFirebase.USER_DETAILS).getValue(User.class);
                             if (user.getUser_name().toLowerCase().contains(s) || user.getLast_name().contains(s)) {
                                 userList.add(user);
                             }

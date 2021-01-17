@@ -26,6 +26,7 @@ import com.pakhi.clicksdigital.Model.Contact;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -63,7 +64,7 @@ public class ConnectionRequests extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Contact> options=
                 new FirebaseRecyclerOptions.Builder<Contact>()
-                        .setQuery(ChatRequestsRef.child(currentUserID).child(Const.USER_DETAILS), Contact.class)
+                        .setQuery(ChatRequestsRef.child(currentUserID).child(ConstFirebase.USER_DETAILS), Contact.class)
                         .build();
 
         FirebaseRecyclerAdapter<Contact, RequestsViewHolder> adapter=
@@ -76,7 +77,7 @@ public class ConnectionRequests extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent profileIntent=new Intent(ConnectionRequests.this, VisitProfileActivity.class);
-                                profileIntent.putExtra("visit_user_id", list_user_id);
+                                profileIntent.putExtra(ConstFirebase.visitUser, list_user_id);
                                 startActivity(profileIntent);
                             }
                         });
@@ -93,8 +94,8 @@ public class ConnectionRequests extends AppCompatActivity {
                                         UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot.hasChild(Const.IMAGE_URL)) {
-                                                    requestProfileImage[0]=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                                if (dataSnapshot.hasChild(ConstFirebase.IMAGE_URL)) {
+                                                    requestProfileImage[0]=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
                                                     Picasso.get().load(requestProfileImage[0]).into(holder.profileImage);
                                                 }
 
@@ -106,8 +107,8 @@ public class ConnectionRequests extends AppCompatActivity {
                                                     }
                                                 });
 
-                                                final String requestUserName=dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                                                final String requestUserStatus=dataSnapshot.child(Const.USER_BIO).getValue().toString();
+                                                final String requestUserName=dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                                                final String requestUserStatus=dataSnapshot.child(ConstFirebase.USER_BIO).getValue().toString();
 
                                                 holder.AcceptButton.setVisibility(View.VISIBLE);
                                                 holder.CancelButton.setVisibility(View.VISIBLE);
@@ -294,17 +295,17 @@ public class ConnectionRequests extends AppCompatActivity {
 
                                         holder.itemView.findViewById(R.id.request_cancel_btn).setVisibility(View.INVISIBLE);
 
-                                        UsersRef.child(list_user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                                        UsersRef.child(list_user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot.hasChild(Const.IMAGE_URL)) {
-                                                    final String requestProfileImage=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                                                if (dataSnapshot.hasChild(ConstFirebase.IMAGE_URL)) {
+                                                    final String requestProfileImage=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
 
                                                     Picasso.get().load(requestProfileImage).into(holder.profileImage);
                                                 }
 
-                                                final String requestUserName=dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                                                final String requestUserStatus=dataSnapshot.child(Const.USER_BIO).getValue().toString();
+                                                final String requestUserName=dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                                                final String requestUserStatus=dataSnapshot.child(ConstFirebase.USER_BIO).getValue().toString();
 
                                                 holder.userName.setText(requestUserName);
                                                 holder.userStatus.setText("you have sent a request to " + requestUserName);

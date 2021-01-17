@@ -25,6 +25,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -77,7 +78,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         String createrId=event.getCreater_id();
         final User[] organiser=new User[1];
-        userRef.child(createrId).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        userRef.child(createrId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 organiser[0]=snapshot.getValue(User.class);
@@ -145,7 +146,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 Intent profileIntent=new Intent(context, VisitProfileActivity.class);
-                profileIntent.putExtra("visit_user_id", organiser[0].getUser_id());
+                profileIntent.putExtra(ConstFirebase.visitUser, organiser[0].getUser_id());
                 context.startActivity(profileIntent);
             }
         });
@@ -166,7 +167,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 Toast.makeText(v.getContext(), "event deleted", Toast.LENGTH_SHORT).show();
                 */
                 Intent intent=new Intent(context, EditEventActivity.class);
-                intent.putExtra("event", event);
+                intent.putExtra(ConstFirebase.event, event);
                 context.startActivity(intent);
             }
         });
@@ -181,8 +182,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     private void openEventDetailsActivity(Event event, User[] organiser) {
         Intent eventDetailsIntent=new Intent(context, EventDetailsActivity.class);
-        eventDetailsIntent.putExtra("event", event);
-        eventDetailsIntent.putExtra("organiser", organiser[0]);
+        eventDetailsIntent.putExtra(ConstFirebase.event, event);
+        eventDetailsIntent.putExtra(ConstFirebase.organiser, organiser[0]);
         eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(eventDetailsIntent);
     }

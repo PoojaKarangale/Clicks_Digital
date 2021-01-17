@@ -41,6 +41,7 @@ import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
@@ -126,7 +127,7 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra("PreviousActivity", "ProfileActivity");
                 startActivity(intent);*/
                 Intent intent=new Intent(ProfileActivity.this, EditProfile.class);
-                intent.putExtra("User", user);
+                intent.putExtra(ConstFirebase.User, user);
                 startActivity(intent);
 
 
@@ -238,12 +239,12 @@ public class ProfileActivity extends AppCompatActivity {
                 .resize(120, 120)
                 .into(profile_image);*/
 
-        UserRef.child(user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        UserRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child(Const.IMAGE_URL).exists()) {
+                if (snapshot.child(ConstFirebase.IMAGE_URL).exists()) {
                     Picasso.get()
-                            .load(snapshot.child(Const.IMAGE_URL).getValue().toString())
+                            .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString())
                             .resize(120, 120)
                             .into(profile_image);
                 }
@@ -427,7 +428,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void createUserProfile() {
 
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(Const.USER_MEDIA_PATH).child(user_id).child(Const.PHOTOS).child(Const.PROFILE_IMAGE);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.USER_MEDIA_PATH).child(user_id).child(ConstFirebase.PHOTOS).child(ConstFirebase.PROFILE_IMAGE);
         final StorageReference imgPath=sReference.child("profile_image");
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -449,7 +450,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         // showToast("Profile updated");
-                                        UserRef.child(user_id).child(Const.USER_DETAILS).child(Const.IMAGE_URL).setValue(picImageUri).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        UserRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.IMAGE_URL).setValue(picImageUri).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(ProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();

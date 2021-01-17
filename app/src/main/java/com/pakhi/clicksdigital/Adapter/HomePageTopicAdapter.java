@@ -17,6 +17,7 @@ import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
         rootRef.getUserRef().child(m.getFrom()).child("DETAILS").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                holder.publisherName.setText(snapshot.child(Const.USER_NAME).getValue() + " " + snapshot.child("last_name").getValue());
+                holder.publisherName.setText(snapshot.child(ConstFirebase.USER_NAME).getValue() + " " + snapshot.child("last_name").getValue());
             }
 
             @Override
@@ -125,7 +126,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
 
     public void sendUserToTopicReplyActivity(Message m){
         Intent replyIntent=new Intent(mcontext, TopicRepliesActivity.class);
-        replyIntent.putExtra("message", m);
+        replyIntent.putExtra(ConstFirebase.message, m);
         mcontext.startActivity(replyIntent);
 
     }

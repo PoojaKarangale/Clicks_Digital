@@ -128,8 +128,8 @@ public class ContactUserActivity extends AppCompatActivity {
                         if (snapshot.child(ConstFirebase.number).getValue() != null) {
                             phone=snapshot.child(ConstFirebase.number).getValue().toString().replace(" ", "");
                         }
-                        if (snapshot.child(Const.USER_NAME).getValue() != null) {
-                            phone=snapshot.child(Const.USER_NAME).getValue().toString();
+                        if (snapshot.child(ConstFirebase.USER_NAME).getValue() != null) {
+                            phone=snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
                         }
                         Contact contact=new Contact(snapshot.getKey(), name, phone);
 
@@ -223,19 +223,19 @@ public class ContactUserActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent chatActivity=new Intent(ContactUserActivity.this, ChatActivity.class);
-                        chatActivity.putExtra("visit_user_id", userIDs);
+                        chatActivity.putExtra(ConstFirebase.visitUser, userIDs);
                         startActivity(chatActivity);
                     }
                 });
 
-                UsersRef.child(userIDs).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                UsersRef.child(userIDs).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //retrive user details
-                        userImage[0]=dataSnapshot.child(Const.IMAGE_URL).getValue().toString();
+                        userImage[0]=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
                         Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
-                        String profileName=dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                        String profileStatus=dataSnapshot.child(Const.USER_BIO).getValue().toString();
+                        String profileName=dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                        String profileStatus=dataSnapshot.child(ConstFirebase.USER_BIO).getValue().toString();
 
                         holder.userName.setText(profileName);
                         holder.userStatus.setText(profileStatus);

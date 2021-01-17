@@ -73,8 +73,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
-        event=(Event) getIntent().getSerializableExtra("event");
-        organiser=(User) getIntent().getSerializableExtra("organiser");
+        event=(Event) getIntent().getSerializableExtra(ConstFirebase.event);
+        organiser=(User) getIntent().getSerializableExtra(ConstFirebase.organiser);
 
         pref=SharedPreference.getInstance();
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -135,7 +135,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent eventDetailsIntent = new Intent(EventDetailsActivity.this, EventGalleryActivity.class);
-                eventDetailsIntent.putExtra("event", event);
+                eventDetailsIntent.putExtra(ConstFirebase.event, event);
                 eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(eventDetailsIntent);
             }
@@ -164,13 +164,13 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private void sendUserToEventsParticipants() {
         Intent intent=new Intent(this, EventParticipantsActivity.class);
-        intent.putExtra("Event", event);
+        intent.putExtra(ConstFirebase.Event, event);
         startActivity(intent);
     }
 
     private void startPaymentGateWay() {
         Intent intent=new Intent(this, PaymentActivity.class);
-        intent.putExtra("Event", event);
+        intent.putExtra(ConstFirebase.Event, event);
         startActivity(intent);
     }
 

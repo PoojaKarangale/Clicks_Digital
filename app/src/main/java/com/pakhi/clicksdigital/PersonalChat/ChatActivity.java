@@ -51,6 +51,7 @@ import com.pakhi.clicksdigital.Notifications.Sender;
 import com.pakhi.clicksdigital.Notifications.Token;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
@@ -113,12 +114,12 @@ public class ChatActivity extends AppCompatActivity {
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
 
-        messageReceiverID=getIntent().getExtras().get("visit_user_id").toString();
+        messageReceiverID=getIntent().getExtras().get(ConstFirebase.visitUser).toString();
 
         apiService=Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         databaseReference=rootRef.getUserRef().child(messageReceiverID);
-        databaseReference.child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user=dataSnapshot.getValue(User.class);
@@ -137,11 +138,11 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         databaseReference=rootRef.getUserRef().child(messageSenderID);
-        databaseReference.child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user=dataSnapshot.getValue(User.class);
-                messageSenderName=dataSnapshot.child(Const.USER_NAME).getValue(String.class);
+                messageSenderName=dataSnapshot.child(ConstFirebase.USER_NAME).getValue(String.class);
                 //  userName.setText(messageReceiverName);
             /*    Picasso.get()
                         .load(user.getImage_url())
@@ -214,7 +215,7 @@ public class ChatActivity extends AppCompatActivity {
         SendMessageButton=(ImageButton) findViewById(R.id.send_message_btn);
         MessageInputText=(EditText) findViewById(R.id.input_message);
 
-        messageAdapter=new MessageAdapter(messagesList, Const.personalChat,getApplicationContext());
+        messageAdapter=new MessageAdapter(messagesList, ConstFirebase.personalChat,getApplicationContext());
         userMessagesList=(RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
         linearLayoutManager=new LinearLayoutManager(this);
@@ -595,7 +596,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // progressDialog.show();
         StorageReference storageRootReference=FirebaseStorageInstance.getInstance().getRootRef();
-        StorageReference sRef=storageRootReference.child(Const.USER_MEDIA_PATH).child(messageSenderID).child(Const.FILES_PATH).child("Sent_Pdf").child(messageReceiverID).child(System.currentTimeMillis() + "");
+        StorageReference sRef=storageRootReference.child(ConstFirebase.USER_MEDIA_PATH).child(messageSenderID).child(ConstFirebase.FILES_PATH).child("Sent_Pdf").child(messageReceiverID).child(System.currentTimeMillis() + "");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
@@ -629,7 +630,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void uploadImage(final Uri imageUri) {
         Log.d("ChatActivity", "-----------uploading image----------------------");
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("User_Media").child(messageSenderID).child(Const.PHOTOS).child("Sent_Photos").child(messageReceiverID);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("User_Media").child(messageSenderID).child(ConstFirebase.PHOTOS).child("Sent_Photos").child(messageReceiverID);
         final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

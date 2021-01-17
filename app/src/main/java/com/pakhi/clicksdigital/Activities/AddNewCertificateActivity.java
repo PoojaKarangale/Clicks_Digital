@@ -26,6 +26,7 @@ import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -77,7 +78,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                     certificate=new Certificates(name, institute, fileUri);
                     Intent sendDataBackIntent=new Intent();
                     //sendDataBackIntent.putExtra("certificate", certificate);
-                    sendDataBackIntent.putExtra("certificate", certificate);
+                    sendDataBackIntent.putExtra(ConstFirebase.certificate, certificate);
                     setResult(RESULT_OK, sendDataBackIntent);
                     finish();
                 }
@@ -108,7 +109,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
     private void uploadFile(Uri data) {
         Toast.makeText(this, "Wait for file to be uploaded", Toast.LENGTH_SHORT).show();
         progressDialog.show();
-        StorageReference sRef=storageRootReference.child(Const.USER_MEDIA_PATH).child(currentUserId).child("Files/" + name + " " + System.currentTimeMillis() + ".pdf");
+        StorageReference sRef=storageRootReference.child(ConstFirebase.USER_MEDIA_PATH).child(currentUserId).child("Files/" + name + " " + System.currentTimeMillis() + ".pdf");
         sRef.putFile(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 

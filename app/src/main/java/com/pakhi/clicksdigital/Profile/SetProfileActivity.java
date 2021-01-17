@@ -43,6 +43,7 @@ import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
@@ -114,7 +115,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
         Intent intent=getIntent();
-        previousActivity=intent.getStringExtra("PreviousActivity");
+        previousActivity=intent.getStringExtra(ConstFirebase.PreviousActivity);
 
         pref=SharedPreference.getInstance();
 
@@ -260,7 +261,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
     private void addUserDetailsToDatabase() {
         final DatabaseReference reference=rootRef.getUserRef();
-        reference.child(userid).child(Const.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child(userid).child(ConstFirebase.USER_DETAILS).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 addCurrentUserSqliteData(userItems);
@@ -302,12 +303,12 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     private HashMap<String, String> putDataIntoHashMap(User user) {
         final HashMap<String, String> userItems=new HashMap<>();
 
-        userItems.put(Const.USER_ID, user.getUser_id());
-        userItems.put(Const.USER_NAME, user.getUser_name());
-        userItems.put(Const.USER_BIO, user.getUser_id());
-        userItems.put(Const.IMAGE_URL, user.getImage_url());
-        userItems.put(Const.USER_TYPE, user.getUser_type());
-        userItems.put(Const.CITY, user.getCity());
+        userItems.put(ConstFirebase.USER_ID, user.getUser_id());
+        userItems.put(ConstFirebase.USER_NAME, user.getUser_name());
+        userItems.put(ConstFirebase.USER_BIO, user.getUser_id());
+        userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
+        userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
+        userItems.put(ConstFirebase.CITY, user.getCity());
         userItems.put("expectations_from_us", user.getExpectations_from_us());
         userItems.put("experiences", user.getExperiences());
         userItems.put("gender", user.getGender());

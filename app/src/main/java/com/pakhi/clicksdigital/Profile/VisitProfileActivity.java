@@ -24,6 +24,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
@@ -53,13 +54,13 @@ public class VisitProfileActivity extends AppCompatActivity {
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         userRef=rootRef.getUserRef();
-        user_id=getIntent().getStringExtra("visit_user_id");
+        user_id=getIntent().getStringExtra(ConstFirebase.visitUser);
         db=new UserDatabase(this);
         getCurrentUserFromDb();
 
         initializeMsgRequestFields();
 
-        userRef.child(user_id).child(Const.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        userRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -109,8 +110,8 @@ public class VisitProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent chatIntent=new Intent(getApplicationContext(), ChatActivity.class);
-                chatIntent.putExtra("visit_user_id", user.getUser_id());
-                chatIntent.putExtra("visit_user_name", user.getUser_name());
+                chatIntent.putExtra(ConstFirebase.visitUser, user.getUser_id());
+                chatIntent.putExtra(ConstFirebase.visit_user_name, user.getUser_name());
                 startActivity(chatIntent);
             }
         });
@@ -275,7 +276,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void makeAdmin(final View view) {
-        DatabaseReference databaseReference=userRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child("user_type");
         databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -287,7 +288,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(final View view) {
-        DatabaseReference databaseReference=userRef.child(user_id).child(Const.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child("user_type");
         databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

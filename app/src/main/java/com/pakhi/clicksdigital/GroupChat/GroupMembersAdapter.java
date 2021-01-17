@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -172,7 +173,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
     private void viewProfile(String visit_user_id) {
         Intent profileIntent=new Intent(mcontext, VisitProfileActivity.class);
-        profileIntent.putExtra("visit_user_id", visit_user_id);
+        profileIntent.putExtra(ConstFirebase.visitUser, visit_user_id);
         mcontext.startActivity(profileIntent);
     }
 

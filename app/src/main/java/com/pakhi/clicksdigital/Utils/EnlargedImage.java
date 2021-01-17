@@ -14,7 +14,7 @@ public class EnlargedImage extends AppCompatActivity {
 
     public static void enlargeImage(String s, Context context) {
         Intent fullScreenIntent=new Intent(context, EnlargedImage.class);
-        fullScreenIntent.putExtra(Const.IMAGE_URL, s);
+        fullScreenIntent.putExtra(ConstFirebase.IMAGE_URL, s);
         context.startActivity(fullScreenIntent);
     }
 
@@ -24,7 +24,7 @@ public class EnlargedImage extends AppCompatActivity {
         setContentView(R.layout.activity_enlarged_image);
 
         Intent intent=getIntent();
-        String image=intent.getStringExtra(Const.IMAGE_URL);
+        String image=intent.getStringExtra(ConstFirebase.IMAGE_URL);
         ImageView myimage=(ImageView) findViewById(R.id.imageView);
 
         Picasso.get().load(image).placeholder(R.drawable.profile_image)

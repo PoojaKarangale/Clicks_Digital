@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -106,7 +107,7 @@ public class ReplyFragment extends Fragment {
     private void updateUi() {
         //send user to topic replies activity
         Intent i=new Intent(getContext(), TopicRepliesActivity.class);
-        i.putExtra("message", message);
+        i.putExtra(ConstFirebase.message, message);
         startActivity(i);
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             FragmentManager fm=getFragmentManager();

@@ -40,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
@@ -82,7 +83,7 @@ public class EditEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
 
-        event=(Event) getIntent().getSerializableExtra("event");
+        event=(Event) getIntent().getSerializableExtra(ConstFirebase.event);
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         eventRef=rootRef.getEventRef();
