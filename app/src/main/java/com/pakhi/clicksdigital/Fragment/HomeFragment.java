@@ -38,13 +38,14 @@ import java.util.TimerTask;
 
 public class HomeFragment extends Fragment {
 
-    private static final int NUM_PAGES  =5;
-    private static       int currentPage=0;
-    ArrayList<Message>       trendingTopics=new ArrayList<>();
-    String                   currentUserID;
-    RecyclerView             topicRecyclerView;
-    SharedPreference         pref;
+    private static final int NUM_PAGES = 5;
+    private static int currentPage = 0;
+    ArrayList<Message> trendingTopics = new ArrayList<>();
+    String currentUserID;
+    RecyclerView topicRecyclerView;
+    SharedPreference pref;
     FirebaseDatabaseInstance rootRef;
+
     Button                   requestBtn;
     HomePageTopicAdapter     topicAdapter;
     ArrayList<String>        images        =new ArrayList<>();

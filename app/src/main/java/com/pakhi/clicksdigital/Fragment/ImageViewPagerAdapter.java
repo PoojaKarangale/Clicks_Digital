@@ -105,7 +105,6 @@ class ImageViewPagerAdapter extends PagerAdapter {
         });
 
         doNotifyDataSetChangedOnce = true;
-        //  Objects.requireNonNull(container).addView(itemView);
         container.addView(itemView, 0);
         return itemView;
     }

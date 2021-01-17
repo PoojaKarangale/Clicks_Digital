@@ -88,7 +88,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         initiateFields();
 
         //seting group info
-       // Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
+        // Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
 
         StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
         final StorageReference imgPath=sReference.child(currentGroupId ); //+ "." + getFileExtention(picImageUri)
