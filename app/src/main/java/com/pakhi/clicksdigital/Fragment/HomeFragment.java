@@ -46,14 +46,14 @@ public class HomeFragment extends Fragment {
     SharedPreference pref;
     FirebaseDatabaseInstance rootRef;
 
-    Button                   requestBtn;
-    HomePageTopicAdapter     topicAdapter;
-    ArrayList<String>        images        =new ArrayList<>();
+    Button requestBtn;
+    HomePageTopicAdapter topicAdapter;
+    ArrayList<String> images = new ArrayList<>();
 
-    ArrayList<String>        uploader        =new ArrayList<>();
-    ArrayList<String>        eventName     =new ArrayList<>();
-    DatabaseReference        sliderRef;
-    Context                  context;
+    ArrayList<String> uploader = new ArrayList<>();
+    ArrayList<String> eventName = new ArrayList<>();
+    DatabaseReference sliderRef;
+    Context context;
 
     public HomeFragment() {
 
@@ -62,14 +62,14 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View homeView=inflater.inflate(R.layout.fragment_home, container, false);
-        pref=SharedPreference.getInstance();
+        View homeView = inflater.inflate(R.layout.fragment_home, container, false);
+        pref = SharedPreference.getInstance();
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
+        rootRef = FirebaseDatabaseInstance.getInstance();
 
-        final String user_type=pref.getData(SharedPreference.user_type, getContext());
-        currentUserID=pref.getData(SharedPreference.currentUserId, getContext());
-        requestBtn=homeView.findViewById(R.id.request_button);
+        final String user_type = pref.getData(SharedPreference.user_type, getContext());
+        currentUserID = pref.getData(SharedPreference.currentUserId, getContext());
+        requestBtn = homeView.findViewById(R.id.request_button);
         setupRecyclerView(homeView);
 
         rootRef.getApprovedUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void removeTopicOlderThanTwoMonths() {
-        final Calendar calendar=Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         rootRef.getTopicRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -135,15 +135,15 @@ public class HomeFragment extends Fragment {
 
                                 //Log.d("REMOVE TOPIC", "---in group chat -----------" + snapshot.getValue());
 
-                                Date topicDate=null;
-                                SimpleDateFormat formatter=new SimpleDateFormat("MMM dd, yyyy");
+                                Date topicDate = null;
+                                SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy");
                                 try {
-                                    topicDate=formatter.parse(snapshot.child("date").getValue().toString());
+                                    topicDate = formatter.parse(snapshot.child("date").getValue().toString());
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
                                 calendar.add(Calendar.MONTH, -2);
-                                Date twoMonthAgo=new Date(formatter.format(calendar.getTime()));
+                                Date twoMonthAgo = new Date(formatter.format(calendar.getTime()));
 
                                 if (topicDate.before(twoMonthAgo)) {
 //                                    Log.d("REMOVE TOPIC", "---in group chat -----------" + snapshot.getValue());
@@ -167,18 +167,17 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
     }
 
     private void setupRecyclerView(View v) {
-        topicRecyclerView=(RecyclerView) v.findViewById(R.id.display);
+        topicRecyclerView = (RecyclerView) v.findViewById(R.id.display);
         topicRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-      //  topicRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //  topicRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         topicRecyclerView.setLayoutManager(linearLayoutManager);
-      //  linearLayoutManager.setReverseLayout(true);
+        //  linearLayoutManager.setReverseLayout(true);
 
-        topicAdapter=new HomePageTopicAdapter(getContext(), trendingTopics);
+        topicAdapter = new HomePageTopicAdapter(getContext(), trendingTopics);
         topicRecyclerView.setAdapter(topicAdapter);
 
     }
@@ -193,7 +192,7 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 trendingTopics.clear();
                 for (final DataSnapshot topicSnap : snapshot.getChildren()) {
-                    final String groupId=(String) topicSnap.getValue();
+                    final String groupId = (String) topicSnap.getValue();
                     rootRef.getUserRef().child(currentUserID).child("groups").child(groupId).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -202,7 +201,7 @@ public class HomeFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         trendingTopics.add(0, snapshot.getValue(Message.class));
-                                     //   topicAdapter.notifyDataSetChanged();
+                                        topicAdapter.notifyDataSetChanged();
                                     }
 
                                     @Override
@@ -219,7 +218,7 @@ public class HomeFragment extends Fragment {
                         }
                     });
                 }
-               // topicAdapter.notifyDataSetChanged();
+                // topicAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -254,13 +253,14 @@ public class HomeFragment extends Fragment {
     private void init(View homeView) {
 
         final ViewPager mViewPager;
-        mViewPager=homeView.findViewById(R.id.viewPagerMain);
+        mViewPager = homeView.findViewById(R.id.viewPagerMain);
 
-        final ImageViewPagerAdapter mViewPagerAdapter=new ImageViewPagerAdapter(getContext(), images, eventName, uploader);
+        final ImageViewPagerAdapter mViewPagerAdapter = new ImageViewPagerAdapter(getContext(), images, eventName, uploader);
         //        mViewPager.setAdapter(mViewPagerAdapter);
 
         images.clear();
         eventName.clear();
+        uploader.clear();
         rootRef.getsliderRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -270,11 +270,11 @@ public class HomeFragment extends Fragment {
                             images.add(0, snap.child("URL").getValue().toString());
                             eventName.add(0, snap.child("NameOfEvent").getValue().toString());
                             uploader.add(0, snap.child("sender").getValue().toString());
-                            //  mViewPagerAdapter.notifyDataSetChanged();
+                            mViewPagerAdapter.notifyDataSetChanged();
                         }
                     }
                 }
-                 mViewPagerAdapter.notifyDataSetChanged();
+                mViewPagerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -285,21 +285,20 @@ public class HomeFragment extends Fragment {
 
         mViewPager.setAdapter(mViewPagerAdapter);
 
-        final Handler handler=new Handler();
-        final Runnable Update=new Runnable() {
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
             @Override
             public void run() {
                 if (currentPage == images.size()) {
-                    currentPage=0;
+                    currentPage = 0;
                 }
                 mViewPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(currentPage++, true);
                 mViewPagerAdapter.notifyDataSetChanged();
-
-            }
+           }
         };
         //Auto start
-        Timer swipeTimer=new Timer();
+        Timer swipeTimer = new Timer();
         swipeTimer.schedule(new TimerTask() {
             @Override
             public void run() {

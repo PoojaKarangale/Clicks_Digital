@@ -34,10 +34,10 @@ import java.util.List;
 
 public class OnlineEventsFragment extends Fragment {
     FirebaseDatabaseInstance rootRef;
-    private View              view;
-    private EventAdapter      eventAdapter;
-    private List<Event>       events;
-    private RecyclerView      events_recycler;
+    private View view;
+    private EventAdapter eventAdapter;
+    private List<Event> events;
+    private RecyclerView events_recycler;
     private DatabaseReference eventRef;
 
     public OnlineEventsFragment() {
@@ -46,20 +46,20 @@ public class OnlineEventsFragment extends Fragment {
     public static String previousDateString(String dateString)
             throws ParseException {
         // Create a date formatter using your format string
-        DateFormat dateFormat=new SimpleDateFormat("yyyyMMdd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
         // Parse the given date string into a Date object.
         // Note: This can throw a ParseException.
-        Date myDate=dateFormat.parse(dateString);
+        Date myDate = dateFormat.parse(dateString);
 
         // Use the Calendar class to subtract one day
-        Calendar calendar=Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(myDate);
         calendar.add(Calendar.DAY_OF_YEAR, -1);
         calendar.add(Calendar.MONTH, -2);
         // Use the date formatter to produce a formatted date string
-        Date previousDate=calendar.getTime();
-        String result=dateFormat.format(previousDate);
+        Date previousDate = calendar.getTime();
+        String result = dateFormat.format(previousDate);
 
         return result;
     }
@@ -67,23 +67,23 @@ public class OnlineEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_online_events, container, false);
+        view = inflater.inflate(R.layout.fragment_online_events, container, false);
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
-        eventRef=rootRef.getEventRef();
+        rootRef = FirebaseDatabaseInstance.getInstance();
+        eventRef = rootRef.getEventRef();
 
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-        events_recycler=view.findViewById(R.id.events_recycler);
+        events_recycler = view.findViewById(R.id.events_recycler);
         events_recycler.setHasFixedSize(true);
         events_recycler.setLayoutManager(layoutManager);
 
-        events=new ArrayList<>();
+        events = new ArrayList<>();
 
-        eventAdapter=new EventAdapter(getContext(), events);
+        eventAdapter = new EventAdapter(getContext(), events);
         events_recycler.setAdapter(eventAdapter);
 
-        SearchView searchView=view.findViewById(R.id.search_bar);
+        SearchView searchView = view.findViewById(R.id.search_bar);
         searchEvents("");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -113,23 +113,23 @@ public class OnlineEventsFragment extends Fragment {
 
     private void removeOldEvents() {
 
-        final Calendar calendar=Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -2);
 
-        Timestamp ts=new Timestamp(calendar.getTimeInMillis() / 1000L);
-        final Date twoMonthAgo=new Date(ts.getTime());
+        Timestamp ts = new Timestamp(calendar.getTimeInMillis() / 1000L);
+        final Date twoMonthAgo = new Date(ts.getTime());
 
-        DatabaseReference eventRef=rootRef.getEventRef();
+        DatabaseReference eventRef = rootRef.getEventRef();
         eventRef.child(ConstFirebase.eventOffline).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
 
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
 
-                        Timestamp ts=new Timestamp(event.getTimeStamp());
-                        Date eventDate=new Date(ts.getTime());
+                        Timestamp ts = new Timestamp(event.getTimeStamp());
+                        Date eventDate = new Date(ts.getTime());
                         if (eventDate.before(twoMonthAgo)) {
                             dataSnapshot.getRef().removeValue();
                         }
@@ -149,10 +149,10 @@ public class OnlineEventsFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
 
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
 
-                        Timestamp ts=new Timestamp(event.getTimeStamp());
-                        Date eventDate=new Date(ts.getTime());
+                        Timestamp ts = new Timestamp(event.getTimeStamp());
+                        Date eventDate = new Date(ts.getTime());
                         if (eventDate.before(twoMonthAgo)) {
                             dataSnapshot.getRef().removeValue();
                         }
@@ -173,10 +173,10 @@ public class OnlineEventsFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
 
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
 
-                        Timestamp ts=new Timestamp(event.getTimeStamp());
-                        Date eventDate=new Date(ts.getTime());
+                        Timestamp ts = new Timestamp(event.getTimeStamp());
+                        Date eventDate = new Date(ts.getTime());
                         if (eventDate.before(twoMonthAgo)) {
                             dataSnapshot.getRef().removeValue();
                         }
@@ -195,10 +195,10 @@ public class OnlineEventsFragment extends Fragment {
     }
 
     private void searchEvents(final String s) {
-        final Calendar calendar=Calendar.getInstance();
-      //  calendar.add(Calendar.DAY_OF_MONTH,1);
-        Timestamp ts=new Timestamp(calendar.getTimeInMillis() / 1000L);
-        final Date current=new Date(ts.getTime());
+        final Calendar calendar = Calendar.getInstance();
+        //  calendar.add(Calendar.DAY_OF_MONTH,1);
+        Timestamp ts = new Timestamp(calendar.getTimeInMillis() / 1000L);
+        final Date current = new Date(ts.getTime());
 
         eventRef.child(ConstFirebase.eventOnline).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
@@ -206,9 +206,9 @@ public class OnlineEventsFragment extends Fragment {
                 events.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        Timestamp ts=new Timestamp(event.getTimeStamp());
-                        Date eventDate=new Date(ts.getTime());
+                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        Timestamp ts = new Timestamp(event.getTimeStamp());
+                        Date eventDate = new Date(ts.getTime());
                         if (!eventDate.before(current)) {
                             if (event.getEventName().toLowerCase().contains(s)
                                     || event.getDescription().toLowerCase().contains(s)
@@ -235,16 +235,17 @@ public class OnlineEventsFragment extends Fragment {
                 //  events.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        Timestamp ts=new Timestamp(event.getTimeStamp());
-                        Date eventDate=new Date(ts.getTime());
+                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        Timestamp ts = new Timestamp(event.getTimeStamp());
+                        Date eventDate = new Date(ts.getTime());
                         if (!eventDate.before(current)) {
-                        if (event.getEventName().toLowerCase().contains(s)
-                                || event.getDescription().toLowerCase().contains(s)
-                                || event.getCategory().toLowerCase().contains(s)
-                        ) {
-                            events.add(event);
-                        }}
+                            if (event.getEventName().toLowerCase().contains(s)
+                                    || event.getDescription().toLowerCase().contains(s)
+                                    || event.getCategory().toLowerCase().contains(s)
+                            ) {
+                                events.add(event);
+                            }
+                        }
                     }
                 }
                 Collections.sort(events, new Comparator<Event>() {

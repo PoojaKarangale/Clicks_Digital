@@ -87,7 +87,6 @@ class ImageViewPagerAdapter extends PagerAdapter {
         });
         //upload.setText(uploader.get(position));
 
-
         Picasso.get().load(images.get(position)).into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +104,7 @@ class ImageViewPagerAdapter extends PagerAdapter {
         });
 
         doNotifyDataSetChangedOnce = true;
-        container.addView(itemView, 0);
+        container.addView(itemView);
         return itemView;
     }
 

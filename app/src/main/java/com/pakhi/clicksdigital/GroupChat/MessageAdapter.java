@@ -112,18 +112,20 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else {
             configureMessageViewHolderOther((MessageViewHolderOther) messageViewHolder, position, message);
         }
-
     }
 
     private void configureMessageViewHolder(MessageViewHolder messageViewHolder, int position, final Message message) {
         messageViewHolder.senderMessageText.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.senderLayoutPdf.setVisibility(View.GONE);
+
+        messageViewHolder.senderDate.setText(message.getTime() + " - " + message.getDate());
+
         switch (message.getType()) {
             case "text":
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
                 messageViewHolder.senderMessageText.setText(message.getMessage());
-                messageViewHolder.senderDate.setText(message.getTime() + " - " + message.getDate());
+                //  messageViewHolder.senderDate.setText(message.getTime() + " - " + message.getDate());
                 break;
             case "image":
                 messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
@@ -154,6 +156,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private void configureMessageViewHolderOther(final MessageViewHolderOther messageViewHolder, int position, final Message message) {
+        messageViewHolder.receiverMessageText.setVisibility(View.GONE);
+        messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
+        messageViewHolder.receiverLayoutPdf.setVisibility(View.GONE);
+       // messageViewHolder.download_pdf_receiver.setVisibility(View.GONE);
+        messageViewHolder.download_image_receiver.setVisibility(View.GONE);
+
         usersRef = rootRef.getUserRef().child(message.getFrom()).child(Const.USER_DETAILS);
 
         usersRef.addValueEventListener(new ValueEventListener() {
@@ -168,15 +176,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             }
         });
-
+        messageViewHolder.receiverDate.setText(message.getTime() + " - " + message.getDate());
         switch (message.getType()) {
             case "text":
-                messageViewHolder.receiverDate.setText(message.getTime() + " - " + message.getDate());
+                //  messageViewHolder.receiverDate.setText(message.getTime() + " - " + message.getDate());
                 messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverMessageText.setText(message.getMessage());
                 break;
             case "image":
                 messageViewHolder.receiverLayoutImage.setVisibility(View.VISIBLE);
+                messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
+                messageViewHolder.download_image_receiver.setVisibility(View.VISIBLE);
                 Picasso.get()
                         .load(String.valueOf(message.getMessage()))
                         .into(messageViewHolder.messageReceiverPicture);

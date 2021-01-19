@@ -116,7 +116,6 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
 
             }
         });
-
     }
 
     @Override
@@ -128,7 +127,6 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
         Intent replyIntent=new Intent(mcontext, TopicRepliesActivity.class);
         replyIntent.putExtra(ConstFirebase.message, m);
         mcontext.startActivity(replyIntent);
-
     }
 
     public class HomePageTopivViewHolder extends RecyclerView.ViewHolder {

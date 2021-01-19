@@ -33,102 +33,110 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapter.ViewHolder> {
     DatabaseReference userRef, groupRef;
-    boolean isClickedMemberIsAdmin=false, isCurrentUserIsAdmin=false;
-    SharedPreference         pref;
-    String                   currentUserId;
+    boolean isClickedMemberIsAdmin = false, isCurrentUserIsAdmin = false;
+    SharedPreference pref;
+    String currentUserId;
     FirebaseDatabaseInstance rootRef;
-    private Context    mcontext;
+    private Context mcontext;
     private List<User> groupMembers;
-    private String     groupid;
+    private String groupid;
 
     public GroupMembersAdapter(Context mcontext, List<User> groupMembers, String groupid) {
-        this.mcontext=mcontext;
-        this.groupMembers=groupMembers;
-        this.groupid=groupid;
+        this.mcontext = mcontext;
+        this.groupMembers = groupMembers;
+        this.groupid = groupid;
         Log.d("GroupMembersTESTING", String.valueOf(groupMembers.size()));
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=LayoutInflater.from(mcontext)
+        View view = LayoutInflater.from(mcontext)
                 .inflate(R.layout.item_user, parent, false);
-        pref=SharedPreference.getInstance();
-        rootRef=FirebaseDatabaseInstance.getInstance();
+        pref = SharedPreference.getInstance();
+        rootRef = FirebaseDatabaseInstance.getInstance();
 
-        groupRef=rootRef.getGroupRef();
-        userRef=rootRef.getUserRef();
+        groupRef = rootRef.getGroupRef();
+        userRef = rootRef.getUserRef();
 
-        currentUserId=pref.getData(SharedPreference.currentUserId, view.getContext());
+        currentUserId = pref.getData(SharedPreference.currentUserId, view.getContext());
         return new GroupMembersAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final User groupMember=groupMembers.get(position);
+        final User groupMember = groupMembers.get(position);
 
-        Picasso.get().load(groupMember.getImage_url()).into(holder.profileImage);
-        holder.userName.setText(groupMember.getUser_name());
-        holder.userStatus.setText(groupMember.getUser_bio());
-        holder.is_admin.setVisibility(View.GONE);
-        holder.profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String visit_user_id=groupMembers.get(position).getUser_id();
-                viewPhoto(visit_user_id);
-            }
-        });
-        // check is visiting user is admin or not
-        groupRef.child(groupid).child("admins").child(groupMembers.get(position).getUser_id()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    holder.is_admin.setVisibility(View.VISIBLE);
-                    isClickedMemberIsAdmin=true;
+        if (groupMember != null) {
+
+
+            Picasso.get().load(groupMember.getImage_url()).into(holder.profileImage);
+            holder.userName.setText(groupMember.getUser_name());
+            holder.userStatus.setText(groupMember.getUser_bio());
+            holder.is_admin.setVisibility(View.GONE);
+            holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String visit_user_id = groupMembers.get(position).getUser_id();
+                    viewPhoto(visit_user_id);
                 }
-            }
+            });
+            // check is visiting user is admin or not
+            groupRef.child(groupid).child("admins").child(groupMembers.get(position).getUser_id()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        holder.is_admin.setVisibility(View.VISIBLE);
+                        isClickedMemberIsAdmin = true;
+                    }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-        //check if current user is admin or not
-        groupRef.child(groupid).child("admins").child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final String[] options;
-                if (dataSnapshot.exists()) {
-                    // current user is admin of current group
-                    isCurrentUserIsAdmin=true;
-                    if (isClickedMemberIsAdmin) {
-                        options=new String[]{"view profile", "remove member", "remove group admin"};
+                }
+            });
+            //check if current user is admin or not
+            groupRef.child(groupid).child("admins").child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    final String[] options;
+                    if (dataSnapshot.exists()) {
+                        // current user is admin of current group
+                        isCurrentUserIsAdmin = true;
+                        if (isClickedMemberIsAdmin) {
+                            options = new String[]{"view profile", "remove member", "remove group admin"};
+                        } else {
+                            options = new String[]{"view profile", "remove member", "make group admin"};
+                        }
                     } else {
-                        options=new String[]{"view profile", "remove member", "make group admin"};
+                        options = new String[]{"view profile"};
                     }
-                } else {
-                    options=new String[]{"view profile"};
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String visit_user_id = groupMembers.get(position).getUser_id();
+
+                            showOptionsBuilder(options, visit_user_id);
+                        }
+                    });
                 }
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String visit_user_id=groupMembers.get(position).getUser_id();
 
-                        showOptionsBuilder(options, visit_user_id);
-                    }
-                });
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
 
-            }
-        });
+
+        }
+
+
     }
 
     private void showOptionsBuilder(String[] options, final String visit_user_id) {
-        CharSequence optionsShown[]=options;
-        AlertDialog.Builder builder=new AlertDialog.Builder(mcontext);
+        CharSequence optionsShown[] = options;
+        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         // builder.setTitle("");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -172,7 +180,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     private void viewProfile(String visit_user_id) {
-        Intent profileIntent=new Intent(mcontext, VisitProfileActivity.class);
+        Intent profileIntent = new Intent(mcontext, VisitProfileActivity.class);
         profileIntent.putExtra(ConstFirebase.visitUser, visit_user_id);
         mcontext.startActivity(profileIntent);
     }
@@ -203,17 +211,17 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView profileImage;
-        TextView        userStatus, userName, is_admin;
+        TextView userStatus, userName, is_admin;
         // ImageView online_status;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            profileImage=itemView.findViewById(R.id.image_profile);
-            userStatus=itemView.findViewById(R.id.user_status);
+            profileImage = itemView.findViewById(R.id.image_profile);
+            userStatus = itemView.findViewById(R.id.user_status);
             //online_status = itemView.findViewById(R.id.user_online_status);
-            is_admin=itemView.findViewById(R.id.is_admin);
-            userName=itemView.findViewById(R.id.display_name);
+            is_admin = itemView.findViewById(R.id.is_admin);
+            userName = itemView.findViewById(R.id.display_name);
 
             userStatus.setVisibility(View.VISIBLE);
 

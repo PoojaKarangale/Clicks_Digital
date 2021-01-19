@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="start"
     android:layout_marginTop="5dp"
     android:layout_marginEnd="45dp"
     android:focusableInTouchMode="true"
+    android:gravity="start"
     android:orientation="vertical">
 
     <TextView
@@ -23,9 +24,9 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/lato"
         android:longClickable="true"
-        android:textAlignment="gravity"
         android:paddingBottom="2dp"
         android:text="receiver messages here"
+        android:textAlignment="gravity"
         android:textColor="@color/recevierMessage"
         android:textIsSelectable="true"
         android:textSize="@dimen/title1"
@@ -103,7 +104,8 @@
             android:layout_height="170dp"
             android:layout_margin="5dp"
             android:layout_toEndOf="@+id/message_profile_image"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/download_image_receiver"
@@ -111,7 +113,8 @@
             android:layout_height="@dimen/widget_size36"
             android:layout_margin="5dp"
             android:layout_toRightOf="@+id/message_receiver_image_view"
-            android:src="@drawable/download" />
+            android:src="@drawable/download"
+            android:visibility="gone" />
 
     </LinearLayout>
 
