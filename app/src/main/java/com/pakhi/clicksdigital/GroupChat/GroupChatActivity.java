@@ -113,9 +113,25 @@ public class GroupChatActivity extends AppCompatActivity {
         getUserFromDb();
         GetUserInfo();
 
+        GroupIdRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    currentGroupName = snapshot.child(ConstFirebase.group_name).getValue().toString();
+                    group_name.setText(currentGroupName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         InitializeFields();
         //currentGroupName = "Name Here";
-        group_name.setText(currentGroupName);
+       // group_name.setText(currentGroupName);
 
         GroupIdRef.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -133,6 +149,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
+
 
         final String[] image_url = new String[1];
         FirebaseStorageInstance storageRootRef = FirebaseStorageInstance.getInstance();
@@ -452,7 +469,7 @@ ChildEventListener mChildEventListener ;
     private void InitializeFields() {
         mToolbar = findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(currentGroupName);
+      //  getSupportActionBar().setTitle(currentGroupName);
 
         SendMessageButton = findViewById(R.id.send_message_button);
         userMessageInput = findViewById(R.id.input_group_message);

@@ -132,7 +132,7 @@ public class ChatsFragment extends Fragment {
                                         public void onClick(View view) {
                                             Intent chatIntent=new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra(ConstFirebase.visitUser, usersIDs);
-                                            chatIntent.putExtra(ConstFirebase.visitUser, retName);
+                                            chatIntent.putExtra(Const.USER_NAME, retName);
                                             //  chatIntent.putExtra("visit_image", retImage[0]);
                                             startActivity(chatIntent);
                                         }

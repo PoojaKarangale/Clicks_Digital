@@ -211,7 +211,7 @@ public class User implements Serializable {
         this.work_profession=work_profession;
     }
 
-    public String getVerificationRequest() {
+   /* public String getVerificationRequest() {
         return "not verified";
-    }
+    }*/
 }
