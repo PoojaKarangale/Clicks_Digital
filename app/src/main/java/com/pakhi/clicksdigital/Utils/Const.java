@@ -1,8 +1,8 @@
 package com.pakhi.clicksdigital.Utils;
 
 public class Const {
-    public static final String LAST_NAME    ="last_name";
 
+    public static final String LAST_NAME        ="last_name";
     public static final String USER_DETAILS    ="DETAILS";
     public final static String USER_NAME       ="user_name";
     public final static String USER_EMAIL      ="user_email";
@@ -20,7 +20,6 @@ public class Const {
     public final static String WEBLINK         ="weblink";
     public final static String GENDER          ="gender";
     public static final String APPROVED_REQUESTS  ="Approved_requests";
-    final static        int    PICK_PDF_CODE   =2342;
     public static       String prevActivity    ="previousActivity";
     public static       String registerActivity="RegisterActivity";
     public static       String groupId         ="groupId";

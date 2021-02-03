@@ -48,12 +48,12 @@
             android:gravity="start"
             >
 
-            <RelativeLayout
+           <!-- <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                >
+                >-->
 
                 <ImageView
                     android:id="@+id/back_btn"
@@ -78,8 +78,11 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/dimen_10dp"
+                    android:text="Name Here"
                     android:layout_toEndOf="@+id/image_profile"
-                    android:textSize="@dimen/title1"></TextView>
+                    android:textSize="@dimen/title1">
+
+                </TextView>
                 <!--   <ImageView
                        android:id="@+id/requesting_users"
                        android:layout_width="@dimen/widget_size"
@@ -90,7 +93,7 @@
                        android:src="@drawable/default_profile_for_groups"
                        android:visibility="gone" />-->
 
-            </RelativeLayout>
+           <!-- </RelativeLayout>-->
         </androidx.appcompat.widget.Toolbar>
 
         <!-- <ImageView
