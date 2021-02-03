@@ -71,7 +71,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ViewHolder> 
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mcontext, VisitProfileActivity.class);
-                            intent.putExtra(ConstFirebase.visitUser,reply.getFrom());
+                            intent.putExtra(Const.visitUser,reply.getFrom());
                             mcontext.startActivity(intent);
                         }
                     });

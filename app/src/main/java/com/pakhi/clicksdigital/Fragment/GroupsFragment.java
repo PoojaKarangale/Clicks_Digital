@@ -23,6 +23,7 @@ import com.pakhi.clicksdigital.GroupChat.MyGroupsAdapter;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -60,7 +61,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         UsersRef=rootRef.getUserRef();
 
         userID=pref.getData(SharedPreference.currentUserId, getContext());
-        userGroupRef=UsersRef.child(userID).child("groups");
+        userGroupRef=UsersRef.child(userID).child(ConstFirebase.groups1);
 
         initializeFields();
 

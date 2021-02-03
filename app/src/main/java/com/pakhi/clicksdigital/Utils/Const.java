@@ -29,4 +29,55 @@ public class Const {
     public static       String isPhoneVerified ="true";
     public static       String profileSet      ="true";
 
+
+    // new
+    public static       String date      ="date";
+    public static       String time      ="time";
+    public static       String state     ="state";
+    public static       String offline   ="offline";
+    public static       String online    ="online";
+    public static       String Notifications      ="Notifications";
+    public static       String Change_number      ="Change number";
+    public static       String Contact_us      ="Contact us";
+    public static       String About      ="About";
+    public static       String Groups      ="Groups";
+    public static       String Both      ="Both";
+    public static       String Offline      ="Offline";
+    public static String       Online     = "Online";
+    public static String group_name="group_name";
+    public static String desc = "description";
+    public static String grpid="groupid";
+    public static String uid="uid_creater";
+
+    // intents
+    public final static String message = "message";
+
+    public static String expeactations = "expectations_from_us";
+    public static String expireince = "experiences";
+    public static String offerToComm="offer_to_community";
+    public static String speakerExp="speaker_experience";
+    public static String email="email";
+    public static String webLink="weblink";
+    public static String working="working";
+    public static String last_name="last_name";
+    public static String company="company";
+
+    // new names of putExtra
+    public final static String certificate = "certificate";
+    public final static String visitUser = "visit_user_id";
+    public final static String userID = "user_id";
+    //public final static String message = "message";
+    public final static String event = "event";
+    public final static String organiser = "organiser";
+    public final static String Event = "Event";
+    public final static String previousActivity = "previousActivity";
+    public final static String PreviousActivity = "PreviousActivity";
+
+    public final static String group_id = "group_id";
+    //public final static String group_name = "group_name";
+    public final static String current_group_id = "current_group_id";
+    public final static String User = "User";
+    public final static String visit_user_name = "visit_user_name";
+    public final static String userdata = "userdata";
+
 }

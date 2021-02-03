@@ -48,7 +48,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_replies);
-        topic=(Message) getIntent().getSerializableExtra(ConstFirebase.message);
+        topic=(Message) getIntent().getSerializableExtra(Const.message);
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         UsersRef=rootRef.getUserRef();
@@ -65,7 +65,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Bundle bundle=new Bundle();
-                bundle.putSerializable("message", (Serializable) topic);
+                bundle.putSerializable(Const.message, (Serializable) topic);
 
                 ReplyFragment fragment=new ReplyFragment();
                 fragment.setArguments(bundle);
@@ -172,7 +172,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(TopicRepliesActivity.this, VisitProfileActivity.class);
-                            intent.putExtra(ConstFirebase.visitUser,topic.getFrom());
+                            intent.putExtra(Const.visitUser,topic.getFrom());
                             startActivity(intent);
                         }
                     });

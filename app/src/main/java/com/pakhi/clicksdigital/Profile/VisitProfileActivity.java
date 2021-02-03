@@ -54,7 +54,7 @@ public class VisitProfileActivity extends AppCompatActivity {
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         userRef=rootRef.getUserRef();
-        user_id=getIntent().getStringExtra(ConstFirebase.visitUser);
+        user_id=getIntent().getStringExtra(Const.visitUser);
         db=new UserDatabase(this);
         getCurrentUserFromDb();
 
@@ -110,8 +110,8 @@ public class VisitProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent chatIntent=new Intent(getApplicationContext(), ChatActivity.class);
-                chatIntent.putExtra(ConstFirebase.visitUser, user.getUser_id());
-                chatIntent.putExtra(ConstFirebase.visit_user_name, user.getUser_name());
+                chatIntent.putExtra(Const.visitUser, user.getUser_id());
+                chatIntent.putExtra(Const.visit_user_name, user.getUser_name());
                 startActivity(chatIntent);
             }
         });
@@ -276,7 +276,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void makeAdmin(final View view) {
-        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
         databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -288,7 +288,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(final View view) {
-        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child("user_type");
+        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
         databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

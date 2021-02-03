@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
@@ -82,7 +83,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
                 }
             });
             // check is visiting user is admin or not
-            groupRef.child(groupid).child("admins").child(groupMembers.get(position).getUser_id()).addValueEventListener(new ValueEventListener() {
+            groupRef.child(groupid).child(ConstFirebase.admins).child(groupMembers.get(position).getUser_id()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -97,7 +98,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
                 }
             });
             //check if current user is admin or not
-            groupRef.child(groupid).child("admins").child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            groupRef.child(groupid).child(ConstFirebase.admins).child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     final String[] options;
@@ -162,13 +163,13 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     private void removeMemberFromGroup(final String visit_user_id) {
-        groupRef.child(groupid).child("Users").child(visit_user_id).removeValue();
-        userRef.child(visit_user_id).child("groups").child(groupid).removeValue();
-        groupRef.child(groupid).child("admins").child(visit_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+        groupRef.child(groupid).child(ConstFirebase.users).child(visit_user_id).removeValue();
+        userRef.child(visit_user_id).child(ConstFirebase.groups1).child(groupid).removeValue();
+        groupRef.child(groupid).child(ConstFirebase.admins).child(visit_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    groupRef.child(groupid).child("admins").child(visit_user_id).removeValue();
+                    groupRef.child(groupid).child(ConstFirebase.admins).child(visit_user_id).removeValue();
                 }
             }
 
@@ -181,7 +182,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
     private void viewProfile(String visit_user_id) {
         Intent profileIntent = new Intent(mcontext, VisitProfileActivity.class);
-        profileIntent.putExtra(ConstFirebase.visitUser, visit_user_id);
+        profileIntent.putExtra(Const.visitUser, visit_user_id);
         mcontext.startActivity(profileIntent);
     }
 
@@ -192,7 +193,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     private void makeGroupAdmin(String visit_user_id) {
-        groupRef.child(groupid).child("admins").child(visit_user_id).setValue("").addOnSuccessListener(new OnSuccessListener<Void>() {
+        groupRef.child(groupid).child(ConstFirebase.admins).child(visit_user_id).setValue("").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 // he is now group admin
@@ -201,7 +202,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     private void removeGroupAdmin(String visit_user_id) {
-        groupRef.child(groupid).child("admins").child(visit_user_id).removeValue();
+        groupRef.child(groupid).child(ConstFirebase.admins).child(visit_user_id).removeValue();
     }
 
     @Override

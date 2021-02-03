@@ -127,7 +127,7 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra("PreviousActivity", "ProfileActivity");
                 startActivity(intent);*/
                 Intent intent=new Intent(ProfileActivity.this, EditProfile.class);
-                intent.putExtra(ConstFirebase.User, user);
+                intent.putExtra(Const.User, user);
                 startActivity(intent);
 
 
@@ -411,11 +411,11 @@ public class ProfileActivity extends AppCompatActivity {
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
 
-        UserRef.child(user_id).child("userState")
+        UserRef.child(user_id).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

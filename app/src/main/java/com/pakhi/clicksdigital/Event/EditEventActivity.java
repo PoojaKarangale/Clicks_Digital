@@ -40,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
@@ -83,7 +84,7 @@ public class EditEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
 
-        event=(Event) getIntent().getSerializableExtra(ConstFirebase.event);
+        event=(Event) getIntent().getSerializableExtra(Const.event);
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         eventRef=rootRef.getEventRef();
@@ -189,14 +190,14 @@ public class EditEventActivity extends AppCompatActivity {
 
             unpaidChip.setSelected(true);
         }
-        if (event.getEventType().equals("Offline")) {
+        if (event.getEventType().equals(Const.Offline)) {
 
             offlineChip.setSelected(true);
             venu.setVisibility(View.VISIBLE);
             city.setVisibility(View.VISIBLE);
             address.setVisibility(View.VISIBLE);
 
-        } else if (event.getEventType().equals("Online")) {
+        } else if (event.getEventType().equals(Const.Online)) {
 
             onlineChip.setSelected(true);
             venu.setVisibility(View.GONE);
@@ -238,7 +239,7 @@ public class EditEventActivity extends AppCompatActivity {
         String eventKey=event.getEventId();
         boolean addressFlag;
 
-        if (event_type.equals("Both") || event_type.equals("Offline")) {
+        if (event_type.equals(Const.Both) || event_type.equals(Const.Offline)) {
             if (ValidateInput.field(venu) || ValidateInput.field(city) || ValidateInput.field(address)) {
                 addressFlag=true;
             } else {
@@ -276,7 +277,7 @@ public class EditEventActivity extends AppCompatActivity {
                 int totalFee=Integer.parseInt(total_fee.getText().toString());
                 Event event;
                 event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
-                eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+                eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(EditEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
@@ -295,7 +296,7 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     private void createEventStorage(String eventId) {
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Events").child(eventId);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.Events).child(eventId);
 
         final StorageReference imgPath=sReference.child(System.currentTimeMillis() + "." + getFileExtention(picImageUri));
 
@@ -384,7 +385,7 @@ public class EditEventActivity extends AppCompatActivity {
         offlineChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event_type="Offline";
+                event_type=Const.Offline;
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
                 address.setVisibility(View.VISIBLE);
@@ -393,7 +394,7 @@ public class EditEventActivity extends AppCompatActivity {
         onlineChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event_type="Online";
+                event_type=Const.Online;
 
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.GONE);
@@ -405,7 +406,7 @@ public class EditEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                event_type="Both";
+                event_type=Const.Both;
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
                 address.setVisibility(View.VISIBLE);

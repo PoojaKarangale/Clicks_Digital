@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class ForwardMessageAdapter extends RecyclerView.Adapter<ForwardMessageAd
 
     @Override
     public void onBindViewHolder(@NonNull final ForwardMessageAdapter.ViewHolder holder, int position) {
-        if (groupOrContact.equals("Groups")) {
+        if (groupOrContact.equals(Const.Groups)) {
 
             Group group=allGroups.get(position);
             Picasso.get().load(group.getImage_url()).placeholder(R.drawable.profile_image).into(holder.image_profile);
@@ -93,7 +94,7 @@ public class ForwardMessageAdapter extends RecyclerView.Adapter<ForwardMessageAd
 
     @Override
     public int getItemCount() {
-        if (groupOrContact.equals("Groups"))
+        if (groupOrContact.equals(Const.Groups))
             return allGroups.size();
         else return allContacts.size();
     }

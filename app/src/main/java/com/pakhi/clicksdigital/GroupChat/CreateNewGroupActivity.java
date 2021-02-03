@@ -27,6 +27,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
@@ -142,17 +144,17 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
         HashMap<String, Object> hashMap=new HashMap<>();
 
-        hashMap.put("group_name", groupName);
-        hashMap.put("description", description_str);
-        hashMap.put("groupid", groupid);
-        hashMap.put("uid_creater", currentUserId);
-        hashMap.put("date", saveCurrentDate);
-        hashMap.put("time", saveCurrentTime);
+        hashMap.put(Const.group_name, groupName);
+        hashMap.put(Const.desc, description_str);
+        hashMap.put(Const.grpid, groupid);
+        hashMap.put(Const.uid, currentUserId);
+        hashMap.put(Const.date, saveCurrentDate);
+        hashMap.put(Const.time, saveCurrentTime);
 
         if (isProfileSelected)
-            hashMap.put("image_url", picImageUri.toString());
+            hashMap.put(Const.IMAGE_URL, picImageUri.toString());
         else
-            hashMap.put("image_url", "default_profile");
+            hashMap.put(Const.IMAGE_URL, "default_profile");
 
         reference.child(groupid).setValue(hashMap);
 
@@ -161,12 +163,12 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
     private void addAdminToTheGroup(String userid, String groupid) {
         DatabaseReference groupRef, userRef;
-        groupRef=rootRef.getGroupRef().child(groupid).child("Users").child(userid);
+        groupRef=rootRef.getGroupRef().child(groupid).child(ConstFirebase.users).child(userid);
         groupRef.setValue("");
-        userRef=rootRef.getUserRef().child(userid).child("groups").child(groupid);
+        userRef=rootRef.getUserRef().child(userid).child(ConstFirebase.groups1).child(groupid);
         userRef.setValue("");
 //        setting group admin
-        rootRef.getGroupRef().child(groupid).child("admins").child(userid).setValue("");
+        rootRef.getGroupRef().child(groupid).child(ConstFirebase.admins).child(userid).setValue("");
     }
 
     private void openGallery() {
@@ -203,7 +205,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 
     private void createGroup(String groupid) {
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.grpPhotos).child(ConstFirebase.profGrp);
 
         final StorageReference imgPath=sReference.child(groupid ); //+ "." + getFileExtention(picImageUri)
 
@@ -268,11 +270,11 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
 
-        rootRef.getUserRef().child(currentUserId).child("userState")
+        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

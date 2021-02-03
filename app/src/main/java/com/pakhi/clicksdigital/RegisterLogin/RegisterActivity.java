@@ -75,8 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void sendUserToPhoneVerify() {
         Intent i=new Intent(RegisterActivity.this, PhoneVerify.class);
-        i.putExtra(ConstFirebase.MO_NUMBER, number);
-        i.putExtra(ConstFirebase.prevActivity, ConstFirebase.registerActivity);
+        i.putExtra(Const.MO_NUMBER, number);
+        i.putExtra(Const.prevActivity, ConstFirebase.registerActivity);
         startActivity(i);
     }
 
@@ -165,17 +165,17 @@ public class RegisterActivity extends AppCompatActivity {
         userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
         userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
         userItems.put(ConstFirebase.CITY, user.getCity());
-        userItems.put("expectations_from_us", user.getExpectations_from_us());
-        userItems.put("experiences", user.getExperiences());
-        userItems.put("gender", user.getGender());
-        userItems.put("number", user.getNumber());
-        userItems.put("offer_to_community", user.getOffer_to_community());
-        userItems.put("speaker_experience", user.getSpeaker_experience());
-        userItems.put("email", user.getUser_email());
-        userItems.put("weblink", user.getWeblink());
-        userItems.put("working", user.getWeblink());
-        userItems.put("last_name", user.getLast_name());
-        userItems.put("company", user.getCompany());
+        userItems.put(Const.expeactations, user.getExpectations_from_us());
+        userItems.put(Const.expireince, user.getExperiences());
+        userItems.put(Const.GENDER, user.getGender());
+        userItems.put(Const.MO_NUMBER, user.getNumber());
+        userItems.put(Const.offerToComm, user.getOffer_to_community());
+        userItems.put(Const.speakerExp, user.getSpeaker_experience());
+        userItems.put(Const.email, user.getUser_email());
+        userItems.put(Const.webLink, user.getWeblink());
+        userItems.put(Const.working, user.getWeblink());
+        userItems.put(Const.last_name, user.getLast_name());
+        userItems.put(Const.company, user.getCompany());
         return userItems;
     }
 

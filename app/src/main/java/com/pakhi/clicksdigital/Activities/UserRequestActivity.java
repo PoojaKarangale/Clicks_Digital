@@ -16,6 +16,7 @@ import com.pakhi.clicksdigital.Adapter.UserRequestAdapter;
 import com.pakhi.clicksdigital.Model.User_request;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -96,7 +97,7 @@ public class UserRequestActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        updateUserStatus("online");
+        updateUserStatus(Const.online);
     }
 
     private void updateUserStatus(String state) {
@@ -111,13 +112,13 @@ public class UserRequestActivity extends AppCompatActivity {
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
         SharedPreference pref=SharedPreference.getInstance();
         String currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
-        rootRef.getUserRef().child(currentUserId).child("userState")
+        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

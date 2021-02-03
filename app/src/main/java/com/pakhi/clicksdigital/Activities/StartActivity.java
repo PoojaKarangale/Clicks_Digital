@@ -31,6 +31,8 @@ import com.pakhi.clicksdigital.Fragment.HomeFragment;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.ShareApp;
@@ -213,7 +215,7 @@ public class StartActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            updateUserStatus("online");
+            updateUserStatus(Const.online);
         }
     }
 
@@ -222,7 +224,7 @@ public class StartActivity extends AppCompatActivity {
         super.onDestroy();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            updateUserStatus("offline");
+            updateUserStatus(Const.offline);
         }
     }
 
@@ -255,11 +257,11 @@ public class StartActivity extends AppCompatActivity {
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
 
-        rootRef.getUserRef().child(userID).child("userState")
+        rootRef.getUserRef().child(userID).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

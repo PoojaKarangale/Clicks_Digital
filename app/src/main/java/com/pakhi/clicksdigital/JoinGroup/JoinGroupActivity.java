@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -115,7 +117,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                 for (final DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                     Log.d("SEARCH GROUP","--------------"+snapshot1.getKey()+" "+snapshot1.getValue());
 
-                       rootRef.getUserRef().child(current_user_id).child("groups").child(snapshot1.getKey()).addValueEventListener(new ValueEventListener() {
+                       rootRef.getUserRef().child(current_user_id).child(ConstFirebase.groups1).child(snapshot1.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Log.d("GROUPS","----------snapshot"+snapshot.getValue());
@@ -162,10 +164,10 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
-        usersRef.child(current_user_id).child("userState")
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
+        usersRef.child(current_user_id).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

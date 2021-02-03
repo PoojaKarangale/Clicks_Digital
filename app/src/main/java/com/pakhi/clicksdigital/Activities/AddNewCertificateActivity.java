@@ -78,7 +78,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                     certificate=new Certificates(name, institute, fileUri);
                     Intent sendDataBackIntent=new Intent();
                     //sendDataBackIntent.putExtra("certificate", certificate);
-                    sendDataBackIntent.putExtra(ConstFirebase.certificate, certificate);
+                    sendDataBackIntent.putExtra(Const.certificate, certificate);
                     setResult(RESULT_OK, sendDataBackIntent);
                     finish();
                 }

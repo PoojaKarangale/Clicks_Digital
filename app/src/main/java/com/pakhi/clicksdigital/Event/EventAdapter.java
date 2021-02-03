@@ -146,7 +146,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 Intent profileIntent=new Intent(context, VisitProfileActivity.class);
-                profileIntent.putExtra(ConstFirebase.visitUser, organiser[0].getUser_id());
+                profileIntent.putExtra(Const.visitUser, organiser[0].getUser_id());
                 context.startActivity(profileIntent);
             }
         });
@@ -167,7 +167,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 Toast.makeText(v.getContext(), "event deleted", Toast.LENGTH_SHORT).show();
                 */
                 Intent intent=new Intent(context, EditEventActivity.class);
-                intent.putExtra(ConstFirebase.event, event);
+                intent.putExtra(Const.event, event);
                 context.startActivity(intent);
             }
         });
@@ -182,8 +182,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     private void openEventDetailsActivity(Event event, User[] organiser) {
         Intent eventDetailsIntent=new Intent(context, EventDetailsActivity.class);
-        eventDetailsIntent.putExtra(ConstFirebase.event, event);
-        eventDetailsIntent.putExtra(ConstFirebase.organiser, organiser[0]);
+        eventDetailsIntent.putExtra(Const.event, event);
+        eventDetailsIntent.putExtra(Const.organiser, organiser[0]);
         eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(eventDetailsIntent);
     }

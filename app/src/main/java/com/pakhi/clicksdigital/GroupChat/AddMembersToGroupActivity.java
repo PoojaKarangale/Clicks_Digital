@@ -38,7 +38,7 @@ public class AddMembersToGroupActivity extends AppCompatActivity {
         userRef=rootRef.getUserRef();
         groupRef=rootRef.getGroupRef();
 
-        groupId=getIntent().getStringExtra(ConstFirebase.current_group_id);
+        groupId=getIntent().getStringExtra(Const.current_group_id);
 
         send=findViewById(R.id.send);
 
@@ -57,8 +57,8 @@ public class AddMembersToGroupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 for (User user : allUsers) {
                     if (user.getSelected()) {
-                        groupRef.child(groupId).child("Users").child(user.getUser_id()).setValue("");
-                        userRef.child(user.getUser_id()).child("groups").child(groupId).setValue("");
+                        groupRef.child(groupId).child(ConstFirebase.users).child(user.getUser_id()).setValue("");
+                        userRef.child(user.getUser_id()).child(ConstFirebase.groups1).child(groupId).setValue("");
                         user.setSelected(false);
                     }
                 }

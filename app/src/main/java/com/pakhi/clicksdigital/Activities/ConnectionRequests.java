@@ -77,12 +77,13 @@ public class ConnectionRequests extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent profileIntent=new Intent(ConnectionRequests.this, VisitProfileActivity.class);
-                                profileIntent.putExtra(ConstFirebase.visitUser, list_user_id);
+                                profileIntent.putExtra(Const.visitUser, list_user_id);
                                 startActivity(profileIntent);
                             }
                         });
 
-                        DatabaseReference getTypeRef=getRef(position).child("request_type").getRef();
+                        DatabaseReference getTypeRef=getRef(position).child(ConstFirebase.request_type).getRef();
+
 
                         getTypeRef.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -120,12 +121,12 @@ public class ConnectionRequests extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(View v) {
 
-                                                        ContactsRef.child(currentUserID).child(list_user_id).child("Contact")
+                                                        ContactsRef.child(currentUserID).child(list_user_id).child(ConstFirebase.Contact)
                                                                 .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()) {
-                                                                    ContactsRef.child(list_user_id).child(currentUserID).child("Contact")
+                                                                    ContactsRef.child(list_user_id).child(currentUserID).child(ConstFirebase.Contact)
                                                                             .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {

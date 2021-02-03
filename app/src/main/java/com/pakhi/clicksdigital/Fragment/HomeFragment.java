@@ -25,6 +25,7 @@ import com.google.firebase.database.core.Context;
 import com.pakhi.clicksdigital.Adapter.HomePageTopicAdapter;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -193,7 +194,7 @@ public class HomeFragment extends Fragment {
                 trendingTopics.clear();
                 for (final DataSnapshot topicSnap : snapshot.getChildren()) {
                     final String groupId = (String) topicSnap.getValue();
-                    rootRef.getUserRef().child(currentUserID).child("groups").child(groupId).addValueEventListener(new ValueEventListener() {
+                    rootRef.getUserRef().child(currentUserID).child(ConstFirebase.groups1).child(groupId).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
@@ -266,10 +267,10 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot snap : snapshot.getChildren()) {
-                        if (snap.child("URL").exists() && snap.child("NameOfEvent").exists() && snap.child("sender").exists()) {
-                            images.add(0, snap.child("URL").getValue().toString());
-                            eventName.add(0, snap.child("NameOfEvent").getValue().toString());
-                            uploader.add(0, snap.child("sender").getValue().toString());
+                        if (snap.child(ConstFirebase.url).exists() && snap.child(ConstFirebase.nameOfEvent).exists() && snap.child(ConstFirebase.sender).exists()) {
+                            images.add(0, snap.child(ConstFirebase.url).getValue().toString());
+                            eventName.add(0, snap.child(ConstFirebase.nameOfEvent).getValue().toString());
+                            uploader.add(0, snap.child(ConstFirebase.sender).getValue().toString());
                             mViewPagerAdapter.notifyDataSetChanged();
                         }
                     }

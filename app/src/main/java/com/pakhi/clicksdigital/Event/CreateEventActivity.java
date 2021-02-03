@@ -45,6 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
@@ -276,7 +277,7 @@ public class CreateEventActivity extends AppCompatActivity {
             feeFlag=true;
         }
 
-        if (event_type.equals("Both") || event_type.equals("Offline")) {
+        if (event_type.equals(Const.Both) || event_type.equals(Const.Offline)) {
             if (ValidateInput.field(venu) || ValidateInput.field(city) || ValidateInput.field(address)) {
                 addressFlag=true;
             } else {
@@ -323,7 +324,7 @@ public class CreateEventActivity extends AppCompatActivity {
         Event event;
         event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
 
-        eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+        eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
@@ -331,8 +332,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 finish();
             }
         });
-        eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").child("startMonth").setValue(startMonth);
-        eventRef.child(event.getEventType()).child(eventKey).child("EventDetails").child("endMonth").setValue(endMonth);
+        eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.startMonth).setValue(startMonth);
+        eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.endMonth).setValue(endMonth);
 
        /* if(event.getEventType().equals(ConstFirebase.eventOnline)){
           eventRef.child(ConstFirebase.eventOnline).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -457,7 +458,7 @@ public class CreateEventActivity extends AppCompatActivity {
         offlineChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event_type="Offline";
+                event_type=Const.Offline;
 
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
@@ -467,7 +468,7 @@ public class CreateEventActivity extends AppCompatActivity {
         onlineChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                event_type="Online";
+                event_type=Const.Online;
 
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.GONE);

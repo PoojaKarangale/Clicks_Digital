@@ -203,7 +203,7 @@ public class ContactUserActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        updateUserStatus("online");
+        updateUserStatus(Const.online);
 
 
         FirebaseRecyclerOptions options=
@@ -223,7 +223,7 @@ public class ContactUserActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent chatActivity=new Intent(ContactUserActivity.this, ChatActivity.class);
-                        chatActivity.putExtra(ConstFirebase.visitUser, userIDs);
+                        chatActivity.putExtra(Const.visitUser, userIDs);
                         startActivity(chatActivity);
                     }
                 });
@@ -262,14 +262,14 @@ public class ContactUserActivity extends AppCompatActivity {
                         if (dataSnapshot.exists()) {
 
                             //retrive user state
-                            if (dataSnapshot.child("userState").hasChild("state")) {
-                                String state=dataSnapshot.child("userState").child("state").getValue().toString();
-                                String date=dataSnapshot.child("userState").child("date").getValue().toString();
-                                String time=dataSnapshot.child("userState").child("time").getValue().toString();
+                            if (dataSnapshot.child(ConstFirebase.userState).hasChild(ConstFirebase.state)) {
+                                String state=dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.state).getValue().toString();
+                                String date=dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.date).getValue().toString();
+                                String time=dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.time).getValue().toString();
 
-                                if (state.equals("online")) {
+                                if (state.equals(Const.online)) {
                                     holder.onlineIcon.setVisibility(View.VISIBLE);
-                                } else if (state.equals("offline")) {
+                                } else if (state.equals(Const.offline)) {
                                     holder.onlineIcon.setVisibility(View.INVISIBLE);
                                 }
                             } else {
@@ -311,11 +311,11 @@ public class ContactUserActivity extends AppCompatActivity {
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
 
-        rootRef.getUserRef().child(currentUserID).child("userState")
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

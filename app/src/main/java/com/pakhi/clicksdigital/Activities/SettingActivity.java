@@ -18,6 +18,7 @@ import com.pakhi.clicksdigital.FragmentsInSetting.ChangeMyNumberFragmentReplacem
 import com.pakhi.clicksdigital.FragmentsInSetting.ContactusFragmentReplacementActivity;
 import com.pakhi.clicksdigital.FragmentsInSetting.NotificationFragmentReplaceActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 
 public class SettingActivity extends AppCompatActivity {
     SettingListAdapter listAdapter;
@@ -29,10 +30,10 @@ public class SettingActivity extends AppCompatActivity {
             R.drawable.info
     };
     private String[] titleForListView ={
-            "Notifications",
-            "Change number",
-            "Contact us",
-            "About"};
+            Const.Notifications,
+            Const.Change_number,
+            Const.Contact_us,
+            Const.About};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

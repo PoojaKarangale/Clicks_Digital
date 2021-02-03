@@ -73,8 +73,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
-        event=(Event) getIntent().getSerializableExtra(ConstFirebase.event);
-        organiser=(User) getIntent().getSerializableExtra(ConstFirebase.organiser);
+        event=(Event) getIntent().getSerializableExtra(Const.event);
+        organiser=(User) getIntent().getSerializableExtra(Const.organiser);
 
         pref=SharedPreference.getInstance();
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -93,7 +93,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         checkUserIsAlreadyRegisterd();
 
         loadData();
-        currentEventRef.child("Participants").addValueEventListener(new ValueEventListener() {
+        currentEventRef.child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -135,7 +135,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent eventDetailsIntent = new Intent(EventDetailsActivity.this, EventGalleryActivity.class);
-                eventDetailsIntent.putExtra(ConstFirebase.event, event);
+                eventDetailsIntent.putExtra(Const.event, event);
                 eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(eventDetailsIntent);
             }
@@ -164,20 +164,20 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private void sendUserToEventsParticipants() {
         Intent intent=new Intent(this, EventParticipantsActivity.class);
-        intent.putExtra(ConstFirebase.Event, event);
+        intent.putExtra(Const.Event, event);
         startActivity(intent);
     }
 
     private void startPaymentGateWay() {
         Intent intent=new Intent(this, PaymentActivity.class);
-        intent.putExtra(ConstFirebase.Event, event);
+        intent.putExtra(Const.Event, event);
         startActivity(intent);
     }
 
     private void addUserToEventDataBase() {
         join_event_btn.setEnabled(false);
         Toast.makeText(this, "you have registerd successully", Toast.LENGTH_SHORT).show();
-        currentEventRef.child("Participants").child(currentUserId).setValue("");
+        currentEventRef.child(ConstFirebase.participants).child(currentUserId).setValue("");
     }
 
     private void openGoogleMap() {
@@ -227,7 +227,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         } else {
             cost.setText(String.valueOf("Event Fee :  " + Html.fromHtml("<font  color = '#092859'><i>Free</i></font>")));
         }
-        if (event.getEventType().equals("Online")) {
+        if (event.getEventType().equals(Const.Online)) {
             location_city.setText(event.getVenu());
             txtLoc.setVisibility(View.GONE);
             location.setVisibility(View.GONE);

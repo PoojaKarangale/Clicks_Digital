@@ -143,7 +143,7 @@ public class OnlineEventsFragment extends Fragment {
 
             }
         });
-        eventRef.child("Both").addValueEventListener(new ValueEventListener() {
+        eventRef.child(ConstFirebase.Both).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -229,7 +229,7 @@ public class OnlineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child("Both").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.child(ConstFirebase.Both).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();

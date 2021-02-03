@@ -62,10 +62,10 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
         });
 
         holder.dateAndTime.setText(m.getDate() + " " + m.getTime());
-        rootRef.getUserRef().child(m.getFrom()).child("DETAILS").addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(m.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                holder.publisherName.setText(snapshot.child(ConstFirebase.USER_NAME).getValue() + " " + snapshot.child("last_name").getValue());
+                holder.publisherName.setText(snapshot.child(ConstFirebase.USER_NAME).getValue() + " " + snapshot.child(ConstFirebase.last_name).getValue());
             }
 
             @Override
@@ -106,7 +106,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
         rootRef.getGroupRef().child(m.getTo()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                holder.groupName.setText(snapshot.child("group_name").getValue().toString());
+                holder.groupName.setText(snapshot.child(ConstFirebase.GROUP_NAME).getValue().toString());
                 //   final String image_url=snapshot.child("image_url").getValue().toString();
 
             }
@@ -125,7 +125,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
 
     public void sendUserToTopicReplyActivity(Message m){
         Intent replyIntent=new Intent(mcontext, TopicRepliesActivity.class);
-        replyIntent.putExtra(ConstFirebase.message, m);
+        replyIntent.putExtra(Const.message, m);
         mcontext.startActivity(replyIntent);
     }
 

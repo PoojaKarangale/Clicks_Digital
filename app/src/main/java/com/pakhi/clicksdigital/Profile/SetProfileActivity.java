@@ -115,7 +115,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
         Intent intent=getIntent();
-        previousActivity=intent.getStringExtra(ConstFirebase.PreviousActivity);
+        previousActivity=intent.getStringExtra(Const.PreviousActivity);
 
         pref=SharedPreference.getInstance();
 
@@ -309,17 +309,17 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
         userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
         userItems.put(ConstFirebase.CITY, user.getCity());
-        userItems.put("expectations_from_us", user.getExpectations_from_us());
-        userItems.put("experiences", user.getExperiences());
-        userItems.put("gender", user.getGender());
-        userItems.put("number", user.getNumber());
-        userItems.put("offer_to_community", user.getOffer_to_community());
-        userItems.put("speaker_experience", user.getSpeaker_experience());
-        userItems.put("email", user.getUser_email());
-        userItems.put("weblink", user.getWeblink());
-        userItems.put("working", user.getWork_profession());
-        userItems.put("last_name", user.getLast_name());
-        userItems.put("company", user.getCompany());
+        userItems.put(Const.expeactations, user.getExpectations_from_us());
+        userItems.put(Const.expireince, user.getExperiences());
+        userItems.put(Const.GENDER, user.getGender());
+        userItems.put(Const.MO_NUMBER, user.getNumber());
+        userItems.put(Const.offerToComm, user.getOffer_to_community());
+        userItems.put(Const.speakerExp, user.getSpeaker_experience());
+        userItems.put(Const.email, user.getUser_email());
+        userItems.put(Const.webLink, user.getWeblink());
+        userItems.put(Const.working, user.getWork_profession());
+        userItems.put(Const.last_name, user.getLast_name());
+        userItems.put(Const.company, user.getCompany());
        // userItems.put("profile_verification", user.getVerificationRequest());
         return userItems;
     }
@@ -557,10 +557,10 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
-        rootRef.getUserRef().child(userid).child("userState")
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
+        rootRef.getUserRef().child(userid).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

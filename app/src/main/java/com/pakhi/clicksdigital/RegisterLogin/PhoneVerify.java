@@ -105,7 +105,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
 
-        number = getIntent().getStringExtra(ConstFirebase.MO_NUMBER);
+        number = getIntent().getStringExtra(Const.MO_NUMBER);
         previousActivity = getIntent().getStringExtra(ConstFirebase.prevActivity);
         String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]", "");
         pref = SharedPreference.getInstance();
@@ -239,17 +239,17 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
         userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
         userItems.put(ConstFirebase.CITY, user.getCity());
-        userItems.put("expectations_from_us", user.getExpectations_from_us());
-        userItems.put("experiences", user.getExperiences());
-        userItems.put("gender", user.getGender());
-        userItems.put("number", user.getNumber());
-        userItems.put("offer_to_community", user.getOffer_to_community());
-        userItems.put("speaker_experience", user.getSpeaker_experience());
-        userItems.put("email", user.getUser_email());
-        userItems.put("weblink", user.getWeblink());
-        userItems.put("working", user.getWeblink());
-        userItems.put("last_name", user.getLast_name());
-        userItems.put("company", user.getCompany());
+        userItems.put(Const.expeactations, user.getExpectations_from_us());
+        userItems.put(Const.expireince, user.getExperiences());
+        userItems.put(Const.GENDER, user.getGender());
+        userItems.put(Const.MO_NUMBER, user.getNumber());
+        userItems.put(Const.offerToComm, user.getOffer_to_community());
+        userItems.put(Const.speakerExp, user.getSpeaker_experience());
+        userItems.put(Const.email, user.getUser_email());
+        userItems.put(Const.webLink, user.getWeblink());
+        userItems.put(Const.working, user.getWeblink());
+        userItems.put(Const.last_name, user.getLast_name());
+        userItems.put(Const.company, user.getCompany());
         return userItems;
     }
 
@@ -303,7 +303,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
     void setUserToSetProfileActivity() {
         Intent resIntent = new Intent(PhoneVerify.this, SetProfileActivity.class);
-        resIntent.putExtra(ConstFirebase.PreviousActivity, "PhoneVerify");
+        resIntent.putExtra(Const.PreviousActivity, "PhoneVerify");
         resIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resIntent);
         finish();

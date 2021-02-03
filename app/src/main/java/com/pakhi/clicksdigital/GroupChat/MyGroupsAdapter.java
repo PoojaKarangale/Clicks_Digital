@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
@@ -73,7 +74,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
                 .into(holder.image_profile);
         */
         final String[] image_url=new String[1];
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.grpPhotos).child(ConstFirebase.profGrp);
         final StorageReference imgPath=sReference.child(group.getGroupid() ); //+ "." + getFileExtention(picImageUri)
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -100,10 +101,10 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
             public void onClick(View v) {
 
                 Intent groupChatActivity=new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
-                groupChatActivity.putExtra(ConstFirebase.groupName, group.getGroup_name());
+                groupChatActivity.putExtra(Const.groupName, group.getGroup_name());
                 Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
 
-                groupChatActivity.putExtra(ConstFirebase.groupId, group.getGroupid());
+                groupChatActivity.putExtra(Const.groupId, group.getGroupid());
                 mcontext.startActivity(groupChatActivity);
 
             }

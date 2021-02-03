@@ -84,17 +84,17 @@ public class EventGalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_gallery);
 
-        event = (Event) getIntent().getSerializableExtra(ConstFirebase.event);
+        event = (Event) getIntent().getSerializableExtra(Const.event);
 
         pref = SharedPreference.getInstance();
         FirebaseDatabaseInstance rootRef = FirebaseDatabaseInstance.getInstance();
 
         messageSenderID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
-        rootRef.getUserRef().child(messageSenderID).child("DETAILS").addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(messageSenderID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                name = snapshot.child("user_name").getValue().toString();
+                name = snapshot.child(ConstFirebase.userName).getValue().toString();
             }
 
             @Override
@@ -103,13 +103,13 @@ public class EventGalleryActivity extends AppCompatActivity {
             }
         });
 
-        eventRef = rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child("Photos");
+        eventRef = rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child(ConstFirebase.PHOTOS);
         sliderImageRef = rootRef.getsliderRef();
 
-        rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child("EventDetails").addValueEventListener(new ValueEventListener() {
+        rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                eventName = snapshot.child("eventName").getValue().toString();
+                eventName = snapshot.child(ConstFirebase.eventName1).getValue().toString();
             }
 
             @Override
@@ -346,7 +346,7 @@ public class EventGalleryActivity extends AppCompatActivity {
 
     public void executeUploadtask(byte[] mUploadBytes) {
 
-        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child("Event_photos").child(event.getEventId());
+        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.EventPhotos).child(event.getEventId());
         final String image_name = System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
         final StorageReference imgPath = sReference.child(image_name);
 
@@ -453,9 +453,9 @@ public class EventGalleryActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 number = (int) snapshot.getChildrenCount();
                 imageName.add(image_name);
-                rootRefAdd.getsliderRef().child(image_name).child("NameOfEvent").setValue(eventName);
-                rootRefAdd.getsliderRef().child(image_name).child("URL").setValue(imageUrl);
-                rootRefAdd.getsliderRef().child(image_name).child("sender").setValue(messageSenderID);
+                rootRefAdd.getsliderRef().child(image_name).child(ConstFirebase.nameOfEvent).setValue(eventName);
+                rootRefAdd.getsliderRef().child(image_name).child(ConstFirebase.url).setValue(imageUrl);
+                rootRefAdd.getsliderRef().child(image_name).child(ConstFirebase.sender).setValue(messageSenderID);
 
                 loadingBar.setMessage("The Image is successfully uploaded");
                 loadingBar.dismiss();
@@ -480,6 +480,7 @@ public class EventGalleryActivity extends AppCompatActivity {
             super.onPreExecute();
             loadingBar.setTitle("Compressing and Uploading your image");
             loadingBar.setMessage("Compressing ...");
+            loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
         }
 

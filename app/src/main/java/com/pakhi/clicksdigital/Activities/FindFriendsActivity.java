@@ -131,11 +131,11 @@ public class FindFriendsActivity extends AppCompatActivity {
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
 
-        UsersRef.child(currentUserId).child("userState")
+        UsersRef.child(currentUserId).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
     }
 

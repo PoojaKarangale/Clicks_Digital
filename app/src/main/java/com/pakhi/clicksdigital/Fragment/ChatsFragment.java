@@ -55,8 +55,8 @@ public class ChatsFragment extends Fragment {
 
         mAuth=FirebaseAuth.getInstance();
         currentUserID=mAuth.getCurrentUser().getUid();
-        ChatsRef=FirebaseDatabase.getInstance().getReference().child("MessagesList").child(currentUserID);
-        UsersRef=FirebaseDatabase.getInstance().getReference().child("Users");
+        ChatsRef=FirebaseDatabase.getInstance().getReference().child(ConstFirebase.messagesList).child(currentUserID);
+        UsersRef=FirebaseDatabase.getInstance().getReference().child(ConstFirebase.users);
 
         chatsList=(RecyclerView) PrivateChatsView.findViewById(R.id.recycler_chats);
         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -106,21 +106,21 @@ public class ChatsFragment extends Fragment {
                                         // after adding image uri to users database
                                     }
 
-                                    final String retName=dataSnapshot.child(ConstFirebase.USER_DETAILS).child("user_name").getValue().toString();
-                                    final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child("user_bio").getValue().toString();
+                                    final String retName=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_NAME).getValue().toString();
+                                    final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_BIO).getValue().toString();
 
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText(retStatus);
 
-                                    if (dataSnapshot.child("userState").hasChild("state")) {
-                                        String state=dataSnapshot.child("userState").child("state").getValue().toString();
-                                        String date=dataSnapshot.child("userState").child("date").getValue().toString();
-                                        String time=dataSnapshot.child("userState").child("time").getValue().toString();
+                                    if (dataSnapshot.child(ConstFirebase.userState).hasChild(Const.state)) {
+                                        String state=dataSnapshot.child(ConstFirebase.userState).child(Const.state).getValue().toString();
+                                        String date=dataSnapshot.child(ConstFirebase.userState).child(Const.date).getValue().toString();
+                                        String time=dataSnapshot.child(ConstFirebase.userState).child(Const.time).getValue().toString();
 
-                                        if (state.equals("online")) {
+                                        if (state.equals(Const.online)) {
                                             // holder.userStatus.setText("online");
                                             holder.online_status.setVisibility(View.VISIBLE);
-                                        } else if (state.equals("offline")) {
+                                        } else if (state.equals(Const.offline)) {
                                             holder.userStatus.setText("Last Seen: " + date + " " + time);
                                         }
                                     } else {
@@ -131,8 +131,8 @@ public class ChatsFragment extends Fragment {
                                         @Override
                                         public void onClick(View view) {
                                             Intent chatIntent=new Intent(getContext(), ChatActivity.class);
-                                            chatIntent.putExtra(ConstFirebase.visitUser, usersIDs);
-                                            chatIntent.putExtra(ConstFirebase.visitUser, retName);
+                                            chatIntent.putExtra(Const.visitUser, usersIDs);
+                                            chatIntent.putExtra(Const.visit_user_name, retName);
                                             //  chatIntent.putExtra("visit_image", retImage[0]);
                                             startActivity(chatIntent);
                                         }

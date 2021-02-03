@@ -132,7 +132,7 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child("Both").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.child(ConstFirebase.Both).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
@@ -200,7 +200,7 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child("Both").orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.child(ConstFirebase.Both).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();

@@ -17,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.pakhi.clicksdigital.Event.CreateEventActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,8 @@ public class EventsFragment extends Fragment {
 
         ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getChildFragmentManager(), 0);
 
-        viewPagerAdapter.addFragment(onlineEventsFragment, "Online");
-        viewPagerAdapter.addFragment(offlineEventsFragment, "Offline");
+        viewPagerAdapter.addFragment(onlineEventsFragment, Const.Online);
+        viewPagerAdapter.addFragment(offlineEventsFragment, Const.Offline);
 
         viewPager.setAdapter(viewPagerAdapter);
     }

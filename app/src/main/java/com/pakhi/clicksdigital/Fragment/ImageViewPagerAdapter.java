@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
@@ -73,10 +74,10 @@ class ImageViewPagerAdapter extends PagerAdapter {
         Log.i("Length of uploader -- ", String.valueOf(uploader.size()));
         Log.i("Uploader ---- ", uploader.get(position));
         rootRef = FirebaseDatabaseInstance.getInstance();
-        rootRef.getUserRef().child(uploader.get(position)).child("DETAILS").addValueEventListener(new ValueEventListener() {
+        rootRef.getUserRef().child(uploader.get(position)).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                upload.setText(snapshot.child("user_name").getValue().toString()+" "+snapshot.child("last_name").getValue().toString());
+                upload.setText(snapshot.child(ConstFirebase.USER_NAME).getValue().toString()+" "+snapshot.child(ConstFirebase.last_name).getValue().toString());
                 //Log.i("snap ----", snapshot.child("user_name").getValue().toString());
             }
 
@@ -98,7 +99,7 @@ class ImageViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, VisitProfileActivity.class);
-                intent.putExtra(ConstFirebase.visitUser, uploader.get(position));
+                intent.putExtra(Const.visitUser, uploader.get(position));
                 context.startActivity(intent);
             }
         });

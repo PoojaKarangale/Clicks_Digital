@@ -73,15 +73,15 @@ public class GroupDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_details);
 
         //group_image_url=getIntent().getStringExtra("image_url");
-        group_name_str = getIntent().getStringExtra(ConstFirebase.group_name);
-        currentGroupId = getIntent().getStringExtra(ConstFirebase.group_id);
+        group_name_str = getIntent().getStringExtra(Const.group_name);
+        currentGroupId = getIntent().getStringExtra(Const.group_id);
 
         pref = SharedPreference.getInstance();
         rootRef = FirebaseDatabaseInstance.getInstance();
         UsersRef = rootRef.getUserRef();
         GroupRef = rootRef.getGroupRef();
 
-        groupMembersRef = GroupRef.child(currentGroupId).child("Users");
+        groupMembersRef = GroupRef.child(currentGroupId).child(ConstFirebase.users);
         db = new UserDatabase(this);
         getUserFromDb();
 
@@ -90,7 +90,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         //seting group info
         // Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
 
-        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
+        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.grpPhotos).child(ConstFirebase.profGrp);
         final StorageReference imgPath = sReference.child(currentGroupId); //+ "." + getFileExtention(picImageUri)
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -119,9 +119,9 @@ public class GroupDetailsActivity extends AppCompatActivity {
                         .placeholder(R.drawable.default_profile_for_groups)
                         .into(app_bar_image);
 
-                date[0] = dataSnapshot.child("date").getValue().toString();
+                date[0] = dataSnapshot.child(ConstFirebase.date).getValue().toString();
 
-                group_creater_id[0] = dataSnapshot.child("uid_creater").getValue().toString();
+                group_creater_id[0] = dataSnapshot.child(Const.uid).getValue().toString();
 
              /*   UsersRef.child(group_creater_id[0])
                         .child(Const.USER_DETAILS)
@@ -217,7 +217,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
     public void setGroupName(View view) {
         GroupRef.child(currentGroupId)
-                .child("group_name")
+                .child(ConstFirebase.group_name)
                 .setValue(get_group_name.getText().toString())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -233,7 +233,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
     public void setDescription(View view) {
         GroupRef.child(currentGroupId)
-                .child("description")
+                .child(Const.desc)
                 .setValue(get_description.getText().toString())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -334,7 +334,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
                     public void onSuccess(final Uri uri) {
 
                         GroupRef.child(currentGroupId)
-                                .child("image_url")
+                                .child(ConstFirebase.IMAGE_URL)
                                 .setValue(uri.toString())
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -362,7 +362,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         groupMembersRef.child(uid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                UsersRef.child(uid).child("groups").child(currentGroupId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                UsersRef.child(uid).child(ConstFirebase.groups1).child(currentGroupId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         exit_group.setEnabled(false);
@@ -373,11 +373,11 @@ public class GroupDetailsActivity extends AppCompatActivity {
                 });
             }
         });
-        GroupRef.child(currentGroupId).child("Users").child(uid).addValueEventListener(new ValueEventListener() {
+        GroupRef.child(currentGroupId).child(ConstFirebase.users).child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    GroupRef.child(currentGroupId).child("Users").child(uid).removeValue();
+                    GroupRef.child(currentGroupId).child(ConstFirebase.users).child(uid).removeValue();
                 }
             }
 
@@ -427,7 +427,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
     public void add_member(View view) {
         Intent addMembersIntent = new Intent(this, AddMembersToGroupActivity.class);
-        addMembersIntent.putExtra(ConstFirebase.current_group_id, currentGroupId);
+        addMembersIntent.putExtra(Const.current_group_id, currentGroupId);
         startActivity(addMembersIntent);
     }
 }

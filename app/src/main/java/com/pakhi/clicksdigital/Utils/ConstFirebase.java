@@ -65,6 +65,9 @@ public class ConstFirebase {
     public static       String isPhoneVerified ="true";
     public static       String profileSet      ="true";
 
+
+
+
     // new names of putExtra
     public final static String certificate = "certificate";
     public final static String visitUser = "visit_user_id";
@@ -83,5 +86,31 @@ public class ConstFirebase {
     public final static String visit_user_name = "visit_user_name";
     public final static String userdata = "userdata";
 
+    // today
 
+    public static       String request_type    ="request_type";
+    public static       String Contact         ="Contact";
+    public static       String userState       ="userState";
+    public static       String state           ="state";
+    public static       String date            ="date";
+    public static       String time            ="time";
+    public static       String last_name       ="last_name";
+    public static       String groups1      ="groups";
+    public static       String EventDetails      ="EventDetails";
+    public static       String startMonth      ="startMonth";
+    public static       String endMonth      ="endMonth";
+
+
+    public static String Events = "Events";
+    public static String eventName1 = "eventName";
+    public static String userName = "user_name";
+    public static String EventPhotos = "Event_photos";
+    public static String nameOfEvent="NameOfEvent";
+    public static String url="URL";
+    public static String sender="sender";
+    public static String Both="Both";
+    public static String admins="admins";
+    public static String grpPhotos="Group_photos";
+    public static String profGrp="Group_profile";
+    public static String userType="user_type";
 }

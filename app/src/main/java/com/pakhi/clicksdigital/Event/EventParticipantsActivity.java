@@ -70,16 +70,16 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
         rootRef=FirebaseDatabaseInstance.getInstance();
 
-        event=(Event) getIntent().getSerializableExtra(ConstFirebase.Event);
+        event=(Event) getIntent().getSerializableExtra(Const.Event);
         eventRef=rootRef.getEventRef();
         usersRef=rootRef.getUserRef();
 
         currentEventRef=eventRef.child(event.getEventType()).child(event.getEventId());
        //............... why this code here
-        currentEventRef.child("EventDetails").addValueEventListener(new ValueEventListener() {
+        currentEventRef.child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                eventtitle=snapshot.child("eventName").getValue().toString();
+                eventtitle=snapshot.child(ConstFirebase.eventName1).getValue().toString();
             }
 
             @Override
@@ -88,7 +88,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
             }
         });
         initializeFields();
-        currentEventRef.child("Participants").addValueEventListener(new ValueEventListener() {
+        currentEventRef.child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -219,7 +219,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
         FirebaseRecyclerOptions<String> options=
                 new FirebaseRecyclerOptions.Builder<String>()
-                        .setQuery(currentEventRef.child("Participants"), String.class)
+                        .setQuery(currentEventRef.child(ConstFirebase.participants), String.class)
                         .build();
         FirebaseRecyclerAdapter<String, EventParticipantsActivity.EventParticipantsViewHolder> adapter=
                 new FirebaseRecyclerAdapter<String, EventParticipantsViewHolder>(options) {
@@ -235,7 +235,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
                                     holder.userName.setText(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString());
 
-                                    myParticipantName.add(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString()+" "+dataSnapshot.child("last_name").getValue().toString());
+                                    myParticipantName.add(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString()+" "+dataSnapshot.child(ConstFirebase.last_name).getValue().toString());
                                     myParticipantNumber.add(dataSnapshot.child(ConstFirebase.MO_NUMBER).getValue().toString());
                                     myParticipantEmail.add(dataSnapshot.child(ConstFirebase.USER_EMAIL).getValue().toString());
 
@@ -266,7 +266,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent chatActivity=new Intent(EventParticipantsActivity.this, ChatActivity.class);
-                                chatActivity.putExtra(ConstFirebase.visitUser, getRef(position).getKey());
+                                chatActivity.putExtra(Const.visitUser, getRef(position).getKey());
                                 startActivity(chatActivity);
                             }
                         });
@@ -275,7 +275,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
                             public void onClick(View view) {
                                 // String visit_user_id = getRef(position).getKey();
                                 Intent profileIntent=new Intent(EventParticipantsActivity.this, VisitProfileActivity.class);
-                                profileIntent.putExtra(ConstFirebase.visitUser, visit_user_id);
+                                profileIntent.putExtra(Const.visitUser, visit_user_id);
                                 startActivity(profileIntent);
                             }
                         });

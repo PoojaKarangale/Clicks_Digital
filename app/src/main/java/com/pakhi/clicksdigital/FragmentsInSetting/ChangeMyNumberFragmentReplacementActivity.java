@@ -44,8 +44,8 @@ public class ChangeMyNumberFragmentReplacementActivity extends AppCompatActivity
     }
     private void sendUserToPhoneVerify() {
         Intent i=new Intent(ChangeMyNumberFragmentReplacementActivity.this, PhoneVerify.class);
-        i.putExtra(ConstFirebase.MO_NUMBER, number);
-        i.putExtra(ConstFirebase.previousActivity, "changeNumber");
+        i.putExtra(Const.MO_NUMBER, number);
+        i.putExtra(Const.previousActivity, "changeNumber");
         startActivity(i);
     }
 

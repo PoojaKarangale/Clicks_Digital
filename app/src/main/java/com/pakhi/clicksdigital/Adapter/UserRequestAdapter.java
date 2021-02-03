@@ -68,7 +68,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
                     //user_name[0] = dataSnapshot.child(Constfirebase.USER_NAME).getValue().toString();
                     holder.displayName.setText(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString());
                     //if (dataSnapshot.hasChild("image_url")) {}
-                    final String image_url=dataSnapshot.child("image_url").getValue().toString();
+                    final String image_url=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
                     Picasso.get().load(image_url).placeholder(R.drawable.profile_image).into(holder.image_profile);
 
                     holder.image_profile.setOnClickListener(new View.OnClickListener() {
@@ -152,8 +152,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         String s=mcontext.getString(R.string.requestAcceptMessage) + " " + groupName;
         String title="Request Accepted";
         Intent resultIntent=new Intent(mcontext, StartActivity.class);
-        resultIntent.putExtra(ConstFirebase.groupName, groupName);
-        resultIntent.putExtra(ConstFirebase.groupId, groupId);
+        resultIntent.putExtra(Const.groupName, groupName);
+        resultIntent.putExtra(Const.groupId, groupId);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Notification.autoCancel(mcontext, title, s, resultIntent, 0);
     }
@@ -168,7 +168,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     private void visitUsersProfile(String userId) {
         Intent profileActivity=new Intent(mcontext, VisitProfileActivity.class);
-        profileActivity.putExtra(ConstFirebase.visitUser, userId);
+        profileActivity.putExtra(Const.visitUser, userId);
         mcontext.startActivity(profileActivity);
     }
 
@@ -184,8 +184,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     }
 
     private void addUserToGroup(String groupId, String userId) {
-        rootRef.getGroupRef().child(groupId).child("Users").child(userId).setValue("");
-        rootRef.getUserRef().child(userId).child("groups").child(groupId).setValue("");
+        rootRef.getGroupRef().child(groupId).child(ConstFirebase.users).child(userId).setValue("");
+        rootRef.getUserRef().child(userId).child(ConstFirebase.groups1).child(groupId).setValue("");
         //databaseReference.child("User_requests").child("request_status").setValue("accepted");
     }
 

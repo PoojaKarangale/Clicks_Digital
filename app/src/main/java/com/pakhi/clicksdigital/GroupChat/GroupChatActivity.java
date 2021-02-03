@@ -60,9 +60,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GroupChatActivity extends AppCompatActivity {
-
+    int i=0;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int PICK_PDF_CODE = 2342;
     static final int REQUESTCODE = 12;
@@ -95,8 +97,8 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat2);
 
-        //currentGroupName=getIntent().getExtras().get("groupName").toString();
-        currentGroupId = getIntent().getExtras().get(ConstFirebase.groupId).toString();
+        currentGroupName=getIntent().getExtras().get("groupName").toString();
+        currentGroupId = getIntent().getExtras().get(Const.groupId).toString();
 
         pref = SharedPreference.getInstance();
         currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -117,7 +119,7 @@ public class GroupChatActivity extends AppCompatActivity {
         //currentGroupName = "Name Here";
         group_name.setText(currentGroupName);
 
-        GroupIdRef.child("Users").addValueEventListener(new ValueEventListener() {
+        GroupIdRef.child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.child(currentUserID).exists()) {
@@ -161,12 +163,44 @@ public class GroupChatActivity extends AppCompatActivity {
                 String message = userMessageInput.getText().toString();
 
                 if (TextUtils.isEmpty(message)) {
+                    showToast("first write your message...");
+                } else {
+
+                    String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+                    Pattern p;
+                    Matcher m = null;
+                    String[] words = message.split(" ");
+                    i=0;
+                    for (String word : words) {
+                        p = Pattern.compile(URL_REGEX);
+                        m = p.matcher(word);
+
+                        if(m.find()) {
+                            Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
+                            i=1;
+                            break;
+                        }
+
+                    }
+                    userMessageInput.setText("");
+                    if(i==1){
+                        //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
+                        SaveMessageInfoToDatabase("url", message);
+                    }else{
+                        //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
+                        SaveMessageInfoToDatabase("text", message);
+                    }
+
+                }
+
+                /*if (TextUtils.isEmpty(message)) {
                     //Toast.makeText(GroupChatActivity.this, "Please write message first...", Toast.LENGTH_SHORT).show();
                     showToast("Please write message first...");
                 } else {
+
                     userMessageInput.setText("");
                     SaveMessageInfoToDatabase("text", message);
-                }
+                }*/
             }
         });
         permissions = new PermissionsHandling(this);
@@ -373,9 +407,9 @@ ChildEventListener mChildEventListener ;
 
     private void sendUserToGroupDetails(String s) {
         Intent groupMembersIntent = new Intent(GroupChatActivity.this, GroupDetailsActivity.class);
-        groupMembersIntent.putExtra(ConstFirebase.group_id, currentGroupId);
+        groupMembersIntent.putExtra(Const.group_id, currentGroupId);
         //groupMembersIntent.putExtra("image_url", s);
-        groupMembersIntent.putExtra(ConstFirebase.group_name, currentGroupName);
+        groupMembersIntent.putExtra(Const.group_name, currentGroupName);
 
         startActivity(groupMembersIntent);
     }
@@ -452,7 +486,7 @@ ChildEventListener mChildEventListener ;
     private void InitializeFields() {
         mToolbar = findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(currentGroupName);
+        //getSupportActionBar().setTitle(currentGroupName);
 
         SendMessageButton = findViewById(R.id.send_message_button);
         userMessageInput = findViewById(R.id.input_group_message);
@@ -817,11 +851,11 @@ ChildEventListener mChildEventListener ;
         saveCurrentTime = currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap = new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
 
-        UsersRef.child(currentUserID).child("userState")
+        UsersRef.child(currentUserID).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }

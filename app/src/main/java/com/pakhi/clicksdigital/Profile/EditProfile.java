@@ -92,7 +92,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
 
         Intent intent=getIntent();
-        user=(User) intent.getSerializableExtra(ConstFirebase.userdata);
+        user=(User) intent.getSerializableExtra(Const.userdata);
 
         pref=SharedPreference.getInstance();
         userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -293,22 +293,22 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         userItems.put(ConstFirebase.IMAGE_URL, picImageUri.toString());
         userItems.put(ConstFirebase.USER_TYPE, user_type);
         userItems.put(ConstFirebase.CITY, city);
-        userItems.put("expectations_from_us", expectations_from_us);
-        userItems.put("experiences", experiences);
-        userItems.put("gender", gender);
-        userItems.put("number", number);
-        userItems.put("offer_to_community", offer_to_community);
-        userItems.put("speaker_experience", speaker_experience);
-        userItems.put("email", email_str);
-        userItems.put("weblink", weblink_str);
-        userItems.put("working", working);
-        userItems.put("last_name", last_name_str);
-        userItems.put("company", company_str);
+        userItems.put(Const.expeactations, expectations_from_us);
+        userItems.put(Const.expireince, experiences);
+        userItems.put(Const.GENDER, gender);
+        userItems.put(Const.MO_NUMBER, number);
+        userItems.put(Const.offerToComm, offer_to_community);
+        userItems.put(Const.speakerExp, speaker_experience);
+        userItems.put(Const.email, email_str);
+        userItems.put(Const.webLink, weblink_str);
+        userItems.put(Const.working, working);
+        userItems.put(Const.last_name, last_name_str);
+        userItems.put(Const.company, company_str);
 
         if (isCertificatesAdded) {
 
             final int[] numberOfCertificate={0};
-            reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
+            reference.child(userid).child(ConstFirebase.certificate).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -316,7 +316,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                         numberOfCertificate[0]=(int) dataSnapshot.getChildrenCount();
 
                     for (Certificates c : certificates) {
-                        reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
+                        reference.child(userid).child(ConstFirebase.certificate).child(String.valueOf(numberOfCertificate[0])).setValue(c);
                         numberOfCertificate[0]++;
                     }
                     certificates.clear();
@@ -486,7 +486,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 case REQUEST_CODE_FOR_CERTIFICATE:
                     Certificates certificate;
                     isCertificatesAdded=true;
-                    certificate=(Certificates) data.getSerializableExtra("certificate");
+                    certificate=(Certificates) data.getSerializableExtra(ConstFirebase.certificate);
                     certificates.add(certificate);
                     showAddedCertificates(certificate, certificates.size());
                     break;
@@ -530,13 +530,13 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onStart() {
         super.onStart();
-        updateUserStatus("online");
+        updateUserStatus(Const.online);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        updateUserStatus("Offline");
+        updateUserStatus(Const.offline);
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
@@ -554,11 +554,11 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+        onlineStateMap.put(Const.time, saveCurrentTime);
+        onlineStateMap.put(Const.date, saveCurrentDate);
+        onlineStateMap.put(Const.state, state);
 
-        rootRef.getUserRef().child(userid).child("userState")
+        rootRef.getUserRef().child(userid).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
 
     }
