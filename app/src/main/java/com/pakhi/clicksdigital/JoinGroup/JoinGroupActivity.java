@@ -65,7 +65,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         setUpRecycleView();
 
         SearchView searchView=findViewById(R.id.search_bar);
-
+        searchGroups("");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -110,10 +110,11 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
        /* Query query=rootRef.getGroupRef().orderByChild(Const.GROUP_NAME)
                 .startAt(s)
                 .endAt(s + "\uf8ff");*/
+        groups.clear();
         rootRef.getGroupRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                groups.clear();
+
                 for (final DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                     Log.d("SEARCH GROUP","--------------"+snapshot1.getKey()+" "+snapshot1.getValue());
 
@@ -126,6 +127,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                                 if(group.getGroup_name().toLowerCase().contains(s))
                                 groups.add(group);
                             }
+                            groupAdapter.notifyDataSetChanged();
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -148,7 +150,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onStart() {
         super.onStart();
-        searchGroups("");
+        //  searchGroups("");
         // updateUserStatus("online");
     }
 

@@ -57,12 +57,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-/*import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;*/
+/*
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+*/
 
 public class SetProfileActivity extends AppCompatActivity implements View.OnClickListener {
-
-
 
     public boolean isConnected() {
         boolean connected = false;
@@ -76,7 +76,6 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         }
         return connected;
     }
-
 
     final static int REQUEST_CODE_FOR_CERTIFICATE=3, GET_CITY_CODE=100;
     private static final String TAG         ="ProfileActivity";
@@ -603,7 +602,6 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         protected void onPostExecute(String result) {
 //            if (result.equals("Executed"))
 //                sendUserToStartActivity();
-
         }
     }
 }

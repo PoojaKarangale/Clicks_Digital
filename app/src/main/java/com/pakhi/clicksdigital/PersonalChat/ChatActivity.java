@@ -225,7 +225,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void IntializeControllers() {
-
       /*  ChatToolBar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(ChatToolBar);
 
@@ -236,7 +235,6 @@ public class ChatActivity extends AppCompatActivity {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View actionBarView = layoutInflater.inflate(R.layout.custom_chat_bar, null);
         actionBar.setCustomView(actionBarView);*/
-
         messageScroll = findViewById(R.id.scroll_view);
         back_btn = findViewById(R.id.back_btn);
         userName = (TextView) findViewById(R.id.custom_profile_name);
@@ -423,6 +421,7 @@ public class ChatActivity extends AppCompatActivity {
 
         if (notify) {
            // Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, "username + \": \" + message", "New Message");
+            Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, messageSenderName + ": " + message, "New Message");
         }
         notify = false;
     }
@@ -631,8 +630,10 @@ public class ChatActivity extends AppCompatActivity {
                     public void onSuccess(final Uri uri) {
                         Log.d("ChatActivity", "-----------uploading image----------------------" + uri.toString());
                         SendMessage("image", uri.toString());
+
                     }
                 });
+
             }
         });
     }

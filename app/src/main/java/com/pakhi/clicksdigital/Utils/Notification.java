@@ -5,14 +5,78 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.APIService;
+import com.pakhi.clicksdigital.Notifications.Client;
+import com.pakhi.clicksdigital.Notifications.Data;
+import com.pakhi.clicksdigital.Notifications.MyResponse;
+import com.pakhi.clicksdigital.Notifications.Sender;
+import com.pakhi.clicksdigital.Notifications.Token;
 import com.pakhi.clicksdigital.R;
 
-public class Notification {
-    public static boolean isNotificationOn=false;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    public static void autoCancel(Context context, String title, String message, Intent intent, int notificationID) {
+public class Notification {
+    public static boolean isNotificationOn = false;
+
+    public static void sendPersonalNotifiaction(final String messageSenderID, final String receiverID, final String body, final String title) {
+        DatabaseReference tokens = FirebaseDatabaseInstance.getInstance().getTokensRef();
+        Query query = tokens.orderByKey().equalTo(receiverID);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Token token = snapshot.getValue(Token.class);
+
+                    /* Intent resultIntent = new Intent(getApplicationContext(), ChatActivity.class);
+                    resultIntent.putExtra("visit_user_id", user);
+                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    */
+
+                    Data data = new Data(messageSenderID, R.drawable.logo, body, title,
+                            receiverID);
+
+                    Sender sender = new Sender(data, token.getToken());
+                    APIService apiService;
+                    apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200) {
+                                        if (response.body().success != 1) {
+                                            //Toast.makeText(ChatActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+  /*  public static void autoCancel(Context context, String title, String message, Intent intent, int notificationID) {
 
         PendingIntent pendingIntent=PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder=new NotificationCompat.Builder(context, "WorldDigtal") //.CHANNEL_ID
@@ -42,7 +106,7 @@ public class Notification {
 
     }
 
-
+*/
     /*Intent intent = new Intent(this, AlertDetails.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

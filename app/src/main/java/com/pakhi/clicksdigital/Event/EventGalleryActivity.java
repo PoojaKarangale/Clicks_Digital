@@ -59,9 +59,6 @@ import java.util.List;
 public class EventGalleryActivity extends AppCompatActivity {
     static final int REQUESTCODE = 12;
     static int REQUEST_CODE = 1;
-    //  GridView            gridView;
-   /* List<String> imageUrls =new ArrayList<>();
-    List<String> imageNames=new ArrayList<>();*/
     List<Image> images = new ArrayList<>();
     String name;
     ImageView add_photo;
@@ -121,15 +118,7 @@ public class EventGalleryActivity extends AppCompatActivity {
         initializeFields();
 
         getAllImages();
-        /* gridView.setAdapter(new ImageAdapter(imageUrls, imageNames, this));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item_pos=imageUrls.get(position);
-                ShowDialogBox(item_pos);
-            }
-        });
-        */
+
         add_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,50 +209,6 @@ public class EventGalleryActivity extends AppCompatActivity {
         });
     }
 
-    /*
-    public void ShowDialogBox(final String item_pos) {
-        final Dialog dialog=new Dialog(this);
-
-        dialog.setContentView(R.layout.custom_dialog_for_gallery);
-
-        //Getting custom dialog views
-        // TextView image_name = dialog.findViewById(R.id.txt_Image_name);
-        ImageView image=dialog.findViewById(R.id.img);
-        Button btn_Full=dialog.findViewById(R.id.btn_full);
-        Button btn_Close=dialog.findViewById(R.id.btn_close);
-
-        // String title = imageNames(item_pos);
-
-        //extracting name
-       int index = title.indexOf("/");
-        String name = title.substring(index + 1, title.length());
-        image_name.setText(name);
-
-
-
-        // image.setImageResource(item_pos);
-
-        Picasso.get().load(item_pos).placeholder(R.drawable.profile_image).into(image);
-        btn_Close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        btn_Full.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                EnlargedImage.enlargeImage(item_pos,getApplicationContext());
-
-            }
-        });
-        dialog.show();
-
-    }
-*/
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -279,51 +224,15 @@ public class EventGalleryActivity extends AppCompatActivity {
     private void uploadImage(final Uri imageUri) {
         Bitmap mbitmap = null;
         try {
-
-             mbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-            //mbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), params[0]);
+            mbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
         } catch (IOException e) {
-            Log.i("The exception --- ", e.getMessage());
+           // Log.i("The exception --- ", e.getMessage());
         }
 
         BackGroundImageResize resize = new BackGroundImageResize(mbitmap);
         resize.execute(imageUri);
 
-        /*  StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child("Event_photos").child(event.getEventId());
-        final String image_name = System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
-        final StorageReference imgPath = sReference.child(image_name);
-        imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(final Uri uri) {
-
-                        SaveUrlToDatabase(uri.toString(), image_name);
-
-                    }
-                });
-            }
-        });*/
-
-        /*  final StorageReference sliderRef = FirebaseStorageInstance.getInstance().getRootRef().child("F").child(image_name);
-            //        UploadTask uploadTask = sliderRef.putBytes(mUploadBytes);
-        sliderRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                sliderRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        addToRTDB(uri.toString(), image_name);
-                    }
-                });
-            }
-        });*/
-
-
     }
-
 
     private void SaveUrlToDatabase(String imageUrl, String image_name) {
 
@@ -337,7 +246,6 @@ public class EventGalleryActivity extends AppCompatActivity {
         });
     }
 
-
     public static byte[] getBytesFromBitmap(Bitmap bitmap, int quality) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, quality, stream);
@@ -349,8 +257,6 @@ public class EventGalleryActivity extends AppCompatActivity {
         StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.EventPhotos).child(event.getEventId());
         final String image_name = System.currentTimeMillis() + ""; //+ "." + getFileExtention(imageUri
         final StorageReference imgPath = sReference.child(image_name);
-
-        // final UploadTask uploadTask1 = imgPath.putBytes(mUploadBytes);
 
         imgPath.putBytes(mUploadBytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -367,80 +273,11 @@ public class EventGalleryActivity extends AppCompatActivity {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
 
-                // double currentprogress = (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-
                 mProgress = 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount();
                 loadingBar.setMessage("Uploading ... " + (int) mProgress + "%");
 
             }
         });
-
-
-
-    /*    uploadTask1.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                final String[] fireBaseUri = new String[1];
-
-                final Task<Uri> res = taskSnapshot.getStorage().getDownloadUrl();
-
-                res.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        fireBaseUri[0] = uri.toString();
-                    }
-                });
-                //String fireBaseUri = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-                SaveUrlToDatabase(fireBaseUri[0], image_name);
-                addToRTDB(fireBaseUri[0], image_name);
-
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                double currentprogress = (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-
-                mProgress = 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount();
-                loadingBar.setMessage("Uploading ... " + (int) mProgress + "%");
-
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
-        */
-
-
-           /*   final StorageReference sliderRef = FirebaseStorageInstance.getInstance().getRootRef().child("Slider_Images").child(image_name);
-        UploadTask uploadTask = sliderRef.putBytes(mUploadBytes);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_LONG).show();
-                String fireBaseUri = taskSnapshot.getUploadSessionUri().toString();
-                addToRTDB(fireBaseUri, image_name);
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Couldnt upload", Toast.LENGTH_LONG).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                double currentprogress = (100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                if (currentprogress > (mProgress + 15)) {
-                    mProgress = 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount();
-                    Toast.makeText(getApplicationContext(), String.valueOf(mProgress), Toast.LENGTH_LONG).show();
-                }
-            }
-        });*/
 
     }
 

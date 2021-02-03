@@ -330,5 +330,4 @@ public class StartActivity extends AppCompatActivity {
             return fragmentTitle.get(position);
         }
     }
-
 }

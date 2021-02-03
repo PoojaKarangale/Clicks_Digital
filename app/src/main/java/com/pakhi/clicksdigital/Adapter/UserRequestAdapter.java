@@ -21,7 +21,6 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -148,7 +147,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         builder.show();
     }*/
 
-    private void sendUserTheWelcomeMessage(String groupName, String groupId) {
+   /* private void sendUserTheWelcomeMessage(String groupName, String groupId) {
         String s=mcontext.getString(R.string.requestAcceptMessage) + " " + groupName;
         String title="Request Accepted";
         Intent resultIntent=new Intent(mcontext, StartActivity.class);
@@ -158,6 +157,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         Notification.autoCancel(mcontext, title, s, resultIntent, 0);
     }
 
+
     private void sendUserTheRejectionMessage(String groupName) {
         String s=mcontext.getString(R.string.requestRejectionMessage) + " " + groupName;
         String title="Request rejected";
@@ -165,7 +165,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Notification.autoCancel(mcontext, title, s, resultIntent, 0);
     }
-
+*/
     private void visitUsersProfile(String userId) {
         Intent profileActivity=new Intent(mcontext, VisitProfileActivity.class);
         profileActivity.putExtra(Const.visitUser, userId);

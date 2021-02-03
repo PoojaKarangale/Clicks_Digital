@@ -114,7 +114,7 @@ public class OnlineEventsFragment extends Fragment {
     private void removeOldEvents() {
 
         final Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -2);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
 
         Timestamp ts = new Timestamp(calendar.getTimeInMillis() / 1000L);
         final Date twoMonthAgo = new Date(ts.getTime());
@@ -133,7 +133,6 @@ public class OnlineEventsFragment extends Fragment {
                         if (eventDate.before(twoMonthAgo)) {
                             dataSnapshot.getRef().removeValue();
                         }
-
                     }
                 }
             }

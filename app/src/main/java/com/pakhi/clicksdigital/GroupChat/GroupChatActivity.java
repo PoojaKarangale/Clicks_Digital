@@ -64,7 +64,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GroupChatActivity extends AppCompatActivity {
-    int i=0;
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int PICK_PDF_CODE = 2342;
     static final int REQUESTCODE = 12;
@@ -91,14 +91,15 @@ public class GroupChatActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private ProgressDialog progressDialog;
     private TextView group_name;
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat2);
 
-        currentGroupName=getIntent().getExtras().get("groupName").toString();
-        currentGroupId = getIntent().getExtras().get(Const.groupId).toString();
+        //currentGroupName=getIntent().getExtras().get("groupName").toString();
+        currentGroupId = getIntent().getExtras().get(ConstFirebase.groupId).toString();
 
         pref = SharedPreference.getInstance();
         currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -115,9 +116,25 @@ public class GroupChatActivity extends AppCompatActivity {
         getUserFromDb();
         GetUserInfo();
 
+        GroupIdRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    currentGroupName = snapshot.child(ConstFirebase.group_name).getValue().toString();
+                    group_name.setText(currentGroupName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         InitializeFields();
         //currentGroupName = "Name Here";
-        group_name.setText(currentGroupName);
+        // group_name.setText(currentGroupName);
 
         GroupIdRef.child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
             @Override
@@ -135,6 +152,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
+
 
         final String[] image_url = new String[1];
         FirebaseStorageInstance storageRootRef = FirebaseStorageInstance.getInstance();
@@ -167,26 +185,27 @@ public class GroupChatActivity extends AppCompatActivity {
                 } else {
 
                     String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+
                     Pattern p;
                     Matcher m = null;
                     String[] words = message.split(" ");
-                    i=0;
+                    i = 0;
                     for (String word : words) {
                         p = Pattern.compile(URL_REGEX);
                         m = p.matcher(word);
 
-                        if(m.find()) {
+                        if (m.find()) {
                             Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
-                            i=1;
+                            i = 1;
                             break;
                         }
 
                     }
                     userMessageInput.setText("");
-                    if(i==1){
+                    if (i == 1) {
                         //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
                         SaveMessageInfoToDatabase("url", message);
-                    }else{
+                    } else {
                         //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
                         SaveMessageInfoToDatabase("text", message);
                     }
@@ -197,7 +216,6 @@ public class GroupChatActivity extends AppCompatActivity {
                     //Toast.makeText(GroupChatActivity.this, "Please write message first...", Toast.LENGTH_SHORT).show();
                     showToast("Please write message first...");
                 } else {
-
                     userMessageInput.setText("");
                     SaveMessageInfoToDatabase("text", message);
                 }*/
@@ -214,15 +232,6 @@ public class GroupChatActivity extends AppCompatActivity {
 
         String user_type = pref.getData(SharedPreference.user_type, getApplicationContext());
 
-       /* if (user_type.equals("admin")) {
-            requesting_users.setVisibility(View.VISIBLE);
-        }
-        requesting_users.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToRequestsActivity();
-            }
-        });*/
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,143 +244,9 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startTopicRaiseFagmentForResult();
-                // Log.d("TESTINGTOPICSTART","---------------------topic 2"+topic_str);
             }
         });
 
-        //define limitation out of method
-
-/*
-ChildEventListener mChildEventListener ;
-        groupChatRefForCurrentGroup.keepSynced(true);
-        mChildEventListener = groupChatRefForCurrentGroup.limitToLast((int) limitation)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s)
-                    {
-                        Message messages = dataSnapshot.getValue(Message.class);
-                        messagesList.add(messages);
-                        messageAdapter.notifyDataSetChanged();
-                        linearLayoutManager.setStackFromEnd(true);
-
-                      */
-/*  if(time_fired > 2 && !mSentMessage){
-                          //  userMessageInput.setVisibility(View.VISIBLE);
-                          //  mFab.show();
-                        }
-
-                        if(!userMessagesList.canScrollVertically(1)){
-                           // userMessageInput.setVisibility(View.GONE);
-                          //  mFab.hide();
-                        }*/
-
-        /*
-                        if(mSentMessage){
-                            mSentMessage = false;
-                        }
-
-                        time_fired++;
-
-
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s)
-                    {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot)
-                    {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s)
-                    {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
-
-        //When user scrolls up new data gets added
-
-        userMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                if(!recyclerView.canScrollVertically(-1)){
-                    if(!limitReached) {
-                        limitation += 12;
-
-                        */
-        /*
-        DatabaseReference tempRef = FirebaseDatabase.getInstance().getReference().child("Messages");
-                        tempRef.child(mMessageSenderID).child(mMessageReceiverID)
-                                groupChatRefForCurrentGroup.limitToLast((int) limitation).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (limitation > snapshot.getChildrenCount()) {
-                                    limitation = num_of_messages;
-                                    limitReached = true;
-
-                                    DatabaseReference temp = FirebaseDatabase.getInstance().getReference().child("Messages");
-                                    temp.child(mMessageSenderID).child(mMessageReceiverID);
-
-                                    groupChatRefForCurrentGroup.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            messagesList.clear();
-                                            for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                                                Message messages = snapshot1.getValue(Message.class);
-                                                messagesList.add(messages);
-                                            }
-                                            messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-
-                                }
-                                messagesList.clear();
-                                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                                    Message messages = snapshot1.getValue(Message.class);
-                                    messagesList.add(messages);
-                                    //messageAdapter.notifyDataSetChanged(); BEFORE
-                                }
-                                messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if(dy < -20){
-                  //  mFab.show();
-                }
-            }
-        });*/
     }
 
     private void startTopicRaiseFagmentForResult() {
@@ -486,7 +361,7 @@ ChildEventListener mChildEventListener ;
     private void InitializeFields() {
         mToolbar = findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
-        //getSupportActionBar().setTitle(currentGroupName);
+        //  getSupportActionBar().setTitle(currentGroupName);
 
         SendMessageButton = findViewById(R.id.send_message_button);
         userMessageInput = findViewById(R.id.input_group_message);
@@ -507,16 +382,6 @@ ChildEventListener mChildEventListener ;
 
         userMessagesList.setAdapter(messageAdapter);
 
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setBackground(getResources().getDrawable(R.drawable.icn_actionbar_background));
-        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        mTitle.setText(toolbar_text);
-        mTitle.setTypeface(Typeface.DEFAULT_BOLD);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }*/
 
     }
 
@@ -524,7 +389,7 @@ ChildEventListener mChildEventListener ;
     protected void onRestart() {
         super.onRestart();
 
-      /*  new Handler().post(new Runnable() {
+        /*  new Handler().post(new Runnable() {
 
             @Override
             public void run() {
@@ -537,6 +402,7 @@ ChildEventListener mChildEventListener ;
                 startActivity(intent);
             }
         });*/
+
         /*  if (Build.VERSION.SDK_INT >= 11) {
             recreate();
         } else {
@@ -607,6 +473,8 @@ ChildEventListener mChildEventListener ;
         if (messageType == "topic") {
             saveSeparateTopicNode(messagekEY);
         }
+
+
         progressDialog.dismiss();
     }
 
@@ -860,50 +728,4 @@ ChildEventListener mChildEventListener ;
 
     }
 
-   /* public class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView no_of_likes, senderMessageText, receiverMessageText, senderDate, receiverDate, receiver_name, isSeen, publisher_name, topic_text, topic_date_time, reply, no_of_replies;
-        public CircleImageView receiverProfileImage;
-
-        public ImageView messageSenderPicture, messageReceiverPicture, download_image_receiver, download_pdf_receiver, like;
-        LinearLayout receiverlayout, senderlayout, receiverLayoutPdf, senderLayoutPdf, group_topic_layout;
-
-        public MessageViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            //left side box
-            receiverlayout=itemView.findViewById(R.id.receiver_message_layout);
-            receiverProfileImage=(CircleImageView) itemView.findViewById(R.id.message_profile_image);
-            receiver_name=itemView.findViewById(R.id.receiver_name);
-            receiverMessageText=(TextView) itemView.findViewById(R.id.receiver_message_text);
-            receiverDate=itemView.findViewById(R.id.receiver_message_date_time);
-
-            download_image_receiver=itemView.findViewById(R.id.download_image_receiver);
-            messageReceiverPicture=itemView.findViewById(R.id.message_receiver_image_view);
-
-            receiverLayoutPdf=itemView.findViewById(R.id.layout_recevier_pdf);
-            download_pdf_receiver=itemView.findViewById(R.id.download_pdf);
-
-            //right side box
-            senderlayout=itemView.findViewById(R.id.sender_message_layout);
-            senderMessageText=(TextView) itemView.findViewById(R.id.sender_messsage_text);
-            senderDate=itemView.findViewById(R.id.sender_messsage_date_time);
-
-            senderLayoutPdf=itemView.findViewById(R.id.layout_sender_pdf);
-            messageSenderPicture=itemView.findViewById(R.id.message_sender_image_view);
-
-            //right side
-            isSeen=itemView.findViewById(R.id.isSeen);
-            isSeen.setText("deliverd");
-
-            //Discussion Topic
-            group_topic_layout=itemView.findViewById(R.id.group_topic_layout);
-            publisher_name=itemView.findViewById(R.id.publisher_name);
-            topic_text=itemView.findViewById(R.id.topic_text);
-            topic_date_time=itemView.findViewById(R.id.topic_date_time);
-            reply=itemView.findViewById(R.id.reply);
-            no_of_replies=itemView.findViewById(R.id.no_of_replies);
-            like=itemView.findViewById(R.id.like);
-            no_of_likes=itemView.findViewById(R.id.no_of_likes);
-        }
-    }*/
 }

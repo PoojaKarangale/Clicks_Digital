@@ -132,6 +132,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             String body=remoteMessage.getData().get("body");
             String user=remoteMessage.getData().get("user");
             String icon=remoteMessage.getData().get("icon");
+
             Intent resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
             resultIntent.putExtra("visit_user_id", user);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

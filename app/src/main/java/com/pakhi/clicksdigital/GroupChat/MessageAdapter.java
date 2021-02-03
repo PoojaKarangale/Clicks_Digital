@@ -57,8 +57,8 @@ import java.util.regex.Pattern;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> /*implements MyTaskInformer*/ {
-    int i=0;
+public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+ int i=0;
     SharedPreference pref;
     String currentUserId;
     FirebaseDatabaseInstance rootRef;
@@ -70,7 +70,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_ME = 1;
     private static final int VIEW_TYPE_OTHER = 2;
     private static final int VIEW_TYPE_TOPIC = 3;
-    // WebUrl webUrlObj;
+
     public MessageAdapter(List<Message> userMessagesList, String chatType, Context context) {
         this.userMessagesList = userMessagesList;
         this.chatType = chatType;
@@ -178,7 +178,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.receiverMessageText.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
         messageViewHolder.receiverLayoutPdf.setVisibility(View.GONE);
-        // messageViewHolder.download_pdf_receiver.setVisibility(View.GONE);
+       // messageViewHolder.download_pdf_receiver.setVisibility(View.GONE);
         messageViewHolder.download_image_receiver.setVisibility(View.GONE);
 
         usersRef = rootRef.getUserRef().child(message.getFrom()).child(Const.USER_DETAILS);
@@ -521,17 +521,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return VIEW_TYPE_OTHER;
         }
     }
-
-  /*  @Override
-    public void onTaskDone(WebUrl output) {
-    output.viewHolder.senderUrlTitle.setText(output.title);
-    output.viewHolder.senderUrlText.setText(output.description);
-    //output.viewHolder.senderUrlTitle.setText(output.title);
-        if(!TextUtils.isEmpty(output.imageUrl.toString())){
-            Picasso.get().load(output.imageUrl).into(output.viewHolder.senderUrlImage);
-        }
-        else output.viewHolder.senderUrlImage.setVisibility(View.GONE);
-    }*/
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
