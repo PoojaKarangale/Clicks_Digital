@@ -58,7 +58,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
- int i=0;
+    int i = 0;
     SharedPreference pref;
     String currentUserId;
     FirebaseDatabaseInstance rootRef;
@@ -150,7 +150,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 messageViewHolder.senderLayoutUrl.setVisibility(View.VISIBLE);
                 messageViewHolder.senderUrlText.setText(message.getMessage());
 
-                new URLAsynk().execute(new Async(messageViewHolder,message.getMessage()));
+                new URLAsynk().execute(new Async(messageViewHolder, message.getMessage(),VIEW_TYPE_ME));
                 // new URLAsynk(this).execute(new Async(messageViewHolder,message.getMessage()));
                 // new URLAsynk().execute(message.getMessage());
 
@@ -178,8 +178,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.receiverMessageText.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
         messageViewHolder.receiverLayoutPdf.setVisibility(View.GONE);
-       // messageViewHolder.download_pdf_receiver.setVisibility(View.GONE);
+        // messageViewHolder.download_pdf_receiver.setVisibility(View.GONE);
         messageViewHolder.download_image_receiver.setVisibility(View.GONE);
+
+        messageViewHolder.LayoutUrl.setVisibility(View.GONE);
 
         usersRef = rootRef.getUserRef().child(message.getFrom()).child(Const.USER_DETAILS);
 
@@ -215,9 +217,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 break;
             case "url":
                 messageViewHolder.LayoutUrl.setVisibility(View.VISIBLE);
-                messageViewHolder.UrlText.setText(message.getMessage());
+                messageViewHolder.urlText.setText(message.getMessage());
 
-                new URLAsynkRec().execute(new AsyncRec(messageViewHolder,message.getMessage()));
+              //  new URLAsynkRec().execute(new AsyncRec(messageViewHolder, message.getMessage()));
+
+                new URLAsynk().execute(new Async(messageViewHolder, message.getMessage(),VIEW_TYPE_OTHER));
 
                 // messageViewHolder.senderLayoutUrl.setVisibility(View.VISIBLE);
                 //  messageViewHolder.senderUrlText.setText(message.getMessage());
@@ -251,31 +255,37 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void configureTopicViewHolder(final TopicViewHolder messageViewHolder, int position, final Message message) {
         usersRef = rootRef.getUserRef().child(message.getFrom()).child(Const.USER_DETAILS);
+        messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
+        messageViewHolder.topic_text.setVisibility(View.GONE);
+
 
         //new Topic URL implementation
         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
         Pattern p;
         Matcher m = null;
         String[] words = message.getMessage().split(" ");
-        i=0;
+        i = 0;
         for (String word : words) {
             p = Pattern.compile(URL_REGEX);
             m = p.matcher(word);
 
-            if(m.find()) {
+            if (m.find()) {
                 Toast.makeText(context, "The String contains URL", Toast.LENGTH_LONG).show();
-                i=1;
+                i = 1;
                 break;
             }
 
-        }if(i==1){
+        }
+        if (i == 1) {
             messageViewHolder.topic_text.setVisibility(View.GONE);
             messageViewHolder.topicLayoutUrl.setVisibility(View.VISIBLE);
             messageViewHolder.topicUrlText.setText(message.getMessage());
 
-            new URLAsynkTopic().execute(new AsyncTopic(messageViewHolder,message.getMessage()));
+          //  new URLAsynkTopic().execute(new AsyncTopic(messageViewHolder, message.getMessage()));
+            new URLAsynk().execute(new Async(messageViewHolder, message.getMessage(),VIEW_TYPE_TOPIC));
 
-        }else{
+        } else {
+            messageViewHolder.topic_text.setVisibility(View.VISIBLE);
             messageViewHolder.topic_text.setText(message.getMessage());
         }
 
@@ -524,8 +534,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView senderMessageText, senderDate, isSeen, senderUrlTitle, senderUrlDesc, senderUrlText;
-        public ImageView messageSenderPicture, senderUrlImage;
+        public TextView senderMessageText, senderDate, isSeen, urlTitle, urlDesc, senderUrlText;
+        public ImageView messageSenderPicture, urlImage;
         public LinearLayout senderLayoutPdf, senderLayoutUrl;
 
         public MessageViewHolder(@NonNull View itemView) {
@@ -541,18 +551,18 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             isSeen.setText("deliverd");
 
             senderLayoutUrl = itemView.findViewById(R.id.layout_url_sender);
-            senderUrlImage = itemView.findViewById(R.id.url_image_sender);
-            senderUrlTitle = itemView.findViewById(R.id.title_of_url_sender);
-            senderUrlDesc = itemView.findViewById(R.id.desc_of_url_sender);
+            urlImage = itemView.findViewById(R.id.url_image_sender);
+            urlTitle = itemView.findViewById(R.id.title_of_url_sender);
+            urlDesc = itemView.findViewById(R.id.desc_of_url_sender);
             senderUrlText = itemView.findViewById(R.id.url_text);
         }
     }
 
     public class MessageViewHolderOther extends RecyclerView.ViewHolder {
-        public TextView receiverMessageText, receiverDate, receiver_name,UrlTitle, UrlDesc, UrlText;
+        public TextView receiverMessageText, receiverDate, receiver_name, urlTitle, urlDesc, urlText;
 
         public ImageView messageReceiverPicture, download_image_receiver,
-                download_pdf_receiver,UrlImage;
+                download_pdf_receiver, urlImage;
         LinearLayout receiverLayoutPdf, receiverLayoutImage, LayoutUrl;
 
         public MessageViewHolderOther(@NonNull View itemView) {
@@ -573,10 +583,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             //url
             LayoutUrl = itemView.findViewById(R.id.layout_url_rec);
-            UrlImage = itemView.findViewById(R.id.url_image_rec);
-            UrlTitle = itemView.findViewById(R.id.title_of_url_rec);
-            UrlDesc = itemView.findViewById(R.id.desc_of_url_rec);
-            UrlText = itemView.findViewById(R.id.url_text_rec);
+            urlImage = itemView.findViewById(R.id.url_image_rec);
+            urlTitle = itemView.findViewById(R.id.title_of_url_rec);
+            urlDesc = itemView.findViewById(R.id.desc_of_url_rec);
+            urlText = itemView.findViewById(R.id.url_text_rec);
 
 
         }
@@ -584,10 +594,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class TopicViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView no_of_likes, publisher_name, topic_text, topicUrlTitle, topicUrlDesc, topicUrlText,
+        public TextView no_of_likes, publisher_name, topic_text, urlTitle, urlDesc, topicUrlText,
                 topic_date_time, reply, no_of_replies;
         public CircleImageView receiverProfileImage;
-        public ImageView like, topicUrlImage;
+        public ImageView like, urlImage;
         public LinearLayout topicLayoutUrl;
 
         public TopicViewHolder(@NonNull View itemView) {
@@ -604,9 +614,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             //URL
             topicLayoutUrl = itemView.findViewById(R.id.layout_url_topic);
-            topicUrlImage = itemView.findViewById(R.id.url_image_topic);
-            topicUrlTitle = itemView.findViewById(R.id.title_of_url_topic);
-            topicUrlDesc = itemView.findViewById(R.id.desc_of_url_topic);
+            urlImage = itemView.findViewById(R.id.url_image_topic);
+            urlTitle = itemView.findViewById(R.id.title_of_url_topic);
+            urlDesc = itemView.findViewById(R.id.desc_of_url_topic);
             topicUrlText = itemView.findViewById(R.id.url_text_topic);
 
         }
@@ -614,12 +624,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public class URLAsynk extends AsyncTask<Async, String, WebUrl> {
-       // private WeakReference<MyTaskInformer> mCallBack;
-        //  WebUrl webUrlObj;
-    /*    public URLAsynk(MyTaskInformer callback) {
-            this.mCallBack = new WeakReference<>(callback);
-        }
-*/
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -629,19 +634,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected void onPostExecute(WebUrl output) {
             super.onPostExecute(output);
 
-            //output.viewHolder.senderUrlText.setText(output.description);
-            output.viewHolder.senderUrlTitle.setText(output.title);
-            output.viewHolder.senderUrlDesc.setText(output.description);
-            //output.viewHolder.senderUrlTitle.setText(output.title);
-            if(!TextUtils.isEmpty(output.imageUrl.toString())){
-                Picasso.get().load(output.imageUrl).into(output.viewHolder.senderUrlImage);
+            switch (output.view_type) {
+                case VIEW_TYPE_ME:
+                   setupSelfUrlMessage(output);
+                    break;
+                case VIEW_TYPE_OTHER:
+                    setupOtherUrlMessage(output);
+                    break;
+                case VIEW_TYPE_TOPIC:
+                    setupTopicUrlMessage(output);
+                    break;
             }
-            else output.viewHolder.senderUrlImage.setVisibility(View.GONE);
-               /* final MyTaskInformer callBack = mCallBack.get();
-
-                if(callBack != null) {
-                    callBack.onTaskDone(output);
-                }*/
 
         }
 
@@ -649,7 +652,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected WebUrl doInBackground(Async... object) {
             String value = null;
             Document doc = null;
-            WebUrl  webUrlObj = null;
+            WebUrl webUrlObj = null;
             try {
                 doc = Jsoup.connect(object[0].urlMessage).get();
             } catch (Exception e) {
@@ -659,34 +662,55 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Log.i("Value of Title - ", value);
             String description = doc.select("meta[name=description]").get(0).attr("content");
             Log.i("Value of desc - ", description);
-            String imageUrl="";
+            String imageUrl = "";
             try {
 
-
-                if(!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()){
+                if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {
                     imageUrl = doc.select("meta[property=og:image]").get(0).attr("content");
                     Log.i("Image URL - ", imageUrl);
-
                 }
 
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            webUrlObj = new WebUrl(object[0].viewHolder, value.toString(),description.toString(),imageUrl.toString());
+            webUrlObj = new WebUrl(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString(),object[0].view_type);
 
             return webUrlObj;
         }
     }
 
-    // URLAsyncRec
+    private void setupTopicUrlMessage(WebUrl output) {
+        ((TopicViewHolder)output.viewHolder).urlTitle.setText(output.title);
+        ((TopicViewHolder)output.viewHolder).urlDesc.setText(output.description);
+        if (!TextUtils.isEmpty(output.imageUrl.toString())) {
+            Picasso.get().load(output.imageUrl).into(((TopicViewHolder)output.viewHolder).urlImage);
+        } else ((TopicViewHolder)output.viewHolder).urlImage.setVisibility(View.GONE);
+
+    }
+
+    private void setupOtherUrlMessage(WebUrl output) {
+        ((MessageViewHolderOther)output.viewHolder).urlTitle.setText(output.title);
+        ((MessageViewHolderOther)output.viewHolder).urlDesc.setText(output.description);
+        if (!TextUtils.isEmpty(output.imageUrl.toString())) {
+            Picasso.get().load(output.imageUrl).into(((MessageViewHolderOther)output.viewHolder).urlImage);
+        } else ((MessageViewHolderOther)output.viewHolder).urlImage.setVisibility(View.GONE);
+
+    }
+
+    private void setupSelfUrlMessage(WebUrl output) {
+        ((MessageViewHolder)output.viewHolder).urlTitle.setText(output.title);
+        ((MessageViewHolder)output.viewHolder).urlDesc.setText(output.description);
+        if (!TextUtils.isEmpty(output.imageUrl.toString())) {
+            Picasso.get().load(output.imageUrl).into(((MessageViewHolder)output.viewHolder).urlImage);
+        } else ((MessageViewHolder)output.viewHolder).urlImage.setVisibility(View.GONE);
+
+    }
+
+/*
+
     public class URLAsynkRec extends AsyncTask<AsyncRec, String, WebUrlRec> {
-        // private WeakReference<MyTaskInformer> mCallBack;
-        //  WebUrl webUrlObj;
-    /*    public URLAsynk(MyTaskInformer callback) {
-            this.mCallBack = new WeakReference<>(callback);
-        }
-*/
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -696,19 +720,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected void onPostExecute(WebUrlRec output) {
             super.onPostExecute(output);
 
-            //output.viewHolder.senderUrlText.setText(output.description);
             output.viewHolder.UrlTitle.setText(output.title);
             output.viewHolder.UrlDesc.setText(output.description);
-            //output.viewHolder.senderUrlTitle.setText(output.title);
-            if(!TextUtils.isEmpty(output.imageUrl.toString())){
+            if (!TextUtils.isEmpty(output.imageUrl.toString())) {
                 Picasso.get().load(output.imageUrl).into(output.viewHolder.UrlImage);
-            }
-            else output.viewHolder.UrlImage.setVisibility(View.GONE);
-               /* final MyTaskInformer callBack = mCallBack.get();
+            } else output.viewHolder.UrlImage.setVisibility(View.GONE);
 
-                if(callBack != null) {
-                    callBack.onTaskDone(output);
-                }*/
 
         }
 
@@ -716,7 +733,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected WebUrlRec doInBackground(AsyncRec... object) {
             String value = null;
             Document doc = null;
-            WebUrlRec  webUrlObj = null;
+            WebUrlRec webUrlObj = null;
             try {
                 doc = Jsoup.connect(object[0].urlMessage).get();
             } catch (Exception e) {
@@ -726,11 +743,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Log.i("Value of Title - ", value);
             String description = doc.select("meta[name=description]").get(0).attr("content");
             Log.i("Value of desc - ", description);
-            String imageUrl="";
+            String imageUrl = "";
             try {
 
 
-                if(!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()){
+                if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {
                     imageUrl = doc.select("meta[property=og:image]").get(0).attr("content");
                     Log.i("Image URL - ", imageUrl);
 
@@ -740,20 +757,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            webUrlObj = new WebUrlRec(object[0].viewHolder, value.toString(),description.toString(),imageUrl.toString());
+            webUrlObj = new WebUrlRec(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString());
 
             return webUrlObj;
         }
     }
 
-    //URLTopic
+
     public class URLAsynkTopic extends AsyncTask<AsyncTopic, String, WebUrlTopic> {
-        // private WeakReference<MyTaskInformer> mCallBack;
-        //  WebUrl webUrlObj;
-    /*    public URLAsynk(MyTaskInformer callback) {
-            this.mCallBack = new WeakReference<>(callback);
-        }
-*/
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -763,19 +775,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected void onPostExecute(WebUrlTopic output) {
             super.onPostExecute(output);
 
-            //output.viewHolder.senderUrlText.setText(output.description);
-            output.viewHolder.topicUrlTitle.setText(output.title);
-            output.viewHolder.topicUrlDesc.setText(output.description);
-            //output.viewHolder.senderUrlTitle.setText(output.title);
-            if(!TextUtils.isEmpty(output.imageUrl.toString())){
-                Picasso.get().load(output.imageUrl).into(output.viewHolder.topicUrlImage);
-            }
-            else output.viewHolder.topicUrlImage.setVisibility(View.GONE);
-               /* final MyTaskInformer callBack = mCallBack.get();
+            output.viewHolder.urlTitle.setText(output.title);
+            output.viewHolder.urlDesc.setText(output.description);
+            if (!TextUtils.isEmpty(output.imageUrl.toString())) {
+                Picasso.get().load(output.imageUrl).into(output.viewHolder.urlImage);
+            } else output.viewHolder.urlImage.setVisibility(View.GONE);
 
-                if(callBack != null) {
-                    callBack.onTaskDone(output);
-                }*/
 
         }
 
@@ -783,7 +788,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected WebUrlTopic doInBackground(AsyncTopic... object) {
             String value = null;
             Document doc = null;
-            WebUrlTopic  webUrlObj = null;
+            WebUrlTopic webUrlObj = null;
             try {
                 doc = Jsoup.connect(object[0].urlMessage).get();
             } catch (Exception e) {
@@ -793,11 +798,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Log.i("Value of Title - ", value);
             String description = doc.select("meta[name=description]").get(0).attr("content");
             Log.i("Value of desc - ", description);
-            String imageUrl="";
+            String imageUrl = "";
             try {
 
 
-                if(!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()){
+                if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {
                     imageUrl = doc.select("meta[property=og:image]").get(0).attr("content");
                     Log.i("Image URL - ", imageUrl);
 
@@ -807,40 +812,48 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            webUrlObj = new WebUrlTopic(object[0].viewHolder, value.toString(),description.toString(),imageUrl.toString());
+            webUrlObj = new WebUrlTopic(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString());
 
             return webUrlObj;
         }
     }
 
-
-
+*/
 
 }
 
 class WebUrl {
     String title, description, imageUrl;
-    MessageAdapter.MessageViewHolder viewHolder;
-    WebUrl(MessageAdapter.MessageViewHolder viewHolder, String title, String description, String imageUrl) {
+   // MessageAdapter.MessageViewHolder viewHolder;
+    RecyclerView.ViewHolder viewHolder;
+    int view_type;
+
+    WebUrl(RecyclerView.ViewHolder viewHolder, String title, String description, String imageUrl,int view_type) {
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
         this.viewHolder = viewHolder;
+        this.view_type=view_type;
     }
 }
 
 class Async {
     String urlMessage;
-    MessageAdapter.MessageViewHolder viewHolder;
-    Async(MessageAdapter.MessageViewHolder viewHolder, String urlMessage){
-        this.viewHolder=viewHolder;
-        this.urlMessage=urlMessage;
+   // MessageAdapter.MessageViewHolder viewHolder;
+    RecyclerView.ViewHolder viewHolder;
+    int view_type;
+    Async(RecyclerView.ViewHolder viewHolder, String urlMessage,int view_type) {
+        this.viewHolder = viewHolder;
+        this.urlMessage = urlMessage;
+        this.view_type=view_type;
     }
 }
 
+/*
 class WebUrlRec {
     String title, description, imageUrl;
     MessageAdapter.MessageViewHolderOther viewHolder;
+
     WebUrlRec(MessageAdapter.MessageViewHolderOther viewHolder, String title, String description, String imageUrl) {
         this.title = title;
         this.description = description;
@@ -852,15 +865,17 @@ class WebUrlRec {
 class AsyncRec {
     String urlMessage;
     MessageAdapter.MessageViewHolderOther viewHolder;
-    AsyncRec(MessageAdapter.MessageViewHolderOther viewHolder, String urlMessage){
-        this.viewHolder=viewHolder;
-        this.urlMessage=urlMessage;
+
+    AsyncRec(MessageAdapter.MessageViewHolderOther viewHolder, String urlMessage) {
+        this.viewHolder = viewHolder;
+        this.urlMessage = urlMessage;
     }
 }
 
 class WebUrlTopic {
     String title, description, imageUrl;
     MessageAdapter.TopicViewHolder viewHolder;
+
     WebUrlTopic(MessageAdapter.TopicViewHolder viewHolder, String title, String description, String imageUrl) {
         this.title = title;
         this.description = description;
@@ -872,9 +887,11 @@ class WebUrlTopic {
 class AsyncTopic {
     String urlMessage;
     MessageAdapter.TopicViewHolder viewHolder;
-    AsyncTopic(MessageAdapter.TopicViewHolder viewHolder, String urlMessage){
-        this.viewHolder=viewHolder;
-        this.urlMessage=urlMessage;
+
+    AsyncTopic(MessageAdapter.TopicViewHolder viewHolder, String urlMessage) {
+        this.viewHolder = viewHolder;
+        this.urlMessage = urlMessage;
     }
 }
+*/
 
