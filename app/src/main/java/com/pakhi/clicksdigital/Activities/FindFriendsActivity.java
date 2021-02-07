@@ -103,7 +103,13 @@ public class FindFriendsActivity extends AppCompatActivity {
                         if (dataSnapshot.child(ConstFirebase.USER_DETAILS).exists()) {
                             Log.i("------datasnap user ", dataSnapshot.getValue().toString());
                             User user=dataSnapshot.child(ConstFirebase.USER_DETAILS).getValue(User.class);
-                            if (user.getUser_name().toLowerCase().contains(s) || user.getLast_name().contains(s)) {
+                            if (user.getUser_name().toLowerCase().toLowerCase().contains(s)
+                                    || user.getLast_name().toLowerCase().contains(s)
+                                    || user.getCity().toLowerCase().contains(s)
+                                    || user.getCompany().toLowerCase().contains(s)
+                                    || user.getExperiences().toLowerCase().contains(s)
+                                    || user.getUser_bio().toLowerCase().contains(s)
+                            ) {
                                 userList.add(user);
                             }
                         }
