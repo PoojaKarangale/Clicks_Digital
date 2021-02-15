@@ -53,6 +53,26 @@
                     android:layout_alignStart="@+id/name"
                     android:text="profession"
                     android:textSize="@dimen/title2" />
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/reply_image_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_below="@+id/profession"
+                    android:layout_alignStart="@+id/name"
+
+                    >
+                    <ImageView
+                        android:id="@+id/reply_image"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"/>
+                    <TextView
+                        android:id="@+id/reply_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/topic"

@@ -41,6 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.APIService;
+import com.pakhi.clicksdigital.GroupChat.GroupChatActivity;
+import com.pakhi.clicksdigital.GroupChat.ImageText;
 import com.pakhi.clicksdigital.GroupChat.MessageAdapter;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
@@ -60,6 +62,7 @@ import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.security.acl.Group;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -388,7 +391,7 @@ public class ChatActivity extends AppCompatActivity {
         /* Map messageTextBody = new HashMap();*/
 
         Message message1 = new Message(messageSenderID, message,
-                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate, false);
+                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate, false, null);
 
         /*  messageTextBody.put("from", messageSenderID);
         messageTextBody.put("to", messageReceiverID);
@@ -629,7 +632,17 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(final Uri uri) {
                         Log.d("ChatActivity", "-----------uploading image----------------------" + uri.toString());
-                        SendMessage("image", uri.toString());
+                        progressDialog.dismiss();
+                        MessageInputText.setText("");
+                        messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
+                        Intent intent = new Intent(ChatActivity.this, ImageText.class);
+                        intent.putExtra("image", uri.toString());
+                        intent.putExtra("grp_id", messageReceiverID);
+                        intent.putExtra("check","personal");
+                        intent.putExtra("name", messageSenderName);
+                        startActivity(intent);
+                        finish();
+                        //SendMessage("image", uri.toString());
 
                     }
                 });

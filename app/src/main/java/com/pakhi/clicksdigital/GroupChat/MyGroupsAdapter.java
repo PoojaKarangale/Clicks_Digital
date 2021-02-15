@@ -100,7 +100,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
-                Intent groupChatActivity=new Intent(mcontext.getApplicationContext(), GroupChatActivity.class);
+                Intent groupChatActivity=new Intent(mcontext, GroupChatActivity.class);
                 groupChatActivity.putExtra(Const.groupName, group.getGroup_name());
                 Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
 

@@ -92,6 +92,10 @@ public class GroupChatActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private TextView group_name;
     int i = 0;
+    String separateURL="";
+    TextView withImage;
+    String j;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         //currentGroupName=getIntent().getExtras().get("groupName").toString();
         currentGroupId = getIntent().getExtras().get(ConstFirebase.groupId).toString();
+        //  currentGroupId = getIntent().getStringExtra(ConstFirebase.groupId);
 
         pref = SharedPreference.getInstance();
         currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -179,13 +184,14 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String message = userMessageInput.getText().toString();
+                Log.i("Message check -----", message);
 
                 if (TextUtils.isEmpty(message)) {
                     showToast("first write your message...");
                 } else {
 
                     String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
-
+                    String separateURL="";
                     Pattern p;
                     Matcher m = null;
                     String[] words = message.split(" ");
@@ -195,6 +201,7 @@ public class GroupChatActivity extends AppCompatActivity {
                         m = p.matcher(word);
 
                         if (m.find()) {
+                            separateURL=word;
                             Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
                             i = 1;
                             break;
@@ -204,10 +211,10 @@ public class GroupChatActivity extends AppCompatActivity {
                     userMessageInput.setText("");
                     if (i == 1) {
                         //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
-                        SaveMessageInfoToDatabase("url", message);
+                        SaveMessageInfoToDatabase("url", message,separateURL);
                     } else {
                         //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
-                        SaveMessageInfoToDatabase("text", message);
+                        SaveMessageInfoToDatabase("text", message,"");
                     }
 
                 }
@@ -257,16 +264,45 @@ public class GroupChatActivity extends AppCompatActivity {
         LayoutInflater inflater = ((Activity) this).getLayoutInflater();
         View v = inflater.inflate(R.layout.fragment_topic_raise, null);
         final EditText topic = v.findViewById(R.id.topic);
+        withImage = v.findViewById(R.id.frag_button);
+        //final String maaa=topic.getText().toString();
         //  v.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT));
         builder.setView(v);
 
+        withImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestForPremission();
+                popupMenuSettigns1();
+            }
+        });
         // Set up the buttons
         builder.setPositiveButton("Publish", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String maaa=topic.getText().toString();
+                String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+                Pattern p;
+                Matcher m = null;
+
+                String[] words = maaa.split(" ");
+                i = 0;
+                for (String word : words) {
+                    p = Pattern.compile(URL_REGEX);
+                    m = p.matcher(word);
+
+                    if (m.find()) {
+                        separateURL=word;
+                        Log.i("seperate Url ------", separateURL);
+                        //Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
+                        i = 1;
+                        break;
+                    }
+
+                }
 
                 topic_str = topic.getText().toString();
-                SaveMessageInfoToDatabase("topic", topic_str);
+                SaveMessageInfoToDatabase("topic", topic_str, separateURL);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -450,7 +486,7 @@ public class GroupChatActivity extends AppCompatActivity {
         currentUserName = user.getUser_name();
     }
 
-    private void SaveMessageInfoToDatabase(String messageType, String message) {
+    private void SaveMessageInfoToDatabase(String messageType, String message, String separateURL) {
 
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
@@ -466,7 +502,7 @@ public class GroupChatActivity extends AppCompatActivity {
         Long timestamp = calForDate.getTimeInMillis() / 1000L;
 
         Message message1 = new Message(currentUserID, message,
-                messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp);
+                messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, separateURL);
 
         groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
 
@@ -484,8 +520,21 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void popupMenuSettigns() {
+        j=String.valueOf(0);
         PopupMenu popup = new PopupMenu(GroupChatActivity.this, attach_file_btn);
         popup.getMenuInflater().inflate(R.menu.attach_file_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                return menuItemClicked(item);
+            }
+        });
+        popup.show();
+    }
+    private void popupMenuSettigns1() {
+        //j=1;
+        j=String.valueOf(1);
+        PopupMenu popup = new PopupMenu(GroupChatActivity.this, withImage );
+        popup.getMenuInflater().inflate(R.menu.topic_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 return menuItemClicked(item);
@@ -620,7 +669,7 @@ public class GroupChatActivity extends AppCompatActivity {
               */
                 case REQUESTCODE:
                     imageUriGalary = data.getData();
-                    uploadImage(imageUriGalary);
+                    uploadImage(imageUriGalary, j);
                     break;
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -629,7 +678,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                     String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), imageBitmap, "Title", null);
                     imageUriCamera = Uri.parse(path);
-                    uploadImage(imageUriCamera);
+                    uploadImage(imageUriCamera,j);
                     break;
                 case PICK_PDF_CODE:
                     // docUri = data.getData();
@@ -637,7 +686,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     break;
             }
         } else {
-            showToast("something gone wrong");
+            showToast("something went wrong");
         }
     }
 
@@ -659,7 +708,7 @@ public class GroupChatActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         //SendMessage("pdf", String.valueOf(uri));
-                                        SaveMessageInfoToDatabase("pdf", String.valueOf(uri));
+                                        SaveMessageInfoToDatabase("pdf", String.valueOf(uri),"");
                                     }
                                 });
                     }
@@ -678,9 +727,11 @@ public class GroupChatActivity extends AppCompatActivity {
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void uploadImage(final Uri imageUri) {
+    private void uploadImage(final Uri imageUri, final String flag) {
         StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child(currentGroupId).child("photos");
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
+
+
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -689,8 +740,16 @@ public class GroupChatActivity extends AppCompatActivity {
                 imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(final Uri uri) {
-
-                        SaveMessageInfoToDatabase("image", uri.toString());
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(GroupChatActivity.this, ImageText.class);
+                        intent.putExtra("image", uri.toString());
+                        intent.putExtra("grp_id", currentGroupId);
+                        intent.putExtra("check", "grp");
+                        intent.putExtra("name", "abc");
+                        intent.putExtra("flag", flag);
+                        startActivity(intent);
+                        finish();
+                        //SaveMessageInfoToDatabase("image", uri.toString());
 
                     }
                 });

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -43,6 +45,9 @@ public class TopicRepliesActivity extends AppCompatActivity {
     SharedPreference pref;
     private DatabaseReference UsersRef, replyRef;
     private FirebaseDatabaseInstance rootRef;
+    ImageView topicImage;
+    LinearLayout topicImageLayout;
+    TextView topicImageTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,13 @@ public class TopicRepliesActivity extends AppCompatActivity {
         rootRef=FirebaseDatabaseInstance.getInstance();
         UsersRef=rootRef.getUserRef();
         replyRef=rootRef.getReplyRef();
+
+        /*topicImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnlargedImage.enlargeImage(topic.getMessage(), TopicRepliesActivity.this);
+            }
+        });*/
 
         pref=SharedPreference.getInstance();
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -143,6 +155,11 @@ public class TopicRepliesActivity extends AppCompatActivity {
         like=findViewById(R.id.like);
         no_of_likes=findViewById(R.id.no_of_likes);
 
+        //IMAGE
+        topicImageLayout = findViewById(R.id.reply_image_layout);
+        topicImage = findViewById(R.id.reply_image);
+        topicImageTextView = findViewById(R.id.reply_text);
+
 
         replies_list=findViewById(R.id.replies_list);
         replies_list.setHasFixedSize(true);
@@ -156,8 +173,26 @@ public class TopicRepliesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        if(topic.getMessage().length()>113){
+            if(topic.getMessage().substring(93,113).equals(topic.getTo())){
+                topic_detail.setVisibility(View.GONE);
+                topicImageLayout.setVisibility(View.VISIBLE);
+                topicImageTextView.setText(topic.getExtra());
+                Picasso.get()
+                        .load(String.valueOf(topic.getMessage()))
+                        .into(topicImage);
 
-        topic_detail.setText(topic.getMessage());
+                //date_time.setLayoutParams();
+            }
+            else {
+                topic_detail.setText(topic.getMessage());
+
+            }
+        }
+        else {
+            topic_detail.setText(topic.getMessage());
+        }
+
         UsersRef.child(topic.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

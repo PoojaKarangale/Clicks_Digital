@@ -57,6 +57,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity {
@@ -84,6 +85,12 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private DatabaseReference userRef, eventRef /*,eventCategory*/ ;
     private FirebaseDatabaseInstance rootRef;
+    //String[] listOfCat;
+    //String[] listOfCat1;
+    int i =0;
+
+    ArrayList<String> listOfCat = new ArrayList<>();
+    ArrayList<String> listOfCat1 = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +100,13 @@ public class CreateEventActivity extends AppCompatActivity {
         rootRef=FirebaseDatabaseInstance.getInstance();
         userRef=rootRef.getUserRef();
         eventRef=rootRef.getEventRef();
+
         //eventCategory=rootRef.getEventCatRef();
 
         SharedPreference pref=SharedPreference.getInstance();
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
-
+        Log.i("setCatergories-------","----------");
+        setCategories();
         initializeFields();
 
         progressDialog=new ProgressDialog(CreateEventActivity.this);
@@ -150,6 +159,47 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setCategories() {
+        userRef.child(currentUserId).child(ConstFirebase.groups1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap:snapshot.getChildren()){
+                    Log.i("listOfCat-------", snap.getKey());
+                    listOfCat.add(snap.getKey());
+                    Log.i("Length of listCat-----",String.valueOf(listOfCat.size()));
+                    setFinal(snap.getKey());
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        Log.i("Length of listCat-----",String.valueOf(listOfCat.size()));
+
+
+    }
+
+    private void setFinal(String val) {
+
+            rootRef.getGroupRef().child(val).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.i("finalList ----- ",snapshot.child("group_name").getValue().toString());
+                    listOfCat1.add(snapshot.child("group_name").getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
 
     private void initializeFields() {
 
@@ -383,9 +433,13 @@ public class CreateEventActivity extends AppCompatActivity {
     private void spinnerImplementationForTopic() {
         spinner=findViewById(R.id.event_cat_spinner);
       //  final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
-        final String[] countries=getResources().getStringArray(R.array.array_categories);
+        //final String[] countries=getResources().getStringArray(R.array.array_categories);
 
-        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,android.R.id.text1, countries);
+        //final String[] countries=listOfCat1;
+
+
+
+        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,android.R.id.text1, listOfCat1);
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);

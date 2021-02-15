@@ -7,8 +7,10 @@ public class Message implements Serializable, Comparable<Message> {
     Long timestamp;
     boolean isSeen;
     private String from, message, type, to, messageID, time, date;
+    //change
+    private String extra;
 
-    public Message(String from, String message, String type, String to, String messageID, String time, String date, boolean isSeen) {
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, boolean isSeen, /*change*/String extra) {
         this.from=from;
         this.message=message;
         this.type=type;
@@ -17,12 +19,15 @@ public class Message implements Serializable, Comparable<Message> {
         this.time=time;
         this.date=date;
         this.isSeen=isSeen;
+
+        //change
+        this.extra=extra;
     }
 
     public Message() {
     }
 
-    public Message(String from, String message, String type, String to, String messageID, String time, String date, Long timestamp) {
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, Long timestamp, String extra) {
         this.from=from;
         this.message=message;
         this.type=type;
@@ -31,6 +36,7 @@ public class Message implements Serializable, Comparable<Message> {
         this.time=time;
         this.date=date;
         this.timestamp=timestamp;
+        this.extra=extra;
     }
 
     public Message(String from, String message, String type, String to, String messageID, String time, String date) {
@@ -116,10 +122,16 @@ public class Message implements Serializable, Comparable<Message> {
         this.date=date;
     }
 
+   /* public String getExtra(String extra){return extra;}*/
+
     @Override
     public int compareTo(Message o) {
         if (getTimestamp() == null || o.getTimestamp() == null)
             return 0;
         return getTimestamp().compareTo(o.getTimestamp());
+    }
+
+    public String getExtra() {
+        return extra;
     }
 }

@@ -296,7 +296,7 @@ public class HomeFragment extends Fragment {
                 mViewPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(currentPage++, true);
                 mViewPagerAdapter.notifyDataSetChanged();
-           }
+            }
         };
         //Auto start
         Timer swipeTimer = new Timer();

@@ -16,10 +16,11 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dimen_10dp"
+            android:orientation="vertical"
             >
 
             <TextView
@@ -40,10 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="#092859"
-                app:layout_constraintBottom_toTopOf="@+id/topic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@+id/group_name" />
+                 />
 
 
         <!--    <de.hdodenhof.circleimageview.CircleImageView
@@ -52,33 +50,65 @@
                 android:layout_height="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/group_name" />
--->             <LinearLayout
+-->         <LinearLayout
+            android:id="@+id/raised_image_layout_home"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_margin="10dp">
+            <ImageView
+                android:id="@+id/raised_image_home"
+                android:layout_width="180dp"
+                android:layout_height="180dp"/>
+            <TextView
+                android:id="@+id/raised_image_text_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+            <LinearLayout
             android:id="@+id/layout_url_sender"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical"
-            android:layout_gravity="end"
+            android:layout_gravity="center"
             android:background="@color/white"
-            android:padding="5dp">
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/url_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"
+                />
+
+
             <ImageView
                 android:id="@+id/url_image_sender"
                 android:layout_width="200dp"
                 android:layout_height="130dp"
-                android:scaleType="centerCrop"
-                android:layout_gravity="end"/>
+                android:layout_gravity="end"
+                android:scaleType="centerCrop" />
+
             <TextView
                 android:id="@+id/title_of_url_sender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"/>
+                android:maxLines="2" />
+
             <TextView
                 android:id="@+id/desc_of_url_sender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="3"/>
+                android:maxLines="3" />
+
             <TextView
-                android:id="@+id/url_text"
+
+                android:id="@+id/separate_url_trend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="web"/>
@@ -93,8 +123,7 @@
                 android:text="in the post. in the post. in the post. in the post. in the post. in the post.in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the"
                 android:textSize="@dimen/title1"
                 android:textStyle="italic"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/group_name" />
+                 />
 
             <TextView
                 android:id="@+id/date_time"
@@ -172,6 +201,6 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

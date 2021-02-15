@@ -21,7 +21,13 @@
         android:textIsSelectable="true"
         android:textSize="@dimen/title1"
         android:visibility="gone" />
-
+<LinearLayout
+    android:id="@+id/image_sender_linear"
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:layout_gravity="end">
     <ImageView
         android:id="@+id/message_sender_image_view"
         android:layout_width="170dp"
@@ -30,6 +36,15 @@
         android:layout_margin="5dp"
         android:scaleType="centerCrop"
         android:visibility="gone" />
+    <TextView
+        android:id="@+id/image_text_sender"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        />
+
+</LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_sender_pdf"
@@ -77,6 +92,11 @@
             android:maxLines="3"/>
         <TextView
             android:id="@+id/url_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:id="@+id/separate_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="web"/>
