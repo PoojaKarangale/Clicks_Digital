@@ -35,13 +35,13 @@ import java.util.List;
 
 public class VisitProfileActivity extends AppCompatActivity {
 
-    boolean      isVisterIsAdmin     =false;
-    boolean      isProfileUserIsAdmin=false;
+    boolean isVisterIsAdmin = false;
+    boolean isProfileUserIsAdmin = false;
     UserDatabase db;
     FirebaseDatabaseInstance rootRef;
-    private String    user_id;
+    private String user_id;
     private ImageView profile_image;
-    private TextView  user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
+    private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
     private User user, currentUser;
     private String receiverUserID, senderUserID, Current_State;
     private Button make_admin, removeAdmin, message_btn;
@@ -52,10 +52,10 @@ public class VisitProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_profile);
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
-        userRef=rootRef.getUserRef();
-        user_id=getIntent().getStringExtra(Const.visitUser);
-        db=new UserDatabase(this);
+        rootRef = FirebaseDatabaseInstance.getInstance();
+        userRef = rootRef.getUserRef();
+        user_id = getIntent().getStringExtra(Const.visitUser);
+        db = new UserDatabase(this);
         getCurrentUserFromDb();
 
         initializeMsgRequestFields();
@@ -64,13 +64,30 @@ public class VisitProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    user=dataSnapshot.getValue(User.class);
+                    user = dataSnapshot.getValue(User.class);
                     Picasso.get()
                             .load(user.getImage_url())
                             .resize(120, 120)
                             .into(profile_image);
+
                     if (user.getUser_type().equals("admin")) {
-                        isProfileUserIsAdmin=true;
+                        isProfileUserIsAdmin = true;
+                        if (currentUser.getUser_type().equals("admin")) {
+                            isVisterIsAdmin = true;
+                        }
+
+                        if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
+                            // make him admin btn set visible
+                            make_admin.setVisibility(View.VISIBLE);
+
+                        } else {
+
+                            make_admin.setVisibility(View.GONE);
+                        }
+
+                        if (isVisterIsAdmin && isProfileUserIsAdmin) {
+                            removeAdmin.setVisibility(View.VISIBLE);
+                        }
                     }
                     loadData();
 
@@ -84,18 +101,26 @@ public class VisitProfileActivity extends AppCompatActivity {
             }
         });
 
-        if (currentUser.getUser_type().equals("admin")) {
+          /*  if (currentUser.getUser_type().equals("admin")) {
             isVisterIsAdmin=true;
         }
+
+        Log.d("USERTYPE","(out) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
+
         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
             // make him admin btn set visible
             make_admin.setVisibility(View.VISIBLE);
+            Log.d("USERTYPE","(out of datachange)(in if) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
+
         } else {
-            make_admin.setVisibility(View.INVISIBLE);
+            Log.d("USERTYPE","(out of datachange)(in else) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
+
+            make_admin.setVisibility(View.GONE);
         }
+
         if (isVisterIsAdmin && isProfileUserIsAdmin) {
             removeAdmin.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +134,7 @@ public class VisitProfileActivity extends AppCompatActivity {
         message_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent chatIntent=new Intent(getApplicationContext(), ChatActivity.class);
+                Intent chatIntent = new Intent(getApplicationContext(), ChatActivity.class);
                 chatIntent.putExtra(Const.visitUser, user.getUser_id());
                 chatIntent.putExtra(Const.visit_user_name, user.getUser_name());
                 startActivity(chatIntent);
@@ -120,12 +145,12 @@ public class VisitProfileActivity extends AppCompatActivity {
 
     private void getCurrentUserFromDb() {
         db.getReadableDatabase();
-        Cursor res=db.getAllData();
+        Cursor res = db.getAllData();
         if (res.getCount() == 0) {
 
         } else {
             res.moveToFirst();
-            currentUser=new User(res.getString(0), res.getString(1),
+            currentUser = new User(res.getString(0), res.getString(1),
                     res.getString(2), res.getString(3), res.getString(4),
                     res.getString(5), res.getString(6), res.getString(7),
                     res.getString(8), res.getString(9), res.getString(10),
@@ -136,26 +161,26 @@ public class VisitProfileActivity extends AppCompatActivity {
 
     private void initializeMsgRequestFields() {
 
-        ChatRequestRef=rootRef.getChatRequestsRef();
-        ContactsRef=rootRef.getContactRef();
+        ChatRequestRef = rootRef.getChatRequestsRef();
+        ContactsRef = rootRef.getContactRef();
         //   NotificationRef=FirebaseDatabase.getInstance().getReference().child("Notifications");
-        senderUserID=currentUser.getUser_id();
-        receiverUserID=user_id;
+        senderUserID = currentUser.getUser_id();
+        receiverUserID = user_id;
 
-        profile_image=findViewById(R.id.profile_img);
-        user_name_heading=findViewById(R.id.tv_user_name_heading);
-        user_name=findViewById(R.id.tv_user_name);
-        gender=findViewById(R.id.tv_gender);
-        profession=findViewById(R.id.tv_profession);
-        bio=findViewById(R.id.tv_user_bio);
-        speaker_experience=findViewById(R.id.tv_speaker_experience);
-        experience=findViewById(R.id.tv_experiences);
+        profile_image = findViewById(R.id.profile_img);
+        user_name_heading = findViewById(R.id.tv_user_name_heading);
+        user_name = findViewById(R.id.tv_user_name);
+        gender = findViewById(R.id.tv_gender);
+        profession = findViewById(R.id.tv_profession);
+        bio = findViewById(R.id.tv_user_bio);
+        speaker_experience = findViewById(R.id.tv_speaker_experience);
+        experience = findViewById(R.id.tv_experiences);
 
-        make_admin=findViewById(R.id.make_admin);
-        removeAdmin=findViewById(R.id.remove_admin);
-        message_btn=findViewById(R.id.message_btn);
+        make_admin = findViewById(R.id.make_admin);
+        removeAdmin = findViewById(R.id.remove_admin);
+        message_btn = findViewById(R.id.message_btn);
 
-        Current_State="new";
+        Current_State = "new";
 
     }
 
@@ -196,16 +221,16 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void addCertificationData(final List<Certificates> certificates) {
-        ImageView certi_1=findViewById(R.id.certi_1);
+        ImageView certi_1 = findViewById(R.id.certi_1);
         certi_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (certificates == null) {
                     Toast.makeText(VisitProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
                 } else {
-                    Bundle bundle=new Bundle();
+                    Bundle bundle = new Bundle();
                     bundle.putSerializable("certificates", (Serializable) certificates);
-                    ShowCertificatesFragment gmapFragment=new ShowCertificatesFragment();
+                    ShowCertificatesFragment gmapFragment = new ShowCertificatesFragment();
                     gmapFragment.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, gmapFragment).commit();
                    /* Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed
@@ -217,10 +242,10 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void loadCertification() {
-        final List<Certificates> certificates=new ArrayList<Certificates>();
+        final List<Certificates> certificates = new ArrayList<Certificates>();
         //Loading the data
 
-        DatabaseReference databaseReference=userRef.child(user_id).child("cerificates");
+        DatabaseReference databaseReference = userRef.child(user_id).child("cerificates");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -244,7 +269,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void socialMediaHandles() {
-        ImageView linkedin=findViewById(R.id.iv_user_linkedin);
+        ImageView linkedin = findViewById(R.id.iv_user_linkedin);
 
         //opening the linkedin link
         linkedin.setOnClickListener(new View.OnClickListener() {
@@ -260,12 +285,12 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void contactInfo() {
-        ImageView email=findViewById(R.id.iv_user_email);
+        ImageView email = findViewById(R.id.iv_user_email);
 
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + user.getUser_email()));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + user.getUser_email()));
                 startActivity(intent);
             }
         });
@@ -276,7 +301,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void makeAdmin(final View view) {
-        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
+        DatabaseReference databaseReference = userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
         databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -288,7 +313,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     public void removeAdmin(final View view) {
-        DatabaseReference databaseReference=userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
+        DatabaseReference databaseReference = userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
         databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
