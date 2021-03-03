@@ -2,6 +2,8 @@ package com.pakhi.clicksdigital.Activities;
 
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,12 +36,13 @@ public class UserRequestActivity extends AppCompatActivity {
     private UserRequestAdapter userRequestAdapter;
   //  private List<User_request> user_requests  = new ArrayList<>();
     private List<String>       requestingUsers = new ArrayList<>();
+    ImageView cross;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_request);
-
+        cross = findViewById(R.id.close_post);
         rootRef=FirebaseDatabaseInstance.getInstance();
 
         recyclerView=findViewById(R.id.recycler_requesting_users);
@@ -53,6 +56,13 @@ public class UserRequestActivity extends AppCompatActivity {
 
         //showRequestingUsers();
         readRequestingUsersId();
+        cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     private void readRequestingUsersId() {

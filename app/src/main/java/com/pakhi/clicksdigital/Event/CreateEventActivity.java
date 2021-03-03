@@ -59,6 +59,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateEventActivity extends AppCompatActivity {
     static  int    PReqCode=1;
@@ -88,7 +89,7 @@ public class CreateEventActivity extends AppCompatActivity {
     //String[] listOfCat;
     //String[] listOfCat1;
     int i =0;
-
+    Date startDate, endDate;
     ArrayList<String> listOfCat = new ArrayList<>();
     ArrayList<String> listOfCat1 = new ArrayList<>();
 
@@ -140,9 +141,13 @@ public class CreateEventActivity extends AppCompatActivity {
                 if (isProfileSelected) {
                     // profileFlag=true;
                     if (validateEvent()) {
-                        progressDialog.show();
-                        createEventStorage();
+                        if(validateDate()){
+                            progressDialog.show();
+                            createEventStorage();
+                        }
+
                     }
+
 
                 } else {
                     Toast.makeText(CreateEventActivity.this, "Select event picture", Toast.LENGTH_SHORT).show();
@@ -159,6 +164,16 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
     }
+
+    private boolean validateDate() {
+        boolean abc=true;
+        if(startDate.compareTo(endDate)>0){
+            Toast.makeText(CreateEventActivity.this, "Start date can't be greater than end date", Toast.LENGTH_SHORT).show();
+            abc=false;
+        }
+        return abc;
+    }
+
 
     private void setCategories() {
         userRef.child(currentUserId).child(ConstFirebase.groups1).addValueEventListener(new ValueEventListener() {
@@ -552,6 +567,7 @@ public class CreateEventActivity extends AppCompatActivity {
         SimpleDateFormat currentDateFormat=new SimpleDateFormat("dd MMM yyyy");
         String currentDate=currentDateFormat.format(c.getTime());
 
+
         choose_start_date.setText(currentDate);
         choose_end_date.setText(currentDate);
 
@@ -606,8 +622,16 @@ public class CreateEventActivity extends AppCompatActivity {
                         SimpleDateFormat currentDateFormat=new SimpleDateFormat("dd MMM yyyy");
                         String currentDate=currentDateFormat.format(cal.getTime());
 
+                        choose_date.setText(currentDate);
 
-                        choose_date.setText(currentDate); //dayOfMonth + "-" + (monthOfYear + 1) + "-" + year
+                        if(start){
+                            startDate=cal.getTime();
+                        }
+                        else{
+                            endDate=cal.getTime();
+                        }
+
+                        //dayOfMonth + "-" + (monthOfYear + 1) + "-" + year
                         if (start)
                             selectedStartDate=fieldToTimestamp(year, (monthOfYear), dayOfMonth);
                     }

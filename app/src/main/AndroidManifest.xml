@@ -26,7 +26,11 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".GroupChat.ImageText"></activity>
+        <activity android:name=".LoadImage"></activity>
+        <activity android:name=".Event.FullGalaryView" />
+        <activity android:name=".Profile.ProfileUserRequest" />
+        <activity android:name=".Fragment.FullScreenTopicImageView" />
+        <activity android:name=".GroupChat.ImageText" />
         <activity
             android:name=".splashScreenActivity"
             android:theme="@style/SplashTheme">

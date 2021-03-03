@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
@@ -170,7 +171,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.messageSenderPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enlargeImage(String.valueOf(message.getMessage()), v);
+                Intent intent = new Intent(context, LoadImage.class);
+                intent.putExtra("image_url",message.getMessage());
+                context.startActivity(intent);
             }
         });
 
@@ -258,7 +261,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.messageReceiverPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enlargeImage(String.valueOf(message.getMessage()), v);
+                Intent intent = new Intent(context, LoadImage.class);
+                intent.putExtra("image_url",message.getMessage());
+                context.startActivity(intent);
 
             }
         });
@@ -286,6 +291,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
         messageViewHolder.topic_text.setVisibility(View.GONE);
 
+        messageViewHolder.raisedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, LoadImage.class);
+                intent.putExtra("image_url",message.getMessage());
+                context.startActivity(intent);
+            }
+        });
 
         //new Topic URL implementation
         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
@@ -669,7 +682,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
         }
+
     }
+
 
     public class TopicViewHolder extends RecyclerView.ViewHolder {
 
@@ -747,8 +762,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             value = doc.title();
             Log.i("Value of Title - ", value);
-            String description =doc.select("meta[name=description]").get(0).attr("content");// ;
-            Log.i("Value of desc - ", description);
+            //String description =doc.select("meta[name=description]").get(0).attr("content");// ;
+            //Log.i("Value of desc - ", description);
             String imageUrl = "";
             try {
                  /*description = doc.select("meta[name=description]").get(0).attr("content");
@@ -766,7 +781,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 //description="";
                 e.printStackTrace();
             }
-            webUrlObj = new WebUrl(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString(),object[0].view_type);
+            webUrlObj = new WebUrl(object[0].viewHolder, value.toString(), imageUrl.toString(),object[0].view_type);
 
             return webUrlObj;
         }
@@ -920,7 +935,7 @@ class WebUrl {
     RecyclerView.ViewHolder viewHolder;
     int view_type;
 
-    WebUrl(RecyclerView.ViewHolder viewHolder, String title, String description, String imageUrl,int view_type) {
+    WebUrl(RecyclerView.ViewHolder viewHolder, String title, String imageUrl,int view_type) {
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;

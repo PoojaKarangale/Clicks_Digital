@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Fragment.ChatsFragment;
 import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
@@ -37,6 +42,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,6 +65,8 @@ public class StartActivity extends AppCompatActivity {
     String                   userID;
     FirebaseDatabaseInstance rootRef;
     private ImageView profile;
+    String url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +83,26 @@ public class StartActivity extends AppCompatActivity {
 
         userID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
         setupTabLayout();
+        rootRef.getUserRef().child(userID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                url=snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
+                Picasso.get()
+                        .load(String.valueOf(url)).placeholder(R.drawable.nav_profile)
+                        .resize(120,120)
+                        .into(profile);
 
+                //Toast.makeText(getApplicationContext(), "url image ---- " + url, Toast.LENGTH_LONG).show();
+                Log.i("url --- ", url);
+            }
+//"https://firebasestorage.googleapis.com/v0/b/clicksdigital-ad067.appspot.com/o/User_Media%2FClhjzMSjPodgZbv7QxbrzCYKgCF3%2FPhotos%2FProfileImage%2Fprofile_image?alt=media&token=bf6deedd-2540-4cdb-88ae-1faa2d7e12ee"
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         profile=findViewById(R.id.profile_activity);
+
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

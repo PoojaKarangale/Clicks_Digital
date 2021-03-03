@@ -272,7 +272,55 @@
                     android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15sp" />
+                <LinearLayout
+                    android:id="@+id/accept_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone">
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Accept User Request"/>
+                    <Button
+                        android:id="@+id/request_cancel_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@color/white"
+                        android:text="Cancel"
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+                        android:layout_marginLeft="10dp"
+                        />
+
+                    <Button
+                        android:id="@+id/request_accept_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@color/colorPrimary"
+                        android:text="Accept"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="8sp"
+                        android:layout_marginLeft="7dp"
+
+                        />
+
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/accept_message"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="The profile is already approved by another admin"/>
             </LinearLayout>
+
 
         </RelativeLayout>
 

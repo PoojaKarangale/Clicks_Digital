@@ -64,7 +64,7 @@ class ImageViewPagerAdapter extends PagerAdapter {
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, final int position) {
+    public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
         View itemView=mLayoutInflater.inflate(R.layout.slider_image_home, container, false);
 
         ImageView imageView=itemView.findViewById(R.id.imageViewMain);
@@ -92,7 +92,9 @@ class ImageViewPagerAdapter extends PagerAdapter {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EnlargedImage.enlargeImage( images.get(position),context);
+                Intent intent = new Intent(context, FullScreenTopicImageView.class);
+                intent.putExtra(Const.position, position);
+                context.startActivity(intent);
             }
         });
         upload.setOnClickListener(new View.OnClickListener() {

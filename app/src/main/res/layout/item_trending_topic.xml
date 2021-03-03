@@ -58,14 +58,16 @@
             android:visibility="gone"
             android:layout_gravity="center"
             android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/raised_image_text_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"/>
             <ImageView
                 android:id="@+id/raised_image_home"
                 android:layout_width="180dp"
                 android:layout_height="180dp"/>
-            <TextView
-                android:id="@+id/raised_image_text_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
             <LinearLayout
@@ -82,7 +84,7 @@
                 android:id="@+id/url_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
+                android:textStyle="italic"
                 android:layout_marginBottom="10dp"
                 />
 
@@ -106,12 +108,12 @@
                 android:layout_height="wrap_content"
                 android:maxLines="3" />
 
-            <TextView
+            <!--<TextView
 
                 android:id="@+id/separate_url_trend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="web"/>
+                android:autoLink="web"/>-->
         </LinearLayout>
             <TextView
                 android:id="@+id/topic"

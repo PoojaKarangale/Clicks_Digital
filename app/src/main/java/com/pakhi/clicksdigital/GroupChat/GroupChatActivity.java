@@ -48,6 +48,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -65,6 +66,8 @@ import java.util.regex.Pattern;
 
 public class GroupChatActivity extends AppCompatActivity {
 
+    private static boolean IS_TYPE_TOPIC = false;
+    boolean notify=false;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int PICK_PDF_CODE = 2342;
     static final int REQUESTCODE = 12;
@@ -103,8 +106,8 @@ public class GroupChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_chat2);
 
         //currentGroupName=getIntent().getExtras().get("groupName").toString();
-        currentGroupId = getIntent().getExtras().get(ConstFirebase.groupId).toString();
-        //  currentGroupId = getIntent().getStringExtra(ConstFirebase.groupId);
+        //currentGroupId = getIntent().getExtras().get(ConstFirebase.groupId).toString();
+          currentGroupId = getIntent().getStringExtra(ConstFirebase.groupId);
 
         pref = SharedPreference.getInstance();
         currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -182,6 +185,7 @@ public class GroupChatActivity extends AppCompatActivity {
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                notify=true;
 
                 String message = userMessageInput.getText().toString();
                 Log.i("Message check -----", message);
@@ -486,7 +490,7 @@ public class GroupChatActivity extends AppCompatActivity {
         currentUserName = user.getUser_name();
     }
 
-    private void SaveMessageInfoToDatabase(String messageType, String message, String separateURL) {
+    private void SaveMessageInfoToDatabase(String messageType, final String message, String separateURL) {
 
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
@@ -505,6 +509,19 @@ public class GroupChatActivity extends AppCompatActivity {
                 messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, separateURL);
 
         groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
+
+        if(messageType=="topic"){
+            Log.i("messageKey----", messagekEY);
+            IS_TYPE_TOPIC=true;
+            Log.i("IS_TOPIC_TYPE----", String.valueOf(IS_TYPE_TOPIC));
+
+            notificationBhejo(message, IS_TYPE_TOPIC, messagekEY);
+            Log.i("after----", "after");
+        }
+        else {
+            notificationBhejo(message, IS_TYPE_TOPIC, "");
+
+        }
 
         if (messageType == "topic") {
             saveSeparateTopicNode(messagekEY);
@@ -784,6 +801,34 @@ public class GroupChatActivity extends AppCompatActivity {
 
         UsersRef.child(currentUserID).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
+
+    }
+    public void notificationBhejo(final String message, final boolean IS_TYPE_TOPIC, final String messageKey){
+
+        rootRef.getGroupRef().child(currentGroupId).child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    if(notify&& !snap.getKey().equals(currentUserID)){
+                        Log.i("TOPIC TYPE", String.valueOf(IS_TYPE_TOPIC));
+
+                        if(IS_TYPE_TOPIC){
+                            Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), message, /*title*/ "Topic "+"("+currentGroupName+")"  , "topic", messageKey);
+                        }else {
+                            Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), message, /*title*/ currentGroupName , "grpChat", "");
+                        }
+
+                    }
+
+                }
+                notify=false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 

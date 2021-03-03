@@ -28,7 +28,7 @@ import retrofit2.Response;
 public class Notification {
     public static boolean isNotificationOn = false;
 
-    public static void sendPersonalNotifiaction(final String messageSenderID, final String receiverID, final String body, final String title) {
+    public static void sendPersonalNotifiaction(final String messageSenderID, final String receiverID, final String body, final String title, final String type, final String messageKey) {
         DatabaseReference tokens = FirebaseDatabaseInstance.getInstance().getTokensRef();
         Query query = tokens.orderByKey().equalTo(receiverID);
         query.addValueEventListener(new ValueEventListener() {
@@ -43,7 +43,7 @@ public class Notification {
                     */
 
                     Data data = new Data(messageSenderID, R.drawable.logo, body, title,
-                            receiverID);
+                            receiverID, type, messageKey);
 
                     Sender sender = new Sender(data, token.getToken());
                     APIService apiService;

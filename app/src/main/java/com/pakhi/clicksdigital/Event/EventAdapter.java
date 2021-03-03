@@ -97,8 +97,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 .into(holder.event_image);
 
         holder.event_name.setText(event.getEventName().toUpperCase());
-
-        holder.time_date_text.setText(event.getStartDate() + " to " + event.getEndDate() + ", " + event.getStartTime() + " to " + event.getEndTime());
+        holder.time_date_text.setText(event.getStartTime()+", "+event.getStartDate()+" to "+event.getEndTime()+", "+event.getEndDate());
+        //holder.time_date_text.setText(event.getStartDate() + " to " + event.getEndDate() + ", " + event.getStartTime() + " to " + event.getEndTime());
 
         String text=event.getDescription();
         if (text.length() > 82) {

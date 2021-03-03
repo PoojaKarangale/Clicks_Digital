@@ -1,13 +1,19 @@
 package com.pakhi.clicksdigital.Topic;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,23 +21,34 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+//import com.pakhi.clicksdigital.Adapter.WebUrl1;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
-import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TopicRepliesActivity extends AppCompatActivity {
 
@@ -48,6 +65,14 @@ public class TopicRepliesActivity extends AppCompatActivity {
     ImageView topicImage;
     LinearLayout topicImageLayout;
     TextView topicImageTextView;
+    int i;
+    TextView text, separateUrl, title;
+    ImageView image;
+    Button replyButton;
+    EditText topic_reply;
+    ImageView crossTopic;
+    boolean notify=false;
+    String rep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +97,31 @@ public class TopicRepliesActivity extends AppCompatActivity {
         initialiseFields();
         loadData();
         readReplies();
+        crossTopic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                topic_reply.setVisibility(View.GONE);
+                replyButton.setVisibility(View.GONE);
+                crossTopic.setVisibility(View.GONE);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(topic_reply.getWindowToken(), 0);
+
+            }
+        });
 
         reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle=new Bundle();
+
+                topic_reply.setVisibility(View.VISIBLE);
+                replyButton.setVisibility(View.VISIBLE);
+                crossTopic.setVisibility(View.VISIBLE);
+                topic_reply.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(topic_reply, InputMethodManager.SHOW_IMPLICIT);
+
+                // Notification.sendPersonalNotifiaction(currentUserId, );
+                /*Bundle bundle=new Bundle();
                 bundle.putSerializable(Const.message, (Serializable) topic);
 
                 ReplyFragment fragment=new ReplyFragment();
@@ -88,9 +133,55 @@ public class TopicRepliesActivity extends AppCompatActivity {
                 // transaction.addToBackStack(null);
                 transaction.add(R.id.fragmentContainer, fragment, "TAG_FRAGMENT");
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.commit();
+                transaction.commit();*/
             }
         });
+        replyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String reply=topic_reply.getText().toString();
+                if (!TextUtils.isEmpty(reply)) {
+                    //do something with data
+                    rep = topic_reply.getText().toString();
+                    topic_reply.setText("");
+                    addDataToDatabase("reply", reply);
+                } else {
+                    Toast.makeText(TopicRepliesActivity.this, "Please type something", Toast.LENGTH_SHORT).show();
+                }
+                replyButton.setVisibility(View.GONE);
+                topic_reply.setVisibility(View.GONE);
+                crossTopic.setVisibility(View.GONE);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(topic_reply.getWindowToken(), 0);
+
+                notify=true;
+                Log.i("notification -----", topic.getTo());
+
+                rootRef.getGroupRef().child(topic.getTo()).child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot snap : snapshot.getChildren()){
+                            if(notify&& !snap.getKey().equals(currentUserId)){
+
+
+                                Notification.sendPersonalNotifiaction(topic.getTo(), snap.getKey(),rep , /*title*/ "Topic Reply"  , "topic", topic.getMessageID());
+
+
+                            }
+
+                        }
+                        notify=false;
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        });
+
 
         final boolean[] isLiked={false};
         final DatabaseReference topicLikesRef=rootRef.getTopicLikesRef();
@@ -143,6 +234,27 @@ public class TopicRepliesActivity extends AppCompatActivity {
             }
         });
     }
+    private void addDataToDatabase(String type, String reply) {
+        Calendar calForDate=Calendar.getInstance();
+        SimpleDateFormat currentDateFormat=new SimpleDateFormat("MMM dd, yyyy");
+        String currentDate=currentDateFormat.format(calForDate.getTime());
+
+        SimpleDateFormat currentTimeFormat=new SimpleDateFormat("hh:mm a");
+        String currentTime=currentTimeFormat.format(calForDate.getTime());
+
+        String replykEY=replyRef.child(topic.getMessageID()).push().getKey();
+
+        Message reply1=new Message(currentUserId, reply,
+                type, topic.getTo(), replykEY, currentTime, currentDate);
+
+        replyRef.child(topic.getMessageID()).child(replykEY).setValue(reply1).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
+    }
+
 
     private void initialiseFields() {
         profile_img=findViewById(R.id.profile_img);
@@ -160,6 +272,18 @@ public class TopicRepliesActivity extends AppCompatActivity {
         topicImage = findViewById(R.id.reply_image);
         topicImageTextView = findViewById(R.id.reply_text);
 
+        //URL
+        image = findViewById(R.id.reply_image_url);
+        title = findViewById(R.id.reply_title_url);
+        text = findViewById(R.id.reply_url_text);
+        separateUrl = findViewById(R.id.reply_separate_url);
+
+        //REPLY
+        topic_reply = findViewById(R.id.reply_to_topic);
+        replyButton = findViewById(R.id.reply_button);
+        crossTopic = findViewById(R.id.cross_reply);
+
+
 
         replies_list=findViewById(R.id.replies_list);
         replies_list.setHasFixedSize(true);
@@ -173,10 +297,46 @@ public class TopicRepliesActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+        Pattern p;
+        Matcher ma = null;
+        String[] words = topic.getMessage().split(" ");
+
+        i = 0;
+        p = Pattern.compile(URL_REGEX);
+        ma = p.matcher(topic.getExtra());
+
+        if(ma.find()){
+            i=1;
+        }
+        if(i==1){
+            topic_detail.setVisibility(View.GONE);
+            text.setVisibility(View.VISIBLE);
+            image.setVisibility(View.VISIBLE);
+            separateUrl.setVisibility(View.VISIBLE);
+            title.setVisibility(View.VISIBLE);
+
+            text.setText(topic.getMessage());
+            separateUrl.setText(topic.getExtra());
+
+            new URL().execute(topic.getExtra());
+        }
         if(topic.getMessage().length()>113){
             if(topic.getMessage().substring(93,113).equals(topic.getTo())){
+
                 topic_detail.setVisibility(View.GONE);
-                topicImageLayout.setVisibility(View.VISIBLE);
+                topicImage.setVisibility(View.VISIBLE);
+                topicImageTextView.setVisibility(View.VISIBLE);
+                topicImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(TopicRepliesActivity.this, LoadImage.class);
+                        intent.putExtra("image_url",topic.getMessage());
+                        startActivity(intent);
+                    }
+                });
+
+                //topicImageLayout.setVisibility(View.VISIBLE);
                 topicImageTextView.setText(topic.getExtra());
                 Picasso.get()
                         .load(String.valueOf(topic.getMessage()))
@@ -184,6 +344,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
 
                 //date_time.setLayoutParams();
             }
+
             else {
                 topic_detail.setText(topic.getMessage());
 
@@ -258,5 +419,67 @@ public class TopicRepliesActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
 
+    }
+    public class URL extends AsyncTask<String, String, web>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(web s) {
+            super.onPostExecute(s);
+
+            title.setText(s.title);
+            Picasso.get()
+                    .load(String.valueOf(s.imageURL))
+                    .into(image);
+        }
+
+        @Override
+        protected web doInBackground(String... strings) {
+            String value = null;
+            Document doc = null;
+            web webUrlObj = null;
+            try {
+                doc = Jsoup.connect(strings[0]).get();
+                //value = doc.title();
+            } catch (Exception e) {
+                //value="No Title";
+                e.printStackTrace();
+            }
+            value = doc.title();
+            Log.i("Value of Title - ", value);
+            //String description =doc.select("meta[name=description]").get(0).attr("content");// ;
+           // Log.i("Value of desc - ", description);
+            String imageUrl = "";
+            try {
+                 /*description = doc.select("meta[name=description]").get(0).attr("content");
+                Log.i("Value of desc - ", description);
+*/
+
+
+                if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {
+                    imageUrl = doc.select("meta[property=og:image]").get(0).attr("content");
+                    Log.i("Image URL - ", imageUrl);
+                }
+
+
+            } catch (Exception e) {
+                //description="";
+                e.printStackTrace();
+            }
+            webUrlObj = new web( value.toString(), imageUrl.toString());
+
+            return webUrlObj;
+
+        }
+    }
+}
+class web{
+    String  title, imageURL;
+    web( String title, String imageURL){
+        this.title=title;
+        this.imageURL=imageURL;
     }
 }

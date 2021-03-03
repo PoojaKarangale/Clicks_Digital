@@ -21,12 +21,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.GroupChat.MessageAdapter;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
+import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
 
@@ -79,6 +81,14 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             }
 
         }
+        holder.raisedImageHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mcontext, LoadImage.class);
+                intent.putExtra("image_url", m.getMessage());
+                mcontext.startActivity(intent);
+            }
+        });
         if (i == 1 && m.getMessage().length()>113) {
             if( m.getMessage().substring(93,113).equals(m.getTo())){
                 holder.topicText.setVisibility(View.GONE);
@@ -92,6 +102,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             }
             else {
                 holder.layOutURL.setVisibility(View.VISIBLE);
+                holder.urlDesc.setVisibility(View.GONE);
                 //holder.separateURLText.setText(m.getExtra());
                 holder.topicText.setVisibility(View.GONE);
                 new HomePageTopicAdapter.URLAsynk().execute(new Async(holder, m.getExtra()));
@@ -109,6 +120,8 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
 
         }else if(i == 1 && m.getMessage().length()<=113){
             holder.layOutURL.setVisibility(View.VISIBLE);
+            holder.urlDesc.setVisibility(View.GONE);
+
             //holder.separateURLText.setText(m.getExtra());
             holder.topicText.setVisibility(View.GONE);
             new HomePageTopicAdapter.URLAsynk().execute(new Async(holder, m.getExtra()));
@@ -116,7 +129,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             holder.topicText.setVisibility(View.GONE);
             holder.layOutURL.setVisibility(View.VISIBLE);
             holder.urlText.setText(m.getMessage());
-            holder.separateURLText.setText(m.getExtra());
+  //          holder.separateURLText.setText(m.getExtra());
 
         }
         else if(i==1 && m.getMessage().substring(93,113).equals(m.getTo())) {
@@ -249,7 +262,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             urlDesc = itemView.findViewById(R.id.desc_of_url_sender);
             urlImage = itemView.findViewById(R.id.url_image_sender);
             layOutURL = itemView.findViewById(R.id.layout_url_sender);
-            separateURLText = itemView.findViewById(R.id.separate_url_trend);
+            //separateURLText = itemView.findViewById(R.id.separate_url_trend);
 
             // IMAGE
             raisedImageLayoutHome= itemView.findViewById(R.id.raised_image_layout_home);
@@ -309,8 +322,8 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             }
             value = doc.title();
             Log.i("Value of Title - ", value);
-            String description =doc.select("meta[name=description]").get(0).attr("content");// ;
-            Log.i("Value of desc - ", description);
+            //String description =doc.select("meta[name=description]").get(0).attr("content");// ;
+            //Log.i("Value of desc - ", description);
             String imageUrl = "";
             try {
                  /*description = doc.select("meta[name=description]").get(0).attr("content");
@@ -328,7 +341,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
                 //description="";
                 e.printStackTrace();
             }
-            webUrlObj = new WebUrl1(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString());
+            webUrlObj = new WebUrl1(object[0].viewHolder, value.toString(), imageUrl.toString());
 
             return webUrlObj;
         }
@@ -342,9 +355,9 @@ class WebUrl1 {
     HomePageTopicAdapter.HomePageTopivViewHolder viewHolder;
     //int view_type;
 
-    WebUrl1(HomePageTopicAdapter.HomePageTopivViewHolder viewHolder, String title, String description, String imageUrl) {
+    WebUrl1(HomePageTopicAdapter.HomePageTopivViewHolder viewHolder, String title, String imageUrl) {
         this.title = title;
-        this.description = description;
+        //this.description = description;
         this.imageUrl = imageUrl;
         this.viewHolder = viewHolder;
         //this.view_type=view_type;

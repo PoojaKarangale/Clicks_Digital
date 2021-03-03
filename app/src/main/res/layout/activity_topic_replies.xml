@@ -59,49 +59,78 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone"
+
                     android:layout_below="@+id/profession"
                     android:layout_alignStart="@+id/name"
 
                     >
+
+                    <!-- URL -->
+                    <TextView
+                        android:id="@+id/reply_url_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
                     <ImageView
-                        android:id="@+id/reply_image"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"/>
+                        android:id="@+id/reply_image_url"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/reply_title_url"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/reply_separate_url"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:autoLink="web"/>
+
+                    <!-- IMAGE-->
                     <TextView
                         android:id="@+id/reply_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
+                    <ImageView
+                        android:id="@+id/reply_image"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/topic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/profession"
+                        android:layout_alignStart="@+id/name"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/flag_transparent"
+                        android:fontFamily="@font/lato"
+                        android:gravity="top|start"
+                        android:hint="Event Description"
+                        android:inputType="text|textMultiLine"
+                        android:lineSpacingExtra="2dp"
+                        android:lines="8"
+                        android:maxLength="400"
+                        android:maxLines="12"
+                        android:minLines="2"
+                        android:scrollbars="vertical"
+                        android:scrollHorizontally="false"
+                        android:singleLine="false"
+                        android:text="PayUMoney is one of India’s most popular Payment Gateways and it is used by small as well as large companies for selling their products online and collecting payments in a easy way. The Android SDK provided by PayUMoney is very easy to implement and we are going to learn about it further in the post."
+                        android:textAlignment="gravity" />
+
+
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/topic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/profession"
-                    android:layout_alignStart="@+id/name"
-                    android:layout_marginTop="@dimen/margine_main"
-                    android:background="@drawable/flag_transparent"
-                    android:fontFamily="@font/lato"
-                    android:gravity="top|start"
-                    android:hint="Event Description"
-                    android:inputType="text|textMultiLine"
-                    android:lineSpacingExtra="2dp"
-                    android:lines="8"
-                    android:maxLength="400"
-                    android:maxLines="12"
-                    android:minLines="2"
-                    android:scrollbars="vertical"
-                    android:scrollHorizontally="false"
-                    android:singleLine="false"
-                    android:text="PayUMoney is one of India’s most popular Payment Gateways and it is used by small as well as large companies for selling their products online and collecting payments in a easy way. The Android SDK provided by PayUMoney is very easy to implement and we are going to learn about it further in the post."
-                    android:textAlignment="gravity" />
 
                 <TextView
                     android:id="@+id/date_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/topic"
+                    android:layout_below="@+id/reply_image_layout"
                     android:layout_alignStart="@+id/name"
                     android:layout_marginTop="10dp"
                     android:text="Date and time"
@@ -187,6 +216,35 @@
                     android:layout_marginTop="10dp"
                     android:background="#CCCCCC" />
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/reply_to_topic"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Reply here..."
+                    android:maxLines="10"
+                    android:visibility="gone"
+                    />
+                <Button
+                    android:layout_gravity="right"
+                    android:id="@+id/reply_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="reply"
+                    android:visibility="gone"/>
+                <ImageView
+                    android:id="@+id/cross_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/close"
+                    android:visibility="gone"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="15dp"/>
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/replies_list"

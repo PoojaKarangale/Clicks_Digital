@@ -140,7 +140,7 @@ public class EventGalleryActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mRecyclerView.setHasFixedSize(true); // Helps improve performance
 
-        mAdapter = new ImageAdapter(this, images);
+        mAdapter = new ImageAdapter(this, images, event);
         mRecyclerView.setAdapter(mAdapter);
     }
 

@@ -27,6 +27,7 @@ import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.text.ParseException;
@@ -55,6 +56,9 @@ public class HomeFragment extends Fragment {
     ArrayList<String> eventName = new ArrayList<>();
     DatabaseReference sliderRef;
     Context context;
+    String userName;
+    ArrayList<String> listAdmins = new ArrayList<>();
+    boolean notify = false;
 
     public HomeFragment() {
 
@@ -72,6 +76,18 @@ public class HomeFragment extends Fragment {
         currentUserID = pref.getData(SharedPreference.currentUserId, getContext());
         requestBtn = homeView.findViewById(R.id.request_button);
         setupRecyclerView(homeView);
+
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userName = snapshot.child(ConstFirebase.USER_NAME).getValue().toString()+snapshot.child(ConstFirebase.LAST_NAME).getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         rootRef.getApprovedUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -105,11 +121,39 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String abc = snap.getKey();
+                    if(snap.child(ConstFirebase.USER_DETAILS).exists()){
+                        String type = snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString();
+
+                        if(type.equals("admin")){
+                            listAdmins.add(snap.getKey());
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                notify=true;
                 rootRef.getUserRequestsRef().child(currentUserID).setValue("");
                 Toast.makeText(getContext(), "Request is sent to admin wait for approval ", Toast.LENGTH_LONG).show();
+                for(int j=0;j<listAdmins.size();j++){
+                    if(notify)
+                    Notification.sendPersonalNotifiaction(currentUserID, listAdmins.get(j), "Profile verification request by "+userName,"User Request", "request","");
+                }
+                notify=false;
+
             }
         });
 

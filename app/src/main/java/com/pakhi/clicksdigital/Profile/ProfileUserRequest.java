@@ -29,14 +29,17 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VisitProfileActivity extends AppCompatActivity {
+public class ProfileUserRequest extends AppCompatActivity {
 
+    TextView acceptMessage;
+    private static boolean ACCEPTED = false;
     boolean isVisterIsAdmin = false;
     boolean isProfileUserIsAdmin = false;
     UserDatabase db;
@@ -47,9 +50,9 @@ public class VisitProfileActivity extends AppCompatActivity {
     private User user, currentUser;
     private String receiverUserID, senderUserID, Current_State;
     private Button make_admin, removeAdmin, message_btn;
-    private DatabaseReference userRef, ChatRequestRef, ContactsRef;
+    private DatabaseReference userRef, ChatRequestRef, ContactsRef, userRefAppCan;
     Button cancel, accept;
-    String req="normal";
+    String req;
     LinearLayout acceptLayout;
 
     @Override
@@ -59,10 +62,38 @@ public class VisitProfileActivity extends AppCompatActivity {
 
         rootRef = FirebaseDatabaseInstance.getInstance();
         userRef = rootRef.getUserRef();
-        user_id = getIntent().getStringExtra(Const.visitUser);
-        //req = getIntent().getStringExtra(Const.fromRequest);
+        user_id = getIntent().getStringExtra(ConstFirebase.visitUser);
+        req = getIntent().getStringExtra(Const.fromRequest);
 
 
+        userRefAppCan = rootRef.getApprovedUserRef();
+
+        acceptMessage = findViewById(R.id.accept_message);
+        acceptLayout = findViewById(R.id.accept_layout);
+
+
+        userRefAppCan.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    if(snap.getKey().equals(user_id)){
+                        acceptMessage.setVisibility(View.VISIBLE);
+                        acceptLayout.setVisibility(View.GONE);
+                        ACCEPTED=true;
+                        break;
+                    }
+
+                }
+                if(!ACCEPTED){
+                    acceptLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         db = new UserDatabase(this);
         getCurrentUserFromDb();
@@ -152,6 +183,16 @@ public class VisitProfileActivity extends AppCompatActivity {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Profile is accepted, now you can join groups", "Profile Request Status", "accepted","");
+                rootRef.getApprovedUserRef().child(user.getUser_id()).setValue(true);
+                rootRef.getUserRequestsRef().child(user.getUser_id()).removeValue();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Profile is rejected", "Profile Request Status", "rejected","");
+                rootRef.getUserRequestsRef().child(user.getUser_id()).removeValue();
 
             }
         });
@@ -197,7 +238,6 @@ public class VisitProfileActivity extends AppCompatActivity {
 
         Current_State = "new";
 
-        acceptLayout = findViewById(R.id.accept_layout);
         cancel = findViewById(R.id.request_cancel_btn);
         accept = findViewById(R.id.request_accept_btn);
 
@@ -246,7 +286,7 @@ public class VisitProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (certificates == null) {
-                    Toast.makeText(VisitProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileUserRequest.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("certificates", (Serializable) certificates);
@@ -317,10 +357,9 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void viewProfile(String image_url) {
-        Intent intent = new Intent(VisitProfileActivity.this, LoadImage.class);
+        Intent intent = new Intent(ProfileUserRequest.this, LoadImage.class);
         intent.putExtra("image_url", image_url);
         startActivity(intent);
-
     }
 
     public void makeAdmin(final View view) {

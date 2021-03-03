@@ -1,18 +1,27 @@
 package com.pakhi.clicksdigital.Notifications;
 
+import android.content.Intent;
+
 public class Data {
     private String user;
     private int    icon;
     private String body;
     private String title;
     private String sent;
+    private Intent intent;
+    private String type;
+    private String topicId;
 
-    public Data(String user, int icon, String body, String title, String sent) {
+    public Data(String user, int icon, String body, String title, String sent, String type, String topicId) {
         this.user=user;
         this.icon=icon;
         this.body=body;
         this.title=title;
         this.sent=sent;
+        //this.intent=intent;
+        this.type=type;
+        this.topicId=topicId;
+
     }
 
     public Data() {

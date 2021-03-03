@@ -79,4 +79,6 @@ public class Const {
     public final static String visit_user_name = "visit_user_name";
     public final static String userdata = "userdata";
 
+    public static String position = "position";
+    public static String fromRequest="fromRequest";
 }

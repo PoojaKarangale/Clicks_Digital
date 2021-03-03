@@ -37,6 +37,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
@@ -208,8 +209,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void viewProfile(String image_url) {
-
-        EnlargedImage.enlargeImage(image_url,getApplicationContext());
+        Intent intent = new Intent(ProfileActivity.this, LoadImage.class);
+        intent.putExtra("image_url", image_url);
+        startActivity(intent);
+        //EnlargedImage.enlargeImage(image_url,getApplicationContext());
     }
 
     private void getUserFromDb() {

@@ -177,6 +177,7 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
 
                     String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+                    String separateUrl="";
                     Pattern p;
                     Matcher m = null;
                     String[] words = messageText.split(" ");
@@ -186,6 +187,7 @@ public class ChatActivity extends AppCompatActivity {
                         m = p.matcher(word);
 
                         if(m.find()) {
+                            separateUrl=word;
                             Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
                             i=1;
                             break;
@@ -195,10 +197,10 @@ public class ChatActivity extends AppCompatActivity {
                     MessageInputText.setText("");
                     if(i==1){
                         //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
-                        SendMessage("url", messageText);
+                        SendMessage("url", messageText,separateUrl);
                     }else{
                         //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
-                        SendMessage("text", messageText);
+                        SendMessage("text", messageText,"");
                     }
 
                 }
@@ -376,7 +378,7 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
-    private void SendMessage(String messageType, String message) {
+    private void SendMessage(String messageType, String message, String separteURL) {
 
         messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
 
@@ -391,7 +393,7 @@ public class ChatActivity extends AppCompatActivity {
         /* Map messageTextBody = new HashMap();*/
 
         Message message1 = new Message(messageSenderID, message,
-                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate, false, null);
+                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate, false, separteURL);
 
         /*  messageTextBody.put("from", messageSenderID);
         messageTextBody.put("to", messageReceiverID);
@@ -424,7 +426,7 @@ public class ChatActivity extends AppCompatActivity {
 
         if (notify) {
            // Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, "username + \": \" + message", "New Message");
-            Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, messageSenderName + ": " + message, "New Message");
+            Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, messageSenderName + ": " + message, "New Message", "chat","");
         }
         notify = false;
     }
@@ -600,7 +602,7 @@ public class ChatActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         Log.d("ChatActivity", "----------------------------------------------hhhhhhhhhhhhhhhhhhhhh-----------------" + uri.toString());
-                                        SendMessage("pdf", String.valueOf(uri));
+                                        SendMessage("pdf", String.valueOf(uri),"");
                                     }
                                 });
                     }

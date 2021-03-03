@@ -26,6 +26,7 @@ import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PaymentGatewayFiles.PaymentActivity;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
@@ -105,6 +106,14 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+        organiser_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EventDetailsActivity.this, VisitProfileActivity.class);
+                intent.putExtra(Const.visitUser, organiser.getUser_id());
+                startActivity(intent);
             }
         });
         no_of_participants.setOnClickListener(new View.OnClickListener() {
@@ -215,8 +224,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .load(organiser.getImage_url())
                 .resize(120, 120)
                 .into(organiser_image);
+        time_date_text.setText(event.getStartTime()+", "+event.getStartDate()+" to "+event.getEndTime()+", "+event.getEndDate());
 
-        time_date_text.setText(event.getStartDate() + " to " + event.getEndDate() + ", " + event.getStartTime() + " to " + event.getEndTime());
+        //time_date_text.setText(event.getStartDate() + " to " + event.getEndDate() + ", " + event.getStartTime() + " to " + event.getEndTime());
         event_name.setText(event.getEventName().toUpperCase());
         category.setText(event.getCategory());
         description.setText(event.getDescription());

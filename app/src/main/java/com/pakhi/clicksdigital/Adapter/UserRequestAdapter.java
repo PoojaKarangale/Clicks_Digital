@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.StartActivity;
+import com.pakhi.clicksdigital.Profile.ProfileUserRequest;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -95,8 +96,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteUserRequest(userId, position);
-                // sendUserTheRejectionMessage(groupName);
+                //deleteUserRequest(userId, position);
+                //sendUserTheRejectionMessage(groupName);
                 // createDialog("");
             }
         });
@@ -104,10 +105,12 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // addUserToGroup(groupId, userId);
-                approveUser(userId);
-                deleteUserRequest(userId, position);
+                //addUserToGroup(groupId, userId);
                 //sendUserTheWelcomeMessage(groupName, groupId);
+
+                //approveUser(userId);
+                //deleteUserRequest(userId, position);
+
             }
         });
     }
@@ -167,8 +170,9 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     }
 */
     private void visitUsersProfile(String userId) {
-        Intent profileActivity=new Intent(mcontext, VisitProfileActivity.class);
+        Intent profileActivity=new Intent(mcontext, ProfileUserRequest.class);
         profileActivity.putExtra(Const.visitUser, userId);
+        profileActivity.putExtra(Const.fromRequest, "req");
         mcontext.startActivity(profileActivity);
     }
 
@@ -208,8 +212,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             cancel=itemView.findViewById(R.id.request_cancel_btn);
 
             group_name.setVisibility(View.VISIBLE);
-            accept.setVisibility(View.VISIBLE);
-            cancel.setVisibility(View.VISIBLE);
+            //accept.setVisibility(View.VISIBLE);
+            //cancel.setVisibility(View.VISIBLE);
         }
     }
 }
