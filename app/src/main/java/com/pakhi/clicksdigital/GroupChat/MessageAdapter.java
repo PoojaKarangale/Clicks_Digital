@@ -130,9 +130,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case "text":
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
                 messageViewHolder.senderMessageText.setText(message.getMessage());
+
+                messageViewHolder.senderLayoutUrl.setVisibility(View.GONE);
+                messageViewHolder.senderImageLayout.setVisibility(View.GONE);
                 //  messageViewHolder.senderDate.setText(message.getTime() + " - " + message.getDate());
                 break;
             case "image":
+                messageViewHolder.senderLayoutUrl.setVisibility(View.GONE);
+                messageViewHolder.senderMessageText.setVisibility(View.GONE);
                 messageViewHolder.senderImageLayout.setVisibility(View.VISIBLE);
                 messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
                 Picasso.get()
@@ -150,6 +155,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 messageViewHolder.senderLayoutPdf.setVisibility(View.VISIBLE);
                 break;
             case "url":
+                messageViewHolder.senderImageLayout.setVisibility(View.GONE);
+                messageViewHolder.senderMessageText.setVisibility(View.GONE);
                 messageViewHolder.senderLayoutUrl.setVisibility(View.VISIBLE);
                 messageViewHolder.senderUrlText.setText(message.getMessage());
                 messageViewHolder.senderSeparateURL.setText(message.getExtra());
@@ -215,8 +222,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 //  messageViewHolder.receiverDate.setText(message.getTime() + " - " + message.getDate());
                 messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverMessageText.setText(message.getMessage());
+
+                messageViewHolder.LayoutUrl.setVisibility(View.GONE);
+                messageViewHolder.receiverLayoutImage.setVisibility(View.GONE);
                 break;
             case "image":
+                messageViewHolder.LayoutUrl.setVisibility(View.GONE);
+                messageViewHolder.receiverMessageText.setVisibility(View.GONE);
+
                 messageViewHolder.mainRecImageLayout.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverLayoutImage.setVisibility(View.VISIBLE);
                 messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
@@ -235,6 +248,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 messageViewHolder.receiverLayoutPdf.setVisibility(View.VISIBLE);
                 break;
             case "url":
+
+                messageViewHolder.receiverMessageText.setVisibility(View.GONE);
+                messageViewHolder.receiverLayoutImage.setVisibility(View.GONE);
+
                 messageViewHolder.LayoutUrl.setVisibility(View.VISIBLE);
                 messageViewHolder.urlText.setText(message.getMessage());
                 messageViewHolder.separateURL.setText(message.getExtra());
@@ -295,6 +312,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         usersRef = rootRef.getUserRef().child(message.getFrom()).child(Const.USER_DETAILS);
         messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
         messageViewHolder.topic_text.setVisibility(View.GONE);
+        messageViewHolder.raisedImageLayout.setVisibility(View.GONE);
 
         //new Topic URL implementation
         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
@@ -317,6 +335,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 messageViewHolder.topic_text.setVisibility(View.GONE);
                 messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
 
+
                 messageViewHolder.raisedImageLayout.setVisibility(View.VISIBLE);
                 messageViewHolder.raisedImageText.setText(message.getExtra());
                 Picasso.get()
@@ -324,6 +343,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .into(messageViewHolder.raisedImage);
             } else {
                 messageViewHolder.topic_text.setVisibility(View.GONE);
+                messageViewHolder.raisedImageLayout.setVisibility(View.GONE);
                 messageViewHolder.topicLayoutUrl.setVisibility(View.VISIBLE);
                 messageViewHolder.topicUrlText.setText(message.getMessage());
                 Log.i("extra topic ---- ", message.getExtra());
@@ -334,6 +354,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         } else if (i == 1 && message.getMessage().length() < 113) {
             messageViewHolder.topic_text.setVisibility(View.GONE);
+            messageViewHolder.raisedImageLayout.setVisibility(View.GONE);
             messageViewHolder.topicLayoutUrl.setVisibility(View.VISIBLE);
             messageViewHolder.topicUrlText.setText(message.getMessage());
             Log.i("extra topic ---- ", message.getExtra());
@@ -354,6 +375,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     .into(messageViewHolder.raisedImage);
         } else {
             messageViewHolder.topic_text.setVisibility(View.VISIBLE);
+            messageViewHolder.raisedImageLayout.setVisibility(View.GONE);
+            messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
             messageViewHolder.topic_text.setText(message.getMessage());
         }
 
