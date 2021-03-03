@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Event.EventAdapter;
 import com.pakhi.clicksdigital.Model.Event;
@@ -199,7 +200,8 @@ public class OnlineEventsFragment extends Fragment {
         Timestamp ts = new Timestamp(calendar.getTimeInMillis() / 1000L);
         final Date current = new Date(ts.getTime());
 
-        eventRef.child(ConstFirebase.eventOnline).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        Query query = eventRef.orderByChild("event_type").equalTo(ConstFirebase.eventOnline);
+        query.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 events.clear();

@@ -1,12 +1,9 @@
 package com.pakhi.clicksdigital.Utils;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,6 +16,7 @@ import com.pakhi.clicksdigital.Notifications.Data;
 import com.pakhi.clicksdigital.Notifications.MyResponse;
 import com.pakhi.clicksdigital.Notifications.Sender;
 import com.pakhi.clicksdigital.Notifications.Token;
+import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
 
 import retrofit2.Call;
@@ -28,7 +26,7 @@ import retrofit2.Response;
 public class Notification {
     public static boolean isNotificationOn = false;
 
-    public static void sendPersonalNotifiaction(final String messageSenderID, final String receiverID, final String body, final String title, final String type, final String messageKey) {
+    public static void sendPersonalNotifiaction(final Context applicationContext, final String messageSenderID, final String receiverID, final String body, final String title) {
         DatabaseReference tokens = FirebaseDatabaseInstance.getInstance().getTokensRef();
         Query query = tokens.orderByKey().equalTo(receiverID);
         query.addValueEventListener(new ValueEventListener() {
@@ -37,13 +35,30 @@ public class Notification {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Token token = snapshot.getValue(Token.class);
 
-                    /* Intent resultIntent = new Intent(getApplicationContext(), ChatActivity.class);
-                    resultIntent.putExtra("visit_user_id", user);
+                    Intent resultIntent = new Intent(applicationContext, ChatActivity.class);
+                    resultIntent.putExtra("visit_user_id", receiverID);
                     resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    */
+
 
                     Data data = new Data(messageSenderID, R.drawable.logo, body, title,
-                            receiverID, type, messageKey);
+                            receiverID);
+                  /*  Data data = new Data(messageSenderID, R.drawable.logo, body, title,
+                            receiverID,resultIntent);*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     Sender sender = new Sender(data, token.getToken());
                     APIService apiService;

@@ -13,15 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
@@ -38,7 +34,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageText extends AppCompatActivity {
-    //boolean notify=false;
     FirebaseDatabaseInstance rootRef;
     SharedPreference pref;
     DatabaseReference groupChatRefForCurrentGroup;
@@ -89,7 +84,6 @@ public class ImageText extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notify=true;
                 inp = textImage.getText().toString();
 
                 if(TextUtils.isEmpty(inp)){
@@ -123,7 +117,6 @@ public class ImageText extends AppCompatActivity {
     }
 
     private void goToParent() {
-        Notification.sendPersonalNotifiaction(currentUserID, currentGroupId, messageSenderName + ": " + "Photo", "New Message", "chat","");
         Intent intent = new Intent(ImageText.this, ChatActivity.class);
         intent.putExtra(Const.visitUser, currentGroupId);
         startActivity(intent);
@@ -136,7 +129,7 @@ public class ImageText extends AppCompatActivity {
         finish();
     }
 
-    private void SaveMessageInfoToDatabase(String messageType, final String message, String inp) {
+    private void SaveMessageInfoToDatabase(String messageType, String message, String inp) {
 
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
@@ -148,7 +141,7 @@ public class ImageText extends AppCompatActivity {
         HashMap<String, Object> groupMessageKey = new HashMap<>();
 
         groupChatRefForCurrentGroup.updateChildren(groupMessageKey);
-        final String messagekEY = groupChatRefForCurrentGroup.push().getKey();
+        String messagekEY = groupChatRefForCurrentGroup.push().getKey();
         Long timestamp = calForDate.getTimeInMillis() / 1000L;
 
         Log.i("GROUPID --------- ",currentGroupId);
@@ -162,25 +155,6 @@ public class ImageText extends AppCompatActivity {
             DatabaseReference topicRef = rootRef.getTopicRef();
             topicRef.child(messagekEY).setValue(currentGroupId);
 
-            //NOTIFICATIONS
-            rootRef.getGroupRef().child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot snap : snapshot.getChildren()){
-                        if(notify && !snap.getKey().equals(currentUserID)){
-                            Notification.sendPersonalNotifiaction(currentUserID, snap.getKey(), "Photo", /*title*/ "Topic "+"("+currentGroupName+")" , "topic", messagekEY);
-                        }
-
-                    }
-                    notify=false;
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
             goToParentGrp();
 
         }
@@ -189,25 +163,6 @@ public class ImageText extends AppCompatActivity {
             Message message1 = new Message(currentUserID, message,
                     messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, inp);
             groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
-            //NOTIFICATIONS
-            rootRef.getGroupRef().child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot snap : snapshot.getChildren()){
-                        if(notify && !snap.getKey().equals(currentUserID)){
-                            Notification.sendPersonalNotifiaction(currentUserID, snap.getKey(), "Photo", /*title*/ currentGroupName , "grpChat","");
-                        }
-
-                    }
-                    notify=false;
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
             goToParentGrp();
 
 
@@ -282,11 +237,9 @@ public class ImageText extends AppCompatActivity {
             }
         });
 
-
         if (notify) {
             // Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, "username + \": \" + message", "New Message");
-//            Notification.sendPersonalNotifiaction(currentUserID, currentGroupId, messageSenderName + ": " + message, "New Message");
-            Notification.sendPersonalNotifiaction(currentUserID, currentGroupId, messageSenderName + ": " + "Photo", "New Message", "chat","");
+            Notification.sendPersonalNotifiaction(getApplicationContext(), currentUserID, currentGroupId, messageSenderName + ": " + message, "New Message");
         }
         notify = false;
     }

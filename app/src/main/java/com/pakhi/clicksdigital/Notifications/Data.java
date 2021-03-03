@@ -4,24 +4,36 @@ import android.content.Intent;
 
 public class Data {
     private String user;
-    private int    icon;
+    private int icon;
     private String body;
     private String title;
     private String sent;
+
+    public Intent getIntent() {
+        return intent;
+    }
+
+    public void setIntent(Intent intent) {
+        this.intent = intent;
+    }
+
     private Intent intent;
-    private String type;
-    private String topicId;
 
-    public Data(String user, int icon, String body, String title, String sent, String type, String topicId) {
-        this.user=user;
-        this.icon=icon;
-        this.body=body;
-        this.title=title;
-        this.sent=sent;
-        //this.intent=intent;
-        this.type=type;
-        this.topicId=topicId;
+    public Data(String user, int icon, String body, String title, String sent) {
+        this.user = user;
+        this.icon = icon;
+        this.body = body;
+        this.title = title;
+        this.sent = sent;
+    }
 
+    public Data(String user, int icon, String body, String title, String sent, Intent intent) {
+        this.user = user;
+        this.icon = icon;
+        this.body = body;
+        this.title = title;
+        this.sent = sent;
+        this.intent = intent;
     }
 
     public Data() {
@@ -32,7 +44,7 @@ public class Data {
     }
 
     public void setUser(String user) {
-        this.user=user;
+        this.user = user;
     }
 
     public int getIcon() {
@@ -40,7 +52,7 @@ public class Data {
     }
 
     public void setIcon(int icon) {
-        this.icon=icon;
+        this.icon = icon;
     }
 
     public String getBody() {
@@ -48,7 +60,7 @@ public class Data {
     }
 
     public void setBody(String body) {
-        this.body=body;
+        this.body = body;
     }
 
     public String getTitle() {
@@ -56,7 +68,7 @@ public class Data {
     }
 
     public void setTitle(String title) {
-        this.title=title;
+        this.title = title;
     }
 
     public String getSent() {
@@ -64,6 +76,6 @@ public class Data {
     }
 
     public void setSent(String sent) {
-        this.sent=sent;
+        this.sent = sent;
     }
 }

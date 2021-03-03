@@ -1,16 +1,13 @@
 package com.pakhi.clicksdigital.GroupChat;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -24,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,11 +28,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.LoadImage;
-import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
-import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
@@ -48,9 +43,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -59,9 +52,8 @@ import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    int i = 0;
+    //  int i = 0;
     SharedPreference pref;
     String currentUserId;
     FirebaseDatabaseInstance rootRef;
@@ -146,9 +138,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Picasso.get()
                         .load(String.valueOf(message.getMessage()))
                         .into(messageViewHolder.messageSenderPicture);
-                if(message.getExtra()==""){
+                if (message.getExtra() == "") {
                     messageViewHolder.senderImageText.setVisibility(View.GONE);
-                }else{
+                } else {
                     messageViewHolder.senderImageText.setVisibility(View.VISIBLE);
                     messageViewHolder.senderImageText.setText(message.getExtra());
                 }
@@ -162,7 +154,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 messageViewHolder.senderUrlText.setText(message.getMessage());
                 messageViewHolder.senderSeparateURL.setText(message.getExtra());
 
-                new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(),VIEW_TYPE_ME));
+                new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(), VIEW_TYPE_ME));
                 // new URLAsynk(this).execute(new Async(messageViewHolder,message.getMessage()));
                 // new URLAsynk().execute(message.getMessage());
 
@@ -171,9 +163,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.messageSenderPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, LoadImage.class);
-                intent.putExtra("image_url",message.getMessage());
-                context.startActivity(intent);
+                enlargeImage(String.valueOf(message.getMessage()), v);
             }
         });
 
@@ -188,7 +178,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
-    private void configureMessageViewHolderOther(final MessageViewHolderOther messageViewHolder, int position, final Message message) {
+    private void configureMessageViewHolderOther(final MessageViewHolderOther messageViewHolder, final int position, final Message message) {
         messageViewHolder.receiverMessageText.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
         messageViewHolder.receiverLayoutPdf.setVisibility(View.GONE);
@@ -234,9 +224,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Picasso.get()
                         .load(String.valueOf(message.getMessage()))
                         .into(messageViewHolder.messageReceiverPicture);
-                if(message.getExtra()==""){
+                if (message.getExtra() == "") {
                     messageViewHolder.imageText.setVisibility(View.GONE);
-                }else{
+                } else {
                     messageViewHolder.imageText.setVisibility(View.VISIBLE);
                     messageViewHolder.imageText.setText(message.getExtra());
                 }
@@ -250,9 +240,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 messageViewHolder.separateURL.setText(message.getExtra());
                 messageViewHolder.urlText.setMovementMethod(LinkMovementMethod.getInstance());
 
-              //  new URLAsynkRec().execute(new AsyncRec(messageViewHolder, message.getMessage()));
+                //  new URLAsynkRec().execute(new AsyncRec(messageViewHolder, message.getMessage()));
 
-                new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(),VIEW_TYPE_OTHER));
+                new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(), VIEW_TYPE_OTHER));
 
                 // messageViewHolder.senderLayoutUrl.setVisibility(View.VISIBLE);
                 //  messageViewHolder.senderUrlText.setText(message.getMessage());
@@ -261,9 +251,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.messageReceiverPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, LoadImage.class);
-                intent.putExtra("image_url",message.getMessage());
-                context.startActivity(intent);
+                enlargeImage(String.valueOf(message.getMessage()), v);
 
             }
         });
@@ -284,6 +272,23 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             }
         });
+        messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                CharSequence options[] = new CharSequence[]
+                        {
+                                "Gallary",
+                                "Camera"
+                                //, "Remove photo"
+                        };
+                openAlertBuilderWithOptions(options,v,position);
+
+                return false;
+            }
+        });
+
+
+
     }
 
     private void configureTopicViewHolder(final TopicViewHolder messageViewHolder, int position, final Message message) {
@@ -291,21 +296,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
         messageViewHolder.topic_text.setVisibility(View.GONE);
 
-        messageViewHolder.raisedImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, LoadImage.class);
-                intent.putExtra("image_url",message.getMessage());
-                context.startActivity(intent);
-            }
-        });
-
         //new Topic URL implementation
         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
         Pattern p;
         Matcher m = null;
         String[] words = message.getMessage().split(" ");
-        i = 0;
+        int i = 0;
         for (String word : words) {
             p = Pattern.compile(URL_REGEX);
             m = p.matcher(word);
@@ -315,10 +311,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 i = 1;
                 break;
             }
-
         }
-        if (i == 1 && message.getMessage().length()>113) {
-            if(message.getMessage().substring(93,113).equals(message.getTo())){
+        if (i == 1 && message.getMessage().length() > 113) {
+            if (message.getMessage().substring(93, 113).equals(message.getTo())) {
                 messageViewHolder.topic_text.setVisibility(View.GONE);
                 messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
 
@@ -327,22 +322,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Picasso.get()
                         .load(String.valueOf(message.getMessage()))
                         .into(messageViewHolder.raisedImage);
-
-            }
-            else{
+            } else {
                 messageViewHolder.topic_text.setVisibility(View.GONE);
                 messageViewHolder.topicLayoutUrl.setVisibility(View.VISIBLE);
                 messageViewHolder.topicUrlText.setText(message.getMessage());
                 Log.i("extra topic ---- ", message.getExtra());
-                //Toast.makeText(context, message.getExtra(), Toast.LENGTH_LONG).show();
                 messageViewHolder.topicSearateURL.setText(message.getExtra());
-
-                //  new URLAsynkTopic().execute(new AsyncTopic(messageViewHolder, message.getMessage()));
-                new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(),VIEW_TYPE_TOPIC));
-
+                //new URLAsynkTopic().execute(new AsyncTopic(messageViewHolder, message.getMessage()));
+                new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(), VIEW_TYPE_TOPIC));
             }
 
-        }else if(i == 1 && message.getMessage().length()<113){
+        } else if (i == 1 && message.getMessage().length() < 113) {
             messageViewHolder.topic_text.setVisibility(View.GONE);
             messageViewHolder.topicLayoutUrl.setVisibility(View.VISIBLE);
             messageViewHolder.topicUrlText.setText(message.getMessage());
@@ -351,10 +341,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             messageViewHolder.topicSearateURL.setText(message.getExtra());
 
             //  new URLAsynkTopic().execute(new AsyncTopic(messageViewHolder, message.getMessage()));
-            new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(),VIEW_TYPE_TOPIC));
+            new URLAsynk().execute(new Async(messageViewHolder, message.getExtra(), VIEW_TYPE_TOPIC));
 
-        }
-        else if(i==1 && message.getMessage().substring(93,113).equals(message.getTo())) {
+        } else if (i == 1 && message.getMessage().substring(93, 113).equals(message.getTo())) {
             messageViewHolder.topic_text.setVisibility(View.GONE);
             messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
 
@@ -363,10 +352,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Picasso.get()
                     .load(String.valueOf(message.getMessage()))
                     .into(messageViewHolder.raisedImage);
-
-
-        }
-        else {
+        } else {
             messageViewHolder.topic_text.setVisibility(View.VISIBLE);
             messageViewHolder.topic_text.setText(message.getMessage());
         }
@@ -417,7 +403,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     isLiked[0] = true;
                     messageViewHolder.like.setImageResource(R.drawable.liked);
                 } else {
-                    //topik is not liked by user
+                    //topic is not liked by user
                     isLiked[0] = false;
                     messageViewHolder.like.setImageResource(R.drawable.like_border);
                 }
@@ -493,15 +479,25 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case 0:
+                        forwardMessage(v, position);
+                        break;
+                   /* case 1:
                         deleteMessage(v, position, "deleteForMe");
                         break;
-                    case 1:
+                    case 2:
                         deleteMessage(v, position, "deleteForAll");
-                        break;
+                        break;*/
                 }
             }
         });
         builder.show();
+
+    }
+
+    private void forwardMessage(View v, int position) {
+
+
+
     }
 
     private void deleteMessage(View v, int position, String deleteScope) {
@@ -640,8 +636,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             senderSeparateURL = itemView.findViewById(R.id.separate_url);
 
             //image text
-            senderImageLayout=itemView.findViewById(R.id.image_sender_linear);
-            senderImageText=itemView.findViewById(R.id.image_text_sender);
+            senderImageLayout = itemView.findViewById(R.id.image_sender_linear);
+            senderImageText = itemView.findViewById(R.id.image_text_sender);
         }
     }
 
@@ -677,14 +673,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             separateURL = itemView.findViewById(R.id.separate_url_rec);
 
             //imagetext
-            mainRecImageLayout=itemView.findViewById(R.id.main_rec_image_layout);
-            imageText=itemView.findViewById(R.id.image_text_rec);
+            mainRecImageLayout = itemView.findViewById(R.id.main_rec_image_layout);
+            imageText = itemView.findViewById(R.id.image_text_rec);
 
 
         }
-
     }
-
 
     public class TopicViewHolder extends RecyclerView.ViewHolder {
 
@@ -736,7 +730,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             switch (output.view_type) {
                 case VIEW_TYPE_ME:
-                   setupSelfUrlMessage(output);
+                    setupSelfUrlMessage(output);
                     break;
                 case VIEW_TYPE_OTHER:
                     setupOtherUrlMessage(output);
@@ -762,8 +756,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             value = doc.title();
             Log.i("Value of Title - ", value);
-            //String description =doc.select("meta[name=description]").get(0).attr("content");// ;
-            //Log.i("Value of desc - ", description);
+            String description = doc.select("meta[name=description]").get(0).attr("content");// ;
+            Log.i("Value of desc - ", description);
             String imageUrl = "";
             try {
                  /*description = doc.select("meta[name=description]").get(0).attr("content");
@@ -781,224 +775,69 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 //description="";
                 e.printStackTrace();
             }
-            webUrlObj = new WebUrl(object[0].viewHolder, value.toString(), imageUrl.toString(),object[0].view_type);
+            webUrlObj = new WebUrl(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString(), object[0].view_type);
 
             return webUrlObj;
         }
     }
 
     private void setupTopicUrlMessage(WebUrl output) {
-        ((TopicViewHolder)output.viewHolder).urlTitle.setText(output.title);
-        ((TopicViewHolder)output.viewHolder).urlDesc.setText(output.description);
+        ((TopicViewHolder) output.viewHolder).urlTitle.setText(output.title);
+        ((TopicViewHolder) output.viewHolder).urlDesc.setText(output.description);
         if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-            Picasso.get().load(output.imageUrl).into(((TopicViewHolder)output.viewHolder).urlImage);
-        } else ((TopicViewHolder)output.viewHolder).urlImage.setVisibility(View.GONE);
+            Picasso.get().load(output.imageUrl).into(((TopicViewHolder) output.viewHolder).urlImage);
+        } else ((TopicViewHolder) output.viewHolder).urlImage.setVisibility(View.GONE);
 
     }
 
     private void setupOtherUrlMessage(WebUrl output) {
-        ((MessageViewHolderOther)output.viewHolder).urlTitle.setText(output.title);
-        ((MessageViewHolderOther)output.viewHolder).urlDesc.setText(output.description);
+        ((MessageViewHolderOther) output.viewHolder).urlTitle.setText(output.title);
+        ((MessageViewHolderOther) output.viewHolder).urlDesc.setText(output.description);
         if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-            Picasso.get().load(output.imageUrl).into(((MessageViewHolderOther)output.viewHolder).urlImage);
-        } else ((MessageViewHolderOther)output.viewHolder).urlImage.setVisibility(View.GONE);
+            Picasso.get().load(output.imageUrl).into(((MessageViewHolderOther) output.viewHolder).urlImage);
+        } else ((MessageViewHolderOther) output.viewHolder).urlImage.setVisibility(View.GONE);
 
     }
 
     private void setupSelfUrlMessage(WebUrl output) {
-        ((MessageViewHolder)output.viewHolder).urlTitle.setText(output.title);
-        ((MessageViewHolder)output.viewHolder).urlDesc.setText(output.description);
+        ((MessageViewHolder) output.viewHolder).urlTitle.setText(output.title);
+        ((MessageViewHolder) output.viewHolder).urlDesc.setText(output.description);
         if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-            Picasso.get().load(output.imageUrl).into(((MessageViewHolder)output.viewHolder).urlImage);
-        } else ((MessageViewHolder)output.viewHolder).urlImage.setVisibility(View.GONE);
+            Picasso.get().load(output.imageUrl).into(((MessageViewHolder) output.viewHolder).urlImage);
+        } else ((MessageViewHolder) output.viewHolder).urlImage.setVisibility(View.GONE);
 
     }
 
-/*
-
-    public class URLAsynkRec extends AsyncTask<AsyncRec, String, WebUrlRec> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(WebUrlRec output) {
-            super.onPostExecute(output);
-
-            output.viewHolder.UrlTitle.setText(output.title);
-            output.viewHolder.UrlDesc.setText(output.description);
-            if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-                Picasso.get().load(output.imageUrl).into(output.viewHolder.UrlImage);
-            } else output.viewHolder.UrlImage.setVisibility(View.GONE);
-
-
-        }
-
-        @Override
-        protected WebUrlRec doInBackground(AsyncRec... object) {
-            String value = null;
-            Document doc = null;
-            WebUrlRec webUrlObj = null;
-            try {
-                doc = Jsoup.connect(object[0].urlMessage).get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            value = doc.title();
-            Log.i("Value of Title - ", value);
-            String description = doc.select("meta[name=description]").get(0).attr("content");
-            Log.i("Value of desc - ", description);
-            String imageUrl = "";
-            try {
-
-
-                if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {
-                    imageUrl = doc.select("meta[property=og:image]").get(0).attr("content");
-                    Log.i("Image URL - ", imageUrl);
-
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            webUrlObj = new WebUrlRec(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString());
-
-            return webUrlObj;
-        }
-    }
-
-
-    public class URLAsynkTopic extends AsyncTask<AsyncTopic, String, WebUrlTopic> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(WebUrlTopic output) {
-            super.onPostExecute(output);
-
-            output.viewHolder.urlTitle.setText(output.title);
-            output.viewHolder.urlDesc.setText(output.description);
-            if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-                Picasso.get().load(output.imageUrl).into(output.viewHolder.urlImage);
-            } else output.viewHolder.urlImage.setVisibility(View.GONE);
-
-
-        }
-
-        @Override
-        protected WebUrlTopic doInBackground(AsyncTopic... object) {
-            String value = null;
-            Document doc = null;
-            WebUrlTopic webUrlObj = null;
-            try {
-                doc = Jsoup.connect(object[0].urlMessage).get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            value = doc.title();
-            Log.i("Value of Title - ", value);
-            String description = doc.select("meta[name=description]").get(0).attr("content");
-            Log.i("Value of desc - ", description);
-            String imageUrl = "";
-            try {
-
-
-                if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {
-                    imageUrl = doc.select("meta[property=og:image]").get(0).attr("content");
-                    Log.i("Image URL - ", imageUrl);
-
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            webUrlObj = new WebUrlTopic(object[0].viewHolder, value.toString(), description.toString(), imageUrl.toString());
-
-            return webUrlObj;
-        }
-    }
-
-*/
 
 }
 
 class WebUrl {
     String title, description, imageUrl;
-   // MessageAdapter.MessageViewHolder viewHolder;
+    // MessageAdapter.MessageViewHolder viewHolder;
     RecyclerView.ViewHolder viewHolder;
     int view_type;
 
-    WebUrl(RecyclerView.ViewHolder viewHolder, String title, String imageUrl,int view_type) {
+    WebUrl(RecyclerView.ViewHolder viewHolder, String title, String description, String imageUrl, int view_type) {
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
         this.viewHolder = viewHolder;
-        this.view_type=view_type;
+        this.view_type = view_type;
     }
 }
 
 class Async {
     String urlMessage;
-   // MessageAdapter.MessageViewHolder viewHolder;
+    // MessageAdapter.MessageViewHolder viewHolder;
     RecyclerView.ViewHolder viewHolder;
     int view_type;
-    Async(RecyclerView.ViewHolder viewHolder, String urlMessage,int view_type) {
+
+    Async(RecyclerView.ViewHolder viewHolder, String urlMessage, int view_type) {
         this.viewHolder = viewHolder;
         this.urlMessage = urlMessage;
-        this.view_type=view_type;
+        this.view_type = view_type;
     }
 }
 
-/*
-class WebUrlRec {
-    String title, description, imageUrl;
-    MessageAdapter.MessageViewHolderOther viewHolder;
 
-    WebUrlRec(MessageAdapter.MessageViewHolderOther viewHolder, String title, String description, String imageUrl) {
-        this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.viewHolder = viewHolder;
-    }
-}
-
-class AsyncRec {
-    String urlMessage;
-    MessageAdapter.MessageViewHolderOther viewHolder;
-
-    AsyncRec(MessageAdapter.MessageViewHolderOther viewHolder, String urlMessage) {
-        this.viewHolder = viewHolder;
-        this.urlMessage = urlMessage;
-    }
-}
-
-class WebUrlTopic {
-    String title, description, imageUrl;
-    MessageAdapter.TopicViewHolder viewHolder;
-
-    WebUrlTopic(MessageAdapter.TopicViewHolder viewHolder, String title, String description, String imageUrl) {
-        this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.viewHolder = viewHolder;
-    }
-}
-
-class AsyncTopic {
-    String urlMessage;
-    MessageAdapter.TopicViewHolder viewHolder;
-
-    AsyncTopic(MessageAdapter.TopicViewHolder viewHolder, String urlMessage) {
-        this.viewHolder = viewHolder;
-        this.urlMessage = urlMessage;
-    }
-}
-*/
 

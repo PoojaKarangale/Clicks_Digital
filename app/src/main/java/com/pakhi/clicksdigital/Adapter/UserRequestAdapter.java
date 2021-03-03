@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.StartActivity;
-import com.pakhi.clicksdigital.Profile.ProfileUserRequest;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -31,26 +29,26 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.ViewHolder> {
 
     FirebaseDatabaseInstance rootRef;
-    private Context      mcontext;
+    private Context mcontext;
     private List<String> requestingUsers;
 
     public UserRequestAdapter(Context mcontext, List<String> requestingUsers) {
-        this.mcontext=mcontext;
-        this.requestingUsers=requestingUsers;
+        this.mcontext = mcontext;
+        this.requestingUsers = requestingUsers;
     }
 
     @NonNull
     @Override
     public UserRequestAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=LayoutInflater.from(mcontext)
+        View view = LayoutInflater.from(mcontext)
                 .inflate(R.layout.item_user, parent, false);
-        rootRef=FirebaseDatabaseInstance.getInstance();
+        rootRef = FirebaseDatabaseInstance.getInstance();
         return new UserRequestAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final UserRequestAdapter.ViewHolder holder, final int position) {
-        final String userId=requestingUsers.get(position);
+        final String userId = requestingUsers.get(position);
 
         /*  final User_request userRequest = userRequests.get(position);
         final String userId;
@@ -68,7 +66,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
                     //user_name[0] = dataSnapshot.child(Constfirebase.USER_NAME).getValue().toString();
                     holder.displayName.setText(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString());
                     //if (dataSnapshot.hasChild("image_url")) {}
-                    final String image_url=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
+                    final String image_url = dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
                     Picasso.get().load(image_url).placeholder(R.drawable.profile_image).into(holder.image_profile);
 
                     holder.image_profile.setOnClickListener(new View.OnClickListener() {
@@ -96,8 +94,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //deleteUserRequest(userId, position);
-                //sendUserTheRejectionMessage(groupName);
+                deleteUserRequest(userId, position);
+                // sendUserTheRejectionMessage(groupName);
                 // createDialog("");
             }
         });
@@ -105,19 +103,22 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //addUserToGroup(groupId, userId);
+                // addUserToGroup(groupId, userId);
+                approveUser(userId);
+                deleteUserRequest(userId, position);
                 //sendUserTheWelcomeMessage(groupName, groupId);
-
-                //approveUser(userId);
-                //deleteUserRequest(userId, position);
-
             }
         });
     }
 
+    private void deleteUserRequest(String userId, int position) {
+        requestingUsers.remove(position);
+        rootRef.getUserRequestsRef().child(userId).removeValue();
+    }
+
     private void approveUser(String userId) {
         // one field in user details showing request is approved
-      //  rootRef.getUserRef().child(userId).child(Constfirebase.USER_DETAILS).child("approved").setValue(true);
+        //  rootRef.getUserRef().child(userId).child(Constfirebase.USER_DETAILS).child("approved").setValue(true);
         rootRef.getApprovedUserRef().child(userId).setValue(true);
 
     }
@@ -150,29 +151,28 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
         builder.show();
     }*/
 
-   /* private void sendUserTheWelcomeMessage(String groupName, String groupId) {
-        String s=mcontext.getString(R.string.requestAcceptMessage) + " " + groupName;
-        String title="Request Accepted";
-        Intent resultIntent=new Intent(mcontext, StartActivity.class);
-        resultIntent.putExtra(Const.groupName, groupName);
-        resultIntent.putExtra(Const.groupId, groupId);
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Notification.autoCancel(mcontext, title, s, resultIntent, 0);
-    }
+    /* private void sendUserTheWelcomeMessage(String groupName, String groupId) {
+         String s=mcontext.getString(R.string.requestAcceptMessage) + " " + groupName;
+         String title="Request Accepted";
+         Intent resultIntent=new Intent(mcontext, StartActivity.class);
+         resultIntent.putExtra(Const.groupName, groupName);
+         resultIntent.putExtra(Const.groupId, groupId);
+         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+         Notification.autoCancel(mcontext, title, s, resultIntent, 0);
+     }
 
 
-    private void sendUserTheRejectionMessage(String groupName) {
-        String s=mcontext.getString(R.string.requestRejectionMessage) + " " + groupName;
-        String title="Request rejected";
-        Intent resultIntent=new Intent(mcontext, StartActivity.class);
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Notification.autoCancel(mcontext, title, s, resultIntent, 0);
-    }
-*/
+     private void sendUserTheRejectionMessage(String groupName) {
+         String s=mcontext.getString(R.string.requestRejectionMessage) + " " + groupName;
+         String title="Request rejected";
+         Intent resultIntent=new Intent(mcontext, StartActivity.class);
+         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+         Notification.autoCancel(mcontext, title, s, resultIntent, 0);
+     }
+ */
     private void visitUsersProfile(String userId) {
-        Intent profileActivity=new Intent(mcontext, ProfileUserRequest.class);
+        Intent profileActivity = new Intent(mcontext, VisitProfileActivity.class);
         profileActivity.putExtra(Const.visitUser, userId);
-        profileActivity.putExtra(Const.fromRequest, "req");
         mcontext.startActivity(profileActivity);
     }
 
@@ -182,10 +182,10 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     }
 
-    private void deleteUserRequest(String userId, int position) {
+   /* private void deleteUserRequest(String userId, int position) {
         requestingUsers.remove(position);
         rootRef.getUserRequestsRef().child(userId).removeValue();
-    }
+    }*/
 
     private void addUserToGroup(String groupId, String userId) {
         rootRef.getGroupRef().child(groupId).child(ConstFirebase.users).child(userId).setValue("");
@@ -205,15 +205,15 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            displayName=itemView.findViewById(R.id.display_name);
-            image_profile=itemView.findViewById(R.id.image_profile);
-            group_name=itemView.findViewById(R.id.group_name);
-            accept=itemView.findViewById(R.id.request_accept_btn);
-            cancel=itemView.findViewById(R.id.request_cancel_btn);
+            displayName = itemView.findViewById(R.id.display_name);
+            image_profile = itemView.findViewById(R.id.image_profile);
+            group_name = itemView.findViewById(R.id.group_name);
+            accept = itemView.findViewById(R.id.request_accept_btn);
+            cancel = itemView.findViewById(R.id.request_cancel_btn);
 
             group_name.setVisibility(View.VISIBLE);
-            //accept.setVisibility(View.VISIBLE);
-            //cancel.setVisibility(View.VISIBLE);
+            accept.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.VISIBLE);
         }
     }
 }
