@@ -178,10 +178,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
 
             }
-            else if(type.equals("topic_reply")){
+
+            else if (type.equals("like")){
 
             }
-
             else if(type.equals("request")){
                 resultIntent=new Intent(getApplicationContext(), ProfileUserRequest.class);
                 resultIntent.putExtra(ConstFirebase.visitUser, user);

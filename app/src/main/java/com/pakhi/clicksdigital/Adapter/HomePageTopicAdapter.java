@@ -111,6 +111,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
                 holder.layOutURL.setVisibility(View.VISIBLE);
                 holder.urlText.setText(m.getMessage());
                 holder.separateURLText.setText(m.getExtra());
+                holder.raisedImageLayoutHome.setVisibility(View.GONE);
 
             }
 
@@ -129,6 +130,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             holder.topicText.setVisibility(View.GONE);
             holder.layOutURL.setVisibility(View.VISIBLE);
             holder.urlText.setText(m.getMessage());
+            holder.raisedImageLayoutHome.setVisibility(View.GONE);
   //          holder.separateURLText.setText(m.getExtra());
 
         }
@@ -144,6 +146,8 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
 
         }
         else {
+            holder.layOutURL.setVisibility(View.GONE);
+            holder.raisedImageLayoutHome.setVisibility(View.GONE);
             holder.topicText.setVisibility(View.VISIBLE);
             holder.topicText.setText(m.getMessage());
         }
