@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Activities.StartActivity;
@@ -172,7 +171,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
     }
 
     private void openGallery() {
-        CropImage.activity().setAspectRatio(16, 9)
+        CropImage.activity().setAspectRatio(1, 1)
                 .start(this);
     }
 
