@@ -8,6 +8,8 @@ public class Data {
     private String body;
     private String title;
     private String sent;
+    private String type;
+    private String topicId;
 
     public Intent getIntent() {
         return intent;
@@ -19,12 +21,14 @@ public class Data {
 
     private Intent intent;
 
-    public Data(String user, int icon, String body, String title, String sent) {
+    public Data(String user, int icon, String body, String title, String sent, String type, String topicId) {
         this.user = user;
         this.icon = icon;
         this.body = body;
         this.title = title;
         this.sent = sent;
+        this.type=type;
+        this.topicId=topicId;
     }
 
     public Data(String user, int icon, String body, String title, String sent, Intent intent) {

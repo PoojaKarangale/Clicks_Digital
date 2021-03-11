@@ -239,7 +239,7 @@ public class ImageText extends AppCompatActivity {
 
         if (notify) {
             // Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, "username + \": \" + message", "New Message");
-            Notification.sendPersonalNotifiaction(getApplicationContext(), currentUserID, currentGroupId, messageSenderName + ": " + message, "New Message");
+            Notification.sendPersonalNotifiaction( currentUserID, currentGroupId, messageSenderName + ": " + message, "New Message","chat","");
         }
         notify = false;
     }

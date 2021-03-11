@@ -26,7 +26,7 @@ import retrofit2.Response;
 public class Notification {
     public static boolean isNotificationOn = false;
 
-    public static void sendPersonalNotifiaction(final Context applicationContext, final String messageSenderID, final String receiverID, final String body, final String title) {
+    public static void sendPersonalNotifiaction( final String messageSenderID, final String receiverID, final String body, final String title, final String type, final String topicId) {
         DatabaseReference tokens = FirebaseDatabaseInstance.getInstance().getTokensRef();
         Query query = tokens.orderByKey().equalTo(receiverID);
         query.addValueEventListener(new ValueEventListener() {
@@ -35,13 +35,13 @@ public class Notification {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Token token = snapshot.getValue(Token.class);
 
-                    Intent resultIntent = new Intent(applicationContext, ChatActivity.class);
-                    resultIntent.putExtra("visit_user_id", receiverID);
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //Intent resultIntent = new Intent(applicationContext, ChatActivity.class);
+                    //resultIntent.putExtra("visit_user_id", receiverID);
+                    //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
                     Data data = new Data(messageSenderID, R.drawable.logo, body, title,
-                            receiverID);
+                            receiverID, type, topicId);
                   /*  Data data = new Data(messageSenderID, R.drawable.logo, body, title,
                             receiverID,resultIntent);*/
 
