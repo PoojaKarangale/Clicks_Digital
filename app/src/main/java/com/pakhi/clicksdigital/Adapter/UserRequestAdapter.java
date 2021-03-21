@@ -212,8 +212,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
             cancel = itemView.findViewById(R.id.request_cancel_btn);
 
             group_name.setVisibility(View.VISIBLE);
-            accept.setVisibility(View.VISIBLE);
-            cancel.setVisibility(View.VISIBLE);
+            //accept.setVisibility(View.VISIBLE);
+            //cancel.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -63,7 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margine_sub"
             android:layout_marginEnd="@dimen/margine_sub"
-            android:layout_marginBottom="6dp">
+            android:layout_marginBottom="6dp"
+            >
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>

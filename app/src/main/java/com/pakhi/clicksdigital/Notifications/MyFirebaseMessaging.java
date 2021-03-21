@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,8 +25,11 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.Event.EventDetailsActivity;
+import com.pakhi.clicksdigital.Event.EventParticipantsActivity;
 import com.pakhi.clicksdigital.GroupChat.GroupChatActivity;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
+import com.pakhi.clicksdigital.Model.Event;
+import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.Profile.ProfileUserRequest;
 import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
@@ -196,16 +198,73 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 resultIntent=new Intent(getApplicationContext(), StartActivity.class);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
-            /*else if(type.equals("event")){
-                resultIntent=new Intent(getApplicationContext(), EventDetailsActivity.class);
-                resultIntent.putExtra(ConstFirebase.groupId, user);
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }*/
+            else if(type.equals("event")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+                        resultIntent.putExtra(Const.event, event);
+                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeNotiOreoFore(resultIntent,title, body, icon);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+            else if(type.equals("participant")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeNotiOreoFore(resultIntent,title, body, icon);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                //Event event;
+
+
+            }
+            else if(type.equals("eventPhoto")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeNotiOreoFore(resultIntent,title, body, icon);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
 
 
 
             // Intent resultIntent = remoteMessage.getNotification().get
-            if(!type.equals("topic")){
+            if(!type.equals("topic")&& !type.equals("event")&& !type.equals("participant") && !type.equals("eventPhoto")){
                 PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),
                         0 /* Request code */, resultIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
@@ -282,8 +341,70 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
 
 
+            else if(type.equals("event")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
 
-            if(!type.equals("topic")){
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+                        resultIntent.putExtra(Const.event, event);
+                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeNotiBackOreo(resultIntent, body, icon, title);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+            else if(type.equals("participant")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeNotiBackOreo(resultIntent, body, icon, title);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                //Event event;
+
+
+            }
+            else if(type.equals("eventPhoto")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeNotiBackOreo(resultIntent,title, body, icon);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+
+            if(!type.equals("topic") && !type.equals("event") && !type.equals("participant") && !type.equals("eventPhoto")){
 
                 PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),
                         0 /* Request code */, resultIntent,
@@ -373,7 +494,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             Log.e("remoteMessageforeground", remoteMessage.getData().toString());
 //            String title = remoteMessage.getNotification().getTitle();
 //            String body = remoteMessage.getNotification().getBody();
-            String user=remoteMessage.getData().get("user");
+            final String user=remoteMessage.getData().get("user");
             final String icon=remoteMessage.getData().get("icon");
             final String title=remoteMessage.getData().get("title");
             final String body=remoteMessage.getData().get("body");
@@ -426,7 +547,70 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 resultIntent=new Intent(getApplicationContext(), StartActivity.class);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
-            if(!type.equals("topic")){
+
+            else if(type.equals("event")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+                        resultIntent.putExtra(Const.event, event);
+                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherFore(resultIntent, body, title, icon);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+            else if(type.equals("participant")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherFore(resultIntent, body, title, icon);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                //Event event;
+
+
+            }
+            else if (type.equals("eventPhoto")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherFore(resultIntent, body, title, icon);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+            if(!type.equals("topic") && !type.equals("event") && !type.equals("participant") && !type.equals("eventPhoto")){
 
                 PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),
                         0 /* Request code */, resultIntent,
@@ -458,7 +642,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             //  Map data = remoteMessage.getData();
 //            String title = data.get("title");
 //            String body = data.get("body");
-            String user=remoteMessage.getData().get("user");
+            final String user=remoteMessage.getData().get("user");
             final String icon=remoteMessage.getData().get("icon");
             final String title=remoteMessage.getData().get("title");
             final String body=remoteMessage.getData().get("body");
@@ -517,8 +701,71 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             else if(type.equals("reply")){
 
             }
+            else if(type.equals("event")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
 
-            if(!type.equals("topic")){
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+                        resultIntent.putExtra(Const.event, event);
+                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherBack(resultIntent, body, icon, title);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+            else if(type.equals("participant")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherBack(resultIntent, body, icon, title);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                //Event event;
+
+
+            }
+            else if(type.equals("eventPhoto")){
+                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Event event = snapshot.getValue(Event.class);
+                        resultIntent = new Intent(getApplicationContext(), EventParticipantsActivity.class);
+                        resultIntent.putExtra(Const.Event, event);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherBack(resultIntent, body, icon, title);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+
+
+            if(!type.equals("topic") && !type.equals("event") && !type.equals("participant")&& !type.equals("eventPhoto")){
 
                 PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),
                         0 /* Request code */, resultIntent,

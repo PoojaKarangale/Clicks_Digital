@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snap : snapshot.getChildren()){
-                    String abc = snap.getKey();
+
                     if(snap.child(ConstFirebase.USER_DETAILS).exists()){
                         String type = snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString();
 
@@ -149,8 +149,16 @@ public class HomeFragment extends Fragment {
                 rootRef.getUserRequestsRef().child(currentUserID).setValue("");
                 Toast.makeText(getContext(), "Request is sent to admin wait for approval ", Toast.LENGTH_LONG).show();
                 for(int j=0;j<listAdmins.size();j++){
-                    if(notify)
-                    Notification.sendPersonalNotifiaction(currentUserID, listAdmins.get(j), "Profile verification request by "+userName,"User Request", "request","");
+                    if(notify) Notification.sendPersonalNotifiaction(currentUserID, listAdmins.get(j), "Profile verification request by "+userName,"User Request", "request","");
+
+                    String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(listAdmins.get(j));
+                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserID);
+                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(currentUserID);
+                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("profileRequest");
+
+
                 }
                 notify=false;
 
@@ -236,6 +244,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 trendingTopics.clear();
+                topicAdapter.notifyDataSetChanged();
                 for (final DataSnapshot topicSnap : snapshot.getChildren()) {
                     final String groupId = (String) topicSnap.getValue();
                     rootRef.getUserRef().child(currentUserID).child(ConstFirebase.groups1).child(groupId).addValueEventListener(new ValueEventListener() {
@@ -245,10 +254,12 @@ public class HomeFragment extends Fragment {
                                 rootRef.getGroupChatRef().child(groupId).child(topicSnap.getKey()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        trendingTopics.add(0, snapshot.getValue(Message.class));
+                                        if (snapshot.exists()) {
+                                            trendingTopics.add(0, snapshot.getValue(Message.class));
+                                            // topicAdapter.notifyDataSetChanged();
+                                        }
                                         topicAdapter.notifyDataSetChanged();
                                     }
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -349,6 +360,6 @@ public class HomeFragment extends Fragment {
             public void run() {
                 handler.post(Update);
             }
-        }, 2500, 2500);
+        }, 5000, 2500);
     }
 }

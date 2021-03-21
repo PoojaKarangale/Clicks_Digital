@@ -115,4 +115,11 @@ public class ConstFirebase {
     public static String userType="user_type";
     public static String group_users = "Users";
 
+    public static String NotificationsTopicLike = "NotificationsTopicLike";
+    public static String NotificationsTopicReply = "NotificationsTopicReply";
+    public static String Notifications = "Notifications";
+    public static String notificationFrom="notificationFrom";
+    public static String goToNotificationId="goToNotificationId";
+    public static String typeOfNotification="type";
+    public static String notificationRecieverID="notificationRecieverID";
 }

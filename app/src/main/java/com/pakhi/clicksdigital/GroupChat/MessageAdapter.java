@@ -28,13 +28,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
@@ -58,6 +61,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     String currentUserId;
     FirebaseDatabaseInstance rootRef;
     private String chatType;
+    String user_type;
     private Message message;
     private List<Message> userMessagesList;
     private DatabaseReference usersRef, personalChatRefFrom, personalChatRefTo, groupChatRef;
@@ -78,6 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         pref = SharedPreference.getInstance();
         currentUserId = pref.getData(SharedPreference.currentUserId, viewGroup.getContext());
+        user_type = pref.getData(SharedPreference.user_type,viewGroup.getContext());
         rootRef = FirebaseDatabaseInstance.getInstance();
 
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
@@ -116,6 +121,64 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else {
             configureMessageViewHolderOther((MessageViewHolderOther) messageViewHolder, position, message);
         }
+
+        messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                CharSequence options[];
+
+
+                switch (chatType) {
+                    case "PersonalChat":
+                        //deletePersonalChat(v, position, deleteScope);
+                        if(user_type.equals("admin") || message.getFrom().equals(currentUserId)){
+                            options = new CharSequence[]
+                                    {
+                                            "Forward",
+                                            "Delete For All",
+                                            "Delete For Me"
+                                            //, "Remove photo"
+                                    };
+                        }
+                        else {
+                            options = new CharSequence[]
+                                    {
+                                            "Forward"
+                                            //, "Delete"
+                                            //, "Remove photo"
+                                    };
+                        }
+                        break;
+                    case "GroupChat":
+                        //deleteGroupChat(v, position, deleteScope);
+                        if(user_type.equals("admin") || message.getFrom().equals(currentUserId)){
+                            options = new CharSequence[]
+                                    {
+                                            "Forward",
+                                            "Delete"
+                                            //, "Remove photo"
+                                    };
+                        }
+                        else {
+                            options = new CharSequence[]
+                                    {
+                                            "Forward"
+                                            //, "Delete"
+                                            //, "Remove photo"
+                                    };
+                        }
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + chatType);
+                }
+
+                openAlertBuilderWithOptions(options, v, position);
+
+                return false;
+            }
+        });
+
+
     }
 
     private void configureMessageViewHolder(MessageViewHolder messageViewHolder, int position, final Message message) {
@@ -170,7 +233,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.messageSenderPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enlargeImage(String.valueOf(message.getMessage()), v);
+                //enlargeImage(String.valueOf(message.getMessage()), v);
+                Intent intent = new Intent(context, LoadImage.class);
+                intent.putExtra("image_url", message.getMessage());
+                context.startActivity(intent);
             }
         });
 
@@ -268,8 +334,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.messageReceiverPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enlargeImage(String.valueOf(message.getMessage()), v);
-
+                //enlargeImage(String.valueOf(message.getMessage()), v);
+                Intent intent = new Intent(context, LoadImage.class);
+                intent.putExtra("image_url", message.getMessage());
+                context.startActivity(intent);
             }
         });
 
@@ -289,21 +357,20 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             }
         });
-        messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+      /*  messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 CharSequence options[] = new CharSequence[]
                         {
-                                "Gallary",
-                                "Camera"
+                                "Forward",
+                                "Delete"
                                 //, "Remove photo"
                         };
-                openAlertBuilderWithOptions(options,v,position);
+                openAlertBuilderWithOptions(options, v, position);
 
                 return false;
             }
-        });
-
+        });*/
 
 
     }
@@ -457,16 +524,68 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     isLiked[0] = false;
                     // dislike the topic make hart black
                     topicLikesRef.child(message.getMessageID()).child(currentUserId).removeValue();
+
                     messageViewHolder.like.setImageResource(R.drawable.like_border);
+
                 } else {
                     isLiked[0] = true;
                     // like the topic reden the heart
                     topicLikesRef.child(message.getMessageID()).child(currentUserId).setValue("");
                     messageViewHolder.like.setImageResource(R.drawable.liked);
+                    //addNotification(message); activate it after the glitch is gone
                 }
             }
         });
     }
+
+    private void addNotification(final Message message) {
+        final String[] name = new String[1];
+        final String[] grpName = new String[1];
+
+        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rootRef.getGroupRef().child(message.getTo()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        grpName[0]=snapshot.child(ConstFirebase.group_name).getValue().toString();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                name[0] = snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                sendLikeNotification(name[0], grpName[0]);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+    }
+
+    private void sendLikeNotification(String s, String s2) {
+        if(!currentUserId.equals(message.getFrom())){
+            Notification.sendPersonalNotifiaction(message.getTo(), message.getFrom(), s +"has liked your Dialog topic" + message.getMessage(), s2, "topic", message.getMessageID());
+            String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+            rootRef.getNotificationRef().child(notificationKey).child("to").setValue(message.getFrom());
+            rootRef.getNotificationRef().child(notificationKey).child("from").setValue(currentUserId);
+            rootRef.getNotificationRef().child(notificationKey).child("go").setValue(message.getMessageID());
+            rootRef.getNotificationRef().child(notificationKey).child("type").setValue("topicLike");
+
+
+            //rootRef.getNotificationRefTopicLike().child(message.getFrom()).child(message.getMessageID()).setValue("");
+        }
+
+    }
+
 
     private void openPdf(Uri uri, View v) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -504,23 +623,20 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     case 0:
                         forwardMessage(v, position);
                         break;
-                   /* case 1:
-                        deleteMessage(v, position, "deleteForMe");
+                    case 1:
+                        deleteMessage(v, position, "deleteForAll");
                         break;
                     case 2:
-                        deleteMessage(v, position, "deleteForAll");
-                        break;*/
+                        deleteMessage(v, position, "deleteForMe");
+                        break;
                 }
             }
         });
         builder.show();
-
     }
 
     private void forwardMessage(View v, int position) {
-
-
-
+        Toast.makeText(v.getContext(), "This feature is yet to implement", Toast.LENGTH_LONG).show();
     }
 
     private void deleteMessage(View v, int position, String deleteScope) {
@@ -539,13 +655,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         String toUserId = message.getTo();
         String fromUserID = message.getFrom();
 
-        personalChatRefFrom = rootRef.getMessagesRef().child(fromUserID).child(toUserId);
-        personalChatRefTo = rootRef.getMessagesRef().child(toUserId).child(fromUserID);
+        personalChatRefFrom = rootRef.getMessagesListRef().child(fromUserID).child(toUserId);
+        personalChatRefTo = rootRef.getMessagesListRef().child(toUserId).child(fromUserID);
 
         if (deleteScope.equals("deleteForMe")) {
             personalChatRefFrom.child(message.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    rootRef.getMessagesRef().child(message.getMessageID()).removeValue();
                     Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
                     userMessagesList.remove(position);
                     notifyItemRemoved(position);
@@ -558,6 +675,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     personalChatRefTo.child(message.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+
+                            rootRef.getMessagesRef().child(message.getMessageID()).removeValue();
                             Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
                             userMessagesList.remove(position);
                             notifyItemRemoved(position);
@@ -569,21 +688,42 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private void deleteGroupChat(final View v, final int position, String deleteScope) {
-        Message message = userMessagesList.get(position);
+        final Message message = userMessagesList.get(position);
         groupChatRef = rootRef.getGroupChatRef();
+        final String messageID = message.getMessageID();
 
-        if (deleteScope.equals("deleteForMe")) {
+       /* if (deleteScope.equals("deleteForMe")) {
 
             userMessagesList.remove(position);
             notifyItemRemoved(position);
 
-        } else if (deleteScope.equals("deleteForAll")) {
-            groupChatRef.child(message.getTo()).child(message.getMessageID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+        } else*/ if (deleteScope.equals("deleteForAll")) {
+
+            if(message.getType().equals("topic")){
+                rootRef.getReplyRef().child(messageID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot snap : snapshot.getChildren()){
+                            rootRef.getReplyLikesRef().child(snap.getKey()).removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                rootRef.getTopicLikesRef().child(messageID).removeValue();
+                rootRef.getReplyRef().child(messageID).removeValue();
+                rootRef.getTopicRef().child(messageID).removeValue();
+            }
+
+            groupChatRef.child(message.getTo()).child(messageID).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
                     userMessagesList.remove(position);
                     notifyItemRemoved(position);
+                    Toast.makeText(v.getContext(), "message deleted", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -777,15 +917,20 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 //value="No Title";
                 e.printStackTrace();
             }
-            value = doc.title();
+           /* value = doc.title();
             Log.i("Value of Title - ", value);
             String description = doc.select("meta[name=description]").get(0).attr("content");// ;
-            Log.i("Value of desc - ", description);
+            Log.i("Value of desc - ", description);*/
             String imageUrl = "";
+            String description = "";
             try {
                  /*description = doc.select("meta[name=description]").get(0).attr("content");
                 Log.i("Value of desc - ", description);
 */
+                value = doc.title();
+                Log.i("Value of Title - ", value);
+                description = doc.select("meta[name=description]").get(0).attr("content");// ;
+                Log.i("Value of desc - ", description);
 
 
                 if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {

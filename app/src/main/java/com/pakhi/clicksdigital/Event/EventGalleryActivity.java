@@ -45,6 +45,7 @@ import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -81,6 +82,8 @@ public class EventGalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_gallery);
 
+
+
         event = (Event) getIntent().getSerializableExtra(Const.event);
 
         pref = SharedPreference.getInstance();
@@ -100,10 +103,10 @@ public class EventGalleryActivity extends AppCompatActivity {
             }
         });
 
-        eventRef = rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child(ConstFirebase.PHOTOS);
+        eventRef = rootRef.getEventRef().child(event.getEventId()).child(ConstFirebase.PHOTOS);
         sliderImageRef = rootRef.getsliderRef();
 
-        rootRef.getEventRef().child(event.getEventType()).child(event.getEventId()).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
+        rootRef.getEventRef().child(event.getEventId()).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 eventName = snapshot.child(ConstFirebase.eventName1).getValue().toString();
@@ -241,6 +244,33 @@ public class EventGalleryActivity extends AppCompatActivity {
             public void onSuccess(Void aVoid) {
 
                 //do somthing on data change
+                FirebaseDatabaseInstance root= FirebaseDatabaseInstance.getInstance();
+                root.getEventRef().child(event.getEventId()).child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot snap:snapshot.getChildren()){
+                            if(!messageSenderID.equals(snap.getKey())){
+                                Notification.sendPersonalNotifiaction(event.getEventId(), snap.getKey(), name+" has added photo to the event", eventName, "eventPhoto","" );
+
+                                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+
+
+                                String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+                                rootRef.getNotificationRef().child(notificationKey).child("to").setValue(snap.getKey());
+                                rootRef.getNotificationRef().child(notificationKey).child("from").setValue(messageSenderID);
+                                rootRef.getNotificationRef().child(notificationKey).child("go").setValue(event.getEventId());
+                                rootRef.getNotificationRef().child(notificationKey).child("type").setValue("eventPhoto");
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
             }
         });

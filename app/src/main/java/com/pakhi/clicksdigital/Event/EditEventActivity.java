@@ -28,13 +28,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,6 +48,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
@@ -70,6 +75,7 @@ public class EditEventActivity extends AppCompatActivity {
     private RelativeLayout   fee_layout;
     private MaterialEditText event_name, description, venu, city, address;
     private MaterialEditText fee_amount;
+    String name;
 
     private Uri  picImageUri=null;
     private Chip onlineChip, offlineChip, bothChip, paidChip, unpaidChip;
@@ -236,7 +242,7 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     private void createEvent() {
-        String eventKey=event.getEventId();
+        final String eventKey=event.getEventId();
         boolean addressFlag;
 
         if (event_type.equals(Const.Both) || event_type.equals(Const.Offline)) {
@@ -260,7 +266,7 @@ public class EditEventActivity extends AppCompatActivity {
             if (ValidateInput.field(event_name) && ValidateInput.field(description)) {
                 progressDialog.show();
 
-                String eventName=event_name.getText().toString();
+                final String eventName=event_name.getText().toString();
                 String eventDescription=description.getText().toString();
 
                 String venuStr="";
@@ -275,13 +281,60 @@ public class EditEventActivity extends AppCompatActivity {
                 String endTime=choose_end_time.getText().toString();
                 Long timeStamp=selectedStartDate;
                 int totalFee=Integer.parseInt(total_fee.getText().toString());
-                Event event;
+                final Event event;
                 event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
-                eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+                eventRef.child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(EditEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
+                        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                name = snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                                rootRef.getEventRef().child(eventKey).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.child(ConstFirebase.participants).exists()){
+                                            rootRef.getEventRef().child(eventKey).child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    for(DataSnapshot snap : snapshot.getChildren()){
+                                                        if(!snap.getKey().equals(currentUserId)){
+                                                                    Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has edited event "+eventName, eventName, "event", "");
+                                                            String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
+                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
+                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
+                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("editEvent");
+
+
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                         finish();
                     }
                 });
@@ -536,7 +589,7 @@ public class EditEventActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        eventRef.child(event.getEventType()).child(event.getEventId()).removeValue();
+                        eventRef.child(event.getEventId()).removeValue();
                         Toast.makeText(getApplicationContext(), "Event deleted", Toast.LENGTH_SHORT).show();
 
                     }

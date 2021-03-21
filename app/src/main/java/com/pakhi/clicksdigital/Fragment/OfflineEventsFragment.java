@@ -101,7 +101,7 @@ public class OfflineEventsFragment extends Fragment {
 
         final Date current=calendar.getTime();
 
-        eventRef.child(ConstFirebase.eventOffline).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 events.clear();
@@ -118,7 +118,10 @@ public class OfflineEventsFragment extends Fragment {
                                     || event.getCity().toLowerCase().contains(s)
                                     || event.getVenu().toLowerCase().contains(s)
                             ) {
-                                events.add(event);
+                                if(event.getEventType().equals(ConstFirebase.eventOffline)){
+                                    events.add(event);
+                                }
+
                             }
                         }
                     }
@@ -132,7 +135,7 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child(ConstFirebase.Both).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
@@ -149,7 +152,10 @@ public class OfflineEventsFragment extends Fragment {
                                     || event.getCity().toLowerCase().contains(s)
                                     || event.getVenu().toLowerCase().contains(s)
                             ) {
-                                events.add(event);
+                                if(event.getEventType().equals(ConstFirebase.Both)){
+                                    events.add(event);
+                                }
+
                             }
                         }
                     }
@@ -177,7 +183,7 @@ public class OfflineEventsFragment extends Fragment {
 
     private void showEvents(final String s) {
 
-        eventRef.child(ConstFirebase.eventOffline).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 events.clear();
@@ -188,7 +194,10 @@ public class OfflineEventsFragment extends Fragment {
                             || event.getVenu().toLowerCase().contains(s)
                             || event.getDescription().toLowerCase().contains(s)
                     ) {
-                        events.add(event);
+                        if (event.getEventType().equals(ConstFirebase.eventOffline)){
+
+                            events.add(event);
+                        }
                     }
                 }
                 //eventAdapter.notifyDataSetChanged();
@@ -200,7 +209,7 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child(ConstFirebase.Both).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
@@ -212,7 +221,11 @@ public class OfflineEventsFragment extends Fragment {
                                 || event.getVenu().toLowerCase().contains(s)
                                 || event.getDescription().toLowerCase().contains(s)
                         ) {
-                            events.add(event);
+                            if (event.getEventType().equals(ConstFirebase.Both)){
+
+                                events.add(event);
+
+                            }
                         }
                     }
                 }

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -32,6 +33,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ToastClass;
 import com.squareup.picasso.Picasso;
@@ -57,6 +59,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private FirebaseDatabaseInstance rootRef;
 
     private ProgressDialog progressDialog;
+    String name;
 
     public static String timestampToDateString(long timestamp) {
        /* SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -84,7 +87,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         eventRef=rootRef.getEventRef();
         //currentUserId = FirebaseAuth.getInstance().getUid();
 
-        currentEventRef=eventRef.child(event.getEventType()).child(event.getEventId());
+        currentEventRef=eventRef.child(event.getEventId());
 
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -187,6 +190,23 @@ public class EventDetailsActivity extends AppCompatActivity {
         join_event_btn.setEnabled(false);
         Toast.makeText(this, "you have registerd successully", Toast.LENGTH_SHORT).show();
         currentEventRef.child(ConstFirebase.participants).child(currentUserId).setValue("");
+        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                name = snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                Log.i("name---", name);
+                if(!currentUserId.equals(event.getCreater_id())){
+                    Log.i("entered here --- ", event.getCreater_id());
+                    Notification.sendPersonalNotifiaction(event.getEventId(), event.getCreater_id(), name+ "has registered for your event", event.getEventName(), "participant","");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void openGoogleMap() {

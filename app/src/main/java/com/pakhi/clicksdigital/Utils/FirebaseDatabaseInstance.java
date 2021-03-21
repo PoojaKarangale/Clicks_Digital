@@ -118,4 +118,16 @@ public class FirebaseDatabaseInstance {
     public DatabaseReference getLastName() {
         return rootRef.child(ConstFirebase.users).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.LAST_NAME);
     }
+
+    public DatabaseReference getNotificationRefTopicLike() {
+        return rootRef.child(ConstFirebase.NotificationsTopicLike);
+    }
+
+    public DatabaseReference getNotificationRefTopicReply() {
+        return  rootRef.child(ConstFirebase.NotificationsTopicReply);
+    }
+
+    public DatabaseReference getNotificationRef() {
+        return rootRef.child(ConstFirebase.Notifications);
+    }
 }

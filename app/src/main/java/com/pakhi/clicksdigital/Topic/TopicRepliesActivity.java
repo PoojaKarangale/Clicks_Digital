@@ -73,6 +73,8 @@ public class TopicRepliesActivity extends AppCompatActivity {
     ImageView crossTopic;
     boolean notify=false;
     String rep;
+    public String grpName;
+    public String nameOfSender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,17 @@ public class TopicRepliesActivity extends AppCompatActivity {
         rootRef=FirebaseDatabaseInstance.getInstance();
         UsersRef=rootRef.getUserRef();
         replyRef=rootRef.getReplyRef();
+        rootRef.getGroupRef().child(topic.getTo()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                grpName = snapshot.child(ConstFirebase.group_name).getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         /*topicImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +106,17 @@ public class TopicRepliesActivity extends AppCompatActivity {
 
         pref=SharedPreference.getInstance();
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                nameOfSender=snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         initialiseFields();
         loadData();
@@ -164,7 +188,14 @@ public class TopicRepliesActivity extends AppCompatActivity {
                             if(notify&& !snap.getKey().equals(currentUserId)){
 
 
-                                Notification.sendPersonalNotifiaction(topic.getTo(), snap.getKey(),rep , /*title*/ "Topic Reply"  , "topic", topic.getMessageID());
+                                Notification.sendPersonalNotifiaction(topic.getTo(), snap.getKey(), nameOfSender+" has replied to Dialog topic: "+topic.getMessage().substring(0, 12)+"...", /*title*/ grpName  , "topic", topic.getMessageID());
+                                //rootRef.getNotificationRefTopicReply().child(snap.getKey()).child(topic.getMessageID()).setValue("");
+                                String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(topic.getFrom());
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(topic.getMessageID());
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("topicReply");
 
 
                             }
@@ -225,15 +256,82 @@ public class TopicRepliesActivity extends AppCompatActivity {
                     // dislike the topic make hart black
                     topicLikesRef.child(topic.getMessageID()).child(currentUserId).removeValue();
                     like.setImageResource(R.drawable.like_border);
+                    rootRef.getNotificationRef().addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snap : snapshot.getChildren()){
+                                if(snap.child("go").getValue().toString().equals(topic.getMessageID())){
+                                    if(snap.child("from").getValue().toString().equals(currentUserId)){
+                                        rootRef.getNotificationRef().child(snap.getKey()).removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 } else {
                     isLiked[0]=true;
                     // like the topic reden the heart
                     topicLikesRef.child(topic.getMessageID()).child(currentUserId).setValue("");
+
                     like.setImageResource(R.drawable.liked);
+
+                    addNotifications(topic);
                 }
             }
         });
     }
+
+    private void addNotifications(final Message topic) {
+        final String[] name = new String[1];
+        final String[] grpName = new String[1];
+
+        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rootRef.getGroupRef().child(topic.getTo()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        grpName[0]=snapshot.child(ConstFirebase.group_name).getValue().toString();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                name[0] = snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                sendLikeNotification(name[0], grpName[0]);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    private void sendLikeNotification(String s, String s2) {
+        if(!currentUserId.equals(topic.getFrom())){
+            Notification.sendPersonalNotifiaction(topic.getTo(), topic.getFrom(), s +" has liked your Dialog topic" + topic.getMessage(), s2, "topic", topic.getMessageID());
+            String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(topic.getFrom());
+            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
+            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(topic.getMessageID());
+            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("topicLike");
+
+
+            //rootRef.getNotificationRefTopicLike().child(message.getFrom()).child(message.getMessageID()).setValue("");
+        }
+
+    }
+
+
     private void addDataToDatabase(String type, String reply) {
         Calendar calForDate=Calendar.getInstance();
         SimpleDateFormat currentDateFormat=new SimpleDateFormat("MMM dd, yyyy");

@@ -183,7 +183,7 @@ public class ProfileUserRequest extends AppCompatActivity {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Profile is accepted, now you can join groups", "Profile Request Status", "accepted","");
+                Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Dialog Profile has been approved. Feel free to join groups, attend or events and share knowledge while you learn from the community. Stay Hungry, Stay Foolish!", "Profile Request Status", "accepted","");
                 rootRef.getApprovedUserRef().child(user.getUser_id()).setValue(true);
                 rootRef.getUserRequestsRef().child(user.getUser_id()).removeValue();
             }
@@ -191,7 +191,7 @@ public class ProfileUserRequest extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Profile is rejected", "Profile Request Status", "rejected","");
+                Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Dialog Profile has not been approved as per the community guidelines set by the Admin. You can apply again after 6 months.  You can still access the Events section and keep learning through the community.", "Profile Request Status", "rejected","");
                 rootRef.getUserRequestsRef().child(user.getUser_id()).removeValue();
 
             }

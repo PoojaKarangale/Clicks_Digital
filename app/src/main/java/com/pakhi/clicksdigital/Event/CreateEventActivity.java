@@ -49,6 +49,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
+import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -92,6 +93,7 @@ public class CreateEventActivity extends AppCompatActivity {
     Date startDate, endDate;
     ArrayList<String> listOfCat = new ArrayList<>();
     ArrayList<String> listOfCat1 = new ArrayList<>();
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -368,10 +370,10 @@ public class CreateEventActivity extends AppCompatActivity {
     private void createEvent() {
 
         // progressDialog.show();
-        String eventKey=eventRef.child(event_type).push().getKey();
+        final String eventKey=eventRef.push().getKey();
         Log.d("TESTINGEXTENTION", "--------pic image url----after-------------------" + picImageUrlString);
 
-        String eventName=event_name.getText().toString();
+        final String eventName=event_name.getText().toString();
         String eventDescription=description.getText().toString();
 
         String venuStr="";
@@ -389,7 +391,7 @@ public class CreateEventActivity extends AppCompatActivity {
         Event event;
         event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
 
-        eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+        eventRef.child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
@@ -397,8 +399,44 @@ public class CreateEventActivity extends AppCompatActivity {
                 finish();
             }
         });
-        eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.startMonth).setValue(startMonth);
-        eventRef.child(event.getEventType()).child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.endMonth).setValue(endMonth);
+        eventRef.child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.startMonth).setValue(startMonth);
+        eventRef.child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.endMonth).setValue(endMonth);
+
+        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                name = snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+                rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot snap : snapshot.getChildren()){
+                            if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString())){
+                                Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
+                                String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("createEvent");
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
        /* if(event.getEventType().equals(ConstFirebase.eventOnline)){
           eventRef.child(ConstFirebase.eventOnline).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -454,7 +492,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
 
-        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,android.R.id.text1, listOfCat1);
+        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this,android.R.layout.simple_spinner_item,android.R.id.text1, listOfCat1);
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);

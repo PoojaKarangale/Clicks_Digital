@@ -121,7 +121,7 @@ public class OnlineEventsFragment extends Fragment {
         final Date twoMonthAgo = new Date(ts.getTime());
 
         DatabaseReference eventRef = rootRef.getEventRef();
-        eventRef.child(ConstFirebase.eventOffline).addValueEventListener(new ValueEventListener() {
+        eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -143,7 +143,7 @@ public class OnlineEventsFragment extends Fragment {
 
             }
         });
-        eventRef.child(ConstFirebase.Both).addValueEventListener(new ValueEventListener() {
+        eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -167,7 +167,7 @@ public class OnlineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child(ConstFirebase.eventOnline).addValueEventListener(new ValueEventListener() {
+        eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -200,8 +200,8 @@ public class OnlineEventsFragment extends Fragment {
         Timestamp ts = new Timestamp(calendar.getTimeInMillis() / 1000L);
         final Date current = new Date(ts.getTime());
 
-        Query query = eventRef.orderByChild("event_type").equalTo(ConstFirebase.eventOnline);
-        query.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        //Query query = eventRef.orderByChild("event_type").equalTo(ConstFirebase.eventOnline);
+        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 events.clear();
@@ -215,7 +215,11 @@ public class OnlineEventsFragment extends Fragment {
                                     || event.getDescription().toLowerCase().contains(s)
                                     || event.getCategory().toLowerCase().contains(s)
                             ) {
-                                events.add(event);
+                                if(event.getEventType().equals(ConstFirebase.eventOnline)){
+
+                                    events.add(event);
+
+                                }
                             }
                         }
                     }
@@ -230,7 +234,7 @@ public class OnlineEventsFragment extends Fragment {
             }
         });
 
-        eventRef.child(ConstFirebase.Both).orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
@@ -244,7 +248,10 @@ public class OnlineEventsFragment extends Fragment {
                                     || event.getDescription().toLowerCase().contains(s)
                                     || event.getCategory().toLowerCase().contains(s)
                             ) {
-                                events.add(event);
+                                if(event.getEventType().equals("Both")){
+
+                                    events.add(event);
+                                }
                             }
                         }
                     }

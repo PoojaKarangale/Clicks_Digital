@@ -98,6 +98,7 @@ public class GroupChatActivity extends AppCompatActivity {
     String separateURL="";
     TextView withImage;
     String j;
+    String name="";
 
 
     @Override
@@ -116,6 +117,17 @@ public class GroupChatActivity extends AppCompatActivity {
         UsersRef = rootRef.getUserRef();
         GroupIdRef = rootRef.getGroupRef().child(currentGroupId);
         groupChatRefForCurrentGroup = rootRef.getGroupChatRef().child(currentGroupId);
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                name=snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
@@ -418,8 +430,11 @@ public class GroupChatActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         // linearLayoutManager.setStackFromEnd(true);
         // linearLayoutManager.setReverseLayout(true); ////-----------
+        //linearLayoutManager.setReverseLayout(true);
         userMessagesList.setLayoutManager(linearLayoutManager);
+        linearLayoutManager.setStackFromEnd(true);
 
+        userMessagesList.setHasFixedSize(true);
         userMessagesList.setAdapter(messageAdapter);
 
 
@@ -515,11 +530,16 @@ public class GroupChatActivity extends AppCompatActivity {
             IS_TYPE_TOPIC=true;
             Log.i("IS_TOPIC_TYPE----", String.valueOf(IS_TYPE_TOPIC));
 
-            notificationBhejo(message, IS_TYPE_TOPIC, messagekEY);
+            notificationBhejoTopic(message, messagekEY);
             Log.i("after----", "after");
         }
-        else {
-            notificationBhejo(message, IS_TYPE_TOPIC, "");
+        else if(messageType=="pdf"){
+            String msg="has shared a file";
+            notificationBhejoPDF(msg, "");
+
+        }
+        else if(messageType=="text"){
+            notificationBhejo(message, "");
 
         }
 
@@ -529,6 +549,45 @@ public class GroupChatActivity extends AppCompatActivity {
 
 
         progressDialog.dismiss();
+    }
+
+    private void notificationBhejoPDF(final String msg, String s) {
+        rootRef.getGroupChatRef().child(currentGroupId).child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for( DataSnapshot snap : snapshot.getChildren()){
+                    if(!snap.getKey().equals(currentUserID)){
+                        Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name+": has sent a file", /*title*/ currentGroupName  , "grpChat", "");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void notificationBhejoTopic(final String message,  final String messageKey) {
+        rootRef.getGroupChatRef().child(currentGroupId).child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for( DataSnapshot snap : snapshot.getChildren()){
+                    if(!snap.getKey().equals(currentUserID)){
+                        Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name+": has raised a Dialog Topic "+message, /*title*/ currentGroupName  , "topic", messageKey);
+                    }
+                }
+                notify=false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void saveSeparateTopicNode(String messagekEY) {
@@ -805,7 +864,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 .updateChildren(onlineStateMap);
 
     }
-    public void notificationBhejo(final String message, final boolean IS_TYPE_TOPIC, final String messageKey){
+    public void notificationBhejo(final String message, final String messageKey){
 
         rootRef.getGroupRef().child(currentGroupId).child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
             @Override
@@ -814,11 +873,8 @@ public class GroupChatActivity extends AppCompatActivity {
                     if(notify&& !snap.getKey().equals(currentUserID)){
                         Log.i("TOPIC TYPE", String.valueOf(IS_TYPE_TOPIC));
 
-                        if(IS_TYPE_TOPIC){
-                            Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), message, /*title*/ "Topic "+"("+currentGroupName+")"  , "topic", messageKey);
-                        }else {
-                            Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), message, /*title*/ currentGroupName , "grpChat", "");
-                        }
+                            Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name+": "+message, /*title*/ currentGroupName , "grpChat", "");
+
 
                     }
 

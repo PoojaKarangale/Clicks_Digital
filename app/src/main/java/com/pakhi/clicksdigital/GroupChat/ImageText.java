@@ -17,7 +17,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
@@ -50,6 +53,7 @@ public class ImageText extends AppCompatActivity {
     ImageView image;
     Button button;
     boolean notify=false;
+    String name="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +117,17 @@ public class ImageText extends AppCompatActivity {
             }
         });
 
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                name=snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
@@ -127,6 +142,43 @@ public class ImageText extends AppCompatActivity {
         intent.putExtra(ConstFirebase.groupId, currentGroupId);
         startActivity(intent);
         finish();
+    }public void notificationBhejo(final String message, final String messageKey){
+        notify=true;
+        final String[] grpName = new String[1];
+        rootRef.getGroupRef().child(currentGroupId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                grpName[0] =snapshot.child(ConstFirebase.group_name).getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        rootRef.getGroupRef().child(currentGroupId).child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    if(notify&& !snap.getKey().equals(currentUserID)){
+                        //Log.i("TOPIC TYPE", String.valueOf(IS_TYPE_TOPIC));
+
+
+                            Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name+": \uD83D\uDCF7 photo"+" "+inp, /*title*/ grpName[0] , "grpChat", "");
+
+
+                    }
+
+                }
+                notify=false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void SaveMessageInfoToDatabase(String messageType, String message, String inp) {
@@ -154,6 +206,7 @@ public class ImageText extends AppCompatActivity {
 
             DatabaseReference topicRef = rootRef.getTopicRef();
             topicRef.child(messagekEY).setValue(currentGroupId);
+            notificationBhejoTopic(inp,  messagekEY);
 
             goToParentGrp();
 
@@ -163,6 +216,8 @@ public class ImageText extends AppCompatActivity {
             Message message1 = new Message(currentUserID, message,
                     messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, inp);
             groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
+            notificationBhejo(message, messagekEY);
+
             goToParentGrp();
 
 
@@ -179,8 +234,37 @@ public class ImageText extends AppCompatActivity {
 
         //progressDialog.dismiss();
     }
+
+    private void notificationBhejoTopic(final String inp, final String messagekEY) {
+        notify=true;
+        rootRef.getGroupRef().child(currentGroupId).child(ConstFirebase.users).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    if(notify&& !snap.getKey().equals(currentUserID)){
+                        //Log.i("TOPIC TYPE", String.valueOf(IS_TYPE_TOPIC));
+
+
+                        Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name+": has raised a Dialog topic "+inp+"...", /*title*/ currentGroupName , "topic", messagekEY);
+
+
+                    }
+
+                }
+                notify=false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
     private void SendMessage(String messageType, String message, String inp) {
 
+        notify=true;
         //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
 
         String messageSenderRef = "MessagesList/" + currentUserID + "/" + currentGroupId;
@@ -191,7 +275,7 @@ public class ImageText extends AppCompatActivity {
 
         String messagePushID = userMessageKeyRef.getKey();
 
-        /* Map messageTextBody = new HashMap();*/
+        /* Map messageTextBody = new HashMap(); */
 
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
@@ -239,7 +323,7 @@ public class ImageText extends AppCompatActivity {
 
         if (notify) {
             // Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, "username + \": \" + message", "New Message");
-            Notification.sendPersonalNotifiaction( currentUserID, currentGroupId, messageSenderName + ": " + message, "New Message","chat","");
+            Notification.sendPersonalNotifiaction( currentUserID, currentGroupId, "\uD83D\uDCF7 photo", messageSenderName,"chat","");
         }
         notify = false;
     }

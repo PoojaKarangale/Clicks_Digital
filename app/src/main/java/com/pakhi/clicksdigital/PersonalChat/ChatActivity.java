@@ -426,7 +426,7 @@ public class ChatActivity extends AppCompatActivity {
 
         if (notify) {
            // Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, "username + \": \" + message", "New Message");
-            Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, messageSenderName + ": " + message, "New Message", "chat","");
+            Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID,message, messageSenderName, "chat","");
         }
         notify = false;
     }

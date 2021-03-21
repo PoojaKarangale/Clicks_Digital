@@ -14,16 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Activities.FindFriendsActivity;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
-import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.squareup.picasso.Picasso;
 
@@ -77,6 +72,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
             public void onClick(View v) {
                 Intent chatActivity=new Intent(mcontext, ChatActivity.class);
                 chatActivity.putExtra(Const.visitUser, user.getUser_id());
+                chatActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mcontext.startActivity(chatActivity);
             }
         });
@@ -86,6 +82,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
                 // String visit_user_id = getRef(position).getKey();
                 Intent profileIntent=new Intent(mcontext, VisitProfileActivity.class);
                 profileIntent.putExtra(Const.visitUser, user.getUser_id());
+                profileIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mcontext.startActivity(profileIntent);
             }
         });
