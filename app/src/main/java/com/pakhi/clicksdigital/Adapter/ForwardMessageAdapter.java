@@ -45,6 +45,7 @@ public class ForwardMessageAdapter extends RecyclerView.Adapter<ForwardMessageAd
         return new ForwardMessageAdapter.ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull final ForwardMessageAdapter.ViewHolder holder, int position) {
         if (groupOrContact.equals(Const.Groups)) {

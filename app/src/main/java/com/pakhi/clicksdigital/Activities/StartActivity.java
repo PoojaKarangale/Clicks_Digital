@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +43,6 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,10 +87,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 url=snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
-                Picasso.get()
-                        .load(String.valueOf(url)).placeholder(R.drawable.nav_profile)
-                        .resize(120,120)
-                        .into(profile);
+                Glide.with(getApplicationContext()).load(String.valueOf(url)).placeholder(R.drawable.nav_profile).into(profile);
 
                 //Toast.makeText(getApplicationContext(), "url image ---- " + url, Toast.LENGTH_LONG).show();
                 Log.i("url --- ", url);
@@ -156,7 +153,7 @@ public class StartActivity extends AppCompatActivity {
                     @Override
                     public void onTabUnselected(TabLayout.Tab tab) {
                         super.onTabUnselected(tab);
-                        int tabIconColor=ContextCompat.getColor(getApplicationContext(), R.color.black);
+                        int tabIconColor=ContextCompat.getColor(getApplicationContext(), R.color.white);
                         tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
                     }
 
@@ -243,7 +240,33 @@ public class StartActivity extends AppCompatActivity {
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             updateUserStatus(Const.online);
         }
+        rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
+            ArrayList<String> myList = new ArrayList<>();
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    myList.add(snap.getKey());
+                                    }
+                //setFile(myList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+
+    private void setFile(ArrayList<String> myList) {
+        for(String str : myList){
+            try {
+                rootRef.getUserRef().child(str).child("groups").removeValue();
+            }catch (Exception e){}
+
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

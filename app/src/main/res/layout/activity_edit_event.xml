@@ -266,6 +266,17 @@
                         app:met_floatingLabel="highlight"
                         app:met_primaryColor="?colorPrimary"
                         app:met_singleLineEllipsis="true" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/no_of_seat_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato"
+                        android:hint="No. of seats available"
+                        android:textSize="@dimen/title1"
+                        app:met_baseColor="@android:color/black"
+                        app:met_floatingLabel="highlight"
+                        app:met_primaryColor="?colorPrimary"
+                        app:met_singleLineEllipsis="true" />
                 </LinearLayout>
             </RelativeLayout>
 

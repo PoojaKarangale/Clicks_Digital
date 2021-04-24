@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 //import com.bumptech.glide.Glide;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -88,12 +91,10 @@ public class FullScreenTopicAdapter extends PagerAdapter {
             }
         });
 
-        /*Glide
+        Glide
                 .with(this.context)
-                .load(images.get(position))
-                .into(imageView);*/
-
-        Picasso.get().load(images.get(position)).into(imageView);
+                .load(images.get(position)).transform(new CenterCrop(), new RoundedCorners(15))
+                .into(imageView);
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +105,7 @@ public class FullScreenTopicAdapter extends PagerAdapter {
                         String userID = snapshot.getKey();
                         Intent intent = new Intent(context, VisitProfileActivity.class);
                         intent.putExtra(Const.visitUser, userID);
+                        intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
                         context.startActivity(intent);
 
                     }

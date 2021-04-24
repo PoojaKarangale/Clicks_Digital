@@ -3,9 +3,12 @@ package com.pakhi.clicksdigital.GroupChat;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,6 +24,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +32,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +45,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
@@ -99,12 +105,44 @@ public class GroupChatActivity extends AppCompatActivity {
     TextView withImage;
     String j;
     String name="";
+    boolean replyingToMessage=false;
+    String typeOfSelectedMessage="";
+    String selectedMessageId="";
+    Message msg;
+
+    //replyOnClickHeader
+    LinearLayout onLongClickOnMessage, replyHeader;
+    ImageView replyCross;
+    TextView replyMessageSenderName;
+
+    //Reply On Text
+    TextView replyOnText;
+
+    //ReplyOnImage
+    LinearLayout replyOnImageLayout;
+    ImageView replyOnImageImage;
+    TextView replyOnImageText;
+
+    //Reply on PDf
+    LinearLayout replyOnPDFLayout;
+
+    //ReplyOnURL
+    LinearLayout replyOnURLLayout;
+    ImageView replyOnURLImage;
+    TextView replyOnURLTitle, replyOnURLText;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat2);
+
+
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("custom-message"));
+
 
         //currentGroupName=getIntent().getExtras().get("groupName").toString();
         //currentGroupId = getIntent().getExtras().get(ConstFirebase.groupId).toString();
@@ -135,6 +173,12 @@ public class GroupChatActivity extends AppCompatActivity {
         db = new UserDatabase(this);
         getUserFromDb();
         GetUserInfo();
+        /*replyCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLongClickOnMessage.setVisibility(View.GONE);
+            }
+        });*/
 
         GroupIdRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -198,6 +242,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 notify=true;
+                onLongClickOnMessage.setVisibility(View.GONE);
 
                 String message = userMessageInput.getText().toString();
                 Log.i("Message check -----", message);
@@ -259,8 +304,9 @@ public class GroupChatActivity extends AppCompatActivity {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rootRef.getUserRef().child(currentUserID).child(ConstFirebase.userIsIn).setValue("noWhere");
                 finish();
-            }
+                }
         });
 
         raise_topic.setOnClickListener(new View.OnClickListener() {
@@ -269,6 +315,92 @@ public class GroupChatActivity extends AppCompatActivity {
                 startTopicRaiseFagmentForResult();
             }
         });
+
+    }
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            typeOfSelectedMessage = intent.getStringExtra("typeOfSelectedMessage");
+            selectedMessageId = intent.getStringExtra("selectedMessageId");
+            replyingToMessage = intent.getBooleanExtra("replyingToMessage", false);
+            msg = (Message) intent.getSerializableExtra("message");
+
+            replyMessageSenderName.setVisibility(View.GONE);
+            replyOnImageLayout.setVisibility(View.GONE);
+            replyOnText.setVisibility(View.GONE);
+            replyOnPDFLayout.setVisibility(View.GONE);
+            replyOnURLLayout.setVisibility(View.GONE);
+            final String[] nameOFSender = new String[1];
+            rootRef.getUserRef().child(msg.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    nameOFSender[0] =snapshot.child(ConstFirebase.userName).getValue().toString();
+                    createReplyLayout(msg,nameOFSender);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            onLongClickOnMessage.setVisibility(View.VISIBLE);
+
+            if(msg.getType().equals("text")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                replyOnText.setText(msg.getMessage());
+                replyOnText.setVisibility(View.VISIBLE);
+            }else if(msg.getType().equals("image")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                Picasso.get().load(msg.getMessage()).into(replyOnImageImage);
+                replyOnImageLayout.setVisibility(View.VISIBLE);
+                replyOnImageImage.setVisibility(View.VISIBLE);
+                if(!msg.getExtra().equals("")){
+                    replyOnImageText.setText(msg.getExtra());
+                    replyOnImageText.setVisibility(View.VISIBLE);
+                }
+            }else if(msg.getType().equals("pdf")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                replyOnPDFLayout.setVisibility(View.VISIBLE);
+            }else if(msg.getType().equals("url")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                replyOnURLText.setText(msg.getMessage());
+                replyOnURLLayout.setVisibility(View.VISIBLE);
+            }else if(msg.getType().equals("topic")){
+
+            }
+
+            replyCross.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onLongClickOnMessage.setVisibility(View.GONE);
+                    msg=null;
+                    replyingToMessage=false;
+                    //replyOnText.setText(null);
+                    replyMessageSenderName.setVisibility(View.GONE);
+                    replyOnImageLayout.setVisibility(View.GONE);
+                    replyOnText.setVisibility(View.GONE);
+                    replyOnPDFLayout.setVisibility(View.GONE);
+                    replyOnURLLayout.setVisibility(View.GONE);
+                }
+            });
+
+
+        }
+    };
+
+    private void createReplyLayout(Message message, String[] msg) {
+        if(message.getFrom().equals(currentUserID)){
+            replyMessageSenderName.setText("You");
+        }else{
+            replyMessageSenderName.setText(msg[0]);
+        }
+
 
     }
 
@@ -321,6 +453,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 SaveMessageInfoToDatabase("topic", topic_str, separateURL);
             }
         });
+
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -329,6 +462,7 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
         builder.show();
+
 
     }
 
@@ -362,6 +496,9 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onStart();
 
         //updateUserStatus("online");
+        //setting user is in this groupActivity
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.userIsIn).setValue(currentGroupId);
+
         messagesList.clear();
         messageAdapter.notifyDataSetChanged();
 
@@ -410,7 +547,37 @@ public class GroupChatActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.userIsIn).setValue("noWhere");
+    }
+
     private void InitializeFields() {
+        //Reply header
+        onLongClickOnMessage = findViewById(R.id.reply_layout_long_click);
+        replyHeader = findViewById(R.id.reply_header_and_cross);
+        replyCross = findViewById(R.id.reply_cross);
+        replyMessageSenderName = findViewById(R.id.reply_message_sender_name);
+
+        //Reply On Text
+        replyOnText = findViewById(R.id.reply_text_long_click);
+
+        //Reply On Image
+        replyOnImageLayout = findViewById(R.id.reply_image_layout_long_click);
+        replyOnImageImage = findViewById(R.id.reply_image_long_click);
+        replyOnImageText = findViewById(R.id.reply_image_text_long_click);
+
+        //ReplyOnPDF
+        replyOnPDFLayout = findViewById(R.id.reply_pdf_layout_long_click);
+
+        //ReplyOnURL
+        replyOnURLLayout = findViewById(R.id.reply_url_layout_long_click);
+        replyOnURLImage = findViewById(R.id.reply_url_image_long_click);
+        replyOnURLTitle = findViewById(R.id.reply_url_title_long_click);
+        replyOnURLText = findViewById(R.id.reply_url_text_long_click);
+
+
         mToolbar = findViewById(R.id.group_chat_bar_layout);
         setSupportActionBar(mToolbar);
         //  getSupportActionBar().setTitle(currentGroupName);
@@ -427,14 +594,17 @@ public class GroupChatActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messagesList, "GroupChat", getApplicationContext());
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
+
+        userMessagesList.setHasFixedSize(true);
+
         linearLayoutManager = new LinearLayoutManager(this);
         // linearLayoutManager.setStackFromEnd(true);
         // linearLayoutManager.setReverseLayout(true); ////-----------
         //linearLayoutManager.setReverseLayout(true);
         userMessagesList.setLayoutManager(linearLayoutManager);
         linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(false);
 
-        userMessagesList.setHasFixedSize(true);
         userMessagesList.setAdapter(messageAdapter);
 
 
@@ -443,6 +613,7 @@ public class GroupChatActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.userIsIn).setValue(currentGroupId);
 
         /*  new Handler().post(new Runnable() {
 
@@ -471,6 +642,8 @@ public class GroupChatActivity extends AppCompatActivity {
         }*/
 
     }
+
+
 
     @Override
     protected void onResume() {
@@ -519,11 +692,29 @@ public class GroupChatActivity extends AppCompatActivity {
         groupChatRefForCurrentGroup.updateChildren(groupMessageKey);
         String messagekEY = groupChatRefForCurrentGroup.push().getKey();
         Long timestamp = calForDate.getTimeInMillis() / 1000L;
+        Log.i("replyingToMessage", String.valueOf(replyingToMessage));
+        Log.i("replyingToMessage", String.valueOf(selectedMessageId));
+        Log.i("replyingToMessage", String.valueOf(typeOfSelectedMessage));
+        if(replyingToMessage){
+            Message message1 = new Message(currentUserID, message,
+                    messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, separateURL, selectedMessageId, typeOfSelectedMessage);
+            groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
 
-        Message message1 = new Message(currentUserID, message,
-                messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, separateURL);
 
-        groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
+        }
+        else{
+
+            Message message1 = new Message(currentUserID, message,
+                    messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, separateURL, "", "");
+            groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
+
+        }
+
+
+        rootRef.getGroupRef().child(currentGroupId).child("timestamp").setValue(timestamp);
+        MyGroupsAdapter grpAdapter = new MyGroupsAdapter();
+        grpAdapter.notifyDataSetChanged();
+
 
         if(messageType=="topic"){
             Log.i("messageKey----", messagekEY);
@@ -549,6 +740,50 @@ public class GroupChatActivity extends AppCompatActivity {
 
 
         progressDialog.dismiss();
+        replyingToMessage=false;
+
+    }
+
+    private void checkPresence(final String userID) {
+        rootRef.getUserRef().child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(ConstFirebase.userIsIn).exists()){
+                    String valueOfPresence = snapshot.child(ConstFirebase.userIsIn).getValue().toString();
+                    if(!valueOfPresence.equals(currentGroupId)){
+                        rootRef.getUserRef().child(userID).child("groups").child(currentGroupId).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    String numberOfMessages = snapshot.child("noOfMessages").getValue().toString();
+                                    Log.i("no of message", numberOfMessages);
+                                    setNumberOfMessages(numberOfMessages);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void setNumberOfMessages(String numberOfMessages) {
+        int number = Integer.parseInt(numberOfMessages);
+        number++;
+        rootRef.getUserRef().child(currentUserID).child("groups").child(currentGroupId).child("noOfMessages").setValue(number);
     }
 
     private void notificationBhejoPDF(final String msg, String s) {
@@ -825,6 +1060,9 @@ public class GroupChatActivity extends AppCompatActivity {
                         intent.putExtra("check", "grp");
                         intent.putExtra("name", "abc");
                         intent.putExtra("flag", flag);
+                        intent.putExtra("typeOfSelectedMessage", typeOfSelectedMessage);
+                        intent.putExtra("selectedMessageId", selectedMessageId);
+
                         startActivity(intent);
                         finish();
                         //SaveMessageInfoToDatabase("image", uri.toString());
@@ -873,6 +1111,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     if(notify&& !snap.getKey().equals(currentUserID)){
                         Log.i("TOPIC TYPE", String.valueOf(IS_TYPE_TOPIC));
 
+                            checkPresence(snap.getKey());
                             Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name+": "+message, /*title*/ currentGroupName , "grpChat", "");
 
 
@@ -890,4 +1129,10 @@ public class GroupChatActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        rootRef.getUserRef().child(currentUserID).child(ConstFirebase.userIsIn).setValue("noWhere");
+
+    }
 }

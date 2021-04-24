@@ -1,148 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margine_sub">
+    android:layout_height="75dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="@dimen/margine_sub"
+    app:cardCornerRadius="21dp"
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/image_profile"
-        android:layout_width="47dp"
-        android:layout_height="47dp"
-        android:layout_centerVertical="true"
-        android:src="@mipmap/ic_launcher" />
 
-    <ImageView
-        android:id="@+id/user_online_status"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="5dp"
-        android:src="@drawable/online"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/display_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margine_3"
-        android:layout_toEndOf="@id/image_profile"
-        android:fontFamily="@font/lato"
-        android:maxLines="1"
-        android:text="Name"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/title1"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/user_status"
+    >
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/display_name"
-        android:layout_marginStart="@dimen/margine_3"
-        android:layout_toEndOf="@+id/image_profile"
-        android:fontFamily="@font/lato"
-        android:text="user status"
-        android:textAlignment="textStart"
-        android:textSize="@dimen/title2"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/display_name"
-        android:layout_marginStart="@dimen/margine_3"
-        android:layout_toEndOf="@+id/image_profile"
-        android:fontFamily="@font/lato"
-        android:text="number"
-        android:textAlignment="textStart"
-        android:textSize="@dimen/title2"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/group_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/display_name"
-        android:layout_marginStart="@dimen/margine_3"
-        android:layout_toEndOf="@+id/image_profile"
-        android:fontFamily="@font/lato"
-        android:text="group name"
-        android:textAlignment="textStart"
-        android:textSize="@dimen/title2"
-        android:visibility="invisible" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="4dp"
-        android:orientation="horizontal"
-
+        android:layout_height="match_parent"
+        android:background="@drawable/chat_doodle_back"
         >
 
-        <Button
-            android:id="@+id/request_cancel_btn"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_profile"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_launcher" />
+
+        <ImageView
+            android:id="@+id/user_online_status"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/online"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/display_name"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margine_3"
+            android:layout_toEndOf="@id/image_profile"
+            android:fontFamily="@font/lato"
+            android:maxLines="1"
+            android:text="Name"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/title1"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/user_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/display_name"
+            android:layout_marginStart="@dimen/margine_3"
+            android:layout_toEndOf="@+id/image_profile"
+            android:fontFamily="@font/lato"
+            android:text="user status"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/title2"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/display_name"
+            android:layout_marginStart="@dimen/margine_3"
+            android:layout_toEndOf="@+id/image_profile"
+            android:fontFamily="@font/lato"
+            android:text="number"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/title2"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/group_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/display_name"
+            android:layout_marginStart="@dimen/margine_3"
+            android:layout_toEndOf="@+id/image_profile"
+            android:fontFamily="@font/lato"
+            android:text="group name"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/title2"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+
+            >
+
+            <Button
+                android:id="@+id/request_cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="8sp"
+                android:visibility="gone"
+                />
+
+            <Button
+                android:id="@+id/request_accept_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/colorPrimary"
+                android:text="Accept"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="8sp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/status_of_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:text="status of request accepted or not"
+            android:textColor="@color/colorAccent"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/chat_with_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/chat_with_friend"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/is_admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:text="Admin"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/checkbox_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:background="@color/white"
-            android:text="Cancel"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="8sp"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
-        <Button
-            android:id="@+id/request_accept_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginStart="8dp"
-            android:background="@color/colorPrimary"
-            android:text="Accept"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="8sp"
-            android:visibility="gone"
-           />
+    </RelativeLayout>
 
-    </LinearLayout>
 
-    <TextView
-        android:id="@+id/status_of_request"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        android:text="status of request accepted or not"
-        android:textColor="@color/colorAccent"
-        android:visibility="invisible" />
 
-    <ImageView
-        android:id="@+id/chat_with_friend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/chat_with_friend"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/is_admin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="10dp"
-        android:text="Admin"
-        android:textColor="@color/colorPrimary"
-        android:visibility="gone" />
-
-    <CheckBox
-        android:id="@+id/checkbox_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:background="@color/white"
-        android:visibility="gone" />
-
-</RelativeLayout>
+</androidx.cardview.widget.CardView>

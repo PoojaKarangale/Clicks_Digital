@@ -17,6 +17,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -30,7 +33,6 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -95,9 +97,10 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
                 holder.layOutURL.setVisibility(View.GONE);
                 holder.raisedImageLayoutHome.setVisibility(View.VISIBLE);
                 holder.raisedImageTextHome.setText(m.getExtra());
-                Picasso.get()
-                        .load(String.valueOf(m.getMessage()))
-                        .into(holder.raisedImageHome);
+
+                Glide.with(mcontext).load(String.valueOf(m.getMessage())).
+                        transform(new CenterCrop(), new RoundedCorners(10)).
+                        into(holder.raisedImageHome);
 
             }
             else {
@@ -139,9 +142,9 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             holder.layOutURL.setVisibility(View.GONE);
             holder.raisedImageLayoutHome.setVisibility(View.VISIBLE);
             holder.raisedImageTextHome.setText(m.getExtra());
-            Picasso.get()
-                    .load(String.valueOf(m.getMessage()))
-                    .into(holder.raisedImageHome);
+            Glide.with(mcontext).load(String.valueOf(m.getMessage())).
+                    transform(new CenterCrop(), new RoundedCorners(10)).
+                    into(holder.raisedImageHome);
 
 
         }
@@ -289,11 +292,12 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
             super.onPostExecute(output);
             //output.viewHolder.layOutURL.setVisibility(View.VISIBLE);
             output.viewHolder.urlTitle.setText(output.title);
-            output.viewHolder.urlDesc.setText(output.description);
+            //output.viewHolder.urlDesc.setText(output.description);
             //output.viewHolder.urlText.setText(output.description);
 
             if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-                Picasso.get().load(output.imageUrl).into((output.viewHolder).urlImage);
+                Glide.with(mcontext).load(output.imageUrl).transform(new CenterCrop(), new RoundedCorners(10)).into((output.viewHolder).urlImage);
+                //Picasso.get().load(output.imageUrl).into((output.viewHolder).urlImage);
             } else (output.viewHolder).urlImage.setVisibility(View.GONE);
 
 

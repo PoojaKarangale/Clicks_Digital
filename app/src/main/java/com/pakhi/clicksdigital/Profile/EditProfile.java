@@ -48,7 +48,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
-import com.rengwuxian.materialedittext.MaterialEditText;
+
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -79,10 +79,10 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     FirebaseDatabaseInstance rootRef;
     private boolean          isNewProfilePicSelected=false;
     private ImageView        profile_img;
-    private MaterialEditText full_name, email, bio, last_name;
+    private EditText full_name, email, bio, last_name;
     private ProgressDialog progressDialog;
     private String         gender, user_type;
-    private MaterialEditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
+    private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
     private Button add_more_certificate;
 
     @Override
@@ -93,7 +93,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         Intent intent=getIntent();
         user=(User) intent.getSerializableExtra(Const.userdata);
-
+        //user_type=user.getUser_type();
         pref=SharedPreference.getInstance();
         userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
@@ -280,6 +280,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         String bio_str=bio.getText().toString().trim();
         String weblink_str=weblink.getText().toString().trim();
+        user_type=user.getUser_type();
 
         final DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
 

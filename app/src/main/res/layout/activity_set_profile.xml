@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
-    tools:context=".Profile.SetProfileActivity">
+    tools:context=".Profile.EditProfile"
+    android:background="#E8F0FD">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -21,32 +22,8 @@
         android:layout_height="match_parent"
         android:visibility="visible">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="190dp"
-            android:src="@drawable/event_banner"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="11"
-                android:background="@drawable/bg_rounded_white" />
-
-        </LinearLayout>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -64,288 +41,784 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margine_sub"
-                    android:src="@drawable/close" />
+                    android:src="@drawable/ic_cross" />
 
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
+        <LinearLayout
+            android:id="@+id/main_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/set_profile_back">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_img"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:src="@drawable/persone_profile"
-            app:civ_border_color="@color/white"
-            app:civ_border_width="2dp" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_img"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="27dp"
+                android:src="@drawable/persone_profile"
+                app:civ_border_color="#1768E7"
+                app:civ_border_width="2dp"
+                android:layout_gravity="center_horizontal"
+                />
+            <TextView
+                android:id="@+id/header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/segoe"
+                android:text="Enter your Personal Details"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="27dp"/>
+
+
+        </LinearLayout>
+
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/profile_img"
-            android:layout_marginStart="@dimen/margine_main"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="@dimen/margine_main"
+            android:layout_below="@id/main_header"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="40dp"
             android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
 
-                <TextView
-                    android:id="@+id/header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:fontFamily="@font/lato"
-                    android:text="Enter your Personal Details"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/title1" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/full_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header"
-                    android:layout_marginTop="@dimen/margine_sub"
-                    android:fontFamily="@font/lato"
-                    android:hint="First Name"
-                    android:maxLines="1"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/last_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="Last Name"
-                    android:maxLines="1"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/full_name"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="Email"
-                    android:maxLines="1"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true"
-
-                    />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/bio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/email"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="Write about you"
-                    android:maxLines="2"
-                    android:textSize="@dimen/title1"
-                    android:maxLength="300"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                >
 
                 <LinearLayout
-                    android:id="@+id/gender"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/bio"
-                    android:layout_marginTop="@dimen/margine_sub"
-                    android:orientation="horizontal">
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
                         android:layout_gravity="center_vertical"
-                        android:fontFamily="@font/lato"
-                        android:text="Gender*"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/title1" />
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/friends"/>
 
-                    <RadioGroup
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="25dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/male"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato"
-                            android:onClick="onRadioButtonClicked"
-                            android:text="Male"
-                            android:textColor="#000000"
-                            android:textSize="@dimen/title1" />
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="First Name"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
 
-                        <RadioButton
-                            android:id="@+id/female"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/full_name"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:fontFamily="@font/lato"
-                            android:onClick="onRadioButtonClicked"
-                            android:text="Female"
-                            android:textColor="#000000"
-                            android:textSize="@dimen/title1" />
 
-                    </RadioGroup>
+                            android:layout_marginLeft="7dp"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter first name"
+                            android:maxLines="1"
+                            android:textColor="#121212"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+
+                            />
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/header2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/gender"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margine_main"
-                    android:fontFamily="@font/lato"
-                    android:text="Enter your Experience Details"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/title1" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/working"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/header2"
-                    android:layout_marginTop="@dimen/margine_sub"
-                    android:fontFamily="@font/lato"
-                    android:hint="Current Designation"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/set_profile_red">
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/company"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#FF704D"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/friends"/>
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Last Name"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+                        <EditText
+                            android:id="@+id/last_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Last Name"
+                            android:maxLines="1"
+                            android:textSize="12dp"
+                            android:layout_marginLeft="7dp"
+                            android:textStyle="bold"
+                            />
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
 
-                    android:layout_marginTop="@dimen/margine_sub"
-                    android:fontFamily="@font/lato"
-                    android:hint="Current Company"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/email"/>
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/get_city"
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Email"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/full_name"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Your Email ID"
+                            android:maxLines="1"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+
+                            android:layout_marginLeft="7dp"
+
+                            />
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/email"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="city"
-                    android:maxLines="2"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                    android:layout_height="150dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/set_profile_red">
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/experiences"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/working"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="Work experience"
-                    android:inputType="textMultiLine"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#FF704D"
+                        app:cardCornerRadius="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/friends"/>
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/speaker_experience"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/experiences"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="Speaker at any event"
-                    android:inputType="textMultiLine"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Write Your Professional Description"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+                        <EditText
+                            android:id="@+id/bio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato"
+                            android:hint="Enter Your Professional Description... (500 Char)"
+                            android:maxLines="6"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="7dp"
+                            android:maxLength="500"
+                            />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/expectations_from_us"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/experiences"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="Expectations from us"
-                    android:inputType="textMultiLine"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
 
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/offer_to_community"
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/experiences"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/lato"
-                    android:hint="What can you offer to community"
-                    android:inputType="textMultiLine"
-                    android:textSize="@dimen/title1"
-                    app:met_baseColor="@android:color/black"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="?colorAccent"
-                    app:met_singleLineEllipsis="true" />
+                    android:layout_height="100dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="top"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="7dp">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/male"
+                            android:layout_gravity="center"/>
+
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+
+
+
+                        <RadioGroup
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical"
+                            android:layout_gravity="center_vertical">
+
+                            <RadioButton
+                                android:id="@+id/male"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/segoe"
+                                android:onClick="onRadioButtonClicked"
+                                android:text="Male"
+                                android:textColor="#212121"
+                                android:textSize="12dp" />
+
+                            <RadioButton
+                                android:id="@+id/female"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/segoe"
+                                android:onClick="onRadioButtonClicked"
+                                android:text="Female"
+                                android:textColor="#212121"
+                                android:textSize="12dp" />
+
+                        </RadioGroup>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="vertical"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/set_profile_back">
+                    <TextView
+                        android:id="@+id/header2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/segoe"
+                        android:textStyle="bold"
+                        android:text="Enter your Experience Details"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14dp"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/pen"/>
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Current Designation"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/working"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/header2"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Your Current Designation"
+                            android:textSize="12dp"
+                            android:layout_marginLeft="7dp"
+                            android:textStyle="bold"
+                            />
+
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/set_profile_red">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="27dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6dp"
+                        app:cardBackgroundColor="#FF704D"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/building" />
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Current Company"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/company"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:fontFamily="@font/lato"
+                            android:hint="Enter Current Organization Name"
+                            android:textSize="12dp"
+                            android:layout_marginLeft="7dp"
+                            android:textStyle="bold"
+                            />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/city"/>
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="City"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+
+                        <EditText
+                            android:id="@+id/get_city"
+                            android:layout_marginLeft="7dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:textStyle="bold"
+                            android:hint="Enter City Name"
+                            android:maxLines="2"
+                            android:textSize="12dp"
+                            />
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/set_profile_red">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="27dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6dp"
+                        app:cardBackgroundColor="#FF704D"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/book" />
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Work Experience (in Yrs.)"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/experiences"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/working"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Number of Years"
+                            android:inputType="textMultiLine"
+                            android:textStyle="bold"
+                            android:textSize="12dp"
+
+                            android:layout_marginLeft="7dp"/>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/speaker"/>
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Speaker at events"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/speaker_experience"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Event Names"
+                            android:inputType="textMultiLine"
+                            android:textStyle="bold"
+                            android:textSize="12dp"
+                            />
+
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/set_profile_red">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="27dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6dp"
+                        app:cardBackgroundColor="#FF704D"
+                        app:cardCornerRadius="50dp"
+                        >
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/exp" />
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Expectations from the Community"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/expectations_from_us"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/experiences"
+
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Your Expectations from the Digital Marketing and Technology Professionals in the Community..."
+                            android:inputType="textMultiLine"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+
+                            android:layout_marginLeft="7dp"/>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bulb"/>
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="What can the community expect from you"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/offer_to_community"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/experiences"
+
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter What You Can Offer to the Community in terms of Knowledge, Connections, Resources, etc..."
+                            android:inputType="textMultiLine"
+                            android:textSize="12dp"
+                            android:layout_marginLeft="7dp"
+
+                            android:textStyle="bold"
+                            />
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+
+
+
+
 
                 <EditText
                     android:id="@+id/weblink"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_below="@id/speaker_experience"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/edittext_bg"
-                    android:hint="Linked-in Profile Link"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/linkdin"
+                    android:hint="Enter Your LinkedIn Profile or Personal Website Link..."
                     android:inputType="text"
                     android:paddingStart="10dp"
-                    android:textColor="#333333"
+                    android:textColor="#615d5c"
                     android:textColorHint="#717171"
-                    android:textSize="@dimen/title1" />
+                    android:textSize="12dp" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -358,11 +831,12 @@
                         android:id="@+id/certifications_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/lato"
+                        android:fontFamily="@font/segoe"
                         android:padding="5dp"
-                        android:text="Add Ceritifications"
-                        android:textColor="#333333"
-                        android:textSize="@dimen/title1" />
+                        android:textStyle="bold"
+                        android:text="Add Certifications"
+                        android:textColor="#43B7FD"
+                        android:textSize="14dp" />
 
                     <Button
                         android:id="@+id/add_more_certificate"
@@ -393,9 +867,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/back_round_button"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTint="#1768E7"
                     android:gravity="center"
-                    android:text="Done"
+                    android:text="Submit"
                     android:textColor="@color/white"
                     android:textSize="@dimen/button" />
 
@@ -404,431 +878,6 @@
         </ScrollView>
 
     </RelativeLayout>
-    <!-- <RelativeLayout
-         android:id="@+id/layout_view"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent">
 
-         <androidx.appcompat.widget.Toolbar
-             android:id="@+id/toolbar"
-             android:layout_width="match_parent"
-             android:layout_height="56dp">
-
-             <RelativeLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent">
-
-                 <ImageView
-                     android:id="@+id/done_btn"
-                     android:layout_width="36dp"
-                     android:layout_height="36dp"
-                     android:layout_alignParentEnd="true"
-                     android:layout_marginTop="12dp"
-                     android:layout_marginEnd="16dp"
-                     android:src="@drawable/done_right_click" />
-
-             </RelativeLayout>
-
-         </androidx.appcompat.widget.Toolbar>
-
-
-         <ScrollView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margine_main"
-            android:layout_marginEnd="@dimen/margine_main"
-             android:layout_below="@+id/toolbar"
-             android:scrollbars="none">
-
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 >
-
-                 <de.hdodenhof.circleimageview.CircleImageView
-                     android:id="@+id/profile_img"
-                     android:layout_width="130dp"
-                     android:layout_height="130dp"
-                     android:layout_centerHorizontal="true"
-                     android:layout_marginTop="@dimen/margine_sub"
-                     android:src="@drawable/residential"
-                     android:layout_gravity="center_horizontal"
-                     app:civ_border_color="@color/pale_grey"
-                     app:civ_border_width="1.5dp" />
-
-                 <TextView
-                     android:id="@+id/header"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/profile_img"
-                     android:layout_centerHorizontal="true"
-                     android:layout_gravity="center_horizontal"
-                     android:fontFamily="@font/lato"
-                     android:layout_margin="@dimen/margine_main"
-                     android:text="Enter your Personal Details"
-                     android:textColor="#000000"
-                     android:textSize="@dimen/title1" />
-
-                 <TextView
-                     android:id="@+id/txt1"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/header"
-                     android:layout_marginTop="@dimen/margine_sub"
-                     android:fontFamily="@font/lato"
-                     android:text="Full Name*"
-                     android:textColor="#000000"
-                     android:textSize="@dimen/title1" />
-
-                 <EditText
-                     android:id="@+id/full_name"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:padding="10dp"
-                     android:layout_below="@id/txt1"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:inputType="textPersonName"
-                     android:paddingStart="10dp"
-                     android:textColor="#333333"
-                     android:textSize="@dimen/title1" />
-
-                 <TextView
-                     android:id="@+id/txt2"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/full_name"
-                     android:layout_marginTop="16dp"
-                     android:fontFamily="@font/lato"
-                     android:text="Email*"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/email"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:padding="10dp"
-                     android:layout_below="@id/txt2"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:inputType="textEmailAddress"
-                     android:paddingStart="10dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <TextView
-                     android:id="@+id/txt_city"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/email"
-                     android:layout_marginTop="16dp"
-                     android:fontFamily="@font/lato"
-                     android:text="City*"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/get_city"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/txt_city"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:gravity="top"
-                     android:inputType="textMultiLine"
-                     android:minHeight="80dp"
-                     android:paddingStart="10dp"
-                     android:paddingTop="8dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <TextView
-                     android:id="@+id/txt3"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/get_city"
-                     android:layout_marginTop="16dp"
-                     android:fontFamily="@font/lato"
-                     android:text="Bio*"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/bio"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/txt3"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:gravity="top"
-                     android:inputType="textMultiLine"
-                     android:minHeight="80dp"
-                     android:paddingStart="10dp"
-                     android:paddingTop="8dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <LinearLayout
-                     android:id="@+id/gender"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/bio"
-                     android:layout_marginTop="15dp"
-                     android:orientation="horizontal">
-
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:fontFamily="@font/lato"
-                         android:text="Gender*"
-                         android:textColor="#000000"
-                         android:textSize="20sp" />
-
-                     <RadioGroup
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:layout_marginStart="25dp"
-                         android:orientation="horizontal">
-
-                         <RadioButton
-                             android:id="@+id/male"
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:fontFamily="@font/lato"
-                             android:onClick="onRadioButtonClicked"
-                             android:text="Male"
-                             android:textColor="#000000"
-                             android:textSize="18sp" />
-
-                         <RadioButton
-                             android:id="@+id/female"
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:layout_marginStart="10dp"
-                             android:fontFamily="@font/lato"
-                             android:onClick="onRadioButtonClicked"
-                             android:text="Female"
-                             android:textColor="#000000"
-                             android:textSize="18sp" />
-
-                     </RadioGroup>
-
-                 </LinearLayout>
-
-                 <TextView
-                     android:id="@+id/header2"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/gender"
-                     android:layout_centerHorizontal="true"
-                     android:layout_marginTop="40dp"
-                     android:fontFamily="@font/lato"
-                     android:text="Enter your Experience Details"
-                     android:textColor="#000000"
-                     android:textSize="26sp" />
-
-                 <TextView
-                     android:id="@+id/txt4"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/header2"
-                     android:layout_marginTop="20dp"
-                     android:fontFamily="@font/lato"
-                     android:text="Current Position"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/working"
-                     android:layout_width="match_parent"
-                     android:layout_height="50dp"
-                     android:layout_below="@id/txt4"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:inputType="textShortMessage"
-                     android:paddingStart="10dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <TextView
-                     android:id="@+id/txt5"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/working"
-                     android:layout_marginTop="16dp"
-                     android:fontFamily="@font/lato"
-                     android:text="Past Experiences"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/experiences"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/txt5"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:gravity="top"
-                     android:hint="Enter each experience in a new line"
-                     android:inputType="textMultiLine"
-                     android:minHeight="100dp"
-                     android:paddingStart="10dp"
-                     android:paddingTop="8dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <TextView
-                     android:id="@+id/txt6"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/experiences"
-                     android:layout_marginTop="16dp"
-                     android:fontFamily="@font/lato"
-                     android:text="Speaker at any event(if any)"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/speaker_experience"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/txt6"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:gravity="top"
-                     android:inputType="textPassword"
-                     android:minHeight="80dp"
-                     android:paddingStart="10dp"
-                     android:paddingTop="8dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <TextView
-                     android:id="@+id/txt7"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/speaker_experience"
-                     android:layout_marginTop="16dp"
-                     android:fontFamily="@font/lato"
-                     android:text="Expectationd from platform"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/expectations_from_us"
-                     android:layout_width="match_parent"
-                     android:layout_height="50dp"
-                     android:layout_below="@id/txt7"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:inputType="textPassword"
-                     android:paddingStart="10dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <TextView
-                     android:id="@+id/txt8"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/expectations_from_us"
-                     android:layout_marginTop="16dp"
-                     android:fontFamily="@font/lato"
-                     android:text="What can you offer?"
-                     android:textColor="#000000"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/offer_to_community"
-                     android:layout_width="match_parent"
-                     android:layout_height="50dp"
-                     android:layout_below="@id/txt8"
-                     android:layout_marginTop="5dp"
-                     android:background="@drawable/edittext_bg"
-                     android:inputType="textPassword"
-                     android:paddingStart="10dp"
-                     android:textColor="#333333"
-                     android:textSize="18sp" />
-
-                 <LinearLayout
-                     android:id="@+id/linear1"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@id/offer_to_community"
-                     android:orientation="vertical">
-
-                     <TextView
-                         android:id="@+id/header3"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_below="@id/gender"
-                         android:layout_gravity="center_horizontal"
-                         android:layout_marginTop="40dp"
-                         android:fontFamily="@font/lato"
-                         android:text="Social Links"
-                         android:textColor="#000000"
-                         android:textSize="26sp" />
-
-                     <EditText
-                         android:id="@+id/weblink"
-                         android:layout_width="match_parent"
-                         android:layout_height="50dp"
-                         android:layout_marginTop="20dp"
-                         android:background="@drawable/edittext_bg"
-                         android:hint="Linked-in Profile Link"
-                         android:inputType="text"
-                         android:paddingStart="10dp"
-                         android:textColor="#333333"
-                         android:textColorHint="#717171"
-                         android:textSize="18sp" />
-
-                 </LinearLayout>
-
-                 <RelativeLayout
-                     android:layout_width="fill_parent"
-                     android:layout_height="fill_parent"
-                     android:layout_below="@id/linear1"
-                     android:layout_marginTop="20dp"
-                     android:orientation="vertical">
-
-                     <TextView
-                         android:id="@+id/certifications_text"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:fontFamily="@font/lato"
-                         android:padding="5dp"
-                         android:text="Add Ceritifications"
-                         android:textColor="#333333"
-                         android:textSize="26sp" />
-
-                     <ImageButton
-                         android:id="@+id/add_more_certificate"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_alignParentEnd="true"
-                         android:layout_centerVertical="true"
-                         android:background="@drawable/back_round_button"
-                         android:backgroundTint="@color/colorPrimary"
-                         android:src="@drawable/add" />
-
-                     <LinearLayout
-                         android:id="@+id/add_cerificate_layout"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:layout_below="@+id/certifications_text"
-                         android:orientation="vertical"
-
-                         >
-
-                     </LinearLayout>
-
-                 </RelativeLayout>
-
-             </LinearLayout>
-
-         </ScrollView>
-
-     </RelativeLayout>-->
 
 </RelativeLayout>

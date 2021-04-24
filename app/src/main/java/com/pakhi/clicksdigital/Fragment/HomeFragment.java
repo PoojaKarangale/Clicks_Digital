@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -121,14 +124,17 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        listAdmins.clear();;
         rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snap : snapshot.getChildren()){
 
                     if(snap.child(ConstFirebase.USER_DETAILS).exists()){
-                        String type = snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString();
+                        Log.i("crashing-- ",snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userName).getValue().toString());
 
+                        String type = snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString();
+                        Log.i("type -", type);
                         if(type.equals("admin")){
                             listAdmins.add(snap.getKey());
                         }
@@ -341,6 +347,7 @@ public class HomeFragment extends Fragment {
 
         mViewPager.setAdapter(mViewPagerAdapter);
 
+
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
             @Override
@@ -360,6 +367,18 @@ public class HomeFragment extends Fragment {
             public void run() {
                 handler.post(Update);
             }
-        }, 5000, 2500);
+        }, 0, 4500);
+        try {
+            Interpolator sInterpolator = new AccelerateInterpolator();
+            Field mScroller;
+            mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            FixedSpeedScroller scroller = new FixedSpeedScroller(mViewPager.getContext(), sInterpolator);
+            // scroller.setFixedDuration(5000);
+            mScroller.set(mViewPager, scroller);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException e) {
+        }
     }
 }

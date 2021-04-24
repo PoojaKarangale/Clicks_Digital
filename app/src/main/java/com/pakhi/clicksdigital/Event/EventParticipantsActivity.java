@@ -74,7 +74,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
         eventRef=rootRef.getEventRef();
         usersRef=rootRef.getUserRef();
 
-        currentEventRef=eventRef.child(event.getEventType()).child(event.getEventId());
+        currentEventRef=eventRef.child(event.getEventId());
        //............... why this code here
         currentEventRef.child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
             @Override
@@ -236,8 +236,13 @@ public class EventParticipantsActivity extends AppCompatActivity {
                                     holder.userName.setText(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString());
 
                                     myParticipantName.add(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString()+" "+dataSnapshot.child(ConstFirebase.last_name).getValue().toString());
-                                    myParticipantNumber.add(dataSnapshot.child(ConstFirebase.MO_NUMBER).getValue().toString());
-                                    myParticipantEmail.add(dataSnapshot.child(ConstFirebase.USER_EMAIL).getValue().toString());
+                                    if(dataSnapshot.child(ConstFirebase.MO_NUMBER).exists()){
+                                        myParticipantNumber.add(dataSnapshot.child(ConstFirebase.MO_NUMBER).getValue().toString());
+
+                                    }
+                                    else{
+                                        myParticipantNumber.add("");
+                                    }myParticipantEmail.add(dataSnapshot.child(ConstFirebase.USER_EMAIL).getValue().toString());
 
                                     holder.userStatus.setText(dataSnapshot.child(ConstFirebase.USER_BIO).getValue().toString());
                                     final String image_url=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();

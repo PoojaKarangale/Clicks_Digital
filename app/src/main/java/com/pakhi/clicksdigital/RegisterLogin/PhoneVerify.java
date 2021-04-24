@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.User;
+import com.pakhi.clicksdigital.OnBoarding.OnboardingActivity;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -116,7 +117,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         initializingFields();
         Log.d("phoneVerify", " ----------------------" + phoneNumberWithoutSpecialChar + "----------" + number);
 
-        verify_number.setText("Verify " + number);
+        verify_number.setText("Verifying " + number);
         sendVerificationCode(number);
 
         initializeListeners();
@@ -195,9 +196,11 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
             sendUserToStartActivity();
         }*/
 
+
         if (pref.getData(SharedPreference.isProfileSet, getApplicationContext()) != null
                 && pref.getData(SharedPreference.isProfileSet, getApplicationContext()).equals(ConstFirebase.profileSet)) {
             //start activity
+
             sendUserToStartActivity();
         } else {
             checkUserOnline();
@@ -216,10 +219,12 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
                     //profile is already set
                     pref.saveData(SharedPreference.isProfileSet, ConstFirebase.profileSet, getApplicationContext());
                     pref.saveData(SharedPreference.user_type, dataSnapshot.child(ConstFirebase.USER_TYPE).getValue().toString(), getApplicationContext());
+                    sendUserToOnBoarding(true);
+                    //sendUserToStartActivity();
 
-                    sendUserToStartActivity();
                 } else {
-                    setUserToSetProfileActivity();
+                    sendUserToOnBoarding(false);
+                    //setUserToSetProfileActivity();
                 }
             }
 
@@ -228,6 +233,13 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
             }
         });
+    }
+
+    private void sendUserToOnBoarding(boolean profileCreatedOrNot) {
+        Intent resIntent = new Intent(PhoneVerify.this, OnboardingActivity.class);
+        resIntent.putExtra("profileCreatedOrNot", profileCreatedOrNot);
+        startActivity(resIntent);
+        finish();
     }
 
     private HashMap<String, String> putDataIntoHashMap(User user) {

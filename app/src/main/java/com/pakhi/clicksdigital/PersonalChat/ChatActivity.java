@@ -1,8 +1,11 @@
 package com.pakhi.clicksdigital.PersonalChat;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,6 +19,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -107,6 +112,33 @@ public class ChatActivity extends AppCompatActivity {
     private String saveCurrentTime, saveCurrentDate;
     private ProgressDialog progressDialog;
 
+    boolean replyingToMessage=false;
+    String typeOfSelectedMessage="";
+    String selectedMessageId="";
+    Message msg;
+
+    //replyOnClickHeader
+    LinearLayout onLongClickOnMessage, replyHeader;
+    ImageView replyCross;
+    TextView replyMessageSenderName;
+
+    //Reply On Text
+    TextView replyOnText;
+
+    //ReplyOnImage
+    LinearLayout replyOnImageLayout;
+    ImageView replyOnImageImage;
+    TextView replyOnImageText;
+
+    //Reply on PDf
+    LinearLayout replyOnPDFLayout;
+
+    //ReplyOnURL
+    LinearLayout replyOnURLLayout;
+    ImageView replyOnURLImage;
+    TextView replyOnURLTitle, replyOnURLText;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +152,9 @@ public class ChatActivity extends AppCompatActivity {
         progressDialog.setMessage("Uploading...");
 
         messageReceiverID = getIntent().getExtras().get(Const.visitUser).toString();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("custom-message"));
+
 
 
         DatabaseReference databaseReference = rootRef.getUserRef().child(messageReceiverID);
@@ -170,6 +205,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 notify = true;
+                onLongClickOnMessage.setVisibility(View.GONE);
                 String messageText = MessageInputText.getText().toString();
 
                 if (TextUtils.isEmpty(messageText)) {
@@ -228,8 +264,117 @@ public class ChatActivity extends AppCompatActivity {
 
         seenMessage();
     }
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            typeOfSelectedMessage = intent.getStringExtra("typeOfSelectedMessage");
+            selectedMessageId = intent.getStringExtra("selectedMessageId");
+            replyingToMessage = intent.getBooleanExtra("replyingToMessage", false);
+            msg = (Message) intent.getSerializableExtra("message");
+
+            replyMessageSenderName.setVisibility(View.GONE);
+            replyOnImageLayout.setVisibility(View.GONE);
+            replyOnText.setVisibility(View.GONE);
+            replyOnPDFLayout.setVisibility(View.GONE);
+            replyOnURLLayout.setVisibility(View.GONE);
+            final String[] nameOFSender = new String[1];
+            rootRef.getUserRef().child(msg.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    nameOFSender[0] =snapshot.child(ConstFirebase.userName).getValue().toString();
+                    createReplyLayout(msg,nameOFSender);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            onLongClickOnMessage.setVisibility(View.VISIBLE);
+
+            if(msg.getType().equals("text")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                replyOnText.setText(msg.getMessage());
+                replyOnText.setVisibility(View.VISIBLE);
+            }else if(msg.getType().equals("image")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                Picasso.get().load(msg.getMessage()).into(replyOnImageImage);
+                replyOnImageLayout.setVisibility(View.VISIBLE);
+                replyOnImageImage.setVisibility(View.VISIBLE);
+                if(!msg.getExtra().equals("")){
+                    replyOnImageText.setText(msg.getExtra());
+                    replyOnImageText.setVisibility(View.VISIBLE);
+                }
+            }else if(msg.getType().equals("pdf")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                replyOnPDFLayout.setVisibility(View.VISIBLE);
+            }else if(msg.getType().equals("url")){
+                replyMessageSenderName.setText(nameOFSender[0]);
+                replyMessageSenderName.setVisibility(View.VISIBLE);
+                replyOnURLText.setText(msg.getMessage());
+                replyOnURLLayout.setVisibility(View.VISIBLE);
+            }else if(msg.getType().equals("topic")){
+
+            }
+
+            replyCross.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onLongClickOnMessage.setVisibility(View.GONE);
+                    msg=null;
+                    //replyOnText.setText(null);
+                    replyMessageSenderName.setVisibility(View.GONE);
+                    replyOnImageLayout.setVisibility(View.GONE);
+                    replyOnText.setVisibility(View.GONE);
+                    replyOnPDFLayout.setVisibility(View.GONE);
+                    replyOnURLLayout.setVisibility(View.GONE);
+                    replyingToMessage=false;
+                }
+            });
+
+
+        }
+    };
+
+    private void createReplyLayout(Message msg, String[] nameOFSender) {
+        if(msg.getFrom().equals(messageSenderID)){
+            replyMessageSenderName.setText("You");
+        }else{
+            replyMessageSenderName.setText(nameOFSender[0]);
+        }
+
+    }
 
     private void IntializeControllers() {
+
+        //Reply header
+        onLongClickOnMessage = findViewById(R.id.reply_layout_long_click_per);
+        replyHeader = findViewById(R.id.reply_header_and_cross_per);
+        replyCross = findViewById(R.id.reply_cross_per);
+        replyMessageSenderName = findViewById(R.id.reply_message_sender_name_per);
+
+        //Reply On Text
+        replyOnText = findViewById(R.id.reply_text_long_click_per);
+
+        //Reply On Image
+        replyOnImageLayout = findViewById(R.id.reply_image_layout_long_click_per);
+        replyOnImageImage = findViewById(R.id.reply_image_long_click_per);
+        replyOnImageText = findViewById(R.id.reply_image_text_long_click_per);
+
+        //ReplyOnPDF
+        replyOnPDFLayout = findViewById(R.id.reply_pdf_layout_long_click_per);
+
+        //ReplyOnURL
+        replyOnURLLayout = findViewById(R.id.reply_url_layout_long_click_per);
+        replyOnURLImage = findViewById(R.id.reply_url_image_long_click_per);
+        replyOnURLTitle = findViewById(R.id.reply_url_title_long_click_per);
+        replyOnURLText = findViewById(R.id.reply_url_text_long_click_per);
+
       /*  ChatToolBar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(ChatToolBar);
 
@@ -240,7 +385,7 @@ public class ChatActivity extends AppCompatActivity {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View actionBarView = layoutInflater.inflate(R.layout.custom_chat_bar, null);
         actionBar.setCustomView(actionBarView);*/
-        messageScroll = findViewById(R.id.scroll_view);
+        //messageScroll = findViewById(R.id.scroll_view);
         back_btn = findViewById(R.id.back_btn);
         userName = (TextView) findViewById(R.id.custom_profile_name);
         userLastSeen = (TextView) findViewById(R.id.custom_user_last_seen);
@@ -251,7 +396,7 @@ public class ChatActivity extends AppCompatActivity {
 
         messageAdapter = new MessageAdapter(messagesList, ConstFirebase.personalChat, getApplicationContext());
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
-
+        userMessagesList.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         userMessagesList.setLayoutManager(linearLayoutManager);
@@ -320,7 +465,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
+        //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
         updateUserStatus("online");
         messagesList.clear();
         messageAdapter.notifyDataSetChanged();
@@ -353,7 +498,7 @@ public class ChatActivity extends AppCompatActivity {
                         //  messageAdapter.notifyDataSetChanged();
 
                         userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
-                        messageScroll.fullScroll(NestedScrollView.FOCUS_DOWN);
+                        //messageScroll.fullScroll(NestedScrollView.FOCUS_DOWN);
                     }
 
                     @Override
@@ -380,7 +525,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void SendMessage(String messageType, String message, String separteURL) {
 
-        messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
+        //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
 
         String messageSenderRef = "MessagesList/" + messageSenderID + "/" + messageReceiverID;
         String messageReceiverRef = "MessagesList/" + messageReceiverID + "/" + messageSenderID;
@@ -393,7 +538,8 @@ public class ChatActivity extends AppCompatActivity {
         /* Map messageTextBody = new HashMap();*/
 
         Message message1 = new Message(messageSenderID, message,
-                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate, false, separteURL);
+                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate, false, separteURL,
+                selectedMessageId, typeOfSelectedMessage);
 
         /*  messageTextBody.put("from", messageSenderID);
         messageTextBody.put("to", messageReceiverID);
@@ -409,6 +555,7 @@ public class ChatActivity extends AppCompatActivity {
         messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messagePushID);
 
         rootRef.getMessagesRef().child(messagePushID).setValue(message1);
+        replyingToMessage=false;
 
 
         rootRef.getRootRef().updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
@@ -427,8 +574,13 @@ public class ChatActivity extends AppCompatActivity {
         if (notify) {
            // Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID, "username + \": \" + message", "New Message");
             Notification.sendPersonalNotifiaction(messageSenderID, messageReceiverID,message, messageSenderName, "chat","");
+            checkPresence(messageReceiverID);
         }
         notify = false;
+    }
+
+    private void checkPresence(String messageReceiverID) {
+
     }
 
     private void updateUserStatus(String state) {
@@ -465,6 +617,7 @@ public class ChatActivity extends AppCompatActivity {
     private boolean menuItemClicked(MenuItem item) {
         if (item.getItemId() == R.id.galary_pic_menu) {
             openGalary();
+
         }
         if (item.getItemId() == R.id.camera_menu) {
             openCamera();
@@ -636,7 +789,7 @@ public class ChatActivity extends AppCompatActivity {
                         Log.d("ChatActivity", "-----------uploading image----------------------" + uri.toString());
                         progressDialog.dismiss();
                         MessageInputText.setText("");
-                        messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
+                        //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
                         Intent intent = new Intent(ChatActivity.this, ImageText.class);
                         intent.putExtra("image", uri.toString());
                         intent.putExtra("grp_id", messageReceiverID);

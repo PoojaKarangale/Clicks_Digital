@@ -14,6 +14,7 @@ public class Group {
 
     String status;
     String requesting_userid;
+    Long timestamp;
 
     private boolean isSelected;
 
@@ -46,6 +47,8 @@ public class Group {
     public String getGroup_name() {
         return group_name;
     }
+
+    public Long getTimestamp(){return timestamp; }
 
     public void setGroup_name(String group_name) {
         this.group_name=group_name;

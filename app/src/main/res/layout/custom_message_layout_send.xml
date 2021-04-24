@@ -4,114 +4,251 @@
     android:layout_height="wrap_content"
     android:layout_gravity="end"
     android:layout_marginTop="5dp"
-    android:layout_marginStart="45dp"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/sender_messsage_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:fontFamily="@font/lato"
-        android:longClickable="true"
-        android:text="sender messages"
-        android:textAlignment="gravity"
-        android:textColor="@color/recevierMessage"
-        android:textIsSelectable="true"
-        android:textSize="@dimen/title1"
-        android:visibility="gone" />
-<LinearLayout
-    android:id="@+id/image_sender_linear"
-    android:layout_width="180dp"
-    android:layout_height="wrap_content"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
-    android:visibility="gone"
-    android:layout_gravity="end">
-    <ImageView
-        android:id="@+id/message_sender_image_view"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_gravity="end"
-        android:layout_margin="5dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone" />
-    <TextView
-        android:id="@+id/image_text_sender"
+
+    android:paddingTop="4dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="10dp">
+    <LinearLayout
+        android:id="@+id/reply_main_sender"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:orientation="vertical"
         android:visibility="gone"
-        />
-
-</LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_sender_pdf"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:background="@drawable/bg_rounded_grey_border"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:visibility="gone">
+        android:background="@color/white"
+        >
+        <TextView
+            android:id="@+id/reply_message_sender_name_sender"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
-        <ImageView
-            android:id="@+id/message_sender_pdf_view"
-            android:layout_width="@dimen/widget_size36"
-            android:layout_height="@dimen/widget_size36"
-            android:layout_gravity="start"
-            android:scaleType="centerCrop"
-            android:src="@drawable/documents" />
+        <TextView
+            android:id="@+id/reply_text_sender"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+
+            android:visibility="gone"
+            />
+        <LinearLayout
+            android:id="@+id/reply_image_layout_sender"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_gravity="end"
+            >
+            <ImageView
+                android:id="@+id/reply_image_sender"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="start"
+                android:layout_margin="5dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/reply_image_text_sender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/reply_pdf_layout_sender"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/bg_rounded_grey_border"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/reply_pdf_image_sender"
+                android:layout_width="@dimen/widget_size36"
+                android:layout_height="@dimen/widget_size36"
+                android:layout_gravity="start"
+                android:scaleType="centerCrop"
+                android:src="@drawable/documents" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/reply_url_layout_sender"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_gravity="end"
+            android:background="#92f0cf"
+            android:padding="5dp">
+            <ImageView
+                android:id="@+id/reply_url_image_sender"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:layout_gravity="start"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/reply_url_title_sender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/reply_url_text_sender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
 
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/layout_url_sender"
-        android:layout_width="200dp"
+        android:layout_width="165dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:orientation="vertical"
+        android:background="@drawable/receiver_messages_layout"
+        android:backgroundTint="#D4E3FB"
         android:layout_gravity="end"
-        android:background="#92f0cf"
-        android:padding="5dp">
-        <ImageView
-            android:id="@+id/url_image_sender"
-            android:layout_width="200dp"
-            android:layout_height="130dp"
-            android:scaleType="centerCrop"
-            android:layout_gravity="end"/>
+        android:paddingLeft="15dp"
+        android:paddingTop="4dp"
+        android:paddingRight="7dp"
+        android:paddingBottom="8dp"
+        >
+
         <TextView
-            android:id="@+id/title_of_url_sender"
-            android:layout_width="match_parent"
+            android:id="@+id/sender_messsage_date_time"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="2"/>
-        <TextView
-            android:id="@+id/desc_of_url_sender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="3"/>
-        <TextView
-            android:id="@+id/url_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:fontFamily="@font/segoe"
+            android:text="1:30 PM-May 1, 2020"
+            android:textColor="#8BB4F3"
+            android:textSize="10dp"
             />
         <TextView
-            android:id="@+id/separate_url"
-            android:layout_width="match_parent"
+            android:id="@+id/sender_messsage_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="web"/>
+            android:layout_gravity="end"
+            android:fontFamily="@font/segoe"
+            android:longClickable="true"
+            android:text="sender messages"
+            android:textAlignment="gravity"
+            android:textColor="#212121"
+            android:textIsSelectable="true"
+            android:textSize="12dp"
+            android:visibility="gone"
+            android:layout_marginEnd="20dp"/>
+        <LinearLayout
+            android:id="@+id/image_sender_linear"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_gravity="end"
+            >
+            <ImageView
+                android:id="@+id/message_sender_image_view"
+                android:layout_width="140dp"
+                android:layout_height="101dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="6dp"
+
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/image_text_sender"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_sender_pdf"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/bg_rounded_grey_border"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/message_sender_pdf_view"
+                android:layout_width="@dimen/widget_size36"
+                android:layout_height="@dimen/widget_size36"
+                android:layout_gravity="start"
+                android:scaleType="centerCrop"
+                android:src="@drawable/documents" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_url_sender"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_gravity="end"
+            android:background="#D4E3FB"
+            android:padding="5dp">
+            <ImageView
+                android:id="@+id/url_image_sender"
+                android:layout_width="140dp"
+                android:layout_height="101dp"
+                android:scaleType="centerCrop"
+                android:layout_gravity="end"/>
+            <TextView
+                android:id="@+id/title_of_url_sender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:fontFamily="@font/segoe"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:textSize="12dp"/>
+            <TextView
+                android:id="@+id/desc_of_url_sender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/url_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textStyle="normal"
+                android:textSize="12dp"
+                android:fontFamily="@font/segoe"
+                />
+            <TextView
+                android:id="@+id/separate_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:textStyle="normal"
+                android:layout_marginTop="2dp"
+                android:textSize="12dp"
+                android:fontFamily="@font/segoe"/>
+        </LinearLayout>
+
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/sender_messsage_date_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="2dp"
-        android:fontFamily="@font/lato"
-        android:text="1:30 PM-May 1, 2020"
-        android:textColor="@color/grey"
-        android:textSize="8sp" />
+
 
     <TextView
         android:id="@+id/isSeen"

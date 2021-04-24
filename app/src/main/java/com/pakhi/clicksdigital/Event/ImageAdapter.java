@@ -11,12 +11,15 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.Image;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -45,9 +48,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ImageAdapter.ViewHolder holder, final int position) {
-        Picasso.get()
-                .load(images.get(position).getImage_url())
-                .into(holder.imageView);
+
+
+        Glide.with(context).load(images.get(position).getImage_url())
+                .transform(new CenterCrop(), new RoundedCorners(5)).into(holder.imageView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

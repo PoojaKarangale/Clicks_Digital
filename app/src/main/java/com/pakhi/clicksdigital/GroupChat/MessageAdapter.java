@@ -21,8 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +43,7 @@ import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
-import com.squareup.picasso.Picasso;
+
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -69,6 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_ME = 1;
     private static final int VIEW_TYPE_OTHER = 2;
     private static final int VIEW_TYPE_TOPIC = 3;
+    boolean replyingToMessage =false;
 
     public MessageAdapter(List<Message> userMessagesList, String chatType, Context context) {
         this.userMessagesList = userMessagesList;
@@ -134,16 +139,18 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         if(user_type.equals("admin") || message.getFrom().equals(currentUserId)){
                             options = new CharSequence[]
                                     {
-                                            "Forward",
+                                            "Reply",
                                             "Delete For All",
                                             "Delete For Me"
+
                                             //, "Remove photo"
                                     };
                         }
                         else {
                             options = new CharSequence[]
                                     {
-                                            "Forward"
+
+                                            "Reply"
                                             //, "Delete"
                                             //, "Remove photo"
                                     };
@@ -154,15 +161,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         if(user_type.equals("admin") || message.getFrom().equals(currentUserId)){
                             options = new CharSequence[]
                                     {
-                                            "Forward",
+                                            "Reply",
                                             "Delete"
+
                                             //, "Remove photo"
                                     };
                         }
                         else {
                             options = new CharSequence[]
                                     {
-                                            "Forward"
+
+                                            "Reply"
                                             //, "Delete"
                                             //, "Remove photo"
                                     };
@@ -181,7 +190,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-    private void configureMessageViewHolder(MessageViewHolder messageViewHolder, int position, final Message message) {
+    private void configureMessageViewHolder(final MessageViewHolder messageViewHolder, int position, final Message message) {
         messageViewHolder.senderMessageText.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.senderLayoutPdf.setVisibility(View.GONE);
@@ -191,6 +200,30 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         switch (message.getType()) {
             case "text":
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    messageViewHolder.replyMessageSenderNameSender.setVisibility(View.VISIBLE);
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
+
+
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
                 messageViewHolder.senderMessageText.setText(message.getMessage());
 
@@ -199,12 +232,37 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 //  messageViewHolder.senderDate.setText(message.getTime() + " - " + message.getDate());
                 break;
             case "image":
+
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
+
                 messageViewHolder.senderLayoutUrl.setVisibility(View.GONE);
                 messageViewHolder.senderMessageText.setVisibility(View.GONE);
                 messageViewHolder.senderImageLayout.setVisibility(View.VISIBLE);
                 messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
-                Picasso.get()
-                        .load(String.valueOf(message.getMessage()))
+
+
+                Glide.with(context).load(String.valueOf(message.getMessage()))
+                        .transform(new CenterCrop(), new RoundedCorners(10))
                         .into(messageViewHolder.messageSenderPicture);
                 if (message.getExtra() == "") {
                     messageViewHolder.senderImageText.setVisibility(View.GONE);
@@ -215,9 +273,52 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 break;
             case "pdf":
+
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
                 messageViewHolder.senderLayoutPdf.setVisibility(View.VISIBLE);
                 break;
             case "url":
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
                 messageViewHolder.senderImageLayout.setVisibility(View.GONE);
                 messageViewHolder.senderMessageText.setVisibility(View.GONE);
                 messageViewHolder.senderLayoutUrl.setVisibility(View.VISIBLE);
@@ -251,6 +352,496 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         });
     }
 
+    private void configurePDFTypeReply(final MessageViewHolder messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        messageViewHolder.replyOnTextSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnImageLayoutSender.setVisibility(View.GONE);
+
+    }
+
+    private void configureURLTypeReply(final MessageViewHolder messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        messageViewHolder.replyOnTextSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnImageLayoutSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.GONE);
+
+    }
+
+    private void configureImageTypeReply(final MessageViewHolder messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnImageLayoutSender.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnImageLayoutSender.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        messageViewHolder.replyOnTextSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.GONE);
+
+    }
+
+    private void configureTextTypeReply(final MessageViewHolder messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnTextSender.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnTextSender.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+        messageViewHolder.replyOnImageLayoutSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.GONE);
+        messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.GONE);
+
+    }
+
+    private void configurePDFTypeReply(final MessageViewHolderOther messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnPDFLayoutReceiver.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnPDFLayoutReceiver.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        messageViewHolder.replyOnTextReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnURLLayoutReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnImageLayoutReceiver.setVisibility(View.GONE);
+
+    }
+
+    private void configureURLTypeReply(final MessageViewHolderOther messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnURLLayoutReceiver.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnURLLayoutReceiver.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        messageViewHolder.replyOnTextReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnImageLayoutReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnPDFLayoutReceiver.setVisibility(View.GONE);
+
+    }
+
+    private void configureImageTypeReply(final MessageViewHolderOther messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnImageLayoutReceiver.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnImageLayoutReceiver.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        messageViewHolder.replyOnTextReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnURLLayoutReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnPDFLayoutReceiver.setVisibility(View.GONE);
+
+    }
+
+    private void configureTextTypeReply(final MessageViewHolderOther messageViewHolder, Message message) {
+
+        if(chatType.equals("GroupChat")){
+            rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnTextReceiver.setVisibility(View.VISIBLE);
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        else{
+            rootRef.getMessagesRef().child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+
+                        Message msg = snapshot.getValue(Message.class);
+                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        messageViewHolder.onLongClickOnMessageReceiver.setVisibility(View.VISIBLE);
+                        messageViewHolder.replyOnTextReceiver.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+        messageViewHolder.replyOnImageLayoutReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnURLLayoutReceiver.setVisibility(View.GONE);
+        messageViewHolder.replyOnPDFLayoutReceiver.setVisibility(View.GONE);
+
+    }
+
+    private void writeReplyMessage(String type, Message msg, final MessageViewHolder messageViewHolder) {
+
+
+        if(msg.getFrom().equals(currentUserId)){
+            printNameOfReplyMessageSender(messageViewHolder, "You");
+        }else{
+            getNameOfReplyMessageSender(messageViewHolder,msg);
+        }
+        messageViewHolder.replyMessageSenderNameSender.setVisibility(View.VISIBLE);
+
+        switch (type){
+            case "text":
+
+                messageViewHolder.replyOnTextSender.setText(msg.getMessage());
+                break;
+            case "image":
+                messageViewHolder.replyOnImageImageSender.setVisibility(View.VISIBLE);
+
+                Glide.with(context).load(msg.getMessage()).transform(new CenterCrop(), new RoundedCorners(10))
+                        .into(messageViewHolder.replyOnImageImageSender);
+                if(!msg.getExtra().equals("")){
+                    messageViewHolder.replyOnImageTextSender.setVisibility(View.VISIBLE);
+                    messageViewHolder.replyOnImageTextSender.setText(msg.getExtra());
+                }
+                break;
+            case "pdf":
+                messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.VISIBLE);
+                break;
+            case "url":
+                messageViewHolder.replyOnURLTextSender.setText(msg.getMessage());
+        }
+    }
+
+
+    // This is for Receiver Side
+    private void printNameOfReplyMessageSender(MessageViewHolderOther messageViewHolder, String you) {
+        messageViewHolder.replyMessageSenderNameReceiver.setText(you);
+    }
+    private void getNameOfReplyMessageSender(final MessageViewHolderOther messageViewHolder, Message msg) {
+        rootRef.getUserRef().child(msg.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                String name = snapshot.child(ConstFirebase.userName).getValue().toString();
+                printNameOfReplyMessageSender(messageViewHolder, name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    //This is for Sender Side
+    private void getNameOfReplyMessageSender(final MessageViewHolder messageViewHolder, Message msg) {
+        rootRef.getUserRef().child(msg.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                String name = snapshot.child(ConstFirebase.userName).getValue().toString();
+                printNameOfReplyMessageSender(messageViewHolder, name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void printNameOfReplyMessageSender(MessageViewHolder messageViewHolder, String you) {
+        messageViewHolder.replyMessageSenderNameSender.setText(you);
+    }
+
+    //For Reciever
+    private void writeReplyMessage(String type, Message msg, MessageViewHolderOther messageViewHolder) {
+        if(msg.getFrom().equals(currentUserId)){
+            printNameOfReplyMessageSender(messageViewHolder, "You");
+        }else{
+            getNameOfReplyMessageSender(messageViewHolder,msg);
+        }
+        messageViewHolder.replyMessageSenderNameReceiver.setVisibility(View.VISIBLE);
+
+
+        switch (type){
+            case "text":
+                messageViewHolder.replyOnTextReceiver.setText(msg.getMessage());
+                break;
+            case "image":
+                messageViewHolder.replyOnImageImageReceiver.setVisibility(View.VISIBLE);
+               Glide.with(context).load(msg.getMessage()).transform(new CenterCrop(), new RoundedCorners(10)).into(messageViewHolder.replyOnImageImageReceiver);
+                if(!msg.getExtra().equals("")){
+                    messageViewHolder.replyOnImageTextReceiver.setVisibility(View.VISIBLE);
+                    messageViewHolder.replyOnImageTextReceiver.setText(msg.getExtra());
+                }
+                break;
+            case "pdf":
+                messageViewHolder.replyOnPDFLayoutReceiver.setVisibility(View.VISIBLE);
+                break;
+            case "url":
+                messageViewHolder.replyOnURLTextReceiver.setText(msg.getMessage());
+        }
+    }
+
+
     private void configureMessageViewHolderOther(final MessageViewHolderOther messageViewHolder, final int position, final Message message) {
         messageViewHolder.receiverMessageText.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
@@ -265,6 +856,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if(chatType.equals("PersonalChat")){
+                    messageViewHolder.receiver_name.setVisibility(View.GONE);
+                }
                 String receiverName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
                 messageViewHolder.receiver_name.setText(receiverName);
             }
@@ -286,13 +880,62 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (message.getType()) {
             case "text":
                 //  messageViewHolder.receiverDate.setText(message.getTime() + " - " + message.getDate());
+
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    messageViewHolder.replyMessageSenderNameReceiver.setVisibility(View.VISIBLE);
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
                 messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverMessageText.setText(message.getMessage());
 
                 messageViewHolder.LayoutUrl.setVisibility(View.GONE);
                 messageViewHolder.receiverLayoutImage.setVisibility(View.GONE);
+                messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
+                messageViewHolder.download_image_receiver.setVisibility(View.GONE);
+                messageViewHolder.imageText.setVisibility(View.GONE);
+
                 break;
             case "image":
+
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
                 messageViewHolder.LayoutUrl.setVisibility(View.GONE);
                 messageViewHolder.receiverMessageText.setVisibility(View.GONE);
 
@@ -300,8 +943,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 messageViewHolder.receiverLayoutImage.setVisibility(View.VISIBLE);
                 messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
                 messageViewHolder.download_image_receiver.setVisibility(View.VISIBLE);
-                Picasso.get()
+                Glide.with(context)
                         .load(String.valueOf(message.getMessage()))
+                        .transform(new CenterCrop(), new RoundedCorners(10))
                         .into(messageViewHolder.messageReceiverPicture);
                 if (message.getExtra() == "") {
                     messageViewHolder.imageText.setVisibility(View.GONE);
@@ -311,10 +955,52 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
                 break;
             case "pdf":
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
                 messageViewHolder.receiverLayoutPdf.setVisibility(View.VISIBLE);
                 break;
             case "url":
 
+                if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    switch (message.getTypeOfSelectedMessage()){
+                        case "text":
+                            configureTextTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "image":
+                            configureImageTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "pdf":
+                            configurePDFTypeReply(messageViewHolder, message);
+
+                            break;
+                        case "url":
+                            configureURLTypeReply(messageViewHolder, message);
+
+                            break;
+                    }
+
+                }
                 messageViewHolder.receiverMessageText.setVisibility(View.GONE);
                 messageViewHolder.receiverLayoutImage.setVisibility(View.GONE);
 
@@ -405,8 +1091,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 messageViewHolder.raisedImageLayout.setVisibility(View.VISIBLE);
                 messageViewHolder.raisedImageText.setText(message.getExtra());
-                Picasso.get()
+                Glide.with(context)
                         .load(String.valueOf(message.getMessage()))
+                        .transform(new CenterCrop(), new RoundedCorners(10))
                         .into(messageViewHolder.raisedImage);
             } else {
                 messageViewHolder.topic_text.setVisibility(View.GONE);
@@ -437,8 +1124,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             messageViewHolder.raisedImageLayout.setVisibility(View.VISIBLE);
             messageViewHolder.raisedImageText.setText(message.getExtra());
-            Picasso.get()
+            Glide.with(context)
                     .load(String.valueOf(message.getMessage()))
+                    .transform(new CenterCrop(), new RoundedCorners(10))
                     .into(messageViewHolder.raisedImage);
         } else {
             messageViewHolder.topic_text.setVisibility(View.VISIBLE);
@@ -452,8 +1140,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String receiverName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
-                messageViewHolder.publisher_name.setText(receiverName);
+                if(dataSnapshot.child(ConstFirebase.userID).getValue().toString().equals(currentUserId)){
+                    messageViewHolder.publisher_name.setText("You");
+                }else{
+                    String receiverName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                    messageViewHolder.publisher_name.setText(receiverName);
+                }
+
             }
 
             @Override
@@ -621,7 +1314,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case 0:
-                        forwardMessage(v, position);
+                        //forwardMessage(v, position);
+                        replyingToMessage=true;
+                        replyToMessage(v, position, replyingToMessage);
                         break;
                     case 1:
                         deleteMessage(v, position, "deleteForAll");
@@ -635,8 +1330,30 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         builder.show();
     }
 
+    private void replyToMessage(View v, int position, boolean replyingToMessage) {
+        Message msg = null;
+        msg = userMessagesList.get(position);
+        String typeOfSelectedMessage = msg.getType();
+        String selectedMessageId = msg.getMessageID();
+        Intent intent = new Intent("custom-message");
+        intent.putExtra("typeOfSelectedMessage", typeOfSelectedMessage);
+        intent.putExtra("selectedMessageId", selectedMessageId);
+        intent.putExtra("replyingToMessage", replyingToMessage);
+        intent.putExtra("message",msg);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+
+    }
     private void forwardMessage(View v, int position) {
         Toast.makeText(v.getContext(), "This feature is yet to implement", Toast.LENGTH_LONG).show();
+        Message msg = userMessagesList.get(position);
+        msg.setFrom(currentUserId);
+                Intent intent = new Intent(context, forwarMessageActivity.class);
+                intent.putExtra(Const.message, msg);
+                intent.putExtra("chatType", chatType);
+                context.startActivity(intent);
+
+
     }
 
     private void deleteMessage(View v, int position, String deleteScope) {
@@ -779,6 +1496,27 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public ImageView messageSenderPicture, urlImage;
         public LinearLayout senderLayoutPdf, senderLayoutUrl, senderImageLayout;
 
+        //replyOnClickHeader
+        LinearLayout onLongClickOnMessageSender, replyHeaderSender;
+        TextView replyMessageSenderNameSender;
+
+        //Reply On Text
+        TextView replyOnTextSender;
+
+        //ReplyOnImage
+        LinearLayout replyOnImageLayoutSender;
+        ImageView replyOnImageImageSender;
+        TextView replyOnImageTextSender;
+
+        //Reply on PDf
+        LinearLayout replyOnPDFLayoutSender;
+
+        //ReplyOnURL
+        LinearLayout replyOnURLLayoutSender;
+        ImageView replyOnURLImageSender;
+        TextView replyOnURLTitleSender, replyOnURLTextSender;
+
+
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             //right side box sender
@@ -801,6 +1539,30 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //image text
             senderImageLayout = itemView.findViewById(R.id.image_sender_linear);
             senderImageText = itemView.findViewById(R.id.image_text_sender);
+
+            //ReplyInMessageHEader
+            onLongClickOnMessageSender=itemView.findViewById(R.id.reply_main_sender);
+            replyMessageSenderNameSender=itemView.findViewById(R.id.reply_message_sender_name_sender);
+
+            //replyOnText
+            replyOnTextSender=itemView.findViewById(R.id.reply_text_sender);
+
+            //replyOnImage
+            replyOnImageLayoutSender=itemView.findViewById(R.id.reply_image_layout_sender);
+            replyOnImageImageSender=itemView.findViewById(R.id.reply_image_sender);
+            replyOnImageTextSender=itemView.findViewById(R.id.reply_image_text_sender);
+
+            //replyOnPdf
+            replyOnPDFLayoutSender=itemView.findViewById(R.id.reply_pdf_layout_sender);
+
+            //replyOnURL
+            replyOnURLLayoutSender=itemView.findViewById(R.id.reply_url_layout_sender);
+            replyOnURLImageSender=itemView.findViewById(R.id.reply_url_image_sender);
+            replyOnURLTitleSender=itemView.findViewById(R.id.reply_url_title_sender);
+            replyOnURLTextSender=itemView.findViewById(R.id.reply_url_text_sender);
+
+
+
         }
     }
 
@@ -810,6 +1572,26 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public ImageView messageReceiverPicture, download_image_receiver,
                 download_pdf_receiver, urlImage;
         LinearLayout receiverLayoutPdf, receiverLayoutImage, LayoutUrl, mainRecImageLayout;
+
+        //replyOnClickHeader
+        LinearLayout onLongClickOnMessageReceiver, replyHeaderReceiver;
+        TextView replyMessageSenderNameReceiver;
+
+        //Reply On Text
+        TextView replyOnTextReceiver;
+
+        //ReplyOnImage
+        LinearLayout replyOnImageLayoutReceiver;
+        ImageView replyOnImageImageReceiver;
+        TextView replyOnImageTextReceiver;
+
+        //Reply on PDf
+        LinearLayout replyOnPDFLayoutReceiver;
+
+        //ReplyOnURL
+        LinearLayout replyOnURLLayoutReceiver;
+        ImageView replyOnURLImageReceiver;
+        TextView replyOnURLTitleReceiver, replyOnURLTextReceiver;
 
         public MessageViewHolderOther(@NonNull View itemView) {
             super(itemView);
@@ -839,6 +1621,30 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mainRecImageLayout = itemView.findViewById(R.id.main_rec_image_layout);
             imageText = itemView.findViewById(R.id.image_text_rec);
 
+            //ReplyInMessageHEader
+            onLongClickOnMessageReceiver=itemView.findViewById(R.id.reply_main_receiver);
+            replyMessageSenderNameReceiver=itemView.findViewById(R.id.reply_message_sender_name_receiver);
+
+            //replyOnText
+            replyOnTextReceiver=itemView.findViewById(R.id.reply_text_receiver);
+
+            //replyOnImage
+            replyOnImageLayoutReceiver=itemView.findViewById(R.id.reply_image_layout_receiver);
+            replyOnImageImageReceiver=itemView.findViewById(R.id.reply_image_receiver);
+            replyOnImageTextReceiver=itemView.findViewById(R.id.reply_image_text_receiver);
+
+            //replyOnPdf
+            replyOnPDFLayoutReceiver=itemView.findViewById(R.id.reply_pdf_layout_receiver);
+
+            //replyOnURL
+            replyOnURLLayoutReceiver=itemView.findViewById(R.id.reply_url_layout_receiver);
+            replyOnURLImageReceiver=itemView.findViewById(R.id.reply_url_image_receiver);
+            replyOnURLTitleReceiver=itemView.findViewById(R.id.reply_url_title_receiver);
+            replyOnURLTextReceiver=itemView.findViewById(R.id.reply_url_text_receiver);
+
+
+
+
 
         }
     }
@@ -850,6 +1656,26 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public CircleImageView receiverProfileImage;
         public ImageView like, urlImage, raisedImage;
         public LinearLayout topicLayoutUrl, raisedImageLayout;
+
+        //replyOnClickHeader
+        LinearLayout onLongClickOnMessageTopic, replyHeaderTopic;
+        TextView replyMessageSenderNameTopic;
+
+        //Reply On Text
+        TextView replyOnTextTopic;
+
+        //ReplyOnImage
+        LinearLayout replyOnImageLayoutTopic;
+        TextView replyOnImageTextTopic;
+
+        //Reply on PDf
+        LinearLayout replyOnPDFLayoutTopic;
+
+        //ReplyOnURL
+        LinearLayout replyOnURLLayoutTopic;
+        ImageView replyOnURLImageTopic;
+        TextView replyOnURLTitleTopic, replyOnURLTextTopic;
+
 
         public TopicViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -953,7 +1779,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((TopicViewHolder) output.viewHolder).urlTitle.setText(output.title);
         ((TopicViewHolder) output.viewHolder).urlDesc.setText(output.description);
         if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-            Picasso.get().load(output.imageUrl).into(((TopicViewHolder) output.viewHolder).urlImage);
+
+            Glide.with(context).load(output.imageUrl)
+                    .transform(new CenterCrop(), new RoundedCorners(10)).
+                    into(((TopicViewHolder) output.viewHolder).urlImage);
         } else ((TopicViewHolder) output.viewHolder).urlImage.setVisibility(View.GONE);
 
     }
@@ -962,7 +1791,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((MessageViewHolderOther) output.viewHolder).urlTitle.setText(output.title);
         ((MessageViewHolderOther) output.viewHolder).urlDesc.setText(output.description);
         if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-            Picasso.get().load(output.imageUrl).into(((MessageViewHolderOther) output.viewHolder).urlImage);
+            Glide.with(context).load(output.imageUrl)
+                    .transform(new CenterCrop(), new RoundedCorners(10)).
+                    into(((MessageViewHolderOther) output.viewHolder).urlImage);
         } else ((MessageViewHolderOther) output.viewHolder).urlImage.setVisibility(View.GONE);
 
     }
@@ -971,7 +1802,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((MessageViewHolder) output.viewHolder).urlTitle.setText(output.title);
         ((MessageViewHolder) output.viewHolder).urlDesc.setText(output.description);
         if (!TextUtils.isEmpty(output.imageUrl.toString())) {
-            Picasso.get().load(output.imageUrl).into(((MessageViewHolder) output.viewHolder).urlImage);
+
+
+            Glide.with(context).load(output.imageUrl)
+                    .transform(new CenterCrop(), new RoundedCorners(10)).
+                    into(((MessageViewHolder) output.viewHolder).urlImage);
         } else ((MessageViewHolder) output.viewHolder).urlImage.setVisibility(View.GONE);
 
     }

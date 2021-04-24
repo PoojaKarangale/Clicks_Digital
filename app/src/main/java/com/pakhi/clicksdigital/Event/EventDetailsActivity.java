@@ -18,6 +18,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,13 +39,14 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ToastClass;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.Calendar;
 import java.util.Locale;
 
 public class EventDetailsActivity extends AppCompatActivity {
     private String currentUserId;
+    TextView organiserBio;
 
     private ImageView event_image, organiser_image, close_btn;
     private ImageButton gallery;
@@ -60,6 +64,9 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     String name;
+    boolean registered  = false;
+    TextView time_date_text2;
+
 
     public static String timestampToDateString(long timestamp) {
        /* SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -97,20 +104,12 @@ public class EventDetailsActivity extends AppCompatActivity {
         checkUserIsAlreadyRegisterd();
 
         loadData();
-        currentEventRef.child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    int participants=(int) snapshot.getChildrenCount();
-                    no_of_participants.setText("" + participants);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        if(currentUserId.equals(event.getCreater_id())){
+            join_event_btn.setVisibility(View.GONE);
+        }
 
-            }
-        });
+
         organiser_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +153,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void checkUserIsAlreadyRegisterd() {
+    private boolean checkUserIsAlreadyRegisterd() {
         currentEventRef.child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -163,7 +162,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                         join_event_btn.setEnabled(false);
                         join_event_btn.setTextColor(Color.GRAY);
                         join_event_btn.setText("you are already registered");
+                        registered=true;
                     }
+
                 }
             }
 
@@ -172,6 +173,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             }
         });
+        return registered;
     }
 
     private void sendUserToEventsParticipants() {
@@ -217,40 +219,46 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private void initialiseFields() {
         gallery=findViewById(R.id.gallery);
-
+        organiserBio=findViewById(R.id.organiser_bio);
         join_event_btn=findViewById(R.id.register);
         organiser_name=findViewById(R.id.organiser_name);
         event_image=findViewById(R.id.event_image);
         organiser_image=findViewById(R.id.organiser_image);
         cost=findViewById(R.id.cost);
         time_date_text=findViewById(R.id.time_date_text);
+        time_date_text2=findViewById(R.id.time_date_text_two);
         category=findViewById(R.id.category);
         event_name=findViewById(R.id.event_name);
         no_of_participants=findViewById(R.id.no_of_participants);
         description=findViewById(R.id.description);
         location_city=findViewById(R.id.location_city);
         location=findViewById(R.id.location);
-        txtLoc=findViewById(R.id.txtLoc);
+        //txtLoc=findViewById(R.id.txtLoc);
         close_btn=findViewById(R.id.close_btn);
     }
 
     private void loadData() {
         progressDialog.show();
-        Picasso.get()
+
+        Glide.with(getApplicationContext())
                 .load(event.getEvent_image())
-                .fit()
+                .transform(new CenterCrop(), new RoundedCorners(15))
                 .into(event_image);
-        Picasso.get()
-                .load(organiser.getImage_url())
-                .resize(120, 120)
+
+
+        Glide.with(getApplicationContext()).load(organiser.getImage_url()).
+                transform(new CenterCrop(), new RoundedCorners(10))
                 .into(organiser_image);
-        time_date_text.setText(event.getStartTime()+", "+event.getStartDate()+" to "+event.getEndTime()+", "+event.getEndDate());
+        time_date_text.setText(event.getStartDate()+" - "+event.getStartTime());
+        time_date_text2.setText(event.getEndDate()+" - "+event.getEndTime());
 
         //time_date_text.setText(event.getStartDate() + " to " + event.getEndDate() + ", " + event.getStartTime() + " to " + event.getEndTime());
         event_name.setText(event.getEventName().toUpperCase());
         category.setText(event.getCategory());
         description.setText(event.getDescription());
         organiser_name.setText(organiser.getUser_name());
+        location.setText(event.getAddress());
+        organiserBio.setText(organiser.getUser_bio());
 
         if (event.isPayable()) {
             cost.setText(String.valueOf("Event Fee " + event.getTotalFee()) + "/-");
@@ -259,11 +267,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
         if (event.getEventType().equals(Const.Online)) {
             location_city.setText(event.getVenu());
-            txtLoc.setVisibility(View.GONE);
-            location.setVisibility(View.GONE);
+            //txtLoc.setVisibility(View.GONE);
+            //location.setVisibility(View.GONE);
         } else {
             location_city.setText(event.getVenu() + ", " + event.getCity());
-            txtLoc.setVisibility(View.VISIBLE);
+            //txtLoc.setVisibility(View.VISIBLE);
             location.setVisibility(View.VISIBLE);
         }
 
@@ -271,6 +279,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!event.getAddress().equals("")) {
+
                     openMap();
                 } else {
                     ToastClass.makeText(getApplicationContext(), "no link provided");

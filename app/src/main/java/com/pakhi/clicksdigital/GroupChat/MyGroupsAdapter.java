@@ -49,6 +49,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
         this.mcontext=mcontext;
         this.groups=groups;
     }
+    public  MyGroupsAdapter(){}
 
     @NonNull
     @Override

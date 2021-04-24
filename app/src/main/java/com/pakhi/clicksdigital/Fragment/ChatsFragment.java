@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatsFragment extends Fragment {
     private View         PrivateChatsView;
     private RecyclerView chatsList;
+    Button findNewProf;
 
     private DatabaseReference ChatsRef, UsersRef;
     private FirebaseAuth mAuth;
@@ -59,12 +61,13 @@ public class ChatsFragment extends Fragment {
         UsersRef=FirebaseDatabase.getInstance().getReference().child(ConstFirebase.users);
 
         chatsList=(RecyclerView) PrivateChatsView.findViewById(R.id.recycler_chats);
+        findNewProf = PrivateChatsView.findViewById(R.id.find_new_prof);
         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
 
         FloatingActionButton fab_create_event=PrivateChatsView.findViewById(R.id.fab_create_event);
-        fab_create_event.setOnClickListener(new View.OnClickListener() {
+        findNewProf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendUserToFindFriendsActivity();

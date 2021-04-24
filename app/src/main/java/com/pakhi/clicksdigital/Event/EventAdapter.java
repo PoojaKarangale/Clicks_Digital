@@ -16,6 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +31,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.Calendar;
 import java.util.List;
@@ -91,11 +94,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             }
         });
 
-        Picasso.get()
-                .load(event.getEvent_image())
-                .fit()
-                .into(holder.event_image);
 
+        Glide.with(context).load(event.getEvent_image()).transform(new CenterCrop(), new RoundedCorners(10)).into(holder.event_image);
         holder.event_name.setText(event.getEventName().toUpperCase());
         holder.time_date_text.setText(event.getStartTime()+", "+event.getStartDate()+" to "+event.getEndTime()+", "+event.getEndDate());
         //holder.time_date_text.setText(event.getStartDate() + " to " + event.getEndDate() + ", " + event.getStartTime() + " to " + event.getEndTime());

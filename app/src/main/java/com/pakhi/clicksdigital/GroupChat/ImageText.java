@@ -54,6 +54,8 @@ public class ImageText extends AppCompatActivity {
     Button button;
     boolean notify=false;
     String name="";
+    String typeOfSelectedMessage, selectedMessageId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,9 @@ public class ImageText extends AppCompatActivity {
         check=getIntent().getStringExtra("check");
         messageSenderName=getIntent().getStringExtra("name");
         flag=getIntent().getStringExtra("flag");
+        typeOfSelectedMessage = getIntent().getStringExtra("typeOfSelectedMessage");
+        selectedMessageId = getIntent().getStringExtra("selectedMessageId");
+
 
         imgUri = Uri.parse(imageUri);
 
@@ -203,6 +208,7 @@ public class ImageText extends AppCompatActivity {
             Message message1 = new Message(currentUserID, message,
                     "topic", currentGroupId, messagekEY, currentTime, currentDate, timestamp, inp);
             groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
+            rootRef.getGroupRef().child(currentGroupId).child("timestamp").setValue(timestamp);
 
             DatabaseReference topicRef = rootRef.getTopicRef();
             topicRef.child(messagekEY).setValue(currentGroupId);
@@ -214,7 +220,8 @@ public class ImageText extends AppCompatActivity {
 
         else {
             Message message1 = new Message(currentUserID, message,
-                    messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, inp);
+                    messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, inp, selectedMessageId, typeOfSelectedMessage);
+            rootRef.getGroupRef().child(currentGroupId).child("timestamp").setValue(timestamp);
             groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
             notificationBhejo(message, messagekEY);
 

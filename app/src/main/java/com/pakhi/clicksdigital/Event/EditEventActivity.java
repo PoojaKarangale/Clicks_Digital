@@ -73,7 +73,7 @@ public class EditEventActivity extends AppCompatActivity {
     private ImageButton gallery;
     private Button      submit_btn, calculateTotal;
     private RelativeLayout   fee_layout;
-    private MaterialEditText event_name, description, venu, city, address;
+    private MaterialEditText event_name, description, venu, city, address, noOfSeats;
     private MaterialEditText fee_amount;
     String name;
 
@@ -156,6 +156,7 @@ public class EditEventActivity extends AppCompatActivity {
         venu=findViewById(R.id.venu);
         city=findViewById(R.id.city);
         address=findViewById(R.id.address);
+        noOfSeats=findViewById(R.id.no_of_seat_edit);
 
         choose_end_date=findViewById(R.id.choose_end_date);
         choose_start_date=findViewById(R.id.choose_start_date);
@@ -281,8 +282,11 @@ public class EditEventActivity extends AppCompatActivity {
                 String endTime=choose_end_time.getText().toString();
                 Long timeStamp=selectedStartDate;
                 int totalFee=Integer.parseInt(total_fee.getText().toString());
+                int totalSeats=Integer.parseInt(noOfSeats.getText().toString());
                 final Event event;
-                event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
+                event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type,
+                        venuStr, cityStr, addressStr, timeStamp, startDate, endDate,
+                        startTime, endTime, payable, totalFee, currentUserId, totalSeats);
                 eventRef.child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -301,7 +305,7 @@ public class EditEventActivity extends AppCompatActivity {
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     for(DataSnapshot snap : snapshot.getChildren()){
                                                         if(!snap.getKey().equals(currentUserId)){
-                                                                    Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has edited event "+eventName, eventName, "event", "");
+                                                            Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has edited event "+eventName, eventName, "event", "");
                                                             String notificationKey = rootRef.getNotificationRef().push().getKey();
 
                                                             rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());

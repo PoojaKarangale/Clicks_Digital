@@ -14,7 +14,8 @@
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground">
+            android:background="@drawable/action_bar_start"
+            >
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -26,16 +27,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_cross"
-                    android:id="@+id/close_post" />
+                    android:id="@+id/close_post"
+                    android:layout_alignParentEnd="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Requesting Users"
-                    android:layout_toEndOf="@+id/close_post"
-                    android:layout_marginStart="10dp"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
+
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    />
                 <!--  <ImageView
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"

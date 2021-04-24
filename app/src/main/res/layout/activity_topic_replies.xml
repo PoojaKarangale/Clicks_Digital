@@ -9,9 +9,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/margine_main"
-        android:layout_marginTop="@dimen/margine_main"
-        android:layout_marginRight="@dimen/margine_main"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="233dp">
 
@@ -21,11 +18,14 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:background="@drawable/action_bar_start"
                 android:id="@+id/personal_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:paddingBottom="20dp"
+                >
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_img"
@@ -33,7 +33,10 @@
                     android:layout_height="48dp"
                     android:src="@drawable/persone_profile"
                     app:civ_border_color="@color/colorPrimary"
-                    app:civ_border_width="2dp" />
+                    app:civ_border_width="2dp"
+                    android:layout_marginLeft="@dimen/margine_main"
+                    android:layout_marginTop="@dimen/margine_main"
+                    />
 
                 <TextView
                     android:id="@+id/name"
@@ -43,7 +46,10 @@
                     android:layout_toEndOf="@+id/profile_img"
                     android:text="Firstname Lastname"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/title1" />
+                    android:textSize="@dimen/title1"
+                    android:fontFamily="@font/helvetica_bold"
+                    android:layout_marginTop="@dimen/margine_main"
+                    />
 
                 <TextView
                     android:id="@+id/profession"
@@ -52,6 +58,8 @@
                     android:layout_below="@+id/name"
                     android:layout_alignStart="@+id/name"
                     android:text="profession"
+                    android:fontFamily="@font/segoe"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/title2" />
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -70,7 +78,9 @@
                         android:id="@+id/reply_url_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:fontFamily="@font/segoe"
+                        android:textColor="@color/white"/>
                     <ImageView
                         android:id="@+id/reply_image_url"
                         android:layout_width="180dp"
@@ -80,20 +90,27 @@
                         android:id="@+id/reply_title_url"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/segoe"
+                        android:textColor="@color/white"/>
                     <TextView
                         android:id="@+id/reply_separate_url"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
-                        android:autoLink="web"/>
+                        android:autoLink="web"
+                        android:fontFamily="@font/segoe"
+                        android:textColor="@color/white"/>
 
                     <!-- IMAGE-->
                     <TextView
                         android:id="@+id/reply_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:fontFamily="@font/segoe"
+                        android:textColor="@color/white"/>
                     <ImageView
                         android:id="@+id/reply_image"
                         android:layout_width="200dp"
@@ -107,7 +124,6 @@
                         android:layout_alignStart="@+id/name"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/flag_transparent"
-                        android:fontFamily="@font/lato"
                         android:gravity="top|start"
                         android:hint="Event Description"
                         android:inputType="text|textMultiLine"
@@ -120,7 +136,10 @@
                         android:scrollHorizontally="false"
                         android:singleLine="false"
                         android:text="PayUMoney is one of India’s most popular Payment Gateways and it is used by small as well as large companies for selling their products online and collecting payments in a easy way. The Android SDK provided by PayUMoney is very easy to implement and we are going to learn about it further in the post."
-                        android:textAlignment="gravity" />
+                        android:textAlignment="gravity"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/segoe"
+                        android:textColor="@color/white"/>
 
 
                 </LinearLayout>
@@ -216,17 +235,20 @@
                     android:layout_marginTop="10dp"
                     android:background="#CCCCCC" />
             </RelativeLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
                 <EditText
                     android:id="@+id/reply_to_topic"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:hint="Reply here..."
                     android:maxLines="10"
-                    android:visibility="gone"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toEndOf="@+id/reply_button"
                     />
                 <Button
                     android:layout_gravity="right"
@@ -234,17 +256,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="reply"
-                    android:visibility="gone"/>
+                    android:backgroundTint="@color/blue"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false"
+                    android:layout_toStartOf="@+id/cross_reply"
+
+
+                    />
                 <ImageView
                     android:id="@+id/cross_reply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/close"
-                    android:visibility="gone"
                     android:layout_marginLeft="7dp"
-                    android:layout_marginTop="15dp"/>
+                    android:layout_marginTop="15dp"
+                    android:layout_alignParentEnd="true"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/replies_list"

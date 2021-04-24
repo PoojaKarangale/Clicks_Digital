@@ -4,11 +4,15 @@ import java.io.Serializable;
 
 public class Message implements Serializable, Comparable<Message> {
 
+    private  String typeOfSelectedMessage;
+    private String selectedMessageId;
     Long timestamp;
     boolean isSeen;
     private String from, message, type, to, messageID, time, date;
     //change
     private String extra;
+
+    //private selectedMessageId, typeOfSelectedMessage;
 
     public Message(String from, String message, String type, String to, String messageID, String time, String date, boolean isSeen, /*change*/String extra) {
         this.from=from;
@@ -23,11 +27,41 @@ public class Message implements Serializable, Comparable<Message> {
         //change
         this.extra=extra;
     }
+    // for reply
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, boolean isSeen, /*change*/String extra, String selectedMessageId, String typeOfSelectedMessage) {
+        this.from=from;
+        this.message=message;
+        this.type=type;
+        this.to=to;
+        this.messageID=messageID;
+        this.time=time;
+        this.date=date;
+        this.isSeen=isSeen;
+
+        //change
+        this.extra=extra;
+        this.selectedMessageId = selectedMessageId;
+        this.typeOfSelectedMessage = typeOfSelectedMessage;
+    }
 
     public Message() {
     }
+//for reply
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, Long timestamp, String extra,String selectedMessageId, String typeOfSelectedMessage) {
+        this.from=from;
+        this.message=message;
+        this.type=type;
+        this.to=to;
+        this.messageID=messageID;
+        this.time=time;
+        this.date=date;
+        this.timestamp=timestamp;
 
-    public Message(String from, String message, String type, String to, String messageID, String time, String date, Long timestamp, String extra) {
+        this.extra=extra;
+        this.selectedMessageId = selectedMessageId;
+        this.typeOfSelectedMessage = typeOfSelectedMessage;
+    }
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, Long timestamp, String extra ) {
         this.from=from;
         this.message=message;
         this.type=type;
@@ -39,6 +73,7 @@ public class Message implements Serializable, Comparable<Message> {
         this.extra=extra;
     }
 
+
     public Message(String from, String message, String type, String to, String messageID, String time, String date) {
         this.from=from;
         this.message=message;
@@ -49,6 +84,8 @@ public class Message implements Serializable, Comparable<Message> {
         this.date=date;
 
     }
+    public String getSelectedMessageId(){return selectedMessageId;}
+    public String getTypeOfSelectedMessage(){return typeOfSelectedMessage;}
 
     public Long getTimestamp() {
         return timestamp;

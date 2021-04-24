@@ -4,27 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterLogin.PhoneVerify">
+    tools:context=".RegisterLogin.PhoneVerify"
+    android:background="#0C3474">
+    <ImageView
+        android:layout_width="98dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/wdc_temp_logo" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/black" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white" />
-
-    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -35,7 +24,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="30dp"
         android:elevation="10dp"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="#E8F0FD"
         app:cardCornerRadius="20dp">
 
         <LinearLayout
@@ -46,27 +35,34 @@
             android:padding="20dp">
 
             <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OTP Verification"
+                android:fontFamily="@font/helvetica_bold"
+                android:textSize="20dp"/>
+            <TextView
                 android:id="@+id/verify_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Verify "
-                android:textColor="@color/colorPrimary"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/black"
                 android:textSize="16dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/segoe"
+                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Waiting to automatically detect an SMS sent"
-                android:layout_marginTop="10dp" />
+                android:textColor="#21212180"
+                android:layout_marginTop="4dp" />
 
             <EditText
                 android:id="@+id/get_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginTop="31dp"
                 android:hint="_ _ _ _ _ _"
                 android:inputType="number"
                 android:textSize="20dp"

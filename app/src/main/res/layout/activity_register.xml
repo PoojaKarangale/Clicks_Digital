@@ -4,65 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterLogin.RegisterActivity">
+    tools:context=".RegisterLogin.RegisterActivity"
+    android:background="#0C3474">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@color/black" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@color/white" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center_horizontal">
+        <ImageView
+            android:layout_width="98dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/wdc_temp_logo" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:shadowColor="@color/grey"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:text="Enter your phone number"
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:layout_marginBottom="10dp" />
+        <!--<RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="To continue with us verify your mobile"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:src="@mipmap/wdc_icon_foreground" />
+
+        </RelativeLayout>-->
+
+
 
 
         <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_width="304dp"
+            android:layout_height="320dp"
             android:elevation="10dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="20dp">
+            app:cardBackgroundColor="#E8F0FD"
+            app:cardCornerRadius="12dp"
+            android:layout_marginTop="90dp"
+            >
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,39 +54,60 @@
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:shadowColor="@color/grey"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:text="Enter your phone number"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp"
+                    android:fontFamily="@font/helvetica_bold"
+                    android:layout_marginTop="24dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="To continue with us verify your mobile"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="normal"
+                    android:layout_gravity="center_horizontal"/>
+
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="10dp"
-                        android:src="@mipmap/wdc_icon_foreground" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="45dp"
+                     android:layout_marginRight="21dp"
+                    android:layout_marginLeft="22dp">
 
                     <com.hbb20.CountryCodePicker
                         android:id="@+id/ccp"
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
+                        android:layout_width="77dp"
+                        android:layout_height="40dp"
                         app:ccp_showNameCode="false"
                         app:ccp_showPhoneCode="true"
-                        app:ccp_defaultNameCode="IND" />
+                        app:ccp_defaultNameCode="IND"
+                        android:background="@drawable/edittext_bg"
+
+                        app:ccp_textSize="14dp"/>
 
                     <EditText
+                        android:layout_marginLeft="9dp"
                         android:id="@+id/mobileNo_reg"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_width="174dp"
+                        android:layout_height="40dp"
                         android:hint="Mobile number"
-                        android:layout_marginEnd="10dp"
+                        android:textSize="14dp"
+
                         android:inputType="phone"
                         android:padding="10dp"
                         android:background="@drawable/edittext_bg"
@@ -114,13 +119,15 @@
                     android:id="@+id/verify"
                     android:layout_width="140dp"
                     android:layout_height="45dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginTop="82dp"
+
                     android:background="@drawable/button_bg"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="18dp"
                     android:textAllCaps="false"
-                    android:text="Next" />
+                    android:text="Next"
+                    android:fontFamily="@font/helvetica_bold"
+                    />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

@@ -153,7 +153,8 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
     private void addUserToGroup(String groupId, String userId) {
         rootRef.getGroupRef().child(groupId).child("Users").child(userId).setValue("");
-        rootRef.getUserRef().child(userId).child("groups").child(groupId).setValue("");
+        rootRef.getUserRef().child(userId).child("groups").child(groupId).child("getNotification").setValue(true);
+        rootRef.getUserRef().child(userId).child("groups").child(groupId).child("noOfMessages").setValue(0);
         //databaseReference.child("User_requests").child("request_status").setValue("accepted");
     }
 

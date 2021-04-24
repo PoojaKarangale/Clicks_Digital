@@ -23,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -77,8 +78,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private ImageButton gallery;
     private Button      submit_btn, calculateTotal;
     private RelativeLayout   fee_layout;
-    private MaterialEditText event_name, description, venu, city, address;
-    private MaterialEditText fee_amount;
+    private EditText event_name, description, venu, city, address, noOfSeats;
+    private EditText fee_amount;
 
     private Uri  picImageUri=null;
     private Chip onlineChip, offlineChip, bothChip, paidChip, unpaidChip;
@@ -118,7 +119,7 @@ public class CreateEventActivity extends AppCompatActivity {
         //getCitySelected();
         settingDateAndTime();
         spinnerImplementationForTopic();
-        chipActionHandled();
+        //chipActionHandled();
         // calculateEventFee();
 
         event_image.setOnClickListener(new View.OnClickListener() {
@@ -226,8 +227,8 @@ public class CreateEventActivity extends AppCompatActivity {
         event_name=findViewById(R.id.event_name);
 
         fee_layout=findViewById(R.id.fee_layout);
-        unpaidChip=findViewById(R.id.unpaidChip);
-        paidChip=findViewById(R.id.paidChip);
+        //unpaidChip=findViewById(R.id.unpaidChip);
+        //paidChip=findViewById(R.id.paidChip);
 
         total_fee=findViewById(R.id.total_fee);
         fee_amount=findViewById(R.id.fee_amount);
@@ -241,6 +242,7 @@ public class CreateEventActivity extends AppCompatActivity {
         venu=findViewById(R.id.venu);
         city=findViewById(R.id.city);
         address=findViewById(R.id.address);
+        noOfSeats=findViewById(R.id.no_of_seats);
 
         event_image=findViewById(R.id.event_image);
         description=findViewById(R.id.description);
@@ -388,8 +390,11 @@ public class CreateEventActivity extends AppCompatActivity {
         String endTime=choose_end_time.getText().toString();
         Long timeStamp=selectedStartDate;
         int totalFee=Integer.parseInt(total_fee.getText().toString());
+        int totalSeats = Integer.parseInt(noOfSeats.getText().toString());
         Event event;
-        event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp, startDate, endDate, startTime, endTime, payable, totalFee, currentUserId);
+        event=new Event(eventKey, eventName, eventDescription, category,
+                picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp,
+                startDate, endDate, startTime, endTime, payable, totalFee, currentUserId, totalSeats);
 
         eventRef.child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -570,6 +575,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
                 address.setVisibility(View.VISIBLE);
+
             }
         });
         onlineChip.setOnClickListener(new View.OnClickListener() {
@@ -580,6 +586,14 @@ public class CreateEventActivity extends AppCompatActivity {
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.GONE);
                 address.setVisibility(View.GONE);
+
+                venu.setVisibility(View.VISIBLE);
+                city.setVisibility(View.VISIBLE);
+                address.setVisibility(View.VISIBLE);
+
+                venu.setVisibility(View.VISIBLE);
+                city.setVisibility(View.VISIBLE);
+                address.setVisibility(View.VISIBLE);
 
             }
         });
@@ -595,6 +609,7 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void settingDateAndTime() {
         final Calendar c=Calendar.getInstance();
@@ -719,6 +734,39 @@ public class CreateEventActivity extends AppCompatActivity {
                 default:
                     Toast.makeText(CreateEventActivity.this, "nothing is selected", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public void onRadioClickedEvent(View view) {
+        boolean checked=((RadioButton) view).isChecked();
+
+        switch (view.getId()){
+            case R.id.online:
+                if(checked){
+                    venu.setVisibility(View.VISIBLE);
+                    city.setVisibility(View.GONE);
+                    address.setVisibility(View.GONE);
+                }
+
+                break;
+            case R.id.offline:
+                if(checked){
+                    venu.setVisibility(View.VISIBLE);
+                    city.setVisibility(View.VISIBLE);
+                    address.setVisibility(View.VISIBLE);
+                }
+
+                break;
+            case R.id.offline_and_online:
+                if(checked){
+                    venu.setVisibility(View.VISIBLE);
+                    city.setVisibility(View.VISIBLE);
+                    address.setVisibility(View.VISIBLE);
+                }
+
+                break;
+
+
         }
     }
 }

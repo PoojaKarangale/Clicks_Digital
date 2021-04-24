@@ -113,8 +113,8 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         } else{
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
-        Intent intent=getIntent();
-        previousActivity=intent.getStringExtra(Const.PreviousActivity);
+        //Intent intent=getIntent();
+        //previousActivity=intent.getStringExtra(Const.PreviousActivity);
 
         pref=SharedPreference.getInstance();
 
