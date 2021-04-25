@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -105,7 +108,9 @@ public class ChatsFragment extends Fragment {
                                 if (dataSnapshot.exists()) {
                                     if (dataSnapshot.child(ConstFirebase.USER_DETAILS).hasChild(ConstFirebase.IMAGE_URL)) {
                                         retImage[0]=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.IMAGE_URL).getValue().toString();
-                                        Picasso.get().load(retImage[0]).into(holder.profileImage);
+                                        //Picasso.get().load(retImage[0]).into(holder.profileImage);
+                                        Glide.with(getContext()).load(retImage[0]).transform(new CenterCrop(), new RoundedCorners(10))
+                                                .into(holder.profileImage);
                                         // after adding image uri to users database
                                     }
 
@@ -179,7 +184,7 @@ public class ChatsFragment extends Fragment {
     }
 
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView profileImage;
+        ImageView profileImage;
         TextView        userStatus, userName;
         ImageView online_status;
 
@@ -189,6 +194,7 @@ public class ChatsFragment extends Fragment {
             profileImage=itemView.findViewById(R.id.image_profile);
             userStatus=itemView.findViewById(R.id.user_status);
             online_status=itemView.findViewById(R.id.user_online_status);
+            online_status.setVisibility(View.GONE);
 
             userName=itemView.findViewById(R.id.display_name);
             userStatus.setVisibility(View.VISIBLE);

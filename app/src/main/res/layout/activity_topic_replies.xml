@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Topic.TopicRepliesActivity">
+    tools:context=".Topic.TopicRepliesActivity"
+    android:background="#E8F0FD">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -67,9 +68,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginRight="20dp"
 
                     android:layout_below="@+id/profession"
                     android:layout_alignStart="@+id/name"
+                    android:background="@drawable/topic_reply_back"
 
                     >
 
@@ -84,11 +88,11 @@
                     <ImageView
                         android:id="@+id/reply_image_url"
                         android:layout_width="180dp"
-                        android:layout_height="180dp"
+                        android:layout_height="140dp"
                         android:visibility="gone"/>
                     <TextView
                         android:id="@+id/reply_title_url"
-                        android:layout_width="wrap_content"
+                        android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:textStyle="bold"
@@ -106,7 +110,7 @@
                     <!-- IMAGE-->
                     <TextView
                         android:id="@+id/reply_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:fontFamily="@font/segoe"
@@ -225,15 +229,7 @@
                         android:textSize="@dimen/title4" />
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/hor_line"
-                    android:layout_width="wrap_content"
-                    android:layout_height="3px"
-                    android:layout_below="@+id/like_layout"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="10dp"
-                    android:background="#CCCCCC" />
+
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -246,6 +242,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Reply here..."
                     android:maxLines="10"
+
                     android:layout_alignParentStart="true"
                     android:layout_marginLeft="20dp"
                     android:layout_toEndOf="@+id/reply_button"
@@ -276,9 +273,11 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/replies_list"
+                android:layout_marginHorizontal="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margine_main"
+                android:background="#E8F0FD"
                 app:layout_constraintTop_toBottomOf="@+id/bar">
 
             </androidx.recyclerview.widget.RecyclerView>

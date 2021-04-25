@@ -294,7 +294,7 @@ public class ImageText extends AppCompatActivity {
         //"https://firebasestorage.googleapis.com/v0/b/clicksdigital-ad067.appspot.com/o/Group_photos%2F-MTRZMoFEivrWqxUFJp0%2Fphotos%2F1613250342248.jpg?alt=media&token=6727c447-396d-4a07-a7b7-bbb5b87ed4a8"
 
         Message message1 = new Message(currentUserID, message,
-                messageType, currentGroupId, messagePushID, currentTime, currentDate, false, inp);
+                messageType, currentGroupId, messagePushID, currentTime, currentDate, false, inp, selectedMessageId, typeOfSelectedMessage);
 
 
 

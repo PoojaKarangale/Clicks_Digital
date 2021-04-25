@@ -16,6 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -83,7 +86,8 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             @Override
             public void onSuccess(Uri uri) {
                 //   image_url[0]=uri.toString();
-                Picasso.get().load(uri).placeholder(R.drawable.profile_image).into(holder.image_profile);
+                Glide.with(mcontext).load(uri).placeholder(R.drawable.profile_image).
+            transform(new CenterCrop(), new RoundedCorners(10)).into(holder.image_profile);
             }
 
         });
@@ -215,7 +219,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView displayName, description, status_of_request, number_of_participants;
-        CircleImageView image_profile;
+        ImageView image_profile;
         Button          join_btn;
         ImageView       people;
 

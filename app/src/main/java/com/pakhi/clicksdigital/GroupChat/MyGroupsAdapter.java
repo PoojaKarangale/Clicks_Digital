@@ -8,11 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -30,7 +34,7 @@ import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -81,7 +85,9 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
             @Override
             public void onSuccess(Uri uri) {
                 image_url[0]=uri.toString();
-                Picasso.get().load(uri).placeholder(R.drawable.profile_image).into(holder.image_profile);
+                //Picasso.get().load(uri).placeholder(R.drawable.profile_image).into(holder.image_profile);
+
+                Glide.with(mcontext).load(uri).transform(new CenterCrop(), new RoundedCorners(10)).into(holder.image_profile);
 
             }
 
@@ -119,7 +125,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView        displayName;
-        CircleImageView image_profile;
+        ImageView image_profile;
 
 
         public ViewHolder(@NonNull View itemView) {

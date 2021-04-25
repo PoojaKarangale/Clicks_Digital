@@ -795,6 +795,8 @@ public class ChatActivity extends AppCompatActivity {
                         intent.putExtra("grp_id", messageReceiverID);
                         intent.putExtra("check","personal");
                         intent.putExtra("name", messageSenderName);
+                        intent.putExtra("typeOfSelectedMessage", typeOfSelectedMessage);
+                        intent.putExtra("selectedMessageId", selectedMessageId);
                         startActivity(intent);
                         finish();
                         //SendMessage("image", uri.toString());

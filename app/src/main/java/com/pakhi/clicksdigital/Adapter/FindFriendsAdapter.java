@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.auth.FirebaseUser;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
@@ -54,9 +57,9 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
         holder.userStatus.setText(user.getUser_bio());
         Log.d("findFriend", "--------------" + user.getUser_name() + " " + user.getUser_bio());
         final String image_url=user.getImage_url();
-        Picasso.get()
+       Glide.with(mcontext)
                 .load(image_url).placeholder(R.drawable.profile_image)
-                .resize(120, 120)
+                .transform(new CenterCrop(), new RoundedCorners(10))
                 .into(holder.profile_image);
 
         holder.profile_image.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +98,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
 
     public static class FindFriendViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
-        CircleImageView profile_image;
+        ImageView profile_image;
         ImageView       chat_with_friend;
 
         public FindFriendViewHolder(@NonNull View itemView) {

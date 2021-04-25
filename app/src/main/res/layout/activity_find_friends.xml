@@ -3,19 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.FindFriendsActivity">
+    tools:context=".Activities.FindFriendsActivity"
+    android:background="#E8F0FD">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground">
+        android:background="@drawable/action_bar_start"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/find_friends_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground">
+            android:background="@drawable/action_bar_start">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -25,9 +27,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:fontFamily="@font/lato"
-                    android:text="Find Friends"
-                    android:textSize="@dimen/heading" />
+                    android:fontFamily="@font/segoe"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="Find Other DM and Tech Professionals"
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/close"
@@ -36,7 +40,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/margine_sub"
-                    android:src="@drawable/close" />
+                    android:src="@drawable/ic_cross" />
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@id/search_bar"
@@ -44,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/close"
-                    android:background="@color/white"
+                    android:background="#8BB4F3"
                     android:hint="search by name, category, location..." />
             </RelativeLayout>
 

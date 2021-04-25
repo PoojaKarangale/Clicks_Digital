@@ -8,11 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -72,6 +76,8 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
 
             Picasso.get().load(groupMember.getImage_url()).into(holder.profileImage);
+            Glide.with(mcontext).load(groupMember.getImage_url())
+                    .transform(new CenterCrop(), new RoundedCorners(10)).into(holder.profileImage);
             holder.userName.setText(groupMember.getUser_name());
             holder.userStatus.setText(groupMember.getUser_bio());
             holder.is_admin.setVisibility(View.GONE);
@@ -211,7 +217,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView profileImage;
+        ImageView profileImage;
         TextView userStatus, userName, is_admin;
         // ImageView online_status;
 

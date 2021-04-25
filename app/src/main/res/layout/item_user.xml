@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
+    android:layout_height="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="@dimen/margine_sub"
     app:cardCornerRadius="21dp"
+    android:background="@drawable/user_list"
 
 
     >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/chat_doodle_back"
+
         >
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/image_profile"
             android:layout_width="47dp"
             android:layout_height="47dp"
@@ -32,16 +33,17 @@
             android:visibility="invisible" />
 
         <TextView
+           android:layout_marginTop="15dp"
             android:id="@+id/display_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margine_3"
             android:layout_toEndOf="@id/image_profile"
-            android:fontFamily="@font/lato"
+            android:fontFamily="@font/helvetica_bold"
             android:maxLines="1"
             android:text="Name"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/title1"
+            android:textColor="#121211"
+            android:textSize="12dp"
             android:textStyle="bold" />
 
         <TextView
@@ -51,10 +53,10 @@
             android:layout_below="@+id/display_name"
             android:layout_marginStart="@dimen/margine_3"
             android:layout_toEndOf="@+id/image_profile"
-            android:fontFamily="@font/lato"
+            android:fontFamily="@font/segoe"
             android:text="user status"
             android:textAlignment="textStart"
-            android:textSize="@dimen/title2"
+            android:textSize="10dp"
             android:visibility="gone" />
 
         <TextView
@@ -135,7 +137,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/chat_with_friend"
+            android:src="@drawable/ic_chat_black_24dp"
+            android:layout_marginRight="10dp"
             android:visibility="invisible" />
 
         <TextView
@@ -161,4 +164,4 @@
 
 
 
-</androidx.cardview.widget.CardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

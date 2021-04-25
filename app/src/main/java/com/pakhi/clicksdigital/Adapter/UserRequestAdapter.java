@@ -6,11 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -67,7 +71,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
                     holder.displayName.setText(dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString());
                     //if (dataSnapshot.hasChild("image_url")) {}
                     final String image_url = dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
-                    Picasso.get().load(image_url).placeholder(R.drawable.profile_image).into(holder.image_profile);
+                    Glide.with(mcontext).load(image_url).placeholder(R.drawable.profile_image).transform(new CenterCrop(), new RoundedCorners(10)).into(holder.image_profile);
 
                     holder.image_profile.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -200,7 +204,8 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView displayName, group_name;
-        public CircleImageView image_profile;
+
+        public ImageView image_profile;
         Button accept, cancel;
 
         public ViewHolder(@NonNull View itemView) {

@@ -760,6 +760,7 @@ public class GroupChatActivity extends AppCompatActivity {
                                     setNumberOfMessages(numberOfMessages);
                                 }
 
+
                             }
 
                             @Override
@@ -1111,7 +1112,9 @@ public class GroupChatActivity extends AppCompatActivity {
                     if(notify&& !snap.getKey().equals(currentUserID)){
                         Log.i("TOPIC TYPE", String.valueOf(IS_TYPE_TOPIC));
 
-                            checkPresence(snap.getKey());
+
+
+                        checkPresence(snap.getKey());
                             Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name+": "+message, /*title*/ currentGroupName , "grpChat", "");
 
 

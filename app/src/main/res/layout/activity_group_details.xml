@@ -30,9 +30,9 @@
                 <ImageView
                     android:id="@+id/app_bar_image"
                     android:layout_width="match_parent"
-                    android:layout_height="320dp"
+                    android:layout_height="340dp"
                     android:layout_marginHorizontal="48dp"
-                    android:layout_marginTop="35dp"
+                    android:layout_marginTop="50dp"
                     android:layout_marginBottom="5dp"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax" />
@@ -133,83 +133,130 @@
                 android:layout_marginTop="@dimen/margine_sub"
                 android:gravity="start"
                 android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/txt_des"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/group_info"
-                android:layout_marginTop="@dimen/margine_sub"
-                android:text="Description"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/title2"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/edit_description"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignTop="@+id/txt_des"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/margine_sub"
-                android:layout_toEndOf="@+id/txt_des"
-                android:background="@drawable/back_round_button"
-                android:backgroundTint="@color/colorPrimary"
-                android:contentDescription="edit"
-                android:padding="5dp"
-                android:src="@drawable/edit_btn"
-                android:visibility="gone" />
-
+            
             <LinearLayout
-                android:id="@+id/desc_layout"
+                android:layout_marginHorizontal="15dp"
+                android:id="@+id/desssss"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_des"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_below="@id/group_info"
+                android:orientation="horizontal"
+                android:background="@drawable/set_profile_red">
 
-                <TextView
-                    android:id="@+id/group_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/lato"
-
-                    android:text="group description"
-                    android:textSize="@dimen/title1" />
-
-
-                <EditText
-                    android:id="@+id/get_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/lato"
-                    android:maxLines="1"
-                    android:text="Your Group name"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/title1"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/set_description"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="31dp"
+                    android:layout_height="30dp"
+                    app:cardBackgroundColor="#FF704D"
+                    app:cardCornerRadius="50dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/margine_sub"
-                    android:background="@drawable/back_round_button"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:onClick="setDescription"
-                    android:padding="5dp"
-                    android:src="@drawable/check_right_click_white"
-                    android:visibility="gone" />
+                    android:layout_marginHorizontal="10dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_find_in_page_black_24dp"/>
+                </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:id="@+id/lay_des"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/txt_des"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/group_info"
+                            android:layout_marginTop="9dp"
+                            android:text="Group Description"
+                            android:fontFamily="@font/segoe"
+                            android:textColor="@color/grey"
+                            android:textSize="10dp"
+                            />
+                        <ImageView
+                            android:id="@+id/edit_description"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignTop="@+id/txt_des"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/margine_sub"
+                            android:layout_toEndOf="@+id/txt_des"
+                            android:background="@drawable/back_round_button"
+                            android:backgroundTint="#FF704D"
+                            android:contentDescription="edit"
+                            android:padding="5dp"
+                            android:src="@drawable/edit_btn"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/desc_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lay_des"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal"
+                        android:paddingBottom="10dp">
+
+                        <TextView
+                            android:id="@+id/group_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:textStyle="bold"
+                            android:textColor="#212121"
+                            android:text="group description"
+                            android:textSize="12dp" />
+
+
+                        <EditText
+                            android:id="@+id/get_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:maxLines="1"
+                            android:text="Your Group name"
+                            android:textColor="#212121"
+                            android:textSize="12dp"
+                            android:visibility="gone" />
+
+                        <ImageView
+
+                            android:id="@+id/set_description"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/margine_sub"
+                            android:background="@drawable/back_round_button"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:onClick="setDescription"
+                            android:padding="5dp"
+                            android:layout_marginRight="12dp"
+                            android:src="@drawable/check_right_click_white"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
+
+
+
+
+
 
             <RelativeLayout
                 android:id="@+id/rel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/desc_layout"
+                android:layout_below="@+id/desssss"
                 android:layout_marginTop="@dimen/margine_sub"
+                android:layout_marginHorizontal="15dp"
+                android:background="@drawable/participant_back"
 
                 >
                 <TextView
@@ -219,16 +266,18 @@
                     android:id="@+id/number_of_participants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="participants"
+                    android:text="Group Members"
+                    android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/title2" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/add_member"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="12dp"
                     android:onClick="add_member"
                     android:src="@drawable/add_member"
                     android:visibility="gone" />
@@ -251,11 +300,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/memberList"
                 android:layout_marginTop="@dimen/margine_main"
-                android:background="@drawable/flag_transparent"
+                android:background="#1768E7"
                 android:gravity="center"
+                android:layout_marginBottom="30dp"
                 android:onClick="exitGroup"
                 android:text="Exit Group"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold"
 

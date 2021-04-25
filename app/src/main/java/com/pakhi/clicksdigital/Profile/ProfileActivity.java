@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -246,9 +247,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.child(ConstFirebase.IMAGE_URL).exists()) {
-                    Picasso.get()
+                    Glide.with(getApplicationContext())
                             .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString())
-                            .resize(120, 120)
+
                             .into(profile_image);
                 }
             }

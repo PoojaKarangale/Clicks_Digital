@@ -106,7 +106,7 @@
 
             <TextView
                 android:id="@+id/title_of_url_sender"
-                android:layout_width="match_parent"
+                android:layout_width="193dp"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:layout_marginTop="3dp"
