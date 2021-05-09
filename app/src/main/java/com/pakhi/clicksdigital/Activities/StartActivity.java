@@ -209,7 +209,9 @@ public class StartActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.join_new_groups) {
-            startActivity(new Intent(this, JoinGroupActivity.class));
+            Intent joingroupIntent = new Intent(this, JoinGroupActivity.class);
+            //joingroupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(joingroupIntent);
         }
 
         if (item.getItemId() == R.id.settings) {
@@ -220,6 +222,7 @@ public class StartActivity extends AppCompatActivity {
 
             ShareApp.shareApp(getApplicationContext());
         }
+
         if (item.getItemId() == R.id.user_request) {
 
             //  Log.d("User_type","................"+user_type);

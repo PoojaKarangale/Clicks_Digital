@@ -443,7 +443,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         TextView show_certificate=new TextView(this);
         show_certificate.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-        show_certificate.setText(size + " " + certificate.getName());
+        show_certificate.setText(size + " " + certificate.getName()+" "+certificate.getInstitute());
         show_certificate.setTextColor(Color.BLUE);
         // show_certificate.setBackgroundColor(0xff66ff66); // hex color 0xAARRGGBB
         // textView1.setPadding(20, 20, 20, 20);// in pixels (left, top, right, bottom)

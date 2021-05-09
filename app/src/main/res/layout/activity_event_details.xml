@@ -127,7 +127,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_toEndOf="@+id/gallaryyy"
-        android:layout_toStartOf="@+id/parr">
+        android:layout_toStartOf="@+id/layoutPartcpnts">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/parr"
+        android:id="@+id/layoutPartcpnts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -225,6 +225,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="9dp"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:textColor="#43B7FD"
             android:text="Number"
             android:fontFamily="@font/segoe"

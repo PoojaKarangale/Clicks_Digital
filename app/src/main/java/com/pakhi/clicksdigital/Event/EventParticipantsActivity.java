@@ -303,7 +303,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
 
     public static class EventParticipantsViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
-        CircleImageView profile_image;
+        ImageView profile_image;
         ImageView       chat_with_friend;
 
         public EventParticipantsViewHolder(@NonNull View itemView) {
