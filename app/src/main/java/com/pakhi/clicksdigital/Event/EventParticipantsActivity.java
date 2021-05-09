@@ -74,9 +74,11 @@ public class EventParticipantsActivity extends AppCompatActivity {
         eventRef=rootRef.getEventRef();
         usersRef=rootRef.getUserRef();
 
+
         currentEventRef=eventRef.child(event.getEventId());
+        eventtitle=event.getEventName();
        //............... why this code here
-        currentEventRef.child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
+       /* currentEventRef.child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 eventtitle=snapshot.child(ConstFirebase.eventName1).getValue().toString();
@@ -86,7 +88,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
         initializeFields();
         currentEventRef.child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
             @Override

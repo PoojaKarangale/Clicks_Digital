@@ -221,7 +221,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -242,7 +242,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -364,7 +364,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -385,7 +385,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -571,7 +571,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -592,7 +592,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if (type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -724,7 +724,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -745,7 +745,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);

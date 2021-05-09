@@ -137,7 +137,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                    /* Group group=snapshot1.getValue(Group.class);
                     groups.add(group);*/
                 }
-                groupAdapter.notifyDataSetChanged();
+                //groupAdapter.notifyDataSetChanged();
             }
 
             @Override
