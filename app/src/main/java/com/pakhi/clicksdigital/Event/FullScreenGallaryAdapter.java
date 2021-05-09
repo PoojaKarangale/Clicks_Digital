@@ -74,4 +74,3 @@ public class FullScreenGallaryAdapter extends PagerAdapter {
     }
 
 }
-

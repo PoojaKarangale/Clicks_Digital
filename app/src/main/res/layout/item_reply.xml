@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp">
+    android:layout_marginTop="5dp"
+    android:padding="16dp"
+    android:background="@drawable/set_profile_blue">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/profile_img"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/persone_profile"
-        app:civ_border_color="@color/colorPrimary"
-        app:civ_border_width="2dp" />
+         />
 
     <TextView
         android:id="@+id/name"
@@ -23,7 +24,8 @@
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/profile_img"
         android:text="Firstname Lastname"
-        android:textSize="@dimen/title2"
+        android:textSize="@dimen/sixteen"
+        android:textColor="#212121"
         android:textStyle="bold" />
 
     <TextView
@@ -46,10 +48,15 @@
         android:inputType="text|textMultiLine"
         android:lineSpacingExtra="2dp"
         android:maxLength="400"
+        android:fontFamily="@font/segoe"
+        android:textColor="#212121"
+        android:textSize="@dimen/fifteen"
+
         android:maxLines="12"
         android:minLines="2"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
+        android:layout_marginRight="15dp"
         android:singleLine="false"
         android:text="in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post."
         android:textAlignment="gravity" />
@@ -60,7 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/reply"
         android:layout_alignStart="@+id/name"
-        android:layout_marginTop="@dimen/dimen_10dp"
         android:orientation="horizontal"
         android:paddingTop="3dp">
 

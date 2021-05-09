@@ -130,4 +130,3 @@ public class FullScreenTopicAdapter extends PagerAdapter {
     }
 
 }
-

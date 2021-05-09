@@ -73,6 +73,8 @@ public class ProfileActivity extends AppCompatActivity {
     //    private int[] imagesForListView = {R.drawable.find_friends, R.drawable.my_friends, R.drawable.chat_requests};
     //    private String[] titleForListView = {"Find Friends", "My Friends", " Chat Requests"};
     FirebaseDatabaseInstance rootRef;
+    private TextView designation, currentCompany, city, expectationsFromComm;
+    private TextView expectationsFromUs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +132,9 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);*/
                 Intent intent=new Intent(ProfileActivity.this, EditProfile.class);
                 intent.putExtra(Const.User, user);
+                //intent.putExtra("gender", "Male");
                 startActivity(intent);
+                finish();
 
 
             }
@@ -228,7 +232,7 @@ public class ProfileActivity extends AppCompatActivity {
                     res.getString(5), res.getString(6), res.getString(7),
                     res.getString(8), res.getString(9), res.getString(10),
                     res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14));
+                    res.getString(14),res.getString(15),res.getString(16));
         }
     }
 
@@ -242,16 +246,25 @@ public class ProfileActivity extends AppCompatActivity {
                 .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .resize(120, 120)
                 .into(profile_image);*/
-
+        Log.i("currentUserID", user_id);
         UserRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if (snapshot.child(ConstFirebase.IMAGE_URL).exists()) {
                     Glide.with(getApplicationContext())
                             .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString())
 
                             .into(profile_image);
+
                 }
+                currentCompany.setText(snapshot.child("company").getValue().toString());
+                city.setText(snapshot.child("city").getValue().toString());
+                expectationsFromComm.setText(snapshot.child("expectations_from_us").getValue().toString());
+                expectationsFromUs.setText(snapshot.child("offer_to_community").getValue().toString());
+                bio.setText(snapshot.child("user_bio").getValue().toString());
+                profession.setText(snapshot.child("work_profession").getValue().toString());
+
             }
 
             @Override
@@ -259,9 +272,27 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-        user_name_heading.setText(user.getUser_name());
-        user_name.setText(user.getUser_name());
+        /*UserRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                currentCompany.setText(snapshot.child("company").getValue().toString());
+                city.setText(snapshot.child("city").getValue().toString());
+                exp_from_us.setText(snapshot.child("expectations_from_us").getValue().toString());
+                expectationsFromComm.setText(snapshot.child("offer_to_community").getValue().toString());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+        user_name_heading.setText(user.getUser_name()+" "+user.getLast_name());
+        user_name.setText(user.getUser_name()+" "+user.getLast_name());
         gender.setText(user.getGender());
+
+
+        //bio.setText(user.getUser_bio());
 
         if (user.getWork_profession().equals("")) {
             profession.setText("No Profession Provided");
@@ -314,12 +345,13 @@ public class ProfileActivity extends AppCompatActivity {
         final List<Certificates> certificates=new ArrayList<Certificates>();
         //Loading the data
 
-        DatabaseReference databaseReference=UserRef.child(user_id).child("certificates");
+        DatabaseReference databaseReference=UserRef.child(user_id).child("certificate");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        Log.i("certify - ", childSnapshot.getKey());
                         certificates.add(childSnapshot.getValue(Certificates.class));
 //                        certificates.add(String.valueOf(childSnapshot.getValue()));
 //                        Log.e("this", childSnapshot.getKey() + "    " + childSnapshot.getValue());
@@ -394,6 +426,12 @@ public class ProfileActivity extends AppCompatActivity {
         experience=findViewById(R.id.tv_experiences);
         edit_profile=findViewById(R.id.edit_profile);
         listView=findViewById(R.id.list_view);
+
+        //designation = findViewById(R.id.designation);
+        currentCompany = findViewById(R.id.current_company);
+        city = findViewById(R.id.city_user);
+        expectationsFromComm = findViewById(R.id.exp_from_comm);
+        expectationsFromUs = findViewById(R.id.exp_from_us);
 
     }
 

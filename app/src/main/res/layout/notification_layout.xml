@@ -3,33 +3,33 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
+  <TextView
+      android:id="@+id/heading"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textStyle="bold"/>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:layout_marginTop="10dp">
     <TextView
-        android:id="@+id/heading"
-        android:layout_width="match_parent"
+        android:id="@+id/bold_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"/>
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/bakwas"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp">
-        <TextView
-            android:id="@+id/bold_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/bakwas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="2"/>
-        <TextView
-            android:id="@+id/bold_type_cred"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+        android:maxLines="2"/>
+    <TextView
+        android:id="@+id/bold_type_cred"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"/>
 
-    </LinearLayout>
+  </LinearLayout>
 
 
 

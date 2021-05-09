@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -37,7 +39,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
 
     StorageReference storageRootReference;
     String           name, institute;
-    private MaterialEditText name_of_certificate, name_of_institute;
+    private EditText name_of_certificate, name_of_institute;
     private Button choose_certificate, add_certificate;
     private ProgressDialog progressDialog;
     private Certificates   certificate;
@@ -51,6 +53,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
         currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
         storageRootReference=FirebaseStorageInstance.getInstance().getRootRef();
+
 
         name_of_certificate=findViewById(R.id.name_of_certificate);
         name_of_institute=findViewById(R.id.name_of_institute);
@@ -122,6 +125,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         fileUri=String.valueOf(uri);
+
                                     }
                                 });
                     }

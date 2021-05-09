@@ -202,6 +202,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case "text":
                 if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
                     messageViewHolder.replyMessageSenderNameSender.setVisibility(View.VISIBLE);
+                    messageViewHolder.onLongClickOnMessageSender.setBackgroundResource(R.drawable.reply_back_curve);
+                    messageViewHolder.senderMain.setBackgroundResource(R.drawable.msg_back);
                     switch (message.getTypeOfSelectedMessage()){
                         case "text":
                             configureTextTypeReply(messageViewHolder, message);
@@ -234,6 +236,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case "image":
 
                 if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    messageViewHolder.onLongClickOnMessageSender.setBackgroundResource(R.drawable.reply_back_curve);
+                    messageViewHolder.senderMain.setBackgroundResource(R.drawable.msg_back);
                     switch (message.getTypeOfSelectedMessage()){
                         case "text":
                             configureTextTypeReply(messageViewHolder, message);
@@ -275,6 +279,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case "pdf":
 
                 if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    messageViewHolder.onLongClickOnMessageSender.setBackgroundResource(R.drawable.reply_back_curve);
+                    messageViewHolder.senderMain.setBackgroundResource(R.drawable.msg_back);
                     switch (message.getTypeOfSelectedMessage()){
                         case "text":
                             configureTextTypeReply(messageViewHolder, message);
@@ -299,6 +305,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 break;
             case "url":
                 if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
+                    messageViewHolder.onLongClickOnMessageSender.setBackgroundResource(R.drawable.reply_back_curve);
+                    messageViewHolder.senderMain.setBackgroundResource(R.drawable.msg_back);
                     switch (message.getTypeOfSelectedMessage()){
                         case "text":
                             configureTextTypeReply(messageViewHolder, message);
@@ -337,6 +345,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 //enlargeImage(String.valueOf(message.getMessage()), v);
                 Intent intent = new Intent(context, LoadImage.class);
                 intent.putExtra("image_url", message.getMessage());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
@@ -858,6 +867,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(chatType.equals("PersonalChat")){
                     messageViewHolder.receiver_name.setVisibility(View.GONE);
+                    messageViewHolder.recMain.setBackgroundResource(R.drawable.receiver_messages_layout);
+
                 }
                 String receiverName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
                 messageViewHolder.receiver_name.setText(receiverName);
@@ -883,6 +894,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 if(!message.getSelectedMessageId().equals("") && !message.getTypeOfSelectedMessage().equals("") ){
                     messageViewHolder.replyMessageSenderNameReceiver.setVisibility(View.VISIBLE);
+                    messageViewHolder.onLongClickOnMessageReceiver.setBackgroundResource(R.drawable.reply_back_rec);
                     switch (message.getTypeOfSelectedMessage()){
                         case "text":
                             configureTextTypeReply(messageViewHolder, message);
@@ -1495,6 +1507,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView senderMessageText, senderDate, isSeen, urlTitle, urlDesc, senderUrlText, senderImageText, senderSeparateURL;
         public ImageView messageSenderPicture, urlImage;
         public LinearLayout senderLayoutPdf, senderLayoutUrl, senderImageLayout;
+        public LinearLayout senderMain;
+
+
 
         //replyOnClickHeader
         LinearLayout onLongClickOnMessageSender, replyHeaderSender;
@@ -1520,6 +1535,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             //right side box sender
+
+            senderMain = itemView.findViewById(R.id.sender_main);
+
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_messsage_text);
             senderDate = itemView.findViewById(R.id.sender_messsage_date_time);
             senderLayoutPdf = itemView.findViewById(R.id.layout_sender_pdf);
@@ -1592,10 +1610,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         LinearLayout replyOnURLLayoutReceiver;
         ImageView replyOnURLImageReceiver;
         TextView replyOnURLTitleReceiver, replyOnURLTextReceiver;
+        LinearLayout recMain;
 
         public MessageViewHolderOther(@NonNull View itemView) {
             super(itemView);
 
+            recMain = itemView.findViewById(R.id.rec_main);
             //left side box
             receiver_name = itemView.findViewById(R.id.receiver_name);
             receiverMessageText = (TextView) itemView.findViewById(R.id.receiver_message_text);
@@ -1608,6 +1628,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             download_pdf_receiver = itemView.findViewById(R.id.download_pdf);
 
             receiverLayoutImage = itemView.findViewById(R.id.receiver_image_layout);
+
+
 
             //url
             LayoutUrl = itemView.findViewById(R.id.layout_url_rec);

@@ -3,32 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <RelativeLayout
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="15dp">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/image_of_grp">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        >
+
+    </ImageView>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/image_of_grp">
+        android:id="@+id/grp_name"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@+id/image_of_grp"
+        android:layout_marginTop="20dp">
 
-        </de.hdodenhof.circleimageview.CircleImageView>
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            >
+    </TextView>
 
-        </ImageView>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/grp_name"
-            android:layout_marginLeft="6dp"
-            android:layout_toRightOf="@+id/image_of_grp"
-            android:layout_marginTop="20dp">
-
-        </TextView>
-
-    </RelativeLayout>
+  </RelativeLayout>
 </androidx.cardview.widget.CardView>

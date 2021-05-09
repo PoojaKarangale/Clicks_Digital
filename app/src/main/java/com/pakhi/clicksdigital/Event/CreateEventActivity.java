@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -35,6 +37,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.database.DataSnapshot;
@@ -77,7 +82,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private ImageView   event_image;
     private ImageButton gallery;
     private Button      submit_btn, calculateTotal;
-    private RelativeLayout   fee_layout;
+    private LinearLayout fee_layout;
     private EditText event_name, description, venu, city, address, noOfSeats;
     private EditText fee_amount;
 
@@ -85,6 +90,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private Chip onlineChip, offlineChip, bothChip, paidChip, unpaidChip;
     private Spinner        spinner;
     private ProgressDialog progressDialog;
+    TextView textOverImage;
 
     private DatabaseReference userRef, eventRef /*,eventCategory*/ ;
     private FirebaseDatabaseInstance rootRef;
@@ -95,6 +101,7 @@ public class CreateEventActivity extends AppCompatActivity {
     ArrayList<String> listOfCat = new ArrayList<>();
     ArrayList<String> listOfCat1 = new ArrayList<>();
     String name;
+    RadioButton on, off, both;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +227,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
     private void initializeFields() {
-
+        textOverImage = findViewById(R.id.text_over_image);
         submit_btn=findViewById(R.id.submit_btn);
         cancel_btn=findViewById(R.id.cancel_btn);
         calculateTotal=findViewById(R.id.calculateTotal);
@@ -235,9 +242,6 @@ public class CreateEventActivity extends AppCompatActivity {
         convenience_fee_amount=findViewById(R.id.convenience_fee_amount);
         payumoney_amount=findViewById(R.id.payumoney_amount);
 
-        onlineChip=findViewById(R.id.onlineChip);
-        offlineChip=findViewById(R.id.offlineChip);
-        bothChip=findViewById(R.id.bothChip);
 
         venu=findViewById(R.id.venu);
         city=findViewById(R.id.city);
@@ -251,6 +255,10 @@ public class CreateEventActivity extends AppCompatActivity {
         choose_start_date=findViewById(R.id.choose_start_date);
         choose_start_time=findViewById(R.id.choose_start_time);
         choose_end_time=findViewById(R.id.choose_end_time);
+
+        on = findViewById(R.id.online);
+        off= findViewById(R.id.off);
+        both = findViewById(R.id.offline_and_online);
 
     }
 
@@ -415,16 +423,19 @@ public class CreateEventActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for(DataSnapshot snap : snapshot.getChildren()){
-                            if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString())){
-                                Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
-                                String notificationKey = rootRef.getNotificationRef().push().getKey();
+                            if(snap.child(ConstFirebase.USER_DETAILS).exists()){
+                                if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userID).getValue().toString())){
+                                    //Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
+                                    String notificationKey = rootRef.getNotificationRef().push().getKey();
 
-                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
-                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
-                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
-                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("createEvent");
+                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
+                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
+                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
+                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("createEvent");
 
+                                }
                             }
+
                         }
                     }
 
@@ -728,8 +739,13 @@ public class CreateEventActivity extends AppCompatActivity {
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result=CropImage.getActivityResult(data);
                     picImageUri=result.getUri();
-                    event_image.setImageURI(picImageUri);
+                    Glide.with(getApplicationContext())
+                            .load(picImageUri)
+                            .transform(new CenterCrop(), new RoundedCorners(15))
+                            .into(event_image);
+                    //event_image.setImageURI(picImageUri);
                     isProfileSelected=true;
+                    textOverImage.setVisibility(View.GONE);
                     break;
                 default:
                     Toast.makeText(CreateEventActivity.this, "nothing is selected", Toast.LENGTH_SHORT).show();
@@ -743,28 +759,41 @@ public class CreateEventActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.online:
                 if(checked){
+                    event_type = Const.Online;
                     venu.setVisibility(View.VISIBLE);
                     city.setVisibility(View.GONE);
                     address.setVisibility(View.GONE);
+
                 }
 
                 break;
             case R.id.offline:
                 if(checked){
+                    event_type=Const.offline;
                     venu.setVisibility(View.VISIBLE);
                     city.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);
+
                 }
 
                 break;
             case R.id.offline_and_online:
                 if(checked){
+                    event_type = "Both";
                     venu.setVisibility(View.VISIBLE);
                     city.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);
+
                 }
 
                 break;
+            case R.id.paidChip:
+                payable=true;
+                fee_layout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.unpaidChip:
+                payable=false;
+                fee_layout.setVisibility(View.GONE);
 
 
         }

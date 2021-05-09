@@ -7,33 +7,33 @@
     android:background="#0C3474"
     tools:context=".OnBoarding.OnboardingActivity"
     >
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/on_boarding"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+  <androidx.viewpager.widget.ViewPager
+      android:id="@+id/on_boarding"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
 
 
-        />
-    <LinearLayout
-        android:id="@+id/dots"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_above="@id/proceed_btton"/>
-        <Button
-            android:id="@+id/proceed_btton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="#0C3474"
-            android:layout_alignBottom="@id/on_boarding"
-            android:text="Proceed"
-            android:textColor="@color/white"
-            android:fontFamily="@font/helvetica_bold"
-            android:textAllCaps="false"
-            android:visibility="invisible"
-            android:enabled="false"
-            />
+      />
+  <LinearLayout
+      android:id="@+id/dots"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:gravity="center_horizontal|center_vertical"
+      android:layout_above="@id/proceed_btton"/>
+  <Button
+      android:id="@+id/proceed_btton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:background="#0C3474"
+      android:layout_alignBottom="@id/on_boarding"
+      android:text="Proceed"
+      android:textColor="@color/white"
+      android:fontFamily="@font/helvetica_bold"
+      android:textAllCaps="false"
+      android:visibility="invisible"
+      android:enabled="false"
+      />
 
 </RelativeLayout>

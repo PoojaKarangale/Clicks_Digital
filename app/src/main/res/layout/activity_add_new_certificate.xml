@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.AddNewCertificateActivity">
+    tools:context=".Activities.AddNewCertificateActivity"
+    android:background="#E8F0FD">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/flag_transparent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/action_bar_start"
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -64,41 +66,119 @@
                   android:padding="5dp" />
 
           </LinearLayout>-->
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/name_of_certificate"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top|left"
-            android:hint="name of certificate"
-            android:layout_below="@id/bar"
-            android:inputType="text"
-            android:minLines="1"
-            android:scrollbars="vertical"
-            android:textColorHint="@color/black"
-            android:textSize="@dimen/title1"
-            app:met_baseColor="@android:color/black"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="?colorAccent"
-            app:met_singleLineEllipsis="true"
-            tools:layout_editor_absoluteX="16dp" />
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/set_profile_blue">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/name_of_institute"
+            <androidx.cardview.widget.CardView
+                android:layout_width="31dp"
+                android:layout_height="30dp"
+                app:cardBackgroundColor="#43B7FD"
+                app:cardCornerRadius="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp">
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/friends"/>
+
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#615d5c"
+                    android:fontFamily="@font/segoe"
+                    android:text="Name of the Certificate"
+                    android:textSize="10dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="3dp"/>
+
+                <EditText
+                    android:id="@+id/name_of_certificate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#615d5c"
+
+                    android:layout_marginLeft="7dp"
+                    android:fontFamily="@font/segoe"
+                    android:hint="Enter Name of Certificate"
+                    android:maxLines="1"
+                    android:textColor="#121212"
+
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top|left"
-            android:hint="Institution"
-            android:layout_below="@id/bar"
-            android:inputType="text"
-            android:minLines="1"
-            android:scrollbars="vertical"
-            android:textColorHint="@color/black"
-            android:textSize="@dimen/title1"
-            app:met_baseColor="@android:color/black"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="?colorAccent"
-            app:met_singleLineEllipsis="true"
-            tools:layout_editor_absoluteX="16dp" />
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/set_profile_red">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="31dp"
+                android:layout_height="30dp"
+                app:cardBackgroundColor="#FF704D"
+                app:cardCornerRadius="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp">
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/friends"/>
+
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#615d5c"
+                    android:fontFamily="@font/segoe"
+                    android:text="Certifying Institute"
+                    android:textSize="10dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="3dp"/>
+                <EditText
+                    android:id="@+id/name_of_institute"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/segoe"
+                    android:backgroundTint="#615d5c"
+                    android:hint="Enter Name of Certifying Institute"
+                    android:maxLines="1"
+                    android:textSize="12dp"
+                    android:layout_marginLeft="7dp"
+                    android:textStyle="bold"
+                    />
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
         <!-- <LinearLayout
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
@@ -142,7 +222,7 @@
                 android:background="@drawable/back_round_button"
                 android:backgroundTint="@color/white"
                 android:text="Choose"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#8BB4F3"
                 android:textStyle="bold" />
 
             <Button
@@ -153,7 +233,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/back_round_button"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="#8BB4F3"
                 android:text="ADD"
                 android:textSize="@dimen/button"
                 android:textColor="@color/white"

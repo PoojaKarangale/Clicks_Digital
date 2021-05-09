@@ -7,14 +7,16 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.R;
 import com.squareup.picasso.Picasso;
 
 public class EnlargedImage extends AppCompatActivity {
 
     public static void enlargeImage(String s, Context context) {
-        Intent fullScreenIntent=new Intent(context, EnlargedImage.class);
+        Intent fullScreenIntent=new Intent(context, LoadImage.class);
         fullScreenIntent.putExtra(ConstFirebase.IMAGE_URL, s);
+        fullScreenIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(fullScreenIntent);
     }
 

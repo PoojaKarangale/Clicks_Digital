@@ -85,15 +85,18 @@
 
 
 
-<LinearLayout
+<RelativeLayout
     android:id="@+id/gal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_marginTop="15dp"
+    android:layout_marginHorizontal="25dp"
     android:layout_below="@+id/main_header_detail_event_detail">
 
     <LinearLayout
+        android:id="@+id/gallaryyy"
+        android:layout_alignParentStart="true"
         android:paddingHorizontal="7dp"
         android:paddingVertical="5dp"
         android:layout_width="wrap_content"
@@ -119,68 +122,86 @@
             android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="40.5dp">
+        android:layout_toEndOf="@+id/gallaryyy"
+        android:layout_toStartOf="@+id/parr">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Start Date and Time"
-                android:textSize="9dp"
-                android:textColor="#43B7FD"
-                android:fontFamily="@font/segoe"/>
-            <TextView
 
-                android:id="@+id/time_date_text"
-                android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+
+            >
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato"
-                android:text="28 Feb 2021 - 08:00 AM"
-                android:textColor="#212121"
-                android:textSize="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date and Time"
+                    android:textSize="9dp"
+                    android:textColor="#43B7FD"
+                    android:fontFamily="@font/segoe"/>
+                <TextView
+                    android:layout_marginTop="7dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End Date and Time"
+                    android:textSize="9dp"
+                    android:textColor="#43B7FD"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/time_date_text"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato"
+                    android:text="28 Feb 2021 - 08:00 AM"
+                    android:textColor="#212121"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="10dp"
+
+                    android:id="@+id/time_date_text_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lato"
+                    android:text="28 Feb 2021 - 08:00 AM"
+                    android:textColor="#212121"
+                    android:textSize="10dp"
+                    />
+
+            </LinearLayout>
+
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="End Date and Time"
-                android:textSize="9dp"
-                android:textColor="#43B7FD"/>
-            <TextView
-                android:layout_marginLeft="10dp"
-
-                android:id="@+id/time_date_text_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/lato"
-                android:text="28 Feb 2021 - 08:00 AM"
-                android:textColor="#212121"
-                android:textSize="10dp"
-                 />
-
-        </LinearLayout>
-
 
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/parr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -189,6 +210,7 @@
         android:paddingVertical="5dp"
         android:paddingHorizontal="7dp"
         android:background="@drawable/back_galary"
+        android:layout_alignParentEnd="true"
         >
         <ImageButton
             android:id="@+id/logo_participant"
@@ -216,7 +238,7 @@
 
 
 
-</LinearLayout>
+</RelativeLayout>
 
 <!--Listing Starts -->
 <LinearLayout
@@ -260,7 +282,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#615d5c"
-                android:textSize="10dp"
+                android:textSize="@dimen/thirteen"
                 android:fontFamily="@font/segoe"
                 android:text="Event Name"
 
@@ -277,7 +299,7 @@
                 android:capitalize="characters"
                 android:text="Event Name"
                 android:textColor="#212121"
-                android:textSize="16dp"
+                android:textSize="@dimen/sixteen"
                 android:textStyle="bold"
                 android:layout_marginBottom="3dp"
                 />
@@ -318,7 +340,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#615d5c"
-                android:textSize="10dp"
+                android:textSize="@dimen/thirteen"
                 android:fontFamily="@font/segoe"
                 android:text="Event Category"
 
@@ -332,7 +354,7 @@
                 android:fontFamily="@font/lato"
                 android:text="category"
                 android:textColor="#212121"
-                android:textSize="12dp"
+                android:textSize="@dimen/fifteen"
                 android:textStyle="bold"
                 android:layout_marginBottom="3dp"
                  />
@@ -378,7 +400,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#615d5c"
-                android:textSize="10dp"
+                android:textSize="@dimen/thirteen"
                 android:fontFamily="@font/segoe"
                 android:text="Event Type"
 
@@ -395,7 +417,7 @@
                 android:capitalize="characters"
                 android:text="Event Type"
                 android:textColor="#212121"
-                android:textSize="12dp"
+                android:textSize="@dimen/fifteen"
                 android:textStyle="bold"
                 android:layout_marginBottom="3dp"
                 />
@@ -436,7 +458,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#615d5c"
-                android:textSize="10dp"
+                android:textSize="@dimen/thirteen"
                 android:fontFamily="@font/segoe"
                 android:text="Event Description"
 
@@ -452,7 +474,7 @@
                 android:minLines="4"
                 android:textStyle="bold"
                 android:text="Description of event this event is so good and good and blah blah and blah blah blah "
-                android:textSize="12dp"
+                android:textSize="@dimen/fifteen"
                 android:textColor="#212121"
                 android:layout_marginBottom="3dp"
                 />
@@ -499,7 +521,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#615d5c"
-                android:textSize="10dp"
+                android:textSize="@dimen/thirteen"
                 android:fontFamily="@font/segoe"
                 android:text="Location"
 
@@ -517,7 +539,7 @@
                 android:capitalize="characters"
                 android:text="Zoom/ addr"
                 android:textColor="#212121"
-                android:textSize="12dp"
+                android:textSize="@dimen/fifteen"
                 android:textStyle="bold"
                 android:layout_marginBottom="3dp"
                 />
@@ -560,7 +582,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#615d5c"
-                android:textSize="10dp"
+                android:textSize="@dimen/thirteen"
                 android:fontFamily="@font/segoe"
                 android:text="Meeting/ Location Link"
 
@@ -578,7 +600,7 @@
                 android:capitalize="characters"
                 android:text="No Link provided yet"
                 android:textColor="#212121"
-                android:textSize="12dp"
+                android:textSize="@dimen/fifteen"
                 android:textStyle="bold"
                 android:autoLink="all"
                 android:layout_marginBottom="3dp"
@@ -617,11 +639,13 @@
 
             <LinearLayout
                 android:id="@+id/organiser_detail"
-                android:layout_width="345dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/blue_doodle"
+                android:background="@drawable/blue"
                 android:orientation="horizontal"
+                android:layout_marginHorizontal="20dp"
+
 
                 android:layout_below="@+id/organizer_book_payment"
                 >
@@ -653,7 +677,7 @@
                         android:fontFamily="@font/segoe"
                         android:text="name of organiser"
                         android:textColor="#212121"
-                        android:textSize="14dp"
+                        android:textSize="@dimen/fifteen"
                         android:textStyle="bold" />
 
                     <TextView
@@ -665,7 +689,7 @@
 
                         android:fontFamily="@font/segoe"
                         android:text="bio"
-                        android:textSize="10dp"
+                        android:textSize="@dimen/thirteen"
                         android:textColor="#615d5c"/>
 
                 </LinearLayout>

@@ -23,4 +23,9 @@
     <dimen name="title3">12sp</dimen>
     <dimen name="title4">10sp</dimen>
 
+    <dimen name="thirteen">13dp</dimen>
+    <dimen name="sixteen">16dp</dimen>
+    <dimen name="fifteen">15dp</dimen>
+    <dimen name="fourteen">14dp</dimen>
+
 </resources>

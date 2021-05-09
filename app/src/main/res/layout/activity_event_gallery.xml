@@ -7,67 +7,67 @@
     tools:context=".Event.EventGalleryActivity"
     android:background="#E8F0FD">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/bar"
+  <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#E8F0FD"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/group_chat_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#E8F0FD"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_toEndOf="@+id/image_profile"
+        android:background="@drawable/action_bar_start">
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margine_main"
+            android:fontFamily="@font/segoe"
+            android:text="Event Gallery"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/group_chat_bar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_toEndOf="@+id/image_profile"
-                android:background="@drawable/action_bar_start">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/margine_main"
-                        android:fontFamily="@font/segoe"
-                        android:text="Event Gallery"
-                        android:textColor="@color/white"
-                        android:textSize="14dp"
-                        android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/add_photo"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
 
-                    <ImageView
-                        android:id="@+id/add_photo"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-
-                        android:layout_marginEnd="15dp"
+            android:layout_marginEnd="15dp"
 
 
-                        android:src="@drawable/upload"
-                        />
-                </RelativeLayout>
-            </androidx.appcompat.widget.Toolbar>
+            android:src="@drawable/upload"
+            />
+      </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
 
 
-    </com.google.android.material.appbar.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="15dp"
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+  <androidx.recyclerview.widget.RecyclerView
+      android:layout_marginTop="10dp"
+      android:layout_marginHorizontal="15dp"
+      android:id="@+id/list"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-   <!-- <GridView
-        android:id="@+id/myGrid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/bar"
-        android:columnWidth="100dp"
-        android:horizontalSpacing="10dp"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="10dp" />-->
+  <!-- <GridView
+       android:id="@+id/myGrid"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@id/bar"
+       android:columnWidth="100dp"
+       android:horizontalSpacing="10dp"
+       android:numColumns="auto_fit"
+       android:verticalSpacing="10dp" />-->
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -12,6 +12,7 @@
         android:layout_gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
+        android:id="@+id/img"
         android:src="@drawable/wdc_temp_logo" />
 
 
@@ -19,9 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardView"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/img"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="90dp"
         android:layout_marginRight="30dp"
         android:elevation="10dp"
         app:cardBackgroundColor="#E8F0FD"
@@ -64,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="31dp"
                 android:hint="_ _ _ _ _ _"
+                android:backgroundTint="#43B7FD"
                 android:inputType="number"
                 android:textSize="20dp"
                 android:maxLength="6"

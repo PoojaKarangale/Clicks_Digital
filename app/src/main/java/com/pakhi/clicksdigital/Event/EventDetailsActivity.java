@@ -14,8 +14,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.pakhi.clicksdigital.R;
 
 import androidx.annotation.NonNull;
+//import androidx.appcompat.R;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +33,7 @@ import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PaymentGatewayFiles.PaymentActivity;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
-import com.pakhi.clicksdigital.R;
+//import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
@@ -52,7 +54,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private ImageButton gallery;
     private TextView    cost, time_date_text, event_name, category,
             no_of_participants, description, location_city, location, txtLoc,
-            organiser_name;
+            organiser_name, eventType, venue;
     private Button join_event_btn;
 
     private Event event;
@@ -83,7 +85,6 @@ public class EventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
-
         event=(Event) getIntent().getSerializableExtra(Const.event);
         organiser=(User) getIntent().getSerializableExtra(Const.organiser);
 
@@ -102,12 +103,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         initialiseFields();
 
         checkUserIsAlreadyRegisterd();
+        if(!checkUserIsAlreadyRegisterd()){
+            checkSeatsFull();
+        }
 
         loadData();
 
-        if(currentUserId.equals(event.getCreater_id())){
-            join_event_btn.setVisibility(View.GONE);
-        }
+
 
 
         organiser_name.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +155,24 @@ public class EventDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void checkSeatsFull() {
+        rootRef.getEventRef().child(event.getEventId()).child("Participants").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count = (int) snapshot.getChildrenCount();
+                if(String.valueOf(count).equals(event.getTotalSeats())){
+                    join_event_btn.setEnabled(false);
+                    join_event_btn.setText("Seats Full");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private boolean checkUserIsAlreadyRegisterd() {
         currentEventRef.child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
             @Override
@@ -166,6 +186,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     }
 
                 }
+
             }
 
             @Override
@@ -235,6 +256,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         location=findViewById(R.id.location);
         //txtLoc=findViewById(R.id.txtLoc);
         close_btn=findViewById(R.id.close_btn);
+
+        eventType = findViewById(R.id.event_type);
+        //venue = findViewById(R.id.venu)
     }
 
     private void loadData() {
@@ -256,9 +280,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         event_name.setText(event.getEventName().toUpperCase());
         category.setText(event.getCategory());
         description.setText(event.getDescription());
-        organiser_name.setText(organiser.getUser_name());
+        String n = organiser.getUser_name()+" "+organiser.getLast_name();
+        organiser_name.setText(n);
         location.setText(event.getAddress());
-        organiserBio.setText(organiser.getUser_bio());
+        String b = organiser.getWork_profession()+", "+organiser.getCompany();
+        organiserBio.setText(b);
+
+        eventType.setText(event.getEventType());
 
         if (event.isPayable()) {
             cost.setText(String.valueOf("Event Fee " + event.getTotalFee()) + "/-");

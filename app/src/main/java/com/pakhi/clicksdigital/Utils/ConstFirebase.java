@@ -123,4 +123,5 @@ public class ConstFirebase {
     public static String typeOfNotification="type";
     public static String notificationRecieverID="notificationRecieverID";
     public static String userIsIn="UserIsIn";
+    public static String Blocked = "Blocked";
 }

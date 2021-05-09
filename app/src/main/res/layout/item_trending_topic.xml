@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="artificial inteligence"
-                android:textSize="14dp"
+                android:textSize="@dimen/sixteen"
                 android:fontFamily="@font/helvetica_bold"
                 android:layout_marginTop="8dp"
                 android:textColor="#212121"
@@ -66,8 +66,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/segoe"
+                android:textColor="#212121"
                 android:textStyle="normal"
-                android:textSize="12dp"/>
+                android:textSize="@dimen/fifteen"/>
             <ImageView
                 android:id="@+id/raised_image_home"
                 android:layout_width="193dp"
@@ -91,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/segoe"
                 android:textColor="#212121"
-                android:textSize="12dp"
+                android:textSize="@dimen/fifteen"
 
                 />
 
@@ -112,7 +113,7 @@
                 android:layout_marginTop="3dp"
                 android:fontFamily="@font/segoe"
                 android:textColor="#212121"
-                android:textSize="12dp"/>
+                android:textSize="@dimen/fifteen"/>
 
             <TextView
                 android:id="@+id/desc_of_url_sender"
@@ -137,8 +138,9 @@
                 android:layout_marginTop="5.5dp"
                 android:ellipsize="end"
                 android:maxLines="3"
+                android:textColor="#212121"
                 android:text="in the post. in the post. in the post. in the post. in the post. in the post.in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the"
-                android:textSize="12dp"
+                android:textSize="@dimen/fifteen"
 
                 android:textStyle="normal"
                 android:fontFamily="@font/segoe"

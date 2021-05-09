@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +57,7 @@ import com.pakhi.clicksdigital.Notifications.Data;
 import com.pakhi.clicksdigital.Notifications.MyResponse;
 import com.pakhi.clicksdigital.Notifications.Sender;
 import com.pakhi.clicksdigital.Notifications.Token;
+import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
@@ -137,7 +139,9 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayout replyOnURLLayout;
     ImageView replyOnURLImage;
     TextView replyOnURLTitle, replyOnURLText;
-
+    RelativeLayout chatMessageLayout;
+    LinearLayout blockLayout;
+    TextView blockText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,14 +152,60 @@ public class ChatActivity extends AppCompatActivity {
         pref = SharedPreference.getInstance();
         messageSenderID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
+
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
 
         messageReceiverID = getIntent().getExtras().get(Const.visitUser).toString();
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("custom-message"));
+        IntializeControllers();
 
 
+        blockLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, VisitProfileActivity.class);
+                intent.putExtra(Const.visitUser, messageReceiverID);
+                startActivity(intent);
+            }
+        });
+        rootRef.getBlockRef().child(messageSenderID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    if(snapshot.child(messageReceiverID).exists()){
+                        chatMessageLayout.setVisibility(View.GONE);
+                        blockLayout.setVisibility(View.VISIBLE);
+                        blockText.setText("You can't communicate with this person anymore, click here to unblock");
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        rootRef.getBlockRef().child(messageReceiverID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    if(snapshot.child(messageSenderID).exists()){
+                        chatMessageLayout.setVisibility(View.GONE);
+                        blockLayout.setVisibility(View.VISIBLE);
+                        blockText.setText("You cant't communicate with this person anymore");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         DatabaseReference databaseReference = rootRef.getUserRef().child(messageReceiverID);
         databaseReference.child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
@@ -194,7 +244,6 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-        IntializeControllers();
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,10 +255,13 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 notify = true;
                 onLongClickOnMessage.setVisibility(View.GONE);
+
                 String messageText = MessageInputText.getText().toString();
 
                 if (TextUtils.isEmpty(messageText)) {
                     showToast("first write your message...");
+                    selectedMessageId="";
+                    typeOfSelectedMessage="";
                 } else {
 
                     String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
@@ -393,6 +445,9 @@ public class ChatActivity extends AppCompatActivity {
 
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_btn);
         MessageInputText = (EditText) findViewById(R.id.input_message);
+        chatMessageLayout = findViewById(R.id.chat_linear_layout);
+        blockLayout = findViewById(R.id.block_layout);
+        blockText = findViewById(R.id.block_text);
 
         messageAdapter = new MessageAdapter(messagesList, ConstFirebase.personalChat, getApplicationContext());
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
@@ -556,6 +611,8 @@ public class ChatActivity extends AppCompatActivity {
 
         rootRef.getMessagesRef().child(messagePushID).setValue(message1);
         replyingToMessage=false;
+        typeOfSelectedMessage="";
+        selectedMessageId="";
 
 
         rootRef.getRootRef().updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
@@ -797,6 +854,7 @@ public class ChatActivity extends AppCompatActivity {
                         intent.putExtra("name", messageSenderName);
                         intent.putExtra("typeOfSelectedMessage", typeOfSelectedMessage);
                         intent.putExtra("selectedMessageId", selectedMessageId);
+                        intent.putExtra("someTextFromRaiseTopic","");
                         startActivity(intent);
                         finish();
                         //SendMessage("image", uri.toString());

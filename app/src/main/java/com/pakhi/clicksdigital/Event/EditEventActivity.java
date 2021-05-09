@@ -22,6 +22,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -72,9 +74,9 @@ public class EditEventActivity extends AppCompatActivity {
     private ImageView   event_image;
     private ImageButton gallery;
     private Button      submit_btn, calculateTotal;
-    private RelativeLayout   fee_layout;
-    private MaterialEditText event_name, description, venu, city, address, noOfSeats;
-    private MaterialEditText fee_amount;
+    private LinearLayout   fee_layout;
+    private EditText event_name, description, venu, city, address, noOfSeats;
+    private EditText fee_amount;
     String name;
 
     private Uri  picImageUri=null;
@@ -84,6 +86,7 @@ public class EditEventActivity extends AppCompatActivity {
 
     private DatabaseReference        eventRef;
     private FirebaseDatabaseInstance rootRef;
+    RadioButton online, offline, both, pay, free;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +99,7 @@ public class EditEventActivity extends AppCompatActivity {
         eventRef=rootRef.getEventRef();
         initializeFields();
         loadData();
-        chipActionHandled();
+        //chipActionHandled();
         settingDateAndTime();
         spinnerImplementationForTopic();
 
@@ -141,22 +144,18 @@ public class EditEventActivity extends AppCompatActivity {
         description=findViewById(R.id.description);
 
         fee_layout=findViewById(R.id.fee_layout);
-        unpaidChip=findViewById(R.id.unpaidChip);
-        paidChip=findViewById(R.id.paidChip);
 
         total_fee=findViewById(R.id.total_fee);
         fee_amount=findViewById(R.id.fee_amount);
         convenience_fee_amount=findViewById(R.id.convenience_fee_amount);
         payumoney_amount=findViewById(R.id.payumoney_amount);
 
-        onlineChip=findViewById(R.id.onlineChip);
-        offlineChip=findViewById(R.id.offlineChip);
-        bothChip=findViewById(R.id.bothChip);
+
 
         venu=findViewById(R.id.venu);
         city=findViewById(R.id.city);
         address=findViewById(R.id.address);
-        noOfSeats=findViewById(R.id.no_of_seat_edit);
+        noOfSeats=findViewById(R.id.no_of_seats);
 
         choose_end_date=findViewById(R.id.choose_end_date);
         choose_start_date=findViewById(R.id.choose_start_date);
@@ -169,6 +168,12 @@ public class EditEventActivity extends AppCompatActivity {
 
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
+
+        online = findViewById(R.id.online);
+        offline = findViewById(R.id.offline);
+        both = findViewById(R.id.offline_and_online);
+        pay = findViewById(R.id.paidChip);
+        free = findViewById(R.id.unpaidChip);
     }
 
     private void loadData() {
@@ -184,36 +189,37 @@ public class EditEventActivity extends AppCompatActivity {
         choose_end_date.setText(event.getEndDate());
         choose_start_time.setText(event.getStartTime());
         choose_end_time.setText(event.getEndTime());
-
+        //noOfSeats.setText(event.getTotalSeats());
+        //event.getTotalFee()
         selectedStartDate=event.getTimeStamp();
 
         if (event.isPayable()) {
             totalAmount=event.getTotalFee();
             total_fee.setText(event.getTotalFee());
             // calculateEventFee();
-            paidChip.setSelected(true);
+            pay.setChecked(true);
 
         } else {
 
-            unpaidChip.setSelected(true);
+            free.setChecked(true);
         }
         if (event.getEventType().equals(Const.Offline)) {
 
-            offlineChip.setSelected(true);
+            offline.setChecked(true);
             venu.setVisibility(View.VISIBLE);
             city.setVisibility(View.VISIBLE);
             address.setVisibility(View.VISIBLE);
 
         } else if (event.getEventType().equals(Const.Online)) {
 
-            onlineChip.setSelected(true);
+            online.setChecked(true);
             venu.setVisibility(View.GONE);
             city.setVisibility(View.GONE);
             address.setVisibility(View.VISIBLE);
         } else {
             /* offlineChip.setChipBackgroundColor(getResources().getColorStateList(R.color.chipColor));
              */
-            bothChip.setSelected(true);
+            both.setChecked(true);
             venu.setVisibility(View.VISIBLE);
             city.setVisibility(View.VISIBLE);
             address.setVisibility(View.VISIBLE);

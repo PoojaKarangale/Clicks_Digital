@@ -130,4 +130,8 @@ public class FirebaseDatabaseInstance {
     public DatabaseReference getNotificationRef() {
         return rootRef.child(ConstFirebase.Notifications);
     }
+
+    public DatabaseReference getBlockRef() {
+        return rootRef.child(ConstFirebase.Blocked);
+    }
 }

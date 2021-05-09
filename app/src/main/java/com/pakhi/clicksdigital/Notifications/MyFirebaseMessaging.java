@@ -105,7 +105,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
-
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, ChatActivity.class);
@@ -116,16 +115,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
         OreoNotification oreoNotification = new OreoNotification(this);
         Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
                 defaultSound, icon);
-
         int i = 0;
         if (j > 0){
             i = j;
         }
-
         oreoNotification.getManager().notify(i, builder.build());*/
 
         if (!isAppIsInBackground(getApplicationContext())) {
@@ -160,13 +156,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            Message m = snapshot.getValue(Message.class);
-                            //Log.i("message---", )
-                            resultIntent=new Intent(getApplicationContext(), TopicRepliesActivity.class);
-                            resultIntent.putExtra(Const.message, m);
-                            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Message m = snapshot.getValue(Message.class);
+                        //Log.i("message---", )
+                        resultIntent=new Intent(getApplicationContext(), TopicRepliesActivity.class);
+                        resultIntent.putExtra(Const.message, m);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                            makeNotiOreoFore(resultIntent,title, body, icon);
+                        makeNotiOreoFore(resultIntent,title, body, icon);
 
                     }
 
@@ -221,7 +217,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -242,7 +238,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -364,7 +360,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -385,7 +381,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -462,7 +458,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
-
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, ChatActivity.class);
@@ -471,7 +466,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
-
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(Integer.parseInt(icon))
@@ -481,12 +475,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 .setSound(defaultSound)
                 .setContentIntent(pendingIntent);
         NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         int i = 0;
         if (j > 0) {
             i = j;
         }
-
         noti.notify(i, builder.build());*/
 
         if (!isAppIsInBackground(getApplicationContext())) {
@@ -517,11 +509,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            Message m = snapshot.getValue(Message.class);
-                            resultIntent=new Intent(getApplicationContext(), TopicRepliesActivity.class);
-                            resultIntent.putExtra(Const.message, m);
-                            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            makeOtherFore(resultIntent, body, title, icon);
+                        Message m = snapshot.getValue(Message.class);
+                        resultIntent=new Intent(getApplicationContext(), TopicRepliesActivity.class);
+                        resultIntent.putExtra(Const.message, m);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherFore(resultIntent, body, title, icon);
 
                     }
 
@@ -571,7 +563,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -592,7 +584,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if (type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -667,12 +659,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            Message m = snapshot.getValue(Message.class);
-                            resultIntent=new Intent(getApplicationContext(), TopicRepliesActivity.class);
-                            resultIntent.putExtra(Const.message, m);
-                            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            makeOtherBack(resultIntent, body, icon, title);
-                        }
+                        Message m = snapshot.getValue(Message.class);
+                        resultIntent=new Intent(getApplicationContext(), TopicRepliesActivity.class);
+                        resultIntent.putExtra(Const.message, m);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        makeOtherBack(resultIntent, body, icon, title);
+                    }
 
 
                     @Override
@@ -724,7 +716,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("participant")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
@@ -745,7 +737,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("eventPhoto")){
                 FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);

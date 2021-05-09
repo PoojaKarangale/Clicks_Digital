@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -92,6 +93,9 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         final Certificates certificate=values.get(position);
         holder.txtHeader.setText(certificate.getName());
         holder.txtFooter.setText(certificate.getInstitute());
+        if(position%2!=0){
+            holder.constraintLayout.setBackgroundResource(R.drawable.set_profile_red);
+        }
         if (holder.certi != null)
             holder.certi.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,6 +124,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public ConstraintLayout constraintLayout;
         public TextView txtHeader;
         public TextView txtFooter;
         public View     layout;
@@ -128,6 +133,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public ViewHolder(View v) {
             super(v);
             layout=v;
+            constraintLayout= v.findViewById(R.id.certificate_back);
             txtHeader=(TextView) v.findViewById(R.id.name);
             txtFooter=(TextView) v.findViewById(R.id.institute);
             certi=v.findViewById(R.id.certi);

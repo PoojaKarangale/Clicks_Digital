@@ -27,7 +27,10 @@ public class User implements Serializable {
         this.user_type=user_type;
     }
 
-    public User(String userid, String full_name_str, String bio_str, String image_url, String user_type, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_email, String weblink, String work_profession, String last_name, String company) {
+    public User(String userid, String full_name_str, String bio_str, String image_url,
+                String user_type, String city, String expectations_from_us, String experiences,
+                String gender, String number, String offer_to_community, String speaker_experience,
+                String user_email, String weblink, String work_profession, String last_name, String company) {
         this.image_url=image_url;
         this.user_id=userid;
         this.city=city;
@@ -47,7 +50,10 @@ public class User implements Serializable {
         this.company=company;
     }
 
-    public User(String userid, String full_name_str, String bio_str, String image_url, String user_type, String city, String expectations_from_us, String experiences, String gender, String number, String offer_to_community, String speaker_experience, String user_email, String weblink, String work_profession) {
+    public User(String userid, String full_name_str, String bio_str, String image_url,
+                String user_type, String city, String expectations_from_us,
+                String experiences, String gender, String number, String offer_to_community,
+                String speaker_experience, String user_email, String weblink, String work_profession) {
         this.image_url=image_url;
         this.user_id=userid;
         this.city=city;

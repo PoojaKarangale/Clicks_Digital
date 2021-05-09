@@ -90,7 +90,7 @@
                         android:maxLines="1"
                         android:text="Group name"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/heading"
+                        android:textSize="@dimen/sixteen"
                         android:textStyle="bold"
                         android:visibility="gone" />
 
@@ -175,7 +175,7 @@
                             android:text="Group Description"
                             android:fontFamily="@font/segoe"
                             android:textColor="@color/grey"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             />
                         <ImageView
                             android:id="@+id/edit_description"
@@ -210,7 +210,7 @@
                             android:textStyle="bold"
                             android:textColor="#212121"
                             android:text="group description"
-                            android:textSize="12dp" />
+                            android:textSize="@dimen/fifteen" />
 
 
                         <EditText
@@ -221,7 +221,7 @@
                             android:maxLines="1"
                             android:text="Your Group name"
                             android:textColor="#212121"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                             android:visibility="gone" />
 
                         <ImageView
@@ -269,7 +269,7 @@
                     android:text="Group Members"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14dp" />
+                    android:textSize="@dimen/fifteen" />
 
                 <ImageView
                     android:id="@+id/add_member"

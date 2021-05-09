@@ -9,18 +9,21 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -64,7 +67,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     static               int    REQUEST_CODE=1;
     String userid;
     Uri    picImageUri;
-
+    ArrayList<Certificates> cer = new ArrayList<>();
     String                   number;
     ArrayList<Certificates>  certificates;
     boolean                  isCertificatesAdded=false;
@@ -84,6 +87,8 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     private String         gender, user_type;
     private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
     private Button add_more_certificate;
+    RadioButton male, female;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +98,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         Intent intent=getIntent();
         user=(User) intent.getSerializableExtra(Const.userdata);
+        //gender = intent.getStringExtra("gender");
         //user_type=user.getUser_type();
         pref=SharedPreference.getInstance();
         userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
@@ -136,6 +142,9 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         add_more_certificate=findViewById(R.id.add_more_certificate);
         get_city=findViewById(R.id.get_city);
         close=findViewById(R.id.close);
+
+        male = findViewById(R.id.male);
+        female = findViewById(R.id.female);
     }
 
 
@@ -216,10 +225,29 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 if (snapshot.child(ConstFirebase.IMAGE_URL).exists()) {
                     // picImageUri=(Uri)snapshot.child(Constf
                     // .IMAGE_URL).getValue().toString();
-                    Picasso.get()
+                    Glide.with(getApplicationContext())
                             .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString())
-                            .resize(120, 120)
+
                             .into(profile_img);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        rootRef.getUserRef().child(userid).child(ConstFirebase.certificate).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    cer.clear();
+                    for(DataSnapshot c : snapshot.getChildren()){
+                        cer.add(c.getValue(Certificates.class));
+                        showAddedCertificates(c.getValue(Certificates.class), cer.size());
+                    }
+
                 }
             }
 
@@ -234,6 +262,15 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 .resize(120, 120).placeholder(R.drawable.persone_profile)
                 .into(profile_img);*/
 
+      if(user.getGender().equals("Male")){
+          male.setChecked(true);
+          gender="Male";
+      }
+      else{
+          female.setChecked(true);
+          gender="Female";
+      }
+        //Log.i("gender", user.getGender());
         FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
         picImageUri=firebaseAuth.getCurrentUser().getPhotoUrl();
 
@@ -335,6 +372,8 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             public void onSuccess(Void aVoid) {
                 addCurrentUserToDatabase(userItems);
                 progressDialog.dismiss();
+                Intent intent = new Intent(EditProfile.this, ProfileActivity.class);
+                startActivity(intent);
                 finish();
 
             }
@@ -442,6 +481,14 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void showAddedCertificates(Certificates certificate, int size) {

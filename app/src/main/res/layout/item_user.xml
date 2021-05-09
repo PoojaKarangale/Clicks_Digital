@@ -33,17 +33,17 @@
             android:visibility="invisible" />
 
         <TextView
-           android:layout_marginTop="15dp"
+           android:layout_marginTop="8dp"
             android:id="@+id/display_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margine_3"
+            android:layout_marginStart="7dp"
             android:layout_toEndOf="@id/image_profile"
             android:fontFamily="@font/helvetica_bold"
             android:maxLines="1"
             android:text="Name"
-            android:textColor="#121211"
-            android:textSize="12dp"
+            android:textColor="#212121"
+            android:textSize="@dimen/sixteen"
             android:textStyle="bold" />
 
         <TextView
@@ -51,12 +51,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/display_name"
-            android:layout_marginStart="@dimen/margine_3"
+            android:layout_marginStart="7dp"
             android:layout_toEndOf="@+id/image_profile"
             android:fontFamily="@font/segoe"
             android:text="user status"
             android:textAlignment="textStart"
-            android:textSize="10dp"
+            android:textSize="@dimen/fourteen"
             android:visibility="gone" />
 
         <TextView
@@ -82,7 +82,7 @@
             android:fontFamily="@font/lato"
             android:text="group name"
             android:textAlignment="textStart"
-            android:textSize="@dimen/title2"
+            android:textSize="14dp"
             android:visibility="invisible" />
 
         <LinearLayout

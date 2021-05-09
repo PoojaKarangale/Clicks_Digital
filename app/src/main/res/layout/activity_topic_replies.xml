@@ -19,35 +19,36 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:background="@drawable/action_bar_start"
                 android:id="@+id/personal_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:paddingBottom="20dp"
+                android:background="@drawable/topic_reply_back"
+                android:layout_margin="16dp"
+
                 >
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/profile_img"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/persone_profile"
-                    app:civ_border_color="@color/colorPrimary"
-                    app:civ_border_width="2dp"
                     android:layout_marginLeft="@dimen/margine_main"
                     android:layout_marginTop="@dimen/margine_main"
                     />
 
                 <TextView
                     android:id="@+id/name"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margine_main"
                     android:layout_toEndOf="@+id/profile_img"
                     android:text="Firstname Lastname"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/title1"
+                    android:textColor="#212121"
+                    android:textSize="@dimen/sixteen"
                     android:fontFamily="@font/helvetica_bold"
                     android:layout_marginTop="@dimen/margine_main"
                     />
@@ -60,19 +61,27 @@
                     android:layout_alignStart="@+id/name"
                     android:text="profession"
                     android:fontFamily="@font/segoe"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/title2" />
+                    android:textColor="#212121"
+                    android:textSize="@dimen/fourteen"
+                    />
+                <View
+                    android:id="@+id/vi"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#212121"
+                    android:layout_below="@id/profession"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="20dp"/>
                 <LinearLayout
                     android:layout_marginTop="10dp"
                     android:id="@+id/reply_image_layout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="10dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginHorizontal="20dp"
 
-                    android:layout_below="@+id/profession"
-                    android:layout_alignStart="@+id/name"
+                    android:layout_below="@+id/vi"
                     android:background="@drawable/topic_reply_back"
 
                     >
@@ -84,27 +93,34 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:fontFamily="@font/segoe"
-                        android:textColor="@color/white"/>
+                        android:textSize="@dimen/fifteen"
+                        android:textColor="#212121"/>
                     <ImageView
                         android:id="@+id/reply_image_url"
                         android:layout_width="180dp"
                         android:layout_height="140dp"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:layout_marginTop="7dp"/>
                     <TextView
+                        android:layout_marginTop="3dp"
                         android:id="@+id/reply_title_url"
                         android:layout_width="180dp"
+                        android:textSize="@dimen/fifteen"
+                        android:maxLines="2"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:textStyle="bold"
                         android:fontFamily="@font/segoe"
-                        android:textColor="@color/white"/>
+                        android:textColor="#212121"/>
                     <TextView
                         android:id="@+id/reply_separate_url"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:autoLink="web"
                         android:fontFamily="@font/segoe"
+                        android:textColorLink="#1768E7"
+                        android:textSize="@dimen/fifteen"
                         android:textColor="@color/white"/>
 
                     <!-- IMAGE-->
@@ -126,7 +142,6 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/profession"
                         android:layout_alignStart="@+id/name"
-                        android:layout_marginTop="10dp"
                         android:background="@drawable/flag_transparent"
                         android:gravity="top|start"
                         android:hint="Event Description"
@@ -139,25 +154,77 @@
                         android:scrollbars="vertical"
                         android:scrollHorizontally="false"
                         android:singleLine="false"
+                        android:textSize="@dimen/fifteen"
                         android:text="PayUMoney is one of India’s most popular Payment Gateways and it is used by small as well as large companies for selling their products online and collecting payments in a easy way. The Android SDK provided by PayUMoney is very easy to implement and we are going to learn about it further in the post."
                         android:textAlignment="gravity"
                         android:textStyle="bold"
                         android:fontFamily="@font/segoe"
-                        android:textColor="@color/white"/>
+                        android:textColor="#212121"/>
+
+                    <TextView
+                        android:id="@+id/date_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/reply_image_layout"
+                        android:layout_alignStart="@+id/name"
+                        android:layout_marginTop="10dp"
+                        android:text="Date and time"
+                        android:textSize="@dimen/title3" />
+                    <LinearLayout
+                        android:id="@+id/like_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/date_time"
+                        android:layout_alignStart="@+id/name"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:orientation="horizontal"
+                        android:paddingTop="3dp">
+
+                        <ImageView
+                            android:id="@+id/like"
+                            android:layout_width="@dimen/widget_size"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:paddingEnd="5dp"
+                            android:src="@drawable/like_border" />
+
+                        <TextView
+                            android:id="@+id/no_of_likes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignTop="@+id/reply"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="10dp"
+                            android:layout_toEndOf="@+id/reply"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textSize="@dimen/title4" />
+
+                        <TextView
+                            android:id="@+id/reply"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:text="Reply"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/title4" />
+
+                        <TextView
+                            android:id="@+id/no_of_replies"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/reply"
+                            android:layout_marginStart="4dp"
+                            android:layout_toEndOf="@+id/reply"
+                            android:text="0"
+                            android:textSize="@dimen/title4" />
+                    </LinearLayout>
+
 
 
                 </LinearLayout>
 
 
-                <TextView
-                    android:id="@+id/date_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/reply_image_layout"
-                    android:layout_alignStart="@+id/name"
-                    android:layout_marginTop="10dp"
-                    android:text="Date and time"
-                    android:textSize="@dimen/title3" />
 
                 <!--<TextView
                     android:id="@+id/reply"
@@ -179,87 +246,55 @@
                     android:layout_toEndOf="@+id/reply"
                     android:text="128"
                     android:textSize="@dimen/title2" />-->
-                <LinearLayout
-                    android:id="@+id/like_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/date_time"
-                    android:layout_alignStart="@+id/name"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:orientation="horizontal"
-                    android:paddingTop="3dp">
 
-                    <ImageView
-                        android:id="@+id/like"
-                        android:layout_width="@dimen/widget_size"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:paddingEnd="5dp"
-                        android:src="@drawable/like_border" />
-
-                    <TextView
-                        android:id="@+id/no_of_likes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignTop="@+id/reply"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="10dp"
-                        android:layout_toEndOf="@+id/reply"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textSize="@dimen/title4" />
-
-                    <TextView
-                        android:id="@+id/reply"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:text="Reply"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/title4" />
-
-                    <TextView
-                        android:id="@+id/no_of_replies"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/reply"
-                        android:layout_marginStart="4dp"
-                        android:layout_toEndOf="@+id/reply"
-                        android:text="0"
-                        android:textSize="@dimen/title4" />
-                </LinearLayout>
 
 
             </RelativeLayout>
             <RelativeLayout
+                android:id="@+id/chat_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/send_message_back"
+                android:elevation="20dp"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginHorizontal="12dp"
+                android:paddingStart="@dimen/margine_main"
+                android:paddingEnd="@dimen/margine_main"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
                 <EditText
                     android:id="@+id/reply_to_topic"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Reply here..."
-                    android:maxLines="10"
+                    android:layout_marginEnd="0dp"
+                    android:layout_toStartOf="@+id/attach_file_btn"
+                    android:fontFamily="@font/lato"
+                    android:hint="type message here..."
+                    android:maxLines="5"
+                    android:minLines="1"
+                    android:inputType="textMultiLine"
+                    android:singleLine="false"
+                    android:padding="15dp"
 
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toEndOf="@+id/reply_button"
-                    />
-                <Button
-                    android:layout_gravity="right"
+                    android:textSize="@dimen/fifteen"
+                    android:backgroundTint="#43B7FD"/>
+
+
+                <ImageButton
                     android:id="@+id/reply_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="reply"
-                    android:backgroundTint="@color/blue"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false"
-                    android:layout_toStartOf="@+id/cross_reply"
+                    android:layout_width="@dimen/widget_size36"
+                    android:layout_height="@dimen/widget_size36"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="@dimen/margine_sub"
+                    android:background="@drawable/flag_transparent"
+                    android:src="@drawable/send_message" />
 
-
-                    />
                 <ImageView
                     android:id="@+id/cross_reply"
                     android:layout_width="wrap_content"
@@ -267,16 +302,19 @@
                     android:src="@drawable/close"
                     android:layout_marginLeft="7dp"
                     android:layout_marginTop="15dp"
+                    android:visibility="gone"
                     android:layout_alignParentEnd="true"/>
+
 
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/replies_list"
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginHorizontal="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margine_main"
+
                 android:background="#E8F0FD"
                 app:layout_constraintTop_toBottomOf="@+id/bar">
 

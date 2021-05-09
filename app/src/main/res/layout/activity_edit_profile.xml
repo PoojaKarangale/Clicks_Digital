@@ -128,7 +128,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="First Name"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -140,9 +140,10 @@
                             android:layout_marginLeft="7dp"
                             android:fontFamily="@font/segoe"
                             android:hint="Enter first name"
+                            android:backgroundTint="#D4E3FB"
                             android:maxLines="1"
                             android:textColor="#121212"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                             android:textStyle="bold"
 
                              />
@@ -184,7 +185,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="Last Name"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
                         <EditText
@@ -193,8 +194,9 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/segoe"
                             android:hint="Enter Last Name"
+                            android:backgroundTint="#FFEBE6"
                             android:maxLines="1"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                             android:layout_marginLeft="7dp"
                             android:textStyle="bold"
                             />
@@ -238,7 +240,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="Email"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -250,7 +252,8 @@
                             android:fontFamily="@font/segoe"
                             android:hint="Enter Your Email ID"
                             android:maxLines="1"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
+                            android:backgroundTint="#D4E3FB"
                             android:textStyle="bold"
 
                             android:layout_marginLeft="7dp"
@@ -294,17 +297,19 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="Write Your Professional Description"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
                         <EditText
                             android:id="@+id/bio"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/lato"
+                            android:fontFamily="@font/segoe"
+                            android:backgroundTint="#FFEBE6"
                             android:hint="Enter Your Professional Description... (500 Char)"
                             android:maxLines="6"
-                            android:textSize="12dp"
+                            android:inputType="textMultiLine"
+                            android:textSize="@dimen/fifteen"
                             android:textStyle="bold"
                             android:layout_marginLeft="7dp"
                             android:maxLength="500"
@@ -369,7 +374,8 @@
                                 android:onClick="onRadioButtonClicked"
                                 android:text="Male"
                                 android:textColor="#212121"
-                                android:textSize="12dp" />
+                                android:textSize="@dimen/fifteen"
+                                android:buttonTint="#43B7FD"/>
 
                             <RadioButton
                                 android:id="@+id/female"
@@ -379,7 +385,8 @@
                                 android:onClick="onRadioButtonClicked"
                                 android:text="Female"
                                 android:textColor="#212121"
-                                android:textSize="12dp" />
+                                android:textSize="@dimen/fifteen"
+                                android:buttonTint="#43B7FD"/>
 
                         </RadioGroup>
 
@@ -441,7 +448,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="Current Designation"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -450,9 +457,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/header2"
+                            android:backgroundTint="#D4E3FB"
                             android:fontFamily="@font/segoe"
                             android:hint="Enter Your Current Designation"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                             android:layout_marginLeft="7dp"
                             android:textStyle="bold"
                              />
@@ -498,7 +506,8 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="Current Company"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
+                            android:backgroundTint="#FFEBE6"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -506,10 +515,10 @@
                             android:id="@+id/company"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-
+                            android:backgroundTint="#FFEBE6"
                             android:fontFamily="@font/lato"
                             android:hint="Enter Current Organization Name"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                             android:layout_marginLeft="7dp"
                             android:textStyle="bold"
                              />
@@ -550,7 +559,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="City"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -561,10 +570,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/segoe"
+                            android:backgroundTint="#D4E3FB"
                             android:textStyle="bold"
                             android:hint="Enter City Name"
                             android:maxLines="2"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                              />
 
 
@@ -618,7 +628,9 @@
                             android:layout_below="@id/working"
                             android:fontFamily="@font/segoe"
                             android:hint="Enter Number of Years"
-                            android:inputType="textMultiLine"
+                                android:backgroundTint="#FFEBE6"
+
+                                android:inputType="textMultiLine"
                             android:textStyle="bold"
                             android:textSize="12dp"
 
@@ -661,7 +673,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="Speaker at events"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -671,10 +683,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="7dp"
                             android:fontFamily="@font/segoe"
+                            android:backgroundTint="#D4E3FB"
                             android:hint="Enter Event Names"
                             android:inputType="textMultiLine"
                             android:textStyle="bold"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                              />
 
 
@@ -719,7 +732,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="Expectations from the Community"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -728,11 +741,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/experiences"
-
+                            android:backgroundTint="#FFEBE6"
                             android:fontFamily="@font/segoe"
                             android:hint="Enter Your Expectations from the Digital Marketing and Technology Professionals in the Community..."
                             android:inputType="textMultiLine"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                             android:textStyle="bold"
 
                             android:layout_marginLeft="7dp"/>
@@ -775,7 +788,7 @@
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
                             android:text="What can the community expect from you"
-                            android:textSize="10dp"
+                            android:textSize="@dimen/thirteen"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
@@ -784,11 +797,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/experiences"
+                            android:backgroundTint="#D4E3FB"
 
                             android:fontFamily="@font/segoe"
                             android:hint="Enter What You Can Offer to the Community in terms of Knowledge, Connections, Resources, etc..."
                             android:inputType="textMultiLine"
-                            android:textSize="12dp"
+                            android:textSize="@dimen/fifteen"
                             android:layout_marginLeft="7dp"
 
                             android:textStyle="bold"

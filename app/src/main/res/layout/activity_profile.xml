@@ -284,7 +284,7 @@
                             android:text="Full Name"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:textSize="10dp"/>
+                            android:textSize="@dimen/thirteen"/>
 
                         <TextView
                             android:id="@+id/tv_user_name"
@@ -293,7 +293,7 @@
                             android:fontFamily="@font/segoe"
                             android:text="User Name"
                             android:textColor="#212121"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/fifteen"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -329,7 +329,7 @@
                             android:text="Gender"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:textSize="10dp"/>
+                            android:textSize="@dimen/thirteen"/>
 
                         <TextView
                             android:id="@+id/tv_gender"
@@ -338,7 +338,7 @@
                             android:fontFamily="@font/segoe"
                             android:text="Gender"
                             android:textColor="#212121"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/fifteen"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -374,7 +374,7 @@
                             android:text="Profession"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:textSize="10dp"/>
+                            android:textSize="@dimen/thirteen"/>
 
                         <TextView
                             android:id="@+id/tv_profession"
@@ -383,7 +383,97 @@
                             android:fontFamily="@font/segoe"
                             android:text="Profession"
                             android:textColor="#212121"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/fifteen"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_red"
+                    android:layout_marginTop="10dp">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#FF704D"
+                        app:cardCornerRadius="50dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/building"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Current Company"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:textSize="@dimen/thirteen"/>
+
+                        <TextView
+                            android:id="@+id/current_company"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:text="current company"
+                            android:textColor="#212121"
+                            android:textSize="@dimen/fifteen"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue"
+                    android:layout_marginTop="10dp">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/city"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="City"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:textSize="@dimen/thirteen"/>
+
+                        <TextView
+                            android:id="@+id/city_user"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:text="city_user"
+                            android:textColor="#212121"
+                            android:textSize="@dimen/fifteen"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -419,7 +509,7 @@
                             android:text="Professional Description"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:textSize="10dp"/>
+                            android:textSize="@dimen/thirteen"/>
 
                         <TextView
                             android:id="@+id/tv_user_bio"
@@ -428,7 +518,7 @@
                             android:fontFamily="@font/segoe"
                             android:text="Bio"
                             android:textColor="#212121"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/fifteen"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -464,7 +554,7 @@
                             android:text="Speaker at events"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:textSize="10dp"/>
+                            android:textSize="@dimen/thirteen"/>
 
                         <TextView
                             android:id="@+id/tv_speaker_experience"
@@ -473,7 +563,7 @@
                             android:fontFamily="@font/segoe"
                             android:text="TedX"
                             android:textColor="#212121"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/fifteen"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -509,7 +599,7 @@
                             android:text="Work Experience (in Yrs.)"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:textSize="10dp"/>
+                            android:textSize="@dimen/thirteen"/>
 
                         <TextView
                             android:id="@+id/tv_experiences"
@@ -518,7 +608,96 @@
                             android:fontFamily="@font/segoe"
                             android:text="years of exp"
                             android:textColor="#212121"
-                            android:textSize="12sp"
+                            android:textSize="@dimen/fifteen"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue"
+                    android:layout_marginTop="10dp">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_find_in_page_black_24dp"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Expectations from Community"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:textSize="@dimen/thirteen"/>
+
+                        <TextView
+                            android:id="@+id/exp_from_comm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:text="expFromComm"
+                            android:textColor="#212121"
+                            android:textSize="@dimen/fifteen"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_red"
+                    android:layout_marginTop="10dp">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#FF704D"
+                        app:cardCornerRadius="50dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/bulb"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Expectations From Me"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:textSize="@dimen/thirteen"/>
+
+                        <TextView
+                            android:id="@+id/exp_from_us"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/segoe"
+                            android:text="exp_from_me"
+                            android:textColor="#212121"
+                            android:textSize="@dimen/fifteen"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -554,7 +733,7 @@
                             android:text="Certifications"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:textSize="10dp"/>
+                            android:textSize="@dimen/thirteen"/>
 
                         <LinearLayout
                             android:id="@+id/certification_layout"
@@ -571,7 +750,7 @@
                                 android:text="Certifications"
                                 android:textAllCaps="false"
                                 android:textColor="#272727"
-                                android:textSize="12dp"
+                                android:textSize="@dimen/fifteen"
                                 />
 
                             <ImageView

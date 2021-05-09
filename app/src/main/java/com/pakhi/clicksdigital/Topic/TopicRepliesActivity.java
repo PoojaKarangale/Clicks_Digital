@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +41,6 @@ import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
-import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -68,13 +71,14 @@ public class TopicRepliesActivity extends AppCompatActivity {
     int i;
     TextView text, separateUrl, title;
     ImageView image;
-    Button replyButton;
+    ImageButton replyButton;
     EditText topic_reply;
     ImageView crossTopic;
     boolean notify=false;
     String rep;
     public String grpName;
     public String nameOfSender;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +143,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
 
                 topic_reply.setVisibility(View.VISIBLE);
                 replyButton.setVisibility(View.VISIBLE);
-                crossTopic.setVisibility(View.VISIBLE);
+                //crossTopic.setVisibility(View.VISIBLE);
                 topic_reply.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(topic_reply, InputMethodManager.SHOW_IMPLICIT);
@@ -172,9 +176,6 @@ public class TopicRepliesActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(TopicRepliesActivity.this, "Please type something", Toast.LENGTH_SHORT).show();
                 }
-                replyButton.setVisibility(View.GONE);
-                topic_reply.setVisibility(View.GONE);
-                crossTopic.setVisibility(View.GONE);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(topic_reply.getWindowToken(), 0);
 
@@ -436,8 +437,9 @@ public class TopicRepliesActivity extends AppCompatActivity {
 
                 //topicImageLayout.setVisibility(View.VISIBLE);
                 topicImageTextView.setText(topic.getExtra());
-                Picasso.get()
-                        .load(String.valueOf(topic.getMessage()))
+                Glide.with(getApplicationContext())
+                        .load(String.valueOf(topic.getMessage())).
+                        transform(new CenterCrop(), new RoundedCorners(12))
                         .into(topicImage);
 
                 //date_time.setLayoutParams();
@@ -456,18 +458,37 @@ public class TopicRepliesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    Picasso.get()
+                    Glide.with(getApplicationContext())
                             .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue(String.class))
-                            .resize(120, 120)
+                            .transform(new CenterCrop(), new RoundedCorners(10))
                             .into(profile_img);
-                    name.setText(snapshot.child(ConstFirebase.USER_NAME).getValue().toString());
-                    profession.setText(snapshot.child("work_profession").getValue().toString());
+                    String n = snapshot.child(ConstFirebase.USER_NAME).getValue().toString()
+                            +" " + snapshot.child(ConstFirebase.last_name).getValue().toString();
+                    name.setText(n);
+                    String p = snapshot.child("work_profession").getValue().toString()
+                            +", "+snapshot.child("company").getValue().toString();
+                    profession.setText(p);
+
                     name.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(TopicRepliesActivity.this, VisitProfileActivity.class);
-                            intent.putExtra(Const.visitUser,topic.getFrom());
-                            startActivity(intent);
+                            rootRef.getBlockRef().child(topic.getFrom()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.child(currentUserId).exists()){
+                                        Toast.makeText(getApplicationContext(), "You can't visit the Profile of this person", Toast.LENGTH_LONG).show();
+                                    }else {
+                                        Intent intent = new Intent(getApplicationContext(), VisitProfileActivity.class);
+                                        intent.putExtra(Const.visitUser, topic.getFrom());
+                                        startActivity(intent);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
                     });
                 }
@@ -496,6 +517,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
         replyRef.child(topic.getMessageID()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                replies.clear();
                 if (snapshot.exists()) {
                     no_of_replies.setText(String.valueOf(snapshot.getChildrenCount()));
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -529,8 +551,8 @@ public class TopicRepliesActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             title.setText(s.title);
-            Picasso.get()
-                    .load(String.valueOf(s.imageURL))
+            Glide.with(getApplicationContext())
+                    .load(String.valueOf(s.imageURL)).transform(new CenterCrop(), new RoundedCorners(12))
                     .into(image);
         }
 

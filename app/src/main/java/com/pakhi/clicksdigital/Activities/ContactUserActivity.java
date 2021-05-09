@@ -63,14 +63,11 @@ public class ContactUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact_user);
 /*
         pref = getApplicationContext().getSharedPreferences(Constants.SHARED_PREF, 0); // 0 - for private mode
-
         contactList = new ArrayList<>();
         userList = new ArrayList<>();
-
         recyclerView = findViewById(R.id.recycler_contact_user);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         contactUserAdapter = new ContactUserAdapter(this, userList);
         recyclerView.setAdapter(contactUserAdapter);
         RootRef = FirebaseDatabase.getInstance().getReference();
@@ -165,11 +162,9 @@ public class ContactUserActivity extends AppCompatActivity {
         String key = FirebaseDatabase.getInstance().getReference().child("Chat").push().getKey();
         DatabaseReference chatInfoDb = FirebaseDatabase.getInstance().getReference().child("Chat").child(key).child("info");
         DatabaseReference userDb = FirebaseDatabase.getInstance().getReference().child("user");
-
         HashMap newChatMap = new HashMap();
         newChatMap.put("id", key);
         newChatMap.put("Users/" + currentUserID, true);
-
         Boolean validChat = false;
         for (Contact mUser : userList) {
             if (mUser.getSelected()) {
@@ -178,12 +173,10 @@ public class ContactUserActivity extends AppCompatActivity {
                 userDb.child(mUser.getUid()).child("chat").child(key).setValue(true);
             }
         }
-
         if (validChat) {
             chatInfoDb.updateChildren(newChatMap);
             userDb.child(currentUserID).child("chat").child(key).setValue(true);
         }
-
     }*/
 
     @Override

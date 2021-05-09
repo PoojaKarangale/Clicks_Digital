@@ -98,10 +98,10 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     // AsyncTask<?, ?, ?> runningTask;
     private boolean          isNewProfilePicSelected=false;
     private ImageView        profile_img;
-    private MaterialEditText full_name, email, bio, last_name;
+    private EditText full_name, email, bio, last_name;
     private ProgressDialog progressDialog;
     private String         gender, user_type;
-    private MaterialEditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
+    private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
     private Button add_more_certificate;
 
     @Override
@@ -240,7 +240,8 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         String bio_str=bio.getText().toString().trim();
         String weblink_str=weblink.getText().toString().trim();
 
-        user=new User(userid, full_name_str, bio_str, imageUrl_string, user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
+        user=new User(userid, full_name_str, bio_str, imageUrl_string, user_type, city,
+                expectations_from_us, experiences, gender, number, offer_to_community,
                 speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
 
         ;//= new HashMap<>();
@@ -255,6 +256,8 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         } else {
             // new AsyncOperation().execute("uploadData");
         }
+
+
         addUserDetailsToDatabase();
     }
 
@@ -275,8 +278,8 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
     private void addCertificatesToDatabase() {
         final DatabaseReference reference=rootRef.getUserRef();
-        final int[] numberOfCertificate={0};
-        reference.child(userid).child("certificates").addValueEventListener(new ValueEventListener() {
+        final int[] numberOfCertificate= new int[1];
+        reference.child(userid).child("certificate").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -284,7 +287,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
                     numberOfCertificate[0]=(int) dataSnapshot.getChildrenCount();
 
                 for (Certificates c : certificates) {
-                    reference.child(userid).child("certificates").child(String.valueOf(numberOfCertificate[0])).setValue(c);
+                    reference.child(userid).child("certificate").child(String.valueOf(numberOfCertificate[0])).setValue(c);
                     numberOfCertificate[0]++;
                 }
                 certificates.clear();

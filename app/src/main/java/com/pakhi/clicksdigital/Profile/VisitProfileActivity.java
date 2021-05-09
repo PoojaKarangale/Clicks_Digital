@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +31,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -51,18 +54,52 @@ public class VisitProfileActivity extends AppCompatActivity {
     Button cancel, accept;
     String req="normal";
     LinearLayout acceptLayout;
+    private TextView designation, currentCompany, city, expectationsFromComm;
+    private TextView expectationsFromUs;
+
+    String currentUserID;
+    SharedPreference pref;
+
+    Button block, unblock;
+    NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_profile);
 
+
         rootRef = FirebaseDatabaseInstance.getInstance();
         userRef = rootRef.getUserRef();
         user_id = getIntent().getStringExtra(Const.visitUser);
         //req = getIntent().getStringExtra(Const.fromRequest);
 
+        pref=SharedPreference.getInstance();
+        currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
+        nestedScrollView = findViewById(R.id.nestedScrollView2);
+        final LinearLayout layout = findViewById(R.id.lay);
+
+
+
+        rootRef.getBlockRef().child(user_id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    if(snapshot.child(currentUserID).exists()){
+                        nestedScrollView.setVisibility(View.GONE);
+                        layout.setVisibility(View.VISIBLE);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         db = new UserDatabase(this);
         getCurrentUserFromDb();
@@ -74,10 +111,16 @@ public class VisitProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     user = dataSnapshot.getValue(User.class);
-                    Picasso.get()
+                    Glide.with(getApplicationContext())
                             .load(user.getImage_url())
-                            .resize(120, 120)
                             .into(profile_image);
+                    currentCompany.setText(dataSnapshot.child("company").getValue().toString());
+                    city.setText(dataSnapshot.child("city").getValue().toString());
+                    expectationsFromComm.setText(dataSnapshot.child("expectations_from_us").getValue().toString());
+                    expectationsFromUs.setText(dataSnapshot.child("offer_to_community").getValue().toString());
+                    bio.setText(dataSnapshot.child("user_bio").getValue().toString());
+                    profession.setText(dataSnapshot.child("work_profession").getValue().toString());
+
 
                     if (user.getUser_type().equals("admin")) {
                         isProfileUserIsAdmin = true;
@@ -191,6 +234,12 @@ public class VisitProfileActivity extends AppCompatActivity {
         speaker_experience = findViewById(R.id.tv_speaker_experience);
         experience = findViewById(R.id.tv_experiences);
 
+
+        currentCompany = findViewById(R.id.current_company);
+        city = findViewById(R.id.city_user);
+        expectationsFromComm = findViewById(R.id.exp_from_comm);
+        expectationsFromUs = findViewById(R.id.exp_from_us);
+
         make_admin = findViewById(R.id.make_admin);
         removeAdmin = findViewById(R.id.remove_admin);
         message_btn = findViewById(R.id.message_btn);
@@ -200,6 +249,10 @@ public class VisitProfileActivity extends AppCompatActivity {
         acceptLayout = findViewById(R.id.accept_layout);
         cancel = findViewById(R.id.request_cancel_btn);
         accept = findViewById(R.id.request_accept_btn);
+
+        block = findViewById(R.id.block_contact);
+        unblock = findViewById(R.id.unblock_contact);
+
 
 
     }
@@ -238,6 +291,30 @@ public class VisitProfileActivity extends AppCompatActivity {
         socialMediaHandles();
         contactInfo();
         Toast.makeText(this, "Data Loaded", Toast.LENGTH_SHORT).show();
+
+        rootRef.getBlockRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(currentUserID).exists()){
+                    if(snapshot.child(currentUserID).child(user_id).exists()){
+                        unblock.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        block.setVisibility(View.VISIBLE);
+                    }
+
+                }
+                else {
+                    block.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void addCertificationData(final List<Certificates> certificates) {
@@ -265,7 +342,7 @@ public class VisitProfileActivity extends AppCompatActivity {
         final List<Certificates> certificates = new ArrayList<Certificates>();
         //Loading the data
 
-        DatabaseReference databaseReference = userRef.child(user_id).child("cerificates");
+        DatabaseReference databaseReference = userRef.child(user_id).child("certificate");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -345,5 +422,18 @@ public class VisitProfileActivity extends AppCompatActivity {
                 Toast.makeText(view.getContext(), user.getUser_name() + " is no longer admin now", Toast.LENGTH_SHORT);
             }
         });
+    }
+
+    public void blockContact(View view) {
+        rootRef.getBlockRef().child(currentUserID).child(user_id).setValue(user_id);
+        unblock.setVisibility(View.VISIBLE);
+        block.setVisibility(View.GONE);
+
+    }
+
+    public void unBlockContact(View view) {
+        rootRef.getBlockRef().child(currentUserID).child(user_id).removeValue();
+        unblock.setVisibility(View.GONE);
+        block.setVisibility(View.VISIBLE);
     }
 }

@@ -6,201 +6,195 @@
     android:layout_height="match_parent"
     tools:context=".GroupChat.CreateNewGroupActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_create_group"
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar_create_group"
+      android:layout_width="match_parent"
+      android:layout_height="56dp"
+      android:background="@color/colorPrimary">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimary">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+      <ImageView
+          android:id="@+id/back_btn"
+          android:layout_width="28dp"
+          android:layout_height="28dp"
+          android:layout_alignParentStart="true"
+          android:layout_centerVertical="true"
+          android:src="@drawable/back" />
 
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/back" />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_toEndOf="@+id/back_btn"
+          android:text="New Group"
+          android:layout_marginStart="@dimen/margine_sub"
+          android:textColor="@color/white"
+          android:fontFamily="@font/lato"
+          android:textSize="@dimen/heading"
+          android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/back_btn"
-                android:text="New Group"
-                android:layout_marginStart="@dimen/margine_sub"
-                android:textColor="@color/white"
-                android:fontFamily="@font/lato"
-                android:textSize="@dimen/heading"
-                android:textStyle="bold" />
+    </RelativeLayout>
 
-        </RelativeLayout>
+  </androidx.appcompat.widget.Toolbar>
 
-    </androidx.appcompat.widget.Toolbar>
 
+  <LinearLayout
+      android:id="@+id/main_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/toolbar_create_group"
+      android:background="@color/white"
+      android:gravity="center"
+      android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_img"
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/group_image"
+        app:civ_border_color="#FFFFFF"
+        app:civ_border_width="4dp" />
+
+    <!--
+    <ImageView
+        android:id="@+id/profile_img"
+        android:layout_width="108dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="-48dp"
+        android:src="@drawable/residential"
+         />
+         -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@color/grey"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:text="Select group photo"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/title2" />
 
     <LinearLayout
-        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_create_group"
-        android:background="@color/white"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:gravity="center"
         android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_img"
-            android:layout_width="108dp"
-            android:layout_height="108dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/group_image"
-            app:civ_border_color="#FFFFFF"
-            app:civ_border_width="4dp" />
+      <com.rengwuxian.materialedittext.MaterialEditText
+          android:id="@+id/display_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Group Name"
+          android:textSize="@dimen/title1"
+          app:met_baseColor="@android:color/black"
+          app:met_floatingLabel="highlight"
+          android:maxLines="1"
+          app:met_primaryColor="?colorAccent"
+          app:met_singleLineEllipsis="true" />
 
-        <!--
-        <ImageView
-            android:id="@+id/profile_img"
-            android:layout_width="108dp"
-            android:layout_height="108dp"
-            android:layout_marginTop="-48dp"
-            android:src="@drawable/residential"
-             />
-             -->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:shadowColor="@color/grey"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:text="Select group photo"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/title2" />
-
-        <LinearLayout
+      <!-- <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:orientation="horizontal"
+           android:padding="10dp">
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:fontFamily="@font/lato"
+               android:text="Group name"
+               android:textSize="@dimen/title1" />
+           <EditText
+               android:id="@+id/display_name"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="10dp"
+               android:hint=""
+               android:padding="5dp"
+               android:textColor="@color/grey"
+               android:textSize="16dp"
+               />
+       </LinearLayout>-->
+      <com.rengwuxian.materialedittext.MaterialEditText
+          android:id="@+id/description"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Group Description"
+          android:textSize="@dimen/title1"
+          app:met_baseColor="@android:color/black"
+          app:met_floatingLabel="highlight"
+          android:maxLines="1"
+          app:met_primaryColor="?colorAccent"
+          app:met_singleLineEllipsis="true" />
+      <!--  <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:orientation="vertical">
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/display_name"
-                android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Group Name"
-                android:textSize="@dimen/title1"
-                app:met_baseColor="@android:color/black"
-                app:met_floatingLabel="highlight"
-                android:maxLines="1"
-                app:met_primaryColor="?colorAccent"
-                app:met_singleLineEllipsis="true" />
-
-            <!-- <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_gravity="center"
-                 android:gravity="center"
-                 android:orientation="horizontal"
-                 android:padding="10dp">
-
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:fontFamily="@font/lato"
-                     android:text="Group name"
-                     android:textSize="@dimen/title1" />
-
-                 <EditText
-                     android:id="@+id/display_name"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginStart="10dp"
-                     android:hint=""
-                     android:padding="5dp"
-                     android:textColor="@color/grey"
-                     android:textSize="16dp"
-
-                     />
-             </LinearLayout>-->
-            <com.rengwuxian.materialedittext.MaterialEditText
+                android:text="Description" />
+            <EditText
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Group Description"
-                android:textSize="@dimen/title1"
-                app:met_baseColor="@android:color/black"
-                app:met_floatingLabel="highlight"
-                android:maxLines="1"
-                app:met_primaryColor="?colorAccent"
-                app:met_singleLineEllipsis="true" />
-            <!--  <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center"
-                  android:layout_marginBottom="16dp"
-                  android:gravity="center"
-                  android:orientation="horizontal"
-                  android:padding="10dp">
-
-                  <TextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="Description" />
-
-                  <EditText
-                      android:id="@+id/description"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginStart="10dp"
-                      android:hint=""
-                      android:padding="5dp"
-                      android:textColor="@color/grey"
-                      android:textSize="16dp"
-
-                      />
-              </LinearLayout>-->
-
-            <!--
-            <Button
-                android:id="@+id/verify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/btn_back_stroke_red"
-                android:text="NEXT"
+                android:layout_marginStart="10dp"
+                android:hint=""
+                android:padding="5dp"
+                android:textColor="@color/grey"
+                android:textSize="16dp"
                 />
-                -->
+        </LinearLayout>-->
 
-        </LinearLayout>
-    </LinearLayout>
-
-    <!--  <Button
+      <!--
+      <Button
+          android:id="@+id/verify"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:id="@+id/send_request_btn"
-          android:text="send request"
+          android:layout_marginTop="30dp"
+          android:layout_marginBottom="30dp"
           android:background="@drawable/btn_back_stroke_red"
-          android:layout_below="@+id/main_layout"
-          android:padding="10dp"
-          android:layout_marginTop="-24dp"
-          android:layout_centerHorizontal="true" />-->
+          android:text="NEXT"
+          />
+          -->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/done_btn"
+    </LinearLayout>
+  </LinearLayout>
+
+  <!--  <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/send_request_btn"
+        android:text="send request"
+        android:background="@drawable/btn_back_stroke_red"
         android:layout_below="@+id/main_layout"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="-28dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="submit"
-        android:src="@drawable/done_right_click"
-        app:fabSize="normal" />
+        android:padding="10dp"
+        android:layout_marginTop="-24dp"
+        android:layout_centerHorizontal="true" />-->
+
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/done_btn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/main_layout"
+      android:layout_alignParentEnd="true"
+      android:layout_marginTop="-28dp"
+      android:layout_marginEnd="16dp"
+      android:contentDescription="submit"
+      android:src="@drawable/done_right_click"
+      app:fabSize="normal" />
 
 
 </RelativeLayout>

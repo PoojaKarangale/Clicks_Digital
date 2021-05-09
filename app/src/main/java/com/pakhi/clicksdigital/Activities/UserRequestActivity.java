@@ -30,59 +30,59 @@ import java.util.List;
 
 public class UserRequestActivity extends AppCompatActivity {
 
-    FirebaseDatabaseInstance rootRef;
+  FirebaseDatabaseInstance rootRef;
   //  String                   groupId, groupName;
-    private RecyclerView       recyclerView;
-    private UserRequestAdapter userRequestAdapter;
+  private RecyclerView       recyclerView;
+  private UserRequestAdapter userRequestAdapter;
   //  private List<User_request> user_requests  = new ArrayList<>();
-    private List<String>       requestingUsers = new ArrayList<>();
-    ImageView cross;
+  private List<String>       requestingUsers = new ArrayList<>();
+  ImageView cross;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_request);
-        cross = findViewById(R.id.close_post);
-        rootRef=FirebaseDatabaseInstance.getInstance();
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_user_request);
+    cross = findViewById(R.id.close_post);
+    rootRef=FirebaseDatabaseInstance.getInstance();
 
-        recyclerView=findViewById(R.id.recycler_requesting_users);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    recyclerView=findViewById(R.id.recycler_requesting_users);
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         /* userRequestAdapter = new UserRequestAdapter(getApplicationContext(), user_requests);
         recyclerView.setAdapter(userRequestAdapter);*/
-        userRequestAdapter=new UserRequestAdapter(getApplicationContext(), requestingUsers);
-        recyclerView.setAdapter(userRequestAdapter);
+    userRequestAdapter=new UserRequestAdapter(getApplicationContext(), requestingUsers);
+    recyclerView.setAdapter(userRequestAdapter);
 
-        //showRequestingUsers();
-        readRequestingUsersId();
-        cross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    //showRequestingUsers();
+    readRequestingUsersId();
+    cross.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        finish();
+      }
+    });
 
-    }
+  }
 
-    private void readRequestingUsersId() {
-        DatabaseReference reference=rootRef.getUserRequestsRef();
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                requestingUsers.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    requestingUsers.add(snapshot.getKey());
-                }
-                userRequestAdapter.notifyDataSetChanged();
-            }
+  private void readRequestingUsersId() {
+    DatabaseReference reference=rootRef.getUserRequestsRef();
+    reference.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        requestingUsers.clear();
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+          requestingUsers.add(snapshot.getKey());
+        }
+        userRequestAdapter.notifyDataSetChanged();
+      }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+      @Override
+      public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-    }
+      }
+    });
+  }
 
   /*  private void showRequestingUsers() {
         DatabaseReference reference=rootRef.getUserRequestsRef();
@@ -96,40 +96,38 @@ public class UserRequestActivity extends AppCompatActivity {
                 }
                 userRequestAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }*/
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        updateUserStatus(Const.online);
-    }
+  @Override
+  protected void onStart() {
+    super.onStart();
+    updateUserStatus(Const.online);
+  }
 
-    private void updateUserStatus(String state) {
-        String saveCurrentTime, saveCurrentDate;
+  private void updateUserStatus(String state) {
+    String saveCurrentTime, saveCurrentDate;
 
-        Calendar calendar=Calendar.getInstance();
+    Calendar calendar=Calendar.getInstance();
 
-        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate=currentDate.format(calendar.getTime());
+    SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
+    saveCurrentDate=currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        saveCurrentTime=currentTime.format(calendar.getTime());
+    SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
+    saveCurrentTime=currentTime.format(calendar.getTime());
 
-        HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put(Const.time, saveCurrentTime);
-        onlineStateMap.put(Const.date, saveCurrentDate);
-        onlineStateMap.put(Const.state, state);
-        SharedPreference pref=SharedPreference.getInstance();
-        String currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+    HashMap<String, Object> onlineStateMap=new HashMap<>();
+    onlineStateMap.put(Const.time, saveCurrentTime);
+    onlineStateMap.put(Const.date, saveCurrentDate);
+    onlineStateMap.put(Const.state, state);
+    SharedPreference pref=SharedPreference.getInstance();
+    String currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
-        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.userState)
-                .updateChildren(onlineStateMap);
+    rootRef.getUserRef().child(currentUserId).child(ConstFirebase.userState)
+            .updateChildren(onlineStateMap);
 
-    }
+  }
 }

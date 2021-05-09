@@ -46,25 +46,25 @@ public class FullGalaryView extends AppCompatActivity {
         cross = findViewById(R.id.close_butt_gal);
         final FullScreenGallaryAdapter adapter = new FullScreenGallaryAdapter(FullGalaryView.this, images);
 
-            eventRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    images.clear();
-                    if (snapshot.exists()) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+        eventRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                images.clear();
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 //                        imageUrls.add(dataSnapshot.getValue().toString());
 //                        imageNames.add(dataSnapshot.getKey());
-                            images.add(new Image(dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
-                        }
+                        images.add(new Image(dataSnapshot.getKey(), dataSnapshot.getValue().toString()));
                     }
-                    adapter.notifyDataSetChanged();
                 }
+                adapter.notifyDataSetChanged();
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
+            }
+        });
 
 
         viewPager.setAdapter(adapter);

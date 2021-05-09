@@ -3,74 +3,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.GroupsFragment">
+    tools:context=".Fragment.GroupsFragment"
+    android:background="#E8F0FD">
 
-    <LinearLayout
-        android:id="@+id/join_group_layout"
+  <LinearLayout
+      android:id="@+id/join_group_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="36dp"
+      android:layout_gravity="center"
+      android:padding="@dimen/margine_sub"
+      android:background="@drawable/bg_rounded_white"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="36dp"
-        android:layout_gravity="center"
-        android:padding="@dimen/margine_sub"
-        android:background="@drawable/bg_rounded_white"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:fontFamily="@font/lato"
+        android:minLines="2"
+        android:textSize="@dimen/title2"
+        android:text="You have not joined any Discussion Groups yet"
+        android:textAlignment="center" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/lato"
-            android:minLines="2"
-            android:textSize="@dimen/title2"
-            android:text="You are not part of any group \nTo join group click here"
-            android:textAlignment="center" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Join the group"
-            android:textColor="@color/colorPrimary"
-            android:textAlignment="center"
-            android:padding="5dp"
-            android:fontFamily="@font/lato"
-            android:textSize="@dimen/title1" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_groups"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true" />
+        android:text="Join Groups"
+        android:textColor="@color/colorPrimary"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:fontFamily="@font/lato"
+        android:textSize="@dimen/title1" />
+  </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recycler_groups"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_marginStart="10dp"
+      android:layout_marginEnd="10dp"
+      android:scrollbarAlwaysDrawVerticalTrack="true" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_create_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/add"
-            android:visibility="gone" />
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_join_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/add"
-            android:visibility="gone" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_create_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/add"
+        android:visibility="gone" />
 
-    </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_join_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/add"
+        android:visibility="gone" />
+
+  </RelativeLayout>
 
 </FrameLayout>

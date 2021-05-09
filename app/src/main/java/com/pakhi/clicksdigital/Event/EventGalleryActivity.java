@@ -228,7 +228,7 @@ public class EventGalleryActivity extends AppCompatActivity {
         try {
             mbitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
         } catch (IOException e) {
-           // Log.i("The exception --- ", e.getMessage());
+            // Log.i("The exception --- ", e.getMessage());
         }
 
         BackGroundImageResize resize = new BackGroundImageResize(mbitmap);

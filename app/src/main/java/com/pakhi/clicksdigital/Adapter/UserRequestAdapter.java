@@ -18,6 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Profile.ProfileUserRequest;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -175,8 +176,9 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
      }
  */
     private void visitUsersProfile(String userId) {
-        Intent profileActivity = new Intent(mcontext, VisitProfileActivity.class);
+        Intent profileActivity = new Intent(mcontext, ProfileUserRequest.class);
         profileActivity.putExtra(Const.visitUser, userId);
+        profileActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mcontext.startActivity(profileActivity);
     }
 

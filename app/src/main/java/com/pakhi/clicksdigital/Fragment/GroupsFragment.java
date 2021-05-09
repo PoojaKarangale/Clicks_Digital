@@ -136,40 +136,40 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    String group_key=snapshot.getKey();
-                    //groupAdapter.notifyDataSetChanged();
-                    groups.clear();
-                    GroupRef.child(group_key).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()){
-                            Group group=dataSnapshot.getValue(Group.class);
+                        String group_key=snapshot.getKey();
+                        //groupAdapter.notifyDataSetChanged();
+                        groups.clear();
+                        GroupRef.child(group_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+                                    Group group=dataSnapshot.getValue(Group.class);
 
-                            groups.add(group);
-                                Collections.sort(groups, new Comparator<Group>() {
-                                    @Override
-                                    public int compare(Group o1, Group o2) {
-                                        if(o1.getTimestamp()<o2.getTimestamp()){
-                                            return 1;
+                                    groups.add(group);
+                                    Collections.sort(groups, new Comparator<Group>() {
+                                        @Override
+                                        public int compare(Group o1, Group o2) {
+                                            if(o1.getTimestamp()<o2.getTimestamp()){
+                                                return 1;
+                                            }
+                                            else return -1;
                                         }
-                                        else return -1;
-                                    }
-                                });
+                                    });
 
-                            groupAdapter.notifyDataSetChanged();
+                                    groupAdapter.notifyDataSetChanged();
 
 
-                            }}
+                                }}
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
-                }
-            }}
+                            }
+                        });
+                    }
+                }}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -183,7 +183,6 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                     gp=groups1.get(j);
                     groups1.set(j, groups1.get(j+1));
                     groups1.set(j+1, gp);
-
                 }
             }
         }*/
@@ -207,7 +206,6 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         }
     }
 /*
-
     @Override
     public void onStart() {
         super.onStart();
@@ -220,34 +218,27 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                 new FirebaseRecyclerAdapter<Group, GroupsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final GroupsViewHolder holder, int position, @NonNull Group model) {
-
                         final String groupId = getRef(position).getKey();
-
                         Log.d("GroupFragmentsTESTING", "bind----------------" + groupId);
                         GroupRef.child(groupId).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                                 final String image_url = snapshot.child(Const.IMAGE_URL).getValue().toString();
                                 final String group_name = snapshot.child(Const.GROUP_NAME).getValue().toString();
                                 holder.displayName.setText(group_name);
-
                                 Picasso.get()
                                         .load(image_url).placeholder(R.drawable.profile_image)
                                         .resize(120, 120)
                                         .into(holder.image_profile);
-
                                 Log.d("GroupFragmentsTESTING", "datachange----------------" + group_name);
                                 holder.image_profile.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         Intent fullScreenIntent = new Intent(v.getContext(), EnlargedImage.class);
                                         fullScreenIntent.putExtra(Const.IMAGE_URL, image_url);
-
                                         v.getContext().startActivity(fullScreenIntent);
                                     }
                                 });
-
                                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -258,16 +249,11 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                                     }
                                 });
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
-
-
                     }
-
                     @NonNull
                     @Override
                     public GroupsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -275,23 +261,18 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                         return new GroupsViewHolder(view);
                     }
                 };
-
         recyclerView.setAdapter(adapter);
         adapter.startListening();
-
     }
 */
 
  /*   private class GroupsViewHolder extends RecyclerView.ViewHolder {
         TextView displayName;
         CircleImageView image_profile;
-
         public GroupsViewHolder(@NonNull View itemView) {
             super(itemView);
             displayName = itemView.findViewById(R.id.display_name);
             image_profile = itemView.findViewById(R.id.image_profile);
-
-
         }
     }*/
 }

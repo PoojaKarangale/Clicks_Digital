@@ -33,6 +33,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
+import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -47,6 +48,8 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
     private List<Message> trendingTopis;
     int i;
     FirebaseDatabaseInstance rootRef;
+    SharedPreference pref;
+    String currentUserID;
     public HomePageTopicAdapter(Context mcontext, List<Message> trendingTopis) {
         this.mcontext=mcontext;
         this.trendingTopis=trendingTopis;
@@ -185,6 +188,10 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
         holder.publisherName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                pref = SharedPreference.getInstance();
+                currentUserID = pref.getData(SharedPreference.currentUserId, mcontext);
+
                 Intent intent = new Intent(mcontext, VisitProfileActivity.class);
                 intent.putExtra(Const.visitUser, m.getFrom());
                 mcontext.startActivity(intent);

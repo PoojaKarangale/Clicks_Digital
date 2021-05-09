@@ -37,7 +37,7 @@
             android:maxLines="1"
             android:text="Name"
             android:textColor="#212121"
-            android:textSize="14dp"
+            android:textSize="@dimen/sixteen"
             app:layout_constraintStart_toEndOf="@+id/image_profile"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,7 +50,7 @@
             android:paddingEnd="5dp"
             android:text="group description"
             android:textAlignment="textStart"
-            android:textSize="12sp"
+            android:textSize="@dimen/thirteen"
             android:visibility="gone" />
     </LinearLayout>
 

@@ -1,33 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GroupChat.ImageText"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#D4E3FB">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/action_bar_start"
+        android:gravity="start">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            android:layout_marginLeft="15dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/helvetica_bold"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/image_profile"
+            android:text="Upload Image"
+            android:textSize="16dp"
+            android:textColor="@color/white">
+
+        </TextView>
+
+    </androidx.appcompat.widget.Toolbar>
     <ImageView
         android:id="@+id/image_text"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:paddingTop="20dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:layout_below="@+id/bar"
+        android:layout_above="@id/myLinearLayout"
+        android:layout_marginVertical="15dp"
+        android:layout_marginHorizontal="15dp"
         />
-    <EditText
-        android:id="@+id/input_group_text"
+
+    <RelativeLayout
+        android:id="@+id/myLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="enter the text"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/send_message_back"
+        android:elevation="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
 
 
-    <Button
-        android:id="@+id/button_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send Message"
-        android:gravity="start"/>
+
+        <EditText
+            android:id="@+id/input_group_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@+id/attach_file_btn"
+            android:layout_toEndOf="@+id/raise_topic"
+            android:fontFamily="@font/segoe"
+            android:gravity="top|start"
+            android:hint="Type message here..."
+            android:backgroundTint="#43B7FD"
+            android:inputType="text|textMultiLine"
+            android:lines="8"
+            android:maxLines="10"
+            android:minLines="1"
+            android:padding="15dp"
+            android:scrollbars="vertical"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:textSize="12dp" />
 
 
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/button_image"
+            android:layout_width="22.4dp"
+            android:layout_height="19.19dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="15dp"
+            android:backgroundTint="@android:color/white"
+            android:src="@drawable/send_message" />
+
+
+    </RelativeLayout>
+
+
+
+
+
+</RelativeLayout>

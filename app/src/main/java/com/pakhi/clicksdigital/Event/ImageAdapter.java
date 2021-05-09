@@ -60,7 +60,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 Bundle args = new Bundle();
                 args.putSerializable("ARRAYLIST",(Serializable)images);
                 intent.putExtra("BUNDLE",args);
-
                 context.startActivity(intent);*/
                 Intent intent = new Intent(context, FullGalaryView.class);
                 intent.putExtra("position", position);

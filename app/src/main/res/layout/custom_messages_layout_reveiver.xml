@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rec_main"
     android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:layout_gravity="start"
@@ -12,8 +13,9 @@
     android:paddingLeft="10dp"
     android:paddingRight="11dp"
     android:paddingBottom="11dp"
-    android:backgroundTint="#FFEBE6"
-    android:background="@drawable/receiver_messages_layout">
+    android:layout_marginBottom="8dp"
+
+    android:background="@drawable/receiver_messages_layout_two">
 
     <TextView
         android:id="@+id/receiver_message_date_time"
@@ -32,23 +34,30 @@
         android:text="name"
         android:layout_gravity="start"
         android:textColor="#8BB4F3"
-        android:textSize="10dp" />
+        android:textSize="@dimen/fourteen" />
     <LinearLayout
         android:id="@+id/reply_main_receiver"
-        android:layout_width="180dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:background="@color/white">
+        android:backgroundTint="#FFEBE6"
+        android:background="@drawable/receiver_messages_layout">
         <TextView
             android:id="@+id/reply_message_sender_name_receiver"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:fontFamily="@font/segoe"
+            android:textColor="@color/primary_blue"
+            android:textSize="@dimen/fourteen"
             android:visibility="gone"/>
 
         <TextView
             android:id="@+id/reply_text_receiver"
             android:layout_width="wrap_content"
+            android:fontFamily="@font/segoe"
+            android:textColor="#212121"
+            android:textSize="@dimen/fifteen"
 
             android:layout_height="wrap_content"
             android:maxLines="2"
@@ -57,7 +66,7 @@
             />
         <LinearLayout
             android:id="@+id/reply_image_layout_receiver"
-            android:layout_width="180dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone"
@@ -75,6 +84,10 @@
                 android:id="@+id/reply_image_text_receiver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/segoe"
+                android:textColor="#212121"
+                android:textSize="@dimen/fifteen"
+
                 android:layout_marginLeft="10dp"
                 android:visibility="gone"
                 />
@@ -101,12 +114,11 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/reply_url_layout_receiver"
-            android:layout_width="200dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:orientation="horizontal"
             android:layout_gravity="end"
-            android:background="#92f0cf"
             android:padding="5dp">
             <ImageView
                 android:id="@+id/reply_url_image_receiver"
@@ -120,11 +132,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
+                android:fontFamily="@font/segoe"
+                android:textColor="#212121"
+                android:textSize="@dimen/fifteen"
+
                 android:visibility="gone"/>
             <TextView
                 android:id="@+id/reply_url_text_receiver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/segoe"
+                android:textColor="#212121"
+                android:textSize="@dimen/fifteen"
+
                 />
 
         </LinearLayout>
@@ -142,12 +162,12 @@
         android:textAlignment="gravity"
         android:textColor="#212121"
         android:textIsSelectable="true"
-        android:textSize="12dp"
+        android:textSize="@dimen/fifteen"
         android:layout_gravity="start"
         android:visibility="gone" />
     <LinearLayout
         android:id="@+id/layout_url_rec"
-        android:layout_width="200dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:orientation="vertical"
@@ -168,6 +188,7 @@
             android:fontFamily="@font/segoe"
             android:textStyle="bold"
             android:textColor="#212121"
+            android:textSize="@dimen/fifteen"
             android:layout_marginTop="2dp"/>
         <TextView
             android:id="@+id/desc_of_url_rec"
@@ -180,6 +201,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:textSize="@dimen/fifteen"
             android:fontFamily="@font/segoe"
             android:textColor="#212121"
             />
@@ -189,7 +211,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/segoe"
             android:textColor="#212121"
-            android:autoLink="web"/>
+            android:textSize="@dimen/fifteen"
+            android:autoLink="web"
+            android:textColorLink="#1768E7"/>
     </LinearLayout>
 
 

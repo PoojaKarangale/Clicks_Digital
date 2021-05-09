@@ -114,8 +114,10 @@ public class ChatsFragment extends Fragment {
                                         // after adding image uri to users database
                                     }
 
-                                    final String retName=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_NAME).getValue().toString();
-                                    final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_BIO).getValue().toString();
+                                    final String retName=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_NAME).getValue().toString()
+                                            +" "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.last_name).getValue().toString();
+                                    final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child("work_profession").getValue().toString()
+                                            +", "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child("company").getValue().toString();
 
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText(retStatus);

@@ -79,7 +79,8 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
             Glide.with(mcontext).load(groupMember.getImage_url())
                     .transform(new CenterCrop(), new RoundedCorners(10)).into(holder.profileImage);
             holder.userName.setText(groupMember.getUser_name());
-            holder.userStatus.setText(groupMember.getUser_bio());
+            String s = groupMember.getWork_profession()+", "+groupMember.getCompany();
+            holder.userStatus.setText(s);
             holder.is_admin.setVisibility(View.GONE);
             holder.profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override

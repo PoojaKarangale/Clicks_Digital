@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -130,6 +132,8 @@ public class GroupChatActivity extends AppCompatActivity {
     LinearLayout replyOnURLLayout;
     ImageView replyOnURLImage;
     TextView replyOnURLTitle, replyOnURLText;
+
+    String someTextFromRaiseTopic="";
 
 
 
@@ -249,6 +253,8 @@ public class GroupChatActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(message)) {
                     showToast("first write your message...");
+                    selectedMessageId="";
+                    typeOfSelectedMessage="";
                 } else {
 
                     String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
@@ -406,7 +412,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private void startTopicRaiseFagmentForResult() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
         /*builder.setTitle("Enter new Topic");*/
 
         LayoutInflater inflater = ((Activity) this).getLayoutInflater();
@@ -422,6 +428,7 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 requestForPremission();
                 popupMenuSettigns1();
+                someTextFromRaiseTopic=topic.getText().toString();
             }
         });
         // Set up the buttons
@@ -460,7 +467,6 @@ public class GroupChatActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
-
         builder.show();
 
 
@@ -741,6 +747,8 @@ public class GroupChatActivity extends AppCompatActivity {
 
         progressDialog.dismiss();
         replyingToMessage=false;
+        typeOfSelectedMessage="";
+        selectedMessageId="";
 
     }
 
@@ -1063,7 +1071,7 @@ public class GroupChatActivity extends AppCompatActivity {
                         intent.putExtra("flag", flag);
                         intent.putExtra("typeOfSelectedMessage", typeOfSelectedMessage);
                         intent.putExtra("selectedMessageId", selectedMessageId);
-
+                        intent.putExtra("someTextFromRaiseTopic", someTextFromRaiseTopic);
                         startActivity(intent);
                         finish();
                         //SaveMessageInfoToDatabase("image", uri.toString());

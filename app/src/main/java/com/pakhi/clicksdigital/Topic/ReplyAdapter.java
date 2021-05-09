@@ -11,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,11 +65,13 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.ViewHolder> 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    Picasso.get()
+                    Glide.with(mcontext)
                             .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue(String.class))
-                            .resize(120, 120)
+                            .transform(new CenterCrop(), new RoundedCorners(10))
                             .into(holder.profile_img);
-                    holder.name.setText(snapshot.child(ConstFirebase.USER_NAME).getValue().toString());
+                    String n = snapshot.child(ConstFirebase.USER_NAME).getValue().toString()
+                            +" " + snapshot.child(ConstFirebase.last_name).getValue().toString();
+                    holder.name.setText(n);
                     holder.name.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

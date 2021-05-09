@@ -12,9 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -51,10 +55,11 @@ public class ImageText extends AppCompatActivity {
     private ProgressDialog progressDialog;
     EditText textImage;
     ImageView image;
-    Button button;
+    ImageButton button;
     boolean notify=false;
     String name="";
     String typeOfSelectedMessage, selectedMessageId;
+    String someTextFromRaiseTopic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +72,7 @@ public class ImageText extends AppCompatActivity {
         flag=getIntent().getStringExtra("flag");
         typeOfSelectedMessage = getIntent().getStringExtra("typeOfSelectedMessage");
         selectedMessageId = getIntent().getStringExtra("selectedMessageId");
-
+        someTextFromRaiseTopic = getIntent().getStringExtra("someTextFromRaiseTopic");
 
         imgUri = Uri.parse(imageUri);
 
@@ -75,11 +80,12 @@ public class ImageText extends AppCompatActivity {
         image = findViewById(R.id.image_text);
         button = findViewById(R.id.button_image);
 
+        textImage.setText(someTextFromRaiseTopic);
 
         //image.setImageURI(Uri.parse(imageUri));
         Log.i("The image URi -----",imgUri.toString());
        // image.setImageURI(imgUri);
-        Picasso.get().load(imgUri).into(image);
+        Glide.with(getApplicationContext()).load(imgUri).transform(new CenterCrop(), new RoundedCorners(12)).into(image);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading Image");
         pref = SharedPreference.getInstance();

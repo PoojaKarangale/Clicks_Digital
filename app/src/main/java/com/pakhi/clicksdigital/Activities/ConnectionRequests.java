@@ -196,10 +196,8 @@ public class ConnectionRequests extends AppCompatActivity {
                                                                         "Accept",
                                                                         "Cancel"
                                                                 };
-
                                                         AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionRequests.this);
                                                         builder.setTitle(requestUserName  + "  Chat Request");
-
                                                         builder.setItems(options, new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialogInterface, int i)
@@ -348,10 +346,8 @@ public class ConnectionRequests extends AppCompatActivity {
                                                                 {
                                                                         "Cancel Chat Request"
                                                                 };
-
                                                         AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionRequests.this);
                                                         builder.setTitle("Already Sent Request");
-
                                                         builder.setItems(options, new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -433,7 +429,6 @@ public class ConnectionRequests extends AppCompatActivity {
 /*
             AcceptButton.setVisibility(View.VISIBLE);
             CancelButton.setVisibility(View.VISIBLE);
-
            */
         }
     }
