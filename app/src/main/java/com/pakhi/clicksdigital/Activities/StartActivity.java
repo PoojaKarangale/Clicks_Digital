@@ -43,6 +43,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
+import com.pakhi.clicksdigital.Utils.UserStateStatus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -171,7 +172,20 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        //finish();
+
+        Log.d("ACTIVITYSTATE","BACK PRESSED "+getClass().getName());
+
+        moveTaskToBack(true);
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
         finish();
+        //System.exit(0);
+        /*moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);*/
 
        /* if (viewPager.getCurrentItem() == 0) {
             if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
@@ -231,7 +245,6 @@ public class StartActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), "Since you are not admin, you don't have access to this part of the app", Toast.LENGTH_LONG).show();
             }
-
         }
 
         return true;
@@ -240,9 +253,9 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            updateUserStatus(Const.online);
-        }
+        Log.d("ACTIVITYSTATE","START"+getClass().getName());
+        UserStateStatus.setUserStatus(userID,Const.online);
+
         rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
             ArrayList<String> myList = new ArrayList<>();
 
@@ -250,7 +263,7 @@ public class StartActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snap : snapshot.getChildren()){
                     myList.add(snap.getKey());
-                                    }
+                }
                 //setFile(myList);
             }
 
@@ -266,7 +279,6 @@ public class StartActivity extends AppCompatActivity {
             try {
                 rootRef.getUserRef().child(str).child("groups").removeValue();
             }catch (Exception e){}
-
         }
     }
 
@@ -275,9 +287,9 @@ public class StartActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            updateUserStatus(Const.offline);
-        }
+        Log.d("ACTIVITYSTATE","DESTROY"+getClass().getName());
+        UserStateStatus.setUserStatus(userID,Const.offline);
+        System.exit(0);
     }
 
     private void VerifyUserExistance() {
@@ -297,7 +309,7 @@ public class StartActivity extends AppCompatActivity {
         });*/
     }
 
-    private void updateUserStatus(String state) {
+ /*   private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
 
         Calendar calendar=Calendar.getInstance();
@@ -315,8 +327,7 @@ public class StartActivity extends AppCompatActivity {
 
         rootRef.getUserRef().child(userID).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
-
-    }
+    }*/
 
     void requestForPremission() {
         //checking for permissions
@@ -331,7 +342,6 @@ public class StartActivity extends AppCompatActivity {
         } else {
             //when those permissions are already granted
         }
-
     }
 
     @Override
@@ -344,7 +354,6 @@ public class StartActivity extends AppCompatActivity {
                     )
             ) {
                 //permission granted
-
             } else {
                 //permission not granted
             }

@@ -118,6 +118,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                     int participants=(int) snapshot.getChildrenCount();
                     no_of_participants.setText("" + participants);
                 }
+                else {
+                    no_of_participants.setText("0");
+                }
             }
 
             @Override
@@ -345,6 +348,4 @@ public class EventDetailsActivity extends AppCompatActivity {
         browserIntent.setData(Uri.parse(event.getAddress()));
         startActivity(browserIntent);
     }
-
-
 }
