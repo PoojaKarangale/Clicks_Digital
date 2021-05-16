@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -87,6 +89,11 @@ public class EditEventActivity extends AppCompatActivity {
     private DatabaseReference        eventRef;
     private FirebaseDatabaseInstance rootRef;
     RadioButton online, offline, both, pay, free;
+
+    LinearLayout citylayout, linklayout, seatLayout, countryLayout;
+    CardView linkCard, seatCard;
+
+    EditText country;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +161,7 @@ public class EditEventActivity extends AppCompatActivity {
 
         venu=findViewById(R.id.venu);
         city=findViewById(R.id.city);
+        country=findViewById(R.id.country_loc_edit);
         address=findViewById(R.id.address);
         noOfSeats=findViewById(R.id.no_of_seats);
 
@@ -174,6 +182,8 @@ public class EditEventActivity extends AppCompatActivity {
         both = findViewById(R.id.offline_and_online);
         pay = findViewById(R.id.paidChip);
         free = findViewById(R.id.unpaidChip);
+
+        countryLayout = findViewById(R.id.country_layout);
     }
 
     private void loadData() {
@@ -183,6 +193,11 @@ public class EditEventActivity extends AppCompatActivity {
         description.setText(event.getDescription());
         venu.setText(event.getVenu());
         city.setText(event.getCity());
+
+        country.setText(event.getEventCountry());
+        Log.i("country", event.getEventCountry());
+
+
         address.setText(event.getAddress());
 
         choose_start_date.setText(event.getStartDate());
@@ -289,10 +304,11 @@ public class EditEventActivity extends AppCompatActivity {
                 Long timeStamp=selectedStartDate;
                 int totalFee=Integer.parseInt(total_fee.getText().toString());
                 int totalSeats=Integer.parseInt(noOfSeats.getText().toString());
+                String countryName = country.getText().toString();
                 final Event event;
                 event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type,
                         venuStr, cityStr, addressStr, timeStamp, startDate, endDate,
-                        startTime, endTime, payable, totalFee, currentUserId, totalSeats);
+                        startTime, endTime, payable, totalFee, currentUserId, totalSeats, countryName);
                 eventRef.child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

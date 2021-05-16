@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,6 +65,11 @@ public class VisitProfileActivity extends AppCompatActivity {
 
     Button block, unblock;
     NestedScrollView nestedScrollView;
+    RecyclerView certificateList;
+    TextView certfiText;
+    LinearLayout certificateLayout;
+    MyAdapter myAdapter;
+    TextView country, referredBy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +87,10 @@ public class VisitProfileActivity extends AppCompatActivity {
 
         nestedScrollView = findViewById(R.id.nestedScrollView2);
         final LinearLayout layout = findViewById(R.id.lay);
+
+        certificateLayout = findViewById(R.id.certification_layout);
+        certfiText = findViewById(R.id.certifications);
+        certificateList = findViewById(R.id.certificates_list);
 
 
 
@@ -106,6 +118,7 @@ public class VisitProfileActivity extends AppCompatActivity {
 
         initializeMsgRequestFields();
 
+
         userRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -114,6 +127,52 @@ public class VisitProfileActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext())
                             .load(user.getImage_url())
                             .into(profile_image);
+
+                    if (user.getUser_type().equals("admin")) {
+
+                        isProfileUserIsAdmin = true;
+
+                        if (currentUser.getUser_type().equals("admin")) {
+
+                            isVisterIsAdmin = true;
+
+                        }
+
+                        if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
+                            // make him admin btn set visible
+                            Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
+                            make_admin.setVisibility(View.VISIBLE);
+
+                        } else {
+
+                            make_admin.setVisibility(View.GONE);
+                        }
+
+                        if (isVisterIsAdmin && isProfileUserIsAdmin) {
+                            removeAdmin.setVisibility(View.VISIBLE);
+                        }
+                    }else {
+                        if (currentUser.getUser_type().equals("admin")) {
+
+                            isVisterIsAdmin = true;
+
+                        }
+
+                        if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
+                            // make him admin btn set visible
+                            Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
+                            make_admin.setVisibility(View.VISIBLE);
+
+                        } else {
+
+                            make_admin.setVisibility(View.GONE);
+                        }
+
+                        if (isVisterIsAdmin && isProfileUserIsAdmin) {
+                            removeAdmin.setVisibility(View.VISIBLE);
+                        }
+                    }
+
                     currentCompany.setText(dataSnapshot.child("company").getValue().toString());
                     city.setText(dataSnapshot.child("city").getValue().toString());
                     expectationsFromComm.setText(dataSnapshot.child("expectations_from_us").getValue().toString());
@@ -121,6 +180,12 @@ public class VisitProfileActivity extends AppCompatActivity {
                     bio.setText(dataSnapshot.child("user_bio").getValue().toString());
                     profession.setText(dataSnapshot.child("work_profession").getValue().toString());
 
+                    if(dataSnapshot.child("country").exists()){
+                        country.setText(dataSnapshot.child("country").getValue().toString());
+                    }
+                    if(dataSnapshot.child("referred_by").exists()){
+                        referredBy.setText(dataSnapshot.child("referred_by").getValue().toString());
+                    }
 
                     if (user.getUser_type().equals("admin")) {
                         isProfileUserIsAdmin = true;
@@ -130,10 +195,12 @@ public class VisitProfileActivity extends AppCompatActivity {
 
                         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
                             // make him admin btn set visible
+                            Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
                             make_admin.setVisibility(View.VISIBLE);
 
                         } else {
-
+                            Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
+                            Log.i("visitProfile", String.valueOf(isVisterIsAdmin));
                             make_admin.setVisibility(View.GONE);
                         }
 
@@ -213,7 +280,8 @@ public class VisitProfileActivity extends AppCompatActivity {
                     res.getString(5), res.getString(6), res.getString(7),
                     res.getString(8), res.getString(9), res.getString(10),
                     res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14));
+                    res.getString(14), res.getString(15), res.getString(16),
+                    res.getString(17), res.getString(18));
         }
     }
 
@@ -223,6 +291,7 @@ public class VisitProfileActivity extends AppCompatActivity {
         ContactsRef = rootRef.getContactRef();
         //   NotificationRef=FirebaseDatabase.getInstance().getReference().child("Notifications");
         senderUserID = currentUser.getUser_id();
+        Log.i("currentUserType", currentUser.getUser_type());
         receiverUserID = user_id;
 
         profile_image = findViewById(R.id.profile_img);
@@ -253,14 +322,17 @@ public class VisitProfileActivity extends AppCompatActivity {
         block = findViewById(R.id.block_contact);
         unblock = findViewById(R.id.unblock_contact);
 
+        country = findViewById(R.id.country_user);
+        referredBy = findViewById(R.id.tv_referred_by);
+
 
 
     }
 
     private void loadData() {
 
-        user_name_heading.setText(user.getUser_name());
-        user_name.setText(user.getUser_name());
+        user_name_heading.setText(user.getUser_name()+user.getLast_name());
+        user_name.setText(user.getUser_name()+user.getLast_name());
         gender.setText(user.getGender());
 
         if (user.getWork_profession().equals("")) {
@@ -286,6 +358,8 @@ public class VisitProfileActivity extends AppCompatActivity {
         } else {
             experience.setText(user.getExperiences());
         }
+
+
 
         loadCertification();
         socialMediaHandles();
@@ -323,16 +397,19 @@ public class VisitProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (certificates == null) {
-                    Toast.makeText(VisitProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(VisitProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    certificateList.setVisibility(View.GONE);
+                    certfiText.setText("No certificate provided");
                 } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("certificates", (Serializable) certificates);
-                    ShowCertificatesFragment gmapFragment = new ShowCertificatesFragment();
-                    gmapFragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, gmapFragment).commit();
-                   /* Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);*/
+                    LinearLayout certificationLayout = findViewById(R.id.certification_layout);
+                    certificationLayout.setVisibility(View.GONE);
+
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    certificateList.setLayoutManager(linearLayoutManager);
+
+
+                    myAdapter = new MyAdapter(certificates);
+                    certificateList.setAdapter(myAdapter);
                 }
             }
         });

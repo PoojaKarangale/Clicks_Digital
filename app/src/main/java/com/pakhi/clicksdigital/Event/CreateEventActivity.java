@@ -35,6 +35,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
@@ -102,6 +103,13 @@ public class CreateEventActivity extends AppCompatActivity {
     ArrayList<String> listOfCat1 = new ArrayList<>();
     String name;
     RadioButton on, off, both;
+    LinearLayout citylayout, linklayout, seatLayout, countryLayout;
+    CardView linkCard, seatCard;
+
+    EditText country;
+
+    int colorBlue = Color.parseColor("#43B7FD");
+    int colorRed = Color.parseColor("#FF704D");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,6 +241,8 @@ public class CreateEventActivity extends AppCompatActivity {
         calculateTotal=findViewById(R.id.calculateTotal);
         event_name=findViewById(R.id.event_name);
 
+        citylayout = findViewById(R.id.city_layout);
+
         fee_layout=findViewById(R.id.fee_layout);
         //unpaidChip=findViewById(R.id.unpaidChip);
         //paidChip=findViewById(R.id.paidChip);
@@ -245,6 +255,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         venu=findViewById(R.id.venu);
         city=findViewById(R.id.city);
+        country=findViewById(R.id.country_loc);
         address=findViewById(R.id.address);
         noOfSeats=findViewById(R.id.no_of_seats);
 
@@ -259,6 +270,13 @@ public class CreateEventActivity extends AppCompatActivity {
         on = findViewById(R.id.online);
         off= findViewById(R.id.off);
         both = findViewById(R.id.offline_and_online);
+
+        linklayout = findViewById(R.id.link_layout);
+        seatLayout = findViewById(R.id.seat_layout);
+        countryLayout = findViewById(R.id.country_layout);
+
+        linkCard = findViewById(R.id.link_card);
+        seatCard = findViewById(R.id.seat_card);
 
     }
 
@@ -399,10 +417,12 @@ public class CreateEventActivity extends AppCompatActivity {
         Long timeStamp=selectedStartDate;
         int totalFee=Integer.parseInt(total_fee.getText().toString());
         int totalSeats = Integer.parseInt(noOfSeats.getText().toString());
+        String countryName = country.getText().toString();
+        Log.i("countryName", countryName);
         Event event;
         event=new Event(eventKey, eventName, eventDescription, category,
                 picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp,
-                startDate, endDate, startTime, endTime, payable, totalFee, currentUserId, totalSeats);
+                startDate, endDate, startTime, endTime, payable, totalFee, currentUserId, totalSeats, countryName);
 
         eventRef.child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -412,46 +432,23 @@ public class CreateEventActivity extends AppCompatActivity {
                 finish();
             }
         });
-        eventRef.child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.startMonth).setValue(startMonth);
-        eventRef.child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.endMonth).setValue(endMonth);
+        //eventRef.child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.startMonth).setValue(startMonth);
+        //eventRef.child(eventKey).child(ConstFirebase.EventDetails).child(ConstFirebase.endMonth).setValue(endMonth);
 
         rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 name = snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
-                rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot snap : snapshot.getChildren()){
-                            if(snap.child(ConstFirebase.USER_DETAILS).exists()){
-                                if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userID).getValue().toString())){
-                                    //Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
-                                    String notificationKey = rootRef.getNotificationRef().push().getKey();
-
-                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
-                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
-                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
-                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("createEvent");
-
-                                }
+                send(name, eventKey, eventName);
                             }
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
+
 
 
        /* if(event.getEventType().equals(ConstFirebase.eventOnline)){
@@ -475,6 +472,36 @@ public class CreateEventActivity extends AppCompatActivity {
           });
 
       }*/
+
+    }
+
+    private void send(final String name, final String eventKey, final String eventName) {
+        rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    if(snap.child(ConstFirebase.USER_DETAILS).exists()){
+                        if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userID).getValue().toString())){
+                            Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
+                            String notificationKey = rootRef.getNotificationRef().push().getKey();
+
+                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
+                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
+                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
+                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("createEvent");
+
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
     }
 
@@ -596,7 +623,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.GONE);
-                address.setVisibility(View.GONE);
+                citylayout.setVisibility(View.GONE);
+                //address.setVisibility(View.GONE);
 
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
@@ -613,7 +641,7 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 event_type="Both";
-
+                citylayout.setVisibility(View.VISIBLE);
                 venu.setVisibility(View.VISIBLE);
                 city.setVisibility(View.VISIBLE);
                 address.setVisibility(View.VISIBLE);
@@ -762,7 +790,11 @@ public class CreateEventActivity extends AppCompatActivity {
                     event_type = Const.Online;
                     venu.setVisibility(View.VISIBLE);
                     city.setVisibility(View.GONE);
-                    address.setVisibility(View.GONE);
+                    citylayout.setVisibility(View.GONE);
+                    //address.setVisibility(View.GONE);
+                    countryLayout.setVisibility(View.GONE);
+
+
 
                 }
 
@@ -773,6 +805,9 @@ public class CreateEventActivity extends AppCompatActivity {
                     venu.setVisibility(View.VISIBLE);
                     city.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);
+                    citylayout.setVisibility(View.VISIBLE);
+                    countryLayout.setVisibility(View.VISIBLE);
+
 
                 }
 
@@ -783,6 +818,17 @@ public class CreateEventActivity extends AppCompatActivity {
                     venu.setVisibility(View.VISIBLE);
                     city.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);
+                    citylayout.setVisibility(View.VISIBLE);
+                    countryLayout.setVisibility(View.VISIBLE);
+
+                    /*linklayout.setBackgroundResource(R.drawable.set_profile_red);
+                    seatLayout.setBackgroundResource(R.drawable.set_profile_blue);
+
+                    linkCard.setCardBackgroundColor(colorRed);
+
+
+                    seatCard.setCardBackgroundColor(colorBlue);*/
+
 
                 }
 

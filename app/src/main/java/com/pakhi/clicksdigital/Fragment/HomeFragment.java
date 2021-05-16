@@ -352,8 +352,11 @@ public class HomeFragment extends Fragment {
         final Runnable Update = new Runnable() {
             @Override
             public void run() {
+                int si;
                 if (currentPage == images.size()) {
+
                     currentPage = 0;
+
                 }
                 mViewPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(currentPage++, true);

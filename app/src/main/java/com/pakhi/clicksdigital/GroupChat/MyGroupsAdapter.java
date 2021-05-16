@@ -1,14 +1,19 @@
 package com.pakhi.clicksdigital.GroupChat;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -99,7 +105,35 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
-                EnlargedImage.enlargeImage(group.getImage_url(), mcontext);
+                //EnlargedImage.enlargeImage(group.getImage_url(), mcontext);
+                Dialog builder = new Dialog(mcontext);
+                builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                builder.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        //nothing;
+                    }
+                });
+
+                ImageView imageView = new ImageView(mcontext);
+                Glide.with(mcontext).
+                        load(image_url[0]).
+                        transform(new CenterCrop(), new RoundedCorners(15)).into(imageView);
+                builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                        800,
+                        800));
+                builder.show();
+
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mcontext, LoadImage.class);
+                        intent.putExtra("image_url", image_url[0] );
+                        mcontext.startActivity(intent);
+                    }
+                });
             }
         });
         final String groupId=group.getGroupid();

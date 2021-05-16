@@ -207,6 +207,22 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        rootRef.getApprovedUserRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.child(messageSenderID).exists()){
+                    chatMessageLayout.setVisibility(View.GONE);
+                    blockLayout.setVisibility(View.VISIBLE);
+                    blockText.setText("You can't communicate with this person as your profile is not approved yet");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         DatabaseReference databaseReference = rootRef.getUserRef().child(messageReceiverID);
         databaseReference.child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override

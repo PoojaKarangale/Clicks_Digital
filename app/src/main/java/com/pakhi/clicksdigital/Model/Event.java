@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Event implements Serializable, Comparable<Event> {
 
+    String country;
     String  eventId;
     String  eventName;
     String  description;
@@ -27,7 +28,7 @@ public class Event implements Serializable, Comparable<Event> {
     public Event() {
     }
 
-    public Event(String eventKey, String eventName, String eventDescription,
+    /*public Event(String eventKey, String eventName, String eventDescription,
                  String category, String picImageUrlString, String event_type, String venuStr,
                  String cityStr, String addressStr, Long timeStamp, String startDate, String endDate,
                  String startTime, String endTime, boolean payable, int totalFee, String creater_id, int totalSeats) {
@@ -51,7 +52,33 @@ public class Event implements Serializable, Comparable<Event> {
         this.creater_id=creater_id;
         this.totalSeats=totalSeats;
 
-    }
+    }*/
+    public Event(String eventKey, String eventName, String eventDescription,
+                 String category, String picImageUrlString, String event_type, String venuStr,
+                 String cityStr, String addressStr, Long timeStamp, String startDate, String endDate,
+                 String startTime, String endTime, boolean payable, int totalFee, String creater_id, int totalSeats, String country) {
+
+        this.eventId=eventKey;
+        this.eventName=eventName;
+        this.description=eventDescription;
+        this.event_image=picImageUrlString;
+        this.venu=venuStr;
+        this.city=cityStr;
+        this.address=addressStr;
+        this.timeStamp=timeStamp;
+        this.startDate=startDate;
+        this.endDate=endDate;
+        this.startTime=startTime;
+        this.endTime=endTime;
+        this.eventType=event_type;
+        this.payable=payable;
+        this.totalFee=totalFee;
+        this.category=category;
+        this.creater_id=creater_id;
+        this.totalSeats=totalSeats;
+        this.country = country;
+
+    }/*
 
     public Event(String eventKey, String eventName, String eventDescription, String category, String picImageUrlString, String event_type, String addressStr, Long timeStamp, String startDate, String endDate, String startTime, String endTime, boolean payable, int totalFee, String creater_id) {
 
@@ -70,8 +97,13 @@ public class Event implements Serializable, Comparable<Event> {
         this.totalFee=totalFee;
         this.category=category;
         this.creater_id=creater_id;
+    }*/
+    public String getEventCountry(){
+        return country;
     }
+    public void setEventCountry(){this.country=country;}
     public int getTotalSeats(){return totalSeats; }
+    public void setTotalSeats(){this.totalSeats=totalSeats;}
 
     public String getEventId() {
         return eventId;

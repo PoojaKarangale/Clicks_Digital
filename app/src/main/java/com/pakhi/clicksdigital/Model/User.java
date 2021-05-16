@@ -15,6 +15,8 @@ public class User implements Serializable {
     private String  expectations_from_us, experiences, gender, number, offer_to_community,
             speaker_experience, user_bio, user_email, user_name, user_type, weblink, work_profession;
 
+    private String country, referral;
+
     public User() {
     }
 
@@ -30,7 +32,8 @@ public class User implements Serializable {
     public User(String userid, String full_name_str, String bio_str, String image_url,
                 String user_type, String city, String expectations_from_us, String experiences,
                 String gender, String number, String offer_to_community, String speaker_experience,
-                String user_email, String weblink, String work_profession, String last_name, String company) {
+                String user_email, String weblink, String work_profession, String last_name, String company,
+                String country, String referral) {
         this.image_url=image_url;
         this.user_id=userid;
         this.city=city;
@@ -48,6 +51,32 @@ public class User implements Serializable {
         this.work_profession=work_profession;
         this.last_name=last_name;
         this.company=company;
+        this.country=country;
+        this.referral=referral;
+    }
+    public User(String userid, String full_name_str, String bio_str, String image_url,
+                String user_type, String city, String expectations_from_us, String experiences,
+                String gender, String number, String offer_to_community, String speaker_experience,
+                String user_email, String weblink, String work_profession, String last_name, String company
+                ) {
+        this.image_url=image_url;
+        this.user_id=userid;
+        this.city=city;
+        this.expectations_from_us=expectations_from_us;
+        this.experiences=experiences;
+        this.gender=gender;
+        this.number=number;
+        this.offer_to_community=offer_to_community;
+        this.speaker_experience=speaker_experience;
+        this.user_bio=bio_str;
+        this.user_email=user_email;
+        this.user_name=full_name_str;
+        this.user_type=user_type;
+        this.weblink=weblink;
+        this.work_profession=work_profession;
+        this.last_name=last_name;
+        this.company=company;
+
     }
 
     public User(String userid, String full_name_str, String bio_str, String image_url,
@@ -69,6 +98,12 @@ public class User implements Serializable {
         this.user_type=user_type;
         this.weblink=weblink;
         this.work_profession=work_profession;
+    }
+    public String getCountry(){
+        return country;
+    }
+    public String getReferal(){
+        return referral;
     }
 
     public String getLast_name() {

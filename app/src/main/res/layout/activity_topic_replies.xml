@@ -130,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:fontFamily="@font/segoe"
-                        android:textColor="@color/white"/>
+                        android:textColor="#212121"/>
                     <ImageView
                         android:id="@+id/reply_image"
                         android:layout_width="200dp"

@@ -147,6 +147,7 @@ public class AddNewCertificateActivity extends AppCompatActivity {
                 case PICK_PDF_CODE:
                     if (data.getData() != null) {
                         uploadFile(data.getData());
+                        choose_certificate.setText("Selected");
                     }
                     break;
                 default:

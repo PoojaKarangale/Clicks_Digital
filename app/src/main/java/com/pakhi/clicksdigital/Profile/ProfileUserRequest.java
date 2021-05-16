@@ -1,11 +1,17 @@
 package com.pakhi.clicksdigital.Profile;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +43,8 @@ import com.squareup.picasso.Picasso;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProfileUserRequest extends AppCompatActivity {
 
@@ -54,6 +64,12 @@ public class ProfileUserRequest extends AppCompatActivity {
     Button cancel, accept;
     String req;
     LinearLayout acceptLayout;
+    RecyclerView certificateList;
+    TextView certfiText;
+    LinearLayout certificateLayout;
+    MyAdapter myAdapter;
+
+    TextView country, referredBy, company, city, expFromComm, expFromMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +87,9 @@ public class ProfileUserRequest extends AppCompatActivity {
         acceptMessage = findViewById(R.id.accept_message);
         acceptLayout = findViewById(R.id.accept_layout);
 
+        certificateLayout = findViewById(R.id.certification_layout);
+        certfiText = findViewById(R.id.certifications);
+        certificateList = findViewById(R.id.certificates_list);
 
         userRefAppCan.addValueEventListener(new ValueEventListener() {
             @Override
@@ -129,6 +148,12 @@ public class ProfileUserRequest extends AppCompatActivity {
                             removeAdmin.setVisibility(View.VISIBLE);
                         }
                     }
+                    if(dataSnapshot.child("country").exists()){
+                        country.setText(dataSnapshot.child("country").getValue().toString());
+                    }
+                    if(dataSnapshot.child("referred_by").exists()){
+                        referredBy.setText(dataSnapshot.child("referred_by").getValue().toString());
+                    }
                     loadData();
 
                 }
@@ -184,6 +209,7 @@ public class ProfileUserRequest extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Dialog Profile has been approved. Feel free to join groups, attend or events and share knowledge while you learn from the community. Stay Hungry, Stay Foolish!", "Profile Request Status", "accepted","");
+                acceptLayout.setVisibility(View.GONE);
                 rootRef.getApprovedUserRef().child(user.getUser_id()).setValue(true);
                 rootRef.getUserRequestsRef().child(user.getUser_id()).removeValue();
             }
@@ -191,12 +217,54 @@ public class ProfileUserRequest extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Notification.sendPersonalNotifiaction(senderUserID, user_id,"Your Dialog Profile has not been approved as per the community guidelines set by the Admin. You can apply again after 6 months.  You can still access the Events section and keep learning through the community.", "Profile Request Status", "rejected","");
-                rootRef.getUserRequestsRef().child(user.getUser_id()).removeValue();
+
+                boolean cancelledOrNot = sendCancelReason();
+                if(cancelledOrNot){
+                    acceptLayout.setVisibility(View.GONE);
+                    //acceptMessage.setVisibility(View.VISIBLE);
+                }
+
 
             }
         });
         // ManageChatRequests();
+    }
+
+    private boolean sendCancelReason() {
+        final boolean[] cancelledOrNot = {false};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
+        /*builder.setTitle("Enter new Topic");*/
+
+        LayoutInflater inflater = ((Activity) this).getLayoutInflater();
+        View v = inflater.inflate(R.layout.fragment_get_cancel, null);
+        final EditText cancelMessage = v.findViewById(R.id.cancelText);
+        cancelMessage.setText("Your Dialog Profile has not been approved because ");
+        builder.setView(v);
+
+
+        // Set up the buttons
+        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+
+                String maaa=cancelMessage.getText().toString();
+                Notification.sendPersonalNotifiaction(senderUserID, user_id,maaa+". You can apply again after 6 months.  You can still access the Events section and keep learning through the community.", "Profile Request Status", "rejected","");
+                rootRef.getUserRequestsRef().child(user.getUser_id()).removeValue();
+                //cancelledOrNot[0] =true;
+                acceptLayout.setVisibility(View.GONE);
+            }
+        });
+
+        builder.setNegativeButton("Do it later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.cancel();
+            }
+        });
+        builder.show();
+        return cancelledOrNot[0];
     }
 
     private void getCurrentUserFromDb() {
@@ -235,21 +303,40 @@ public class ProfileUserRequest extends AppCompatActivity {
         make_admin = findViewById(R.id.make_admin);
         removeAdmin = findViewById(R.id.remove_admin);
         message_btn = findViewById(R.id.message_btn);
+        message_btn.setVisibility(View.GONE);
 
         Current_State = "new";
 
         cancel = findViewById(R.id.request_cancel_btn);
         accept = findViewById(R.id.request_accept_btn);
 
+        country = findViewById(R.id.country_user);
+        referredBy = findViewById(R.id.tv_referred_by);
+        company = findViewById(R.id.current_company);
+        city = findViewById(R.id.city_user);
+        expFromComm =findViewById(R.id.exp_from_comm);
+        expFromMe=findViewById(R.id.exp_from_us);
+
 
     }
 
     private void loadData() {
 
-        user_name_heading.setText(user.getUser_name());
-        user_name.setText(user.getUser_name());
-        gender.setText(user.getGender());
 
+        String fullName = user.getUser_name()+user.getLast_name();
+        user_name_heading.setText(fullName);
+        user_name.setText(fullName);
+        gender.setText(user.getGender());
+        company.setText(user.getCompany());
+        city.setText(user.getCity());
+        expFromMe.setText(user.getOffer_to_community());
+        expFromComm.setText(user.getExpectations_from_us());
+        try {
+            country.setText(user.getCountry());
+            referredBy.setText(user.getReferal());
+        }catch (Exception e){
+
+        }
         if (user.getWork_profession().equals("")) {
             profession.setText("No Profession Provided");
         } else {
@@ -286,16 +373,18 @@ public class ProfileUserRequest extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (certificates == null) {
-                    Toast.makeText(ProfileUserRequest.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    certificateList.setVisibility(View.GONE);
+                    certfiText.setText("No certificate provided");
                 } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("certificates", (Serializable) certificates);
-                    ShowCertificatesFragment gmapFragment = new ShowCertificatesFragment();
-                    gmapFragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, gmapFragment).commit();
-                   /* Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);*/
+                    LinearLayout certificationLayout = findViewById(R.id.certification_layout);
+                    certificationLayout.setVisibility(View.GONE);
+
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    certificateList.setLayoutManager(linearLayoutManager);
+
+
+                    myAdapter = new MyAdapter(certificates);
+                    certificateList.setAdapter(myAdapter);
                 }
             }
         });
@@ -305,7 +394,7 @@ public class ProfileUserRequest extends AppCompatActivity {
         final List<Certificates> certificates = new ArrayList<Certificates>();
         //Loading the data
 
-        DatabaseReference databaseReference = userRef.child(user_id).child("cerificates");
+        DatabaseReference databaseReference = userRef.child(user_id).child("cerificate");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

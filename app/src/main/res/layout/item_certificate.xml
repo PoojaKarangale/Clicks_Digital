@@ -7,6 +7,7 @@
     android:layout_marginStart="@dimen/margine_main"
     android:layout_marginEnd="@dimen/margine_main"
     android:id="@+id/certificate_back"
+    android:backgroundTint="#E8F0FD"
     android:background="@drawable/set_profile_blue">
 
     <TextView

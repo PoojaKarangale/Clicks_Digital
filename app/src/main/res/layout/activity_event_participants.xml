@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Event.EventParticipantsActivity">
+    tools:context=".Event.EventParticipantsActivity"
+    android:background="#E8F0FD">
 
 
-  <!--  <com.google.android.material.appbar.AppBarLayout
+   <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,8 +16,31 @@
             android:id="@+id/find_friends_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"></androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>-->
+            android:background="@drawable/action_bar_start">
+          <RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/back_"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/back"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Event Participants"
+                android:layout_toEndOf="@+id/back_"
+                android:textSize="@dimen/sixteen"
+                android:fontFamily="@font/helvetica_bold"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"/>
+          </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/user_recycler_list"
@@ -24,6 +48,7 @@
       android:layout_height="match_parent"
       android:layout_below="@+id/bar"
       android:layout_marginStart="10dp"
+      android:layout_marginTop="20dp"
       android:layout_marginEnd="@dimen/margine_main" />
 
 

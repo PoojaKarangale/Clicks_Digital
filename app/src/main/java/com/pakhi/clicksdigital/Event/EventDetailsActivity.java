@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Layout;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.pakhi.clicksdigital.R;
@@ -69,6 +71,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     boolean registered  = false;
     TextView time_date_text2;
 
+    TextView country;
+
 
     public static String timestampToDateString(long timestamp) {
        /* SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -109,8 +113,23 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         loadData();
 
+        currentEventRef.child("Participants").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    int participants=(int) snapshot.getChildrenCount();
+                    no_of_participants.setText("" + participants);
+                }
+                else {
+                    no_of_participants.setText("0");
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
 
         organiser_name.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,12 +139,20 @@ public class EventDetailsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        no_of_participants.setOnClickListener(new View.OnClickListener() {
+
+        ImageButton logo_participant = findViewById(R.id.logo_participant);
+        logo_participant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendUserToEventsParticipants();
             }
         });
+        /*no_of_participants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendUserToEventsParticipants();
+            }
+        });*/
         join_event_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,8 +325,10 @@ public class EventDetailsActivity extends AppCompatActivity {
             //txtLoc.setVisibility(View.GONE);
             //location.setVisibility(View.GONE);
         } else {
-            location_city.setText(event.getVenu() + ", " + event.getCity());
+            //location_city.setText(event.getVenu() + ", " + event.getCity());
+            location_city.setText(event.getVenu()+", "+event.getCity()+", "+event.getEventCountry());
             //txtLoc.setVisibility(View.VISIBLE);
+
             location.setVisibility(View.VISIBLE);
         }
 
@@ -323,6 +352,4 @@ public class EventDetailsActivity extends AppCompatActivity {
         browserIntent.setData(Uri.parse(event.getAddress()));
         startActivity(browserIntent);
     }
-
-
 }

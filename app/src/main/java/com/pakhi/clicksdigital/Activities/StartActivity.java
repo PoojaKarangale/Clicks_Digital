@@ -43,6 +43,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
+import com.pakhi.clicksdigital.Utils.UserStateStatus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class StartActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "url image ---- " + url, Toast.LENGTH_LONG).show();
                 Log.i("url --- ", url);
             }
-//"https://firebasestorage.googleapis.com/v0/b/clicksdigital-ad067.appspot.com/o/User_Media%2FClhjzMSjPodgZbv7QxbrzCYKgCF3%2FPhotos%2FProfileImage%2Fprofile_image?alt=media&token=bf6deedd-2540-4cdb-88ae-1faa2d7e12ee"
+            //"https://firebasestorage.googleapis.com/v0/b/clicksdigital-ad067.appspot.com/o/User_Media%2FClhjzMSjPodgZbv7QxbrzCYKgCF3%2FPhotos%2FProfileImage%2Fprofile_image?alt=media&token=bf6deedd-2540-4cdb-88ae-1faa2d7e12ee"
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -171,7 +172,26 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        finish();
+        //finish();
+
+        if(tabLayout.getSelectedTabPosition()!=0){
+            tabLayout.getTabAt(0).select();
+        }else {
+            finish();
+        }
+
+        /*Log.d("ACTIVITYSTATE","BACK PRESSED "+getClass().getName());
+
+        moveTaskToBack(true);
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory( Intent.CATEGORY_HOME );
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
+        finish();*/
+        //System.exit(0);
+        /*moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);*/
 
        /* if (viewPager.getCurrentItem() == 0) {
             if (viewPagerAdapter.getItem(0) instanceof HomeFragment) {
@@ -198,8 +218,13 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        if(!user_type.equals("admin")){
 
-        getMenuInflater().inflate(R.menu.options_menu, menu);
+            getMenuInflater().inflate(R.menu.options_menu, menu);
+            menu.getItem(1).setVisible(false);
+        }else {
+            getMenuInflater().inflate(R.menu.options_menu, menu);
+        }
 
         return true;
     }
@@ -209,7 +234,9 @@ public class StartActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.join_new_groups) {
-            startActivity(new Intent(this, JoinGroupActivity.class));
+            Intent joingroupIntent = new Intent(this, JoinGroupActivity.class);
+            //joingroupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(joingroupIntent);
         }
 
         if (item.getItemId() == R.id.settings) {
@@ -220,6 +247,7 @@ public class StartActivity extends AppCompatActivity {
 
             ShareApp.shareApp(getApplicationContext());
         }
+
         if (item.getItemId() == R.id.user_request) {
 
             //  Log.d("User_type","................"+user_type);
@@ -228,7 +256,6 @@ public class StartActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), "Since you are not admin, you don't have access to this part of the app", Toast.LENGTH_LONG).show();
             }
-
         }
 
         return true;
@@ -237,9 +264,9 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            updateUserStatus(Const.online);
-        }
+        Log.d("ACTIVITYSTATE","START"+getClass().getName());
+        UserStateStatus.setUserStatus(userID,Const.online);
+
         rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
             ArrayList<String> myList = new ArrayList<>();
 
@@ -247,7 +274,7 @@ public class StartActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snap : snapshot.getChildren()){
                     myList.add(snap.getKey());
-                                    }
+                }
                 //setFile(myList);
             }
 
@@ -263,7 +290,6 @@ public class StartActivity extends AppCompatActivity {
             try {
                 rootRef.getUserRef().child(str).child("groups").removeValue();
             }catch (Exception e){}
-
         }
     }
 
@@ -272,9 +298,9 @@ public class StartActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            updateUserStatus(Const.offline);
-        }
+        Log.d("ACTIVITYSTATE","DESTROY"+getClass().getName());
+        UserStateStatus.setUserStatus(userID,Const.offline);
+        System.exit(0);
     }
 
     private void VerifyUserExistance() {
@@ -294,26 +320,20 @@ public class StartActivity extends AppCompatActivity {
         });*/
     }
 
-    private void updateUserStatus(String state) {
+ /*   private void updateUserStatus(String state) {
         String saveCurrentTime, saveCurrentDate;
-
         Calendar calendar=Calendar.getInstance();
-
         SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
         saveCurrentDate=currentDate.format(calendar.getTime());
-
         SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
         saveCurrentTime=currentTime.format(calendar.getTime());
-
         HashMap<String, Object> onlineStateMap=new HashMap<>();
         onlineStateMap.put(Const.time, saveCurrentTime);
         onlineStateMap.put(Const.date, saveCurrentDate);
         onlineStateMap.put(Const.state, state);
-
         rootRef.getUserRef().child(userID).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);
-
-    }
+    }*/
 
     void requestForPremission() {
         //checking for permissions
@@ -328,7 +348,6 @@ public class StartActivity extends AppCompatActivity {
         } else {
             //when those permissions are already granted
         }
-
     }
 
     @Override
@@ -341,7 +360,6 @@ public class StartActivity extends AppCompatActivity {
                     )
             ) {
                 //permission granted
-
             } else {
                 //permission not granted
             }

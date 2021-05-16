@@ -93,7 +93,6 @@
                         app:cardBackgroundColor="#43B7FD"
                         android:layout_marginLeft="10dp"
                         android:layout_gravity="center_vertical"
-
                         >
 
                         <ImageView
@@ -355,6 +354,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/city_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -411,8 +411,8 @@
                             </LinearLayout>
 
                         </LinearLayout>
-
                         <LinearLayout
+                            android:id="@+id/country_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -420,9 +420,69 @@
                             android:background="@drawable/set_profile_red"
                             >
                             <androidx.cardview.widget.CardView
+                                android:id="@+id/link_card"
                                 android:layout_width="31dp"
                                 android:layout_height="30dp"
                                 app:cardBackgroundColor="#FF704D"
+                                app:cardCornerRadius="50dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_gravity="center_vertical">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/location"/>
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Country"
+                                    android:layout_marginLeft="10dp"
+                                    android:fontFamily="@font/segoe"
+                                    android:textSize="@dimen/thirteen"
+                                    android:textColor="#615d5c"/>
+
+                                <EditText
+                                    android:id="@+id/country_loc_edit"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="7dp"
+                                    android:fontFamily="@font/segoe"
+                                    android:hint="Enter Country Name"
+                                    android:inputType="text"
+                                    android:maxLines="3"
+                                    android:textAllCaps="false"
+                                    android:textColor="#212121"
+                                    android:textSize="@dimen/fourteen"
+                                    android:textStyle="bold"
+                                    android:backgroundTint="#FFEBE6"
+                                    />
+
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/link_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/set_profile_blue"
+                            >
+                            <androidx.cardview.widget.CardView
+
+                                android:layout_width="31dp"
+                                android:layout_height="30dp"
+                                app:cardBackgroundColor="#43B7FD"
                                 app:cardCornerRadius="50dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_gravity="center_vertical">
@@ -460,7 +520,7 @@
                                     android:textColor="#212121"
                                     android:textSize="@dimen/fourteen"
                                     android:textStyle="bold"
-                                    android:backgroundTint="#FFEBE6"
+                                    android:backgroundTint="#D4E3FB"
                                     />
 
 
@@ -470,16 +530,18 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/seat_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:layout_marginTop="10dp"
-                            android:background="@drawable/set_profile_blue"
+                            android:background="@drawable/set_profile_red"
                             >
                             <androidx.cardview.widget.CardView
+                                android:id="@+id/seat_card"
                                 android:layout_width="31dp"
                                 android:layout_height="30dp"
-                                app:cardBackgroundColor="#43B7FD"
+                                app:cardBackgroundColor="#FF704D"
                                 app:cardCornerRadius="50dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_gravity="center_vertical">
@@ -517,7 +579,7 @@
                                     android:textColor="#212121"
                                     android:textSize="@dimen/fourteen"
                                     android:textStyle="bold"
-                                    android:backgroundTint="#D4E3FB"
+                                    android:backgroundTint="#FFEBE6"
                                     />
 
 

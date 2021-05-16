@@ -88,5 +88,9 @@ dependencies {
     //roundedImage
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    compile 'com.github.chathuralakmal:AndroidImagePopup:1.2.2'
+
 
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/cancelText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_toStartOf="@+id/attach_file_btn"
+        android:background="@drawable/flag_transparent"
+        android:fontFamily="@font/lato"
+        android:gravity="top|start"
+        android:hint="Write your note here"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:maxLength="300"
+        android:maxLines="10"
+        android:minLines="4"
+
+        android:padding="15dp"
+        android:scrollbars="vertical"
+        android:textSize="@dimen/fifteen"
+         />
+
+</LinearLayout>

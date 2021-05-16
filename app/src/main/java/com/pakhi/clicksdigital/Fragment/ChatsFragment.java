@@ -1,13 +1,20 @@
 package com.pakhi.clicksdigital.Fragment;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.pakhi.clicksdigital.Activities.FindFriendsActivity;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Notifications.Token;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
@@ -35,6 +44,7 @@ import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -47,6 +57,7 @@ public class ChatsFragment extends Fragment {
     private DatabaseReference ChatsRef, UsersRef;
     private FirebaseAuth mAuth;
     private String       currentUserID="";
+    FirebaseDatabaseInstance rootRef;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -57,6 +68,8 @@ public class ChatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         PrivateChatsView=inflater.inflate(R.layout.fragment_chat, container, false);
+
+        rootRef=FirebaseDatabaseInstance.getInstance();
 
         mAuth=FirebaseAuth.getInstance();
         currentUserID=mAuth.getCurrentUser().getUid();
@@ -75,6 +88,8 @@ public class ChatsFragment extends Fragment {
             public void onClick(View v) {
                 sendUserToFindFriendsActivity();
 
+
+
             }
         });
         return PrivateChatsView;
@@ -89,6 +104,14 @@ public class ChatsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        final ImagePopup imagePopup = new ImagePopup(getContext());
+        imagePopup.setWindowHeight(800); // Optional
+        imagePopup.setWindowWidth(800); // Optional
+        imagePopup.setBackgroundColor(Color.BLACK);  // Optional
+        imagePopup.setFullScreen(true); // Optional
+        imagePopup.setHideCloseIcon(true);  // Optional
+        imagePopup.setImageOnClickClose(true);
+        // Optional
 
         FirebaseRecyclerOptions<User> options=
                 new FirebaseRecyclerOptions.Builder<User>()
@@ -159,7 +182,36 @@ public class ChatsFragment extends Fragment {
                         holder.profileImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                EnlargedImage.enlargeImage(retImage[0],v.getContext());
+                                //EnlargedImage.enlargeImage(retImage[0],v.getContext());
+                                Dialog builder = new Dialog(getContext());
+                                builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                builder.getWindow().setBackgroundDrawable(
+                                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialogInterface) {
+                                        //nothing;
+                                    }
+                                });
+
+                                ImageView imageView = new ImageView(getContext());
+                                Glide.with(getContext()).
+                                        load(retImage[0]).
+                                        transform(new CenterCrop(), new RoundedCorners(15)).into(imageView);
+                                builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                                        800,
+                                        800));
+                                builder.show();
+
+                                imageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(getContext(), LoadImage.class);
+                                        intent.putExtra("image_url", retImage[0]);
+                                        startActivity(intent);
+                                    }
+                                });
+
 
                             }
                         });

@@ -15,6 +15,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -75,6 +78,10 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseDatabaseInstance rootRef;
     private TextView designation, currentCompany, city, expectationsFromComm;
     private TextView expectationsFromUs;
+    RecyclerView certificateList;
+    MyAdapter myAdapter;
+    TextView certifiText;
+    TextView country, referredBy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,8 @@ public class ProfileActivity extends AppCompatActivity {
         UserRef=rootRef.getUserRef();
         user_id=pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
+        certificateList = findViewById(R.id.certificates_list);
+        certifiText = findViewById(R.id.certifications);
         Log.d("PROFILETESTING", "-----------------initialize---------");
         // Toast.makeText(this, "initialize controller", Toast.LENGTH_SHORT).show();
         initializeMsgRequestFields();
@@ -264,6 +273,12 @@ public class ProfileActivity extends AppCompatActivity {
                 expectationsFromUs.setText(snapshot.child("offer_to_community").getValue().toString());
                 bio.setText(snapshot.child("user_bio").getValue().toString());
                 profession.setText(snapshot.child("work_profession").getValue().toString());
+                if(snapshot.child("country").exists()){
+                    country.setText(snapshot.child("country").getValue().toString());
+                }
+                if(snapshot.child("referred_by").exists()){
+                    referredBy.setText(snapshot.child("referred_by").getValue().toString());
+                }
 
             }
 
@@ -371,13 +386,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void addCertificationData(final List<Certificates> certificates) {
         ImageView certi_1=findViewById(R.id.certi_1);
-        certi_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
                 if (certificates == null) {
-                    Toast.makeText(ProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
+                    certificateList.setVisibility(View.GONE);
+                    certifiText.setText("No certificate provided");
+
                 } else {
-                    Bundle bundle=new Bundle();
+                    /*Bundle bundle=new Bundle();
                     bundle.putSerializable("certificates", (Serializable) certificates);
                     ShowCertificatesFragment gmapFragment=new ShowCertificatesFragment();
 
@@ -386,10 +402,22 @@ public class ProfileActivity extends AppCompatActivity {
                    /* Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);*/
+
+                    LinearLayout certificationLayout = findViewById(R.id.certification_layout);
+                    certificationLayout.setVisibility(View.GONE);
+
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    certificateList.setLayoutManager(linearLayoutManager);
+
+
+                    myAdapter = new MyAdapter(certificates);
+                    certificateList.setAdapter(myAdapter);
+
+
                 }
-            }
-        });
     }
+
+
 
     private void contactInfo() {
         ImageView email=findViewById(R.id.iv_user_email);
@@ -432,6 +460,8 @@ public class ProfileActivity extends AppCompatActivity {
         city = findViewById(R.id.city_user);
         expectationsFromComm = findViewById(R.id.exp_from_comm);
         expectationsFromUs = findViewById(R.id.exp_from_us);
+        country = findViewById(R.id.country_user);
+        referredBy = findViewById(R.id.tv_referred_by);
 
     }
 

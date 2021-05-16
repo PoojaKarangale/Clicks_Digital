@@ -30,6 +30,7 @@ import com.pakhi.clicksdigital.GroupChat.GroupChatActivity;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.Message;
+import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.Profile.ProfileUserRequest;
 import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
@@ -195,17 +196,32 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("event")){
-                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                final FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
 
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
                         resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
                         resultIntent.putExtra(Const.event, event);
-                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
-                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        makeNotiOreoFore(resultIntent,title, body, icon);
+                        //Log.i("Event ")
+
+                        //resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        rootRef.getUserRef().child(event.getCreater_id()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                                User organiser = snapshot.getValue(User.class);
+                                resultIntent.putExtra(Const.organiser, organiser);
+                                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                makeNotiOreoFore(resultIntent, body, icon, title);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
 
                     @Override
@@ -338,17 +354,32 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
 
             else if(type.equals("event")){
-                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                final FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
 
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
                         resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
                         resultIntent.putExtra(Const.event, event);
-                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
-                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        makeNotiBackOreo(resultIntent, body, icon, title);
+                        //Log.i("Event ")
+
+                        //resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        rootRef.getUserRef().child(event.getCreater_id()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                                User organiser = snapshot.getValue(User.class);
+                                resultIntent.putExtra(Const.organiser, organiser);
+                                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                makeNotiBackOreo(resultIntent, body, icon, title);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
 
                     @Override
@@ -541,17 +572,32 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
 
             else if(type.equals("event")){
-                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                final FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
 
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
                         resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
                         resultIntent.putExtra(Const.event, event);
-                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
-                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        makeOtherFore(resultIntent, body, title, icon);
+                        //Log.i("Event ")
+
+                        //resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        rootRef.getUserRef().child(event.getCreater_id()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                                User organiser = snapshot.getValue(User.class);
+                                resultIntent.putExtra(Const.organiser, organiser);
+                                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                makeOtherFore(resultIntent, body, icon, title);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
 
                     @Override
@@ -694,17 +740,32 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             }
             else if(type.equals("event")){
-                FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
+                final FirebaseDatabaseInstance rootRef= FirebaseDatabaseInstance.getInstance();
 
-                rootRef.getEventRef().child(user).addValueEventListener(new ValueEventListener() {
+                rootRef.getEventRef().child(user).child(ConstFirebase.EventDetails).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Event event = snapshot.getValue(Event.class);
                         resultIntent = new Intent(getApplicationContext(), EventDetailsActivity.class);
                         resultIntent.putExtra(Const.event, event);
-                        resultIntent.putExtra(Const.organiser, event.getCreater_id());
-                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        makeOtherBack(resultIntent, body, icon, title);
+                        //Log.i("Event ")
+
+                        //resultIntent.putExtra(Const.organiser, event.getCreater_id());
+                        rootRef.getUserRef().child(event.getCreater_id()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                                User organiser = snapshot.getValue(User.class);
+                                resultIntent.putExtra(Const.organiser, organiser);
+                                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                makeOtherBack(resultIntent, body, icon, title);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
 
                     @Override

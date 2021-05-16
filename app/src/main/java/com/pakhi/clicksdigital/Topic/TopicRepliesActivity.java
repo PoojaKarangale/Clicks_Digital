@@ -1,18 +1,23 @@
 package com.pakhi.clicksdigital.Topic;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -426,14 +431,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
                 topic_detail.setVisibility(View.GONE);
                 topicImage.setVisibility(View.VISIBLE);
                 topicImageTextView.setVisibility(View.VISIBLE);
-                topicImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(TopicRepliesActivity.this, LoadImage.class);
-                        intent.putExtra("image_url",topic.getMessage());
-                        startActivity(intent);
-                    }
-                });
+
 
                 //topicImageLayout.setVisibility(View.VISIBLE);
                 topicImageTextView.setText(topic.getExtra());
@@ -453,6 +451,16 @@ public class TopicRepliesActivity extends AppCompatActivity {
         else {
             topic_detail.setText(topic.getMessage());
         }
+
+        topicImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(TopicRepliesActivity.this, LoadImage.class);
+                intent.putExtra("image_url", topic.getMessage());
+                startActivity(intent);
+            }
+        });
 
         UsersRef.child(topic.getFrom()).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override

@@ -103,6 +103,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     private String         gender, user_type;
     private EditText get_working, get_experiences, get_speaker_experience, get_offer_to_community, get_expectations_from_us, company, get_city;
     private Button add_more_certificate;
+    EditText country, referral;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +154,10 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         weblink=findViewById(R.id.weblink);
         bio=findViewById(R.id.bio);
         get_city=findViewById(R.id.get_city);
+
+        country=findViewById(R.id.country);
+        referral=findViewById(R.id.refer_by);
+
 
         progressDialog=new ProgressDialog(SetProfileActivity.this);
         progressDialog.setMessage("Loading...");
@@ -239,10 +244,12 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         String bio_str=bio.getText().toString().trim();
         String weblink_str=weblink.getText().toString().trim();
+        String countryName = country.getText().toString().trim();
+        String referal = country.getText().toString().trim();
 
         user=new User(userid, full_name_str, bio_str, imageUrl_string, user_type, city,
                 expectations_from_us, experiences, gender, number, offer_to_community,
-                speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
+                speaker_experience, email_str, weblink_str, working, last_name_str, company_str, countryName, referal);
 
         ;//= new HashMap<>();
         userItems=putDataIntoHashMap(user);
@@ -268,6 +275,8 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
             public void onSuccess(Void aVoid) {
                 addCurrentUserSqliteData(userItems);
                 saveDataToSharedPref();
+                rootRef.getUserRequestsRef().child(userid).setValue("");
+                Toast.makeText(getApplicationContext(), "Your profile has been sent to admin for approval",Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
                 // finish();
 

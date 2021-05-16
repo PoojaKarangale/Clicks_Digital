@@ -61,6 +61,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
     Button button;
     Bitmap bmp, scaledbmp;
     String eventtitle;
+    ImageView back_;
 
 
     @Override
@@ -88,6 +89,12 @@ public class EventParticipantsActivity extends AppCompatActivity {
             }
         });*/
         initializeFields();
+        back_.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         currentEventRef.child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -210,6 +217,7 @@ public class EventParticipantsActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.logowdc);
         scaledbmp = Bitmap.createScaledBitmap(bmp, 300, 300, false);
+        back_ = findViewById(R.id.back_);
     }
 
     @Override

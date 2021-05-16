@@ -44,22 +44,20 @@
         android:layout_below="@+id/date_time"
         android:layout_alignStart="@+id/name"
         android:layout_marginTop="10dp"
-        android:ellipsize="end"
-        android:inputType="text|textMultiLine"
-        android:lineSpacingExtra="2dp"
-        android:maxLength="400"
-        android:fontFamily="@font/segoe"
-        android:textColor="#212121"
-        android:textSize="@dimen/fifteen"
+        android:layout_marginRight="15dp"
 
-        android:maxLines="12"
-        android:minLines="2"
+        android:ellipsize="end"
+
+        android:fontFamily="@font/segoe"
+        android:lineSpacingExtra="2dp"
+
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
-        android:layout_marginRight="15dp"
-        android:singleLine="false"
+
         android:text="in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post. in the post."
-        android:textAlignment="gravity" />
+        android:textAlignment="gravity"
+        android:textColor="#212121"
+        android:textSize="@dimen/fifteen" />
 
     <LinearLayout
         android:id="@+id/like_layout"

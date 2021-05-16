@@ -884,6 +884,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onClick(View v) {
                 Intent intent = new Intent(context, VisitProfileActivity.class);
                 intent.putExtra(Const.visitUser, message.getFrom());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });

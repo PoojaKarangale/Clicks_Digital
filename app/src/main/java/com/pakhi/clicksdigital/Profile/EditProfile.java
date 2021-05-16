@@ -89,6 +89,8 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     private Button add_more_certificate;
     RadioButton male, female;
 
+    EditText country, referredBy;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +147,9 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         male = findViewById(R.id.male);
         female = findViewById(R.id.female);
+
+        referredBy = findViewById(R.id.refer_by);
+        country = findViewById(R.id.country);
     }
 
 
@@ -229,6 +234,12 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                             .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString())
 
                             .into(profile_img);
+                    if(snapshot.child("country").exists()){
+                        country.setText(snapshot.child("country").getValue().toString());
+                    }
+                    if(snapshot.child("referred_by").exists()){
+                        referredBy.setText(snapshot.child("referred_by").getValue().toString());
+                    }
                 }
             }
 
@@ -286,6 +297,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         get_city.setText(user.getCity());
         last_name.setText(user.getLast_name());
         company.setText(user.getCompany());
+
     }
 
     private void uploadData() {
@@ -319,10 +331,13 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         String weblink_str=weblink.getText().toString().trim();
         user_type=user.getUser_type();
 
+        String countryName = country.getText().toString().trim();
+        String referred = referredBy.getText().toString().trim();
+
         final DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
 
         final User user=new User(userid, full_name_str, bio_str, picImageUri.toString(), user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
-                speaker_experience, email_str, weblink_str, working, last_name_str, company_str);
+                speaker_experience, email_str, weblink_str, working, last_name_str, company_str, countryName, referred);
 
         final HashMap<String, String> userItems=new HashMap<>();
         userItems.put(ConstFirebase.USER_ID, userid);
@@ -342,6 +357,8 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         userItems.put(Const.working, working);
         userItems.put(Const.last_name, last_name_str);
         userItems.put(Const.company, company_str);
+        userItems.put("country", countryName);
+        userItems.put("referred_by", referred);
 
         if (isCertificatesAdded) {
 

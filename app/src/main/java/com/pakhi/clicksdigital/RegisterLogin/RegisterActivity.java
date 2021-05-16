@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -84,6 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.i("Regiser","Register");
         VerifyUserExistance();
 
       /*  if (firebaseAuth.getCurrentUser() != null) {
@@ -94,7 +96,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void VerifyUserExistance() {
-
         /*if (pref.getData(SharedPreference.userState, getApplicationContext()) != null
                 && pref.getData(SharedPreference.userState, getApplicationContext()).equals(Const.profileStoredUserStored)){
             sendUserToStartActivity();
@@ -102,6 +103,8 @@ public class RegisterActivity extends AppCompatActivity {
                 && pref.getData(SharedPreference.userState, getApplicationContext()).equals(Const.verifiedUserState)) {
             checkUserOnline();
         }*/
+
+        Log.i("User existence--","");
 
         if (pref.getData(SharedPreference.isPhoneVerified, getApplicationContext()) != null
                 && pref.getData(SharedPreference.isPhoneVerified, getApplicationContext()).equals(ConstFirebase.isPhoneVerified)

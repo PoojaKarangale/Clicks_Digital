@@ -44,8 +44,9 @@ public class UserDatabase extends SQLiteOpenHelper {
                 + "weblink" + " TEXT,"
                 + "working" + " TEXT,"
                 + "last_name" + " TEXT,"
-                + "company" + " TEXT"
-                +
+                + "company" + " TEXT,"
+                + "country" + "TEXT,"
+                + "referred_by" + "TEXT"+
                 ")");
         // db.close();
     }

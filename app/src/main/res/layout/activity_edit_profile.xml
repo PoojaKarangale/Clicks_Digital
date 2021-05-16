@@ -616,23 +616,83 @@
                             android:layout_height="wrap_content"
                             android:textColor="#615d5c"
                             android:fontFamily="@font/segoe"
-                            android:text="Work Experience (in Yrs.)"
-                            android:textSize="10dp"
+                            android:text="Country"
+                            android:textSize="13dp"
                             android:layout_marginLeft="12dp"
                             android:layout_marginTop="3dp"/>
 
-                            <EditText
+                        <EditText
+                            android:id="@+id/country"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/working"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Country Name"
+                            android:backgroundTint="#FFEBE6"
+
+                            android:inputType="textMultiLine"
+                            android:textStyle="bold"
+                            android:textSize="15dp"
+
+                            android:layout_marginLeft="7dp"/>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/set_profile_blue">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="27dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/book" />
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Work Experience (in Yrs.)"
+                            android:textSize="13dp"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
                             android:id="@+id/experiences"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/working"
                             android:fontFamily="@font/segoe"
                             android:hint="Enter Number of Years"
-                                android:backgroundTint="#FFEBE6"
+                            android:backgroundTint="#D4E3FB"
 
-                                android:inputType="textMultiLine"
+                            android:inputType="textMultiLine"
                             android:textStyle="bold"
-                            android:textSize="12dp"
+                            android:textSize="15dp"
 
                             android:layout_marginLeft="7dp"/>
 
@@ -647,12 +707,12 @@
                     android:layout_height="150dp"
                     android:layout_marginTop="15dp"
                     android:orientation="horizontal"
-                    android:background="@drawable/set_profile_blue">
+                    android:background="@drawable/set_profile_red">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="31dp"
                         android:layout_height="30dp"
-                        app:cardBackgroundColor="#43B7FD"
+                        app:cardBackgroundColor="#FF704D"
                         app:cardCornerRadius="50dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp">
@@ -683,12 +743,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="7dp"
                             android:fontFamily="@font/segoe"
-                            android:backgroundTint="#D4E3FB"
+                            android:backgroundTint="#FFEBE6"
                             android:hint="Enter Event Names"
                             android:inputType="textMultiLine"
                             android:textStyle="bold"
                             android:textSize="@dimen/fifteen"
-                             />
+                            />
 
 
 
@@ -704,14 +764,14 @@
                     android:layout_height="150dp"
                     android:orientation="horizontal"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/set_profile_red">
+                    android:background="@drawable/set_profile_blue">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="31dp"
                         android:layout_height="27dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="6dp"
-                        app:cardBackgroundColor="#FF704D"
+                        app:cardBackgroundColor="#43B7FD"
                         app:cardCornerRadius="50dp"
                         >
 
@@ -741,7 +801,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/experiences"
-                            android:backgroundTint="#FFEBE6"
+                            android:backgroundTint="#D4E3FB"
                             android:fontFamily="@font/segoe"
                             android:hint="Enter Your Expectations from the Digital Marketing and Technology Professionals in the Community..."
                             android:inputType="textMultiLine"
@@ -762,12 +822,12 @@
                     android:layout_height="150dp"
                     android:layout_marginTop="15dp"
                     android:orientation="horizontal"
-                    android:background="@drawable/set_profile_blue">
+                    android:background="@drawable/set_profile_red">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="31dp"
                         android:layout_height="30dp"
-                        app:cardBackgroundColor="#43B7FD"
+                        app:cardBackgroundColor="#FF704D"
                         app:cardCornerRadius="50dp"
                         android:layout_marginTop="6dp"
                         android:layout_marginLeft="10dp">
@@ -797,7 +857,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/experiences"
-                            android:backgroundTint="#D4E3FB"
+                            android:backgroundTint="#FFEBE6"
 
                             android:fontFamily="@font/segoe"
                             android:hint="Enter What You Can Offer to the Community in terms of Knowledge, Connections, Resources, etc..."
@@ -806,13 +866,71 @@
                             android:layout_marginLeft="7dp"
 
                             android:textStyle="bold"
-                             />
+                            />
 
 
 
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/set_profile_blue">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="31dp"
+                        android:layout_height="30dp"
+                        app:cardBackgroundColor="#43B7FD"
+                        app:cardCornerRadius="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/email"/>
+
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#615d5c"
+                            android:fontFamily="@font/segoe"
+                            android:text="Referred by"
+                            android:textSize="@dimen/thirteen"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginTop="3dp"/>
+
+                        <EditText
+                            android:id="@+id/refer_by"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/full_name"
+                            android:fontFamily="@font/segoe"
+                            android:hint="Enter Name of the Person"
+                            android:maxLines="1"
+                            android:textSize="@dimen/fifteen"
+                            android:backgroundTint="#D4E3FB"
+                            android:textStyle="bold"
+
+                            android:layout_marginLeft="7dp"
+
+                            />
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
 
 

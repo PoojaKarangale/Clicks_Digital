@@ -1,13 +1,18 @@
 package com.pakhi.clicksdigital.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.auth.FirebaseUser;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
@@ -66,7 +72,35 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
             @Override
             public void onClick(View v) {
 
-                EnlargedImage.enlargeImage(image_url,v.getContext());
+                //EnlargedImage.enlargeImage(image_url,v.getContext());
+                Dialog builder = new Dialog(mcontext);
+                builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                builder.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        //nothing;
+                    }
+                });
+
+                ImageView imageView = new ImageView(mcontext);
+                Glide.with(mcontext).
+                        load(image_url).
+                        transform(new CenterCrop(), new RoundedCorners(15)).into(imageView);
+                builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                        800,
+                        800));
+                builder.show();
+
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mcontext, LoadImage.class);
+                        intent.putExtra("image_url", image_url );
+                        mcontext.startActivity(intent);
+                    }
+                });
             }
         });
 

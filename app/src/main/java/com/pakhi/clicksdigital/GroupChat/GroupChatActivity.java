@@ -57,6 +57,7 @@ import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Utils.PaginationScrollListener;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
@@ -612,6 +613,28 @@ public class GroupChatActivity extends AppCompatActivity {
         linearLayoutManager.setReverseLayout(false);
 
         userMessagesList.setAdapter(messageAdapter);
+
+        userMessagesList.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+            @Override
+            protected void loadMoreItems() {
+
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return 0;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return false;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return false;
+            }
+        });
 
 
     }

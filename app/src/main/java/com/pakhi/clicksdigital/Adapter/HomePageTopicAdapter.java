@@ -1,7 +1,10 @@
 package com.pakhi.clicksdigital.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -9,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,9 +94,37 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
         holder.raisedImageHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mcontext, LoadImage.class);
-                intent.putExtra("image_url", m.getMessage());
-                mcontext.startActivity(intent);
+                Dialog builder = new Dialog(mcontext);
+                builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                builder.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        //nothing;
+                    }
+                });
+
+                ImageView imageView = new ImageView(mcontext);
+                Glide.with(mcontext).
+                        load(m.getMessage())
+                        .transform(new CenterCrop(), new RoundedCorners(15))
+                        .into(imageView);
+                builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                        800,
+                        800));
+                builder.show();
+
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mcontext, LoadImage.class);
+                        intent.putExtra("image_url", m.getMessage());
+                        mcontext.startActivity(intent);
+                    }
+                });
+
+
             }
         });
         if (i == 1 && m.getMessage().length()>113) {
