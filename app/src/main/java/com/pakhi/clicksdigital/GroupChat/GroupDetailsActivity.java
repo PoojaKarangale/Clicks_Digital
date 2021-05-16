@@ -119,9 +119,9 @@ public class GroupDetailsActivity extends AppCompatActivity {
                         .placeholder(R.drawable.default_profile_for_groups)
                         .into(app_bar_image);
 
-                date[0] = dataSnapshot.child(ConstFirebase.date).getValue().toString();
+                date[0] = group.getDate();
 
-                group_creater_id[0] = dataSnapshot.child(Const.uid).getValue().toString();
+                group_creater_id[0] = group.getUid_creater();
 
              /*   UsersRef.child(group_creater_id[0])
                         .child(Const.USER_DETAILS)

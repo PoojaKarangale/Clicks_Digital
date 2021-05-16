@@ -185,6 +185,9 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private boolean validateDate() {
         boolean abc=true;
+//        String startDate=choose_start_date.getText().toString();
+//        String endDate=choose_end_date.getText().toString();
+
         if(startDate.compareTo(endDate)>0){
             Toast.makeText(CreateEventActivity.this, "Start date can't be greater than end date", Toast.LENGTH_SHORT).show();
             abc=false;
@@ -658,7 +661,8 @@ public class CreateEventActivity extends AppCompatActivity {
 
         SimpleDateFormat currentDateFormat=new SimpleDateFormat("dd MMM yyyy");
         String currentDate=currentDateFormat.format(c.getTime());
-
+        startDate = c.getTime();
+        endDate = c.getTime();
 
         choose_start_date.setText(currentDate);
         choose_end_date.setText(currentDate);

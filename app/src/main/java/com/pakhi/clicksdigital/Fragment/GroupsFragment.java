@@ -132,6 +132,8 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
     public void RetrieveAndDisplayGroups() {
         Log.d("GroupFragments", "-------------" + userGroupRef);
 
+//        groups.clear();
+//        groupAdapter.notifyDataSetChanged();
         userGroupRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -141,6 +143,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                         String group_key=snapshot.getKey();
                         //groupAdapter.notifyDataSetChanged();
                         groups.clear();
+                        groupAdapter.notifyDataSetChanged();
                         GroupRef.child(group_key).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
