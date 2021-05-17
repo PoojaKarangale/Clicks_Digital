@@ -3,7 +3,7 @@
 
   <item
       android:id="@+id/join_new_groups"
-      android:title="join new groups" />
+      android:title="Join New Groups" />
   <item
       android:id="@+id/user_request"
       android:title="User requests" />
@@ -13,7 +13,7 @@
 
   <item
       android:id="@+id/share_app"
-      android:title="Share me" />
+      android:title="Share Dialog App" />
 
 
 </menu>

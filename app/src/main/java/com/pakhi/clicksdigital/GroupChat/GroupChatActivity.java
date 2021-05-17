@@ -37,6 +37,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,6 +45,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -112,6 +114,7 @@ public class GroupChatActivity extends AppCompatActivity {
     String typeOfSelectedMessage="";
     String selectedMessageId="";
     Message msg;
+    int currentPage=1;
 
     //replyOnClickHeader
     LinearLayout onLongClickOnMessage, replyHeader;
@@ -136,6 +139,11 @@ public class GroupChatActivity extends AppCompatActivity {
 
     String someTextFromRaiseTopic="";
 
+    SwipeRefreshLayout freshLayout;
+    private int itemPos=0;
+
+    String lastKey="";
+    private String prevKey="";
 
 
     @Override
@@ -498,6 +506,7 @@ public class GroupChatActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -509,24 +518,33 @@ public class GroupChatActivity extends AppCompatActivity {
         messagesList.clear();
         messageAdapter.notifyDataSetChanged();
 
-        groupChatRefForCurrentGroup.addChildEventListener(new ChildEventListener() {
+        Query msgQuery = groupChatRefForCurrentGroup.limitToLast(currentPage*10);
+
+        msgQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
 
                     Message messages = dataSnapshot.getValue(Message.class);
+                    itemPos++;
+
+                    if(itemPos==1){
+                        String msgKey = dataSnapshot.getKey();
+                        lastKey=msgKey;
+                        prevKey=msgKey;
+                    }
 
                     messagesList.add(messages); ////-----------
 
-                    Collections.sort(messagesList, new Comparator<Message>() {
+                    /*Collections.sort(messagesList, new Comparator<Message>() {
                         public int compare(Message o1, Message o2) {
                             return o1.getTimestamp().compareTo(o2.getTimestamp());
                         }
-                    });
+                    });*/
 
                     messageAdapter.notifyDataSetChanged();
 
-                    userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
+                    userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount()-1);
                 }
             }
 
@@ -552,7 +570,82 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
+        freshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                currentPage++;
+                itemPos=0;
+                //messagesList.clear();
+                loadMoreMessages();
+            }
+        });
+
     }
+
+    private void loadMoreMessages() {
+        Query msgQuery = groupChatRefForCurrentGroup.orderByKey().endAt(lastKey).limitToLast(10);
+
+        msgQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+
+                    Message messages = dataSnapshot.getValue(Message.class);
+                    String msgKey = dataSnapshot.getKey();
+
+                    //itemPos++;
+                    //messagesList.add(itemPos++,messages); ////-----------
+
+                    if(!prevKey.equals(msgKey)){
+                        messagesList.add(itemPos++,messages); ////-----------
+                    }else {
+                        prevKey=lastKey;
+                    }
+
+                    if(itemPos==1){
+                        lastKey=msgKey;
+                    }
+
+                    /*Collections.sort(messagesList, new Comparator<Message>() {
+                        public int compare(Message o1, Message o2) {
+                            return o1.getTimestamp().compareTo(o2.getTimestamp());
+                        }
+                    });*/
+
+                    messageAdapter.notifyDataSetChanged();
+
+                    //userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount()-1);
+
+                    freshLayout.setRefreshing(false);
+                    linearLayoutManager.scrollToPositionWithOffset(10,0);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()) {
+                    // DisplayMessages(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
 
     @Override
     protected void onPause() {
@@ -601,7 +694,7 @@ public class GroupChatActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messagesList, "GroupChat", getApplicationContext());
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
 
-
+        freshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_message);
         userMessagesList.setHasFixedSize(true);
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -609,35 +702,16 @@ public class GroupChatActivity extends AppCompatActivity {
         // linearLayoutManager.setReverseLayout(true); ////-----------
         //linearLayoutManager.setReverseLayout(true);
         userMessagesList.setLayoutManager(linearLayoutManager);
-        linearLayoutManager.setStackFromEnd(true);
-        linearLayoutManager.setReverseLayout(false);
+        //linearLayoutManager.setStackFromEnd(true);
+        //linearLayoutManager.setReverseLayout(false);
 
         userMessagesList.setAdapter(messageAdapter);
 
-        userMessagesList.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-            @Override
-            protected void loadMoreItems() {
 
-            }
-
-            @Override
-            public int getTotalPageCount() {
-                return 0;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return false;
-            }
-
-            @Override
-            public boolean isLoading() {
-                return false;
-            }
-        });
 
 
     }
+
 
     @Override
     protected void onRestart() {

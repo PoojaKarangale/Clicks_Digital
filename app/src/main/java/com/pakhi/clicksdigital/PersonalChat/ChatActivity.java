@@ -32,6 +32,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -142,6 +143,13 @@ public class ChatActivity extends AppCompatActivity {
     RelativeLayout chatMessageLayout;
     LinearLayout blockLayout;
     TextView blockText;
+
+    SwipeRefreshLayout freshLayout;
+    private int itemPos=0;
+
+    String lastKey="";
+    private String prevKey="";
+    int currentPage=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -465,11 +473,13 @@ public class ChatActivity extends AppCompatActivity {
         blockLayout = findViewById(R.id.block_layout);
         blockText = findViewById(R.id.block_text);
 
+        freshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_message);
+
         messageAdapter = new MessageAdapter(messagesList, ConstFirebase.personalChat, getApplicationContext());
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
         userMessagesList.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
+        //linearLayoutManager.setStackFromEnd(true);
         userMessagesList.setLayoutManager(linearLayoutManager);
         //userMessagesList.setItemAnimator(null);
 
@@ -540,11 +550,19 @@ public class ChatActivity extends AppCompatActivity {
         updateUserStatus("online");
         messagesList.clear();
         messageAdapter.notifyDataSetChanged();
-        rootRef.getMessagesListRef().child(messageSenderID).child(messageReceiverID)
-                .addChildEventListener(new ChildEventListener() {
+
+        Query msgQuery = rootRef.getMessagesListRef().child(messageSenderID).child(messageReceiverID).limitToLast(currentPage*10);
+        msgQuery.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+                        itemPos++;
+
+                        if(itemPos==1){
+                            String msgKey = dataSnapshot.getValue().toString();
+                            lastKey=msgKey;
+                            prevKey=msgKey;
+                        }
                         String messageId = dataSnapshot.getValue().toString();
                         rootRef.getMessagesRef().child(messageId).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -567,8 +585,10 @@ public class ChatActivity extends AppCompatActivity {
                         //messagesList.add(messages);
 
                         //  messageAdapter.notifyDataSetChanged();
+                        if(!(userMessagesList.getAdapter().getItemCount()==0)){
+                            userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
+                        }
 
-                        userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
                         //messageScroll.fullScroll(NestedScrollView.FOCUS_DOWN);
                     }
 
@@ -592,6 +612,87 @@ public class ChatActivity extends AppCompatActivity {
 
                     }
                 });
+        freshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                currentPage++;
+                itemPos=0;
+                //messagesList.clear();
+                loadMoreMessages();
+            }
+        });
+    }
+    private void loadMoreMessages() {
+        Query msgQuery = rootRef.getMessagesListRef().child(messageSenderID).child(messageReceiverID).orderByKey().endAt(lastKey).limitToLast(10);
+        msgQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                final String msgKey = dataSnapshot.getValue().toString();
+
+                //itemPos++;
+                //messagesList.add(itemPos++,messages); ////-----------
+
+
+                String messageId = dataSnapshot.getValue().toString();
+                rootRef.getMessagesRef().child(messageId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            Message messages = snapshot.getValue(Message.class);
+                            //messagesList.clear();
+                            if(!prevKey.equals(msgKey)){
+                                messagesList.add(itemPos++,messages); ////-----------
+                            }else {
+                                prevKey=lastKey;
+                            }
+
+                            if(itemPos==1){
+                                lastKey=msgKey;
+                            }
+                        }
+                        messageAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                //Message messages = dataSnapshot.getValue(Message.class);
+                //messagesList.add(messages);
+
+                //  messageAdapter.notifyDataSetChanged();
+
+                freshLayout.setRefreshing(false);
+                linearLayoutManager.scrollToPositionWithOffset(10,0);
+
+                //userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount()-1);
+                //messageScroll.fullScroll(NestedScrollView.FOCUS_DOWN);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void SendMessage(String messageType, String message, String separteURL) {

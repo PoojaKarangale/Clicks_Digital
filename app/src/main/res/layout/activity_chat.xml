@@ -110,17 +110,22 @@
         android:background="@drawable/chat_doodle_back"
 
 
-        >
-
+        ><androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
 
             android:id="@+id/private_messages_list_of_users"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:stackFromEnd="true"
+
             >
 
         </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
