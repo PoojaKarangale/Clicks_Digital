@@ -58,7 +58,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
     long number_of_participants_in_number;
     Group group;
     Button exit_group;
-    UserDatabase db;
+    //UserDatabase db;
     User user;
     FirebaseDatabaseInstance rootRef;
     SharedPreference pref;
@@ -82,7 +82,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         GroupRef = rootRef.getGroupRef();
 
         groupMembersRef = GroupRef.child(currentGroupId).child(ConstFirebase.users);
-        db = new UserDatabase(this);
+
         getUserFromDb();
 
         initiateFields();
@@ -200,19 +200,8 @@ public class GroupDetailsActivity extends AppCompatActivity {
     }
 
     private void getUserFromDb() {
-        db.getReadableDatabase();
-        Cursor res = db.getAllData();
-        if (res.getCount() == 0) {
-
-        } else {
-            res.moveToFirst();
-            user = new User(res.getString(0), res.getString(1),
-                    res.getString(2), res.getString(3), res.getString(4),
-                    res.getString(5), res.getString(6), res.getString(7),
-                    res.getString(8), res.getString(9), res.getString(10),
-                    res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14));
-        }
+        UserDatabase db=new UserDatabase(this);
+        user = db.getSqliteUser();
     }
 
     public void setGroupName(View view) {

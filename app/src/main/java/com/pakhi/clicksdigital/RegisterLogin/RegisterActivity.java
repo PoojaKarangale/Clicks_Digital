@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String            number;
     private CountryCodePicker ccp;
     private EditText          mobileNo_reg;
-    UserDatabase db;
+    //UserDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,7 +183,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void addCurrentUserSqliteData(User user) {
-        db=new UserDatabase(this);
+        UserDatabase db=new UserDatabase(this);
         HashMap<String, String> userItems = putDataIntoHashMap(user);
         SQLiteDatabase sqlDb=db.getWritableDatabase();
         db.onUpgrade(sqlDb, 0, 1);

@@ -86,7 +86,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     ArrayList<Certificates>  certificates       =new ArrayList<>();
     boolean                  isCertificatesAdded=false;
     User                     user;
-    UserDatabase             db;
+    //UserDatabase             db;
     SharedPreference         pref;
     EditText                 weblink;
     PermissionsHandling      permissions;
@@ -121,7 +121,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         rootRef=FirebaseDatabaseInstance.getInstance();
         userid=pref.getData(SharedPreference.currentUserId, getApplicationContext());
-        db=new UserDatabase(this);
+        //db=new UserDatabase(this);
 
         number=pref.getData(SharedPreference.phone, getApplicationContext());
 
@@ -342,6 +342,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void addCurrentUserSqliteData(HashMap<String, String> userItems) {
+       UserDatabase db=new UserDatabase(this);
         SQLiteDatabase sqlDb=db.getWritableDatabase();
         db.onUpgrade(sqlDb, 0, 1);
         db.insertData(userItems);

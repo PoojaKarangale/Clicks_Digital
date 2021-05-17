@@ -43,12 +43,11 @@ import java.util.concurrent.TimeUnit;
 
 public class PhoneVerify extends AppCompatActivity implements View.OnClickListener {
     String previousActivity;
-    // DatabaseReference userRef;
     String userId;
-    UserDatabase ud;
+
     SharedPreference pref;
     FirebaseDatabaseInstance rootRef;
-    UserDatabase db;
+
     private FirebaseAuth firebaseAuth;
     private String number, verificationCode;
     private EditText get_code;
@@ -116,12 +115,9 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
 
         initializingFields();
         Log.d("phoneVerify", " ----------------------" + phoneNumberWithoutSpecialChar + "----------" + number);
-
         verify_number.setText("Verifying " + number);
         sendVerificationCode(number);
-
         initializeListeners();
-
     }
 
     private void initializingFields() {
@@ -266,7 +262,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
     }
 
     private void addCurrentUserSqliteData(User user) {
-        db = new UserDatabase(this);
+       UserDatabase db = new UserDatabase(this);
         HashMap<String, String> userItems = putDataIntoHashMap(user);
         SQLiteDatabase sqlDb = db.getWritableDatabase();
         db.onUpgrade(sqlDb, 0, 1);
@@ -286,10 +282,10 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
                 addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        ud = new UserDatabase(PhoneVerify.this);
+                        UserDatabase db = new UserDatabase(PhoneVerify.this);
                         String[] key = {"number"};
                         String[] value = {number};
-                        boolean isUpdated = ud.updateData(key, value, userId);
+                        boolean isUpdated = db.updateData(key, value, userId);
                         if (isUpdated) {
                             showToast("Mobile number is updated");
 

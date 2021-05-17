@@ -52,7 +52,7 @@ public class ProfileUserRequest extends AppCompatActivity {
     private static boolean ACCEPTED = false;
     boolean isVisterIsAdmin = false;
     boolean isProfileUserIsAdmin = false;
-    UserDatabase db;
+
     FirebaseDatabaseInstance rootRef;
     private String user_id;
     private ImageView profile_image;
@@ -114,7 +114,7 @@ public class ProfileUserRequest extends AppCompatActivity {
             }
         });
 
-        db = new UserDatabase(this);
+
         getCurrentUserFromDb();
 
         initializeMsgRequestFields();
@@ -268,19 +268,8 @@ public class ProfileUserRequest extends AppCompatActivity {
     }
 
     private void getCurrentUserFromDb() {
-        db.getReadableDatabase();
-        Cursor res = db.getAllData();
-        if (res.getCount() == 0) {
-
-        } else {
-            res.moveToFirst();
-            currentUser = new User(res.getString(0), res.getString(1),
-                    res.getString(2), res.getString(3), res.getString(4),
-                    res.getString(5), res.getString(6), res.getString(7),
-                    res.getString(8), res.getString(9), res.getString(10),
-                    res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14));
-        }
+        UserDatabase db=new UserDatabase(this);
+        user = db.getSqliteUser();
     }
 
     private void initializeMsgRequestFields() {

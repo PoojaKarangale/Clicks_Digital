@@ -66,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
     static int PReqCode=1;
     Uri          picImageUri=null;
     Button       edit_profile;
-    UserDatabase db;
+
     private String    user_id;
     private ListView  listView;
     private ImageView profile_image;
@@ -101,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
         initializeMsgRequestFields();
 
         Toast.makeText(this, "Wait for data to load.", Toast.LENGTH_SHORT).show();
-        db=new UserDatabase(this);
+
         getUserFromDb();
 
         Log.d("PROFILETESTING", "-----------------inibefore data load tialize---------");
@@ -230,19 +230,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getUserFromDb() {
-        db.getReadableDatabase();
-        Cursor res=db.getAllData();
-        if (res.getCount() == 0) {
-
-        } else {
-            res.moveToFirst();
-            user=new User(res.getString(0), res.getString(1),
-                    res.getString(2), res.getString(3), res.getString(4),
-                    res.getString(5), res.getString(6), res.getString(7),
-                    res.getString(8), res.getString(9), res.getString(10),
-                    res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14),res.getString(15),res.getString(16));
-        }
+        UserDatabase db=new UserDatabase(this);
+        user = db.getSqliteUser();
     }
 
     private void loadData() {
@@ -279,7 +268,6 @@ public class ProfileActivity extends AppCompatActivity {
                 if(snapshot.child("referred_by").exists()){
                     referredBy.setText(snapshot.child("referred_by").getValue().toString());
                 }
-
             }
 
             @Override

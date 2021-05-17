@@ -73,7 +73,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     TextView country;
 
-
     public static String timestampToDateString(long timestamp) {
        /* SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date(timestamp);
@@ -248,7 +247,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                 if(!currentUserId.equals(event.getCreater_id())){
                     Log.i("entered here --- ", event.getCreater_id());
                     Notification.sendPersonalNotifiaction(event.getEventId(), event.getCreater_id(), name+ "has registered for your event", event.getEventName(), "participant","");
-
                 }
             }
 

@@ -73,7 +73,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     boolean                  isCertificatesAdded=false;
     StorageReference         mStorageReference;
     User                     user;
-    UserDatabase             db;
+    //UserDatabase             db;
     SharedPreference         pref;
     EditText                 weblink;
     PermissionsHandling      permissions;
@@ -204,22 +204,8 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     }
 
     private void readUserData() {
-        db=new UserDatabase(this);
-        db.getReadableDatabase();
-        Cursor res=db.getAllData();
-        if (res.getCount() == 0) {
-
-        } else {
-            res.moveToFirst();
-            user=new User(res.getString(0), res.getString(1),
-                    res.getString(2), res.getString(3), res.getString(4),
-                    res.getString(5), res.getString(6), res.getString(7),
-                    res.getString(8), res.getString(9), res.getString(10),
-                    res.getString(11), res.getString(12), res.getString(13),
-                    res.getString(14), res.getString(15), res.getString(16));
-
-        }
-        // db.close();
+        UserDatabase db=new UserDatabase(this);
+        user = db.getSqliteUser();
     }
 
     private void loadData() {
@@ -392,12 +378,12 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 Intent intent = new Intent(EditProfile.this, ProfileActivity.class);
                 startActivity(intent);
                 finish();
-
             }
         });
     }
 
     private void addCurrentUserToDatabase(HashMap<String, String> userItems) {
+        UserDatabase db = new UserDatabase(this);
         SQLiteDatabase sqlDb=db.getWritableDatabase();
         db.onUpgrade(sqlDb, 0, 1);
         db.insertData(userItems);
