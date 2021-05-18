@@ -24,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -210,7 +212,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
     private void loadData() {
 
-        rootRef.getUserRef().child(userid).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+        /*rootRef.getUserRef().child(userid).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.child(ConstFirebase.IMAGE_URL).exists()) {
@@ -233,7 +235,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
         rootRef.getUserRef().child(userid).child(ConstFirebase.certificate).addValueEventListener(new ValueEventListener() {
             @Override
@@ -271,6 +273,10 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
         picImageUri=firebaseAuth.getCurrentUser().getPhotoUrl();
 
+        Glide.with(getApplicationContext()).load(user.getImage_url())
+                .transform(new CenterCrop(), new RoundedCorners(50))
+                .into(profile_img);
+
         full_name.setText(user.getUser_name());
         email.setText(user.getUser_email());
         weblink.setText(user.getWeblink());
@@ -283,6 +289,8 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         get_city.setText(user.getCity());
         last_name.setText(user.getLast_name());
         company.setText(user.getCompany());
+        country.setText(user.getCountry());
+        referredBy.setText(user.getReferal());
 
     }
 

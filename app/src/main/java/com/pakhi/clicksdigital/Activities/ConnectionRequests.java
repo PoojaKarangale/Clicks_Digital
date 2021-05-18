@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,7 +36,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ConnectionRequests extends AppCompatActivity {
     SharedPreference         pref;
@@ -97,7 +101,11 @@ public class ConnectionRequests extends AppCompatActivity {
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.hasChild(ConstFirebase.IMAGE_URL)) {
                                                     requestProfileImage[0]=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
-                                                    Picasso.get().load(requestProfileImage[0]).into(holder.profileImage);
+                                                    Glide.with(getApplicationContext())
+                                                            .load(requestProfileImage[0])
+                                                            .transform(new CenterCrop(), new RoundedCorners(50))
+                                                            .into(holder.profileImage);
+
                                                 }
 
                                                 holder.profileImage.setOnClickListener(new View.OnClickListener() {
@@ -300,7 +308,10 @@ public class ConnectionRequests extends AppCompatActivity {
                                                 if (dataSnapshot.hasChild(ConstFirebase.IMAGE_URL)) {
                                                     final String requestProfileImage=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
 
-                                                    Picasso.get().load(requestProfileImage).into(holder.profileImage);
+                                                    Glide.with(getApplicationContext())
+                                                            .load(requestProfileImage)
+                                                            .transform(new CenterCrop(), new RoundedCorners(50))
+                                                            .into(holder.profileImage);
                                                 }
 
                                                 final String requestUserName=dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString();
@@ -412,7 +423,7 @@ public class ConnectionRequests extends AppCompatActivity {
 
     public static class RequestsViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
-        CircleImageView profileImage;
+        ImageView profileImage;
         Button          AcceptButton, CancelButton;
 
 

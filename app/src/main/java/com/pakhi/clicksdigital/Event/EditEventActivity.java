@@ -46,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
@@ -94,6 +95,7 @@ public class EditEventActivity extends AppCompatActivity {
     CardView linkCard, seatCard;
 
     EditText country;
+    UserDatabase userDatabase = new UserDatabase(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,8 @@ public class EditEventActivity extends AppCompatActivity {
         //chipActionHandled();
         settingDateAndTime();
         spinnerImplementationForTopic();
+
+
 
         event_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,6 +310,9 @@ public class EditEventActivity extends AppCompatActivity {
                 int totalSeats=Integer.parseInt(noOfSeats.getText().toString());
                 String countryName = country.getText().toString();
                 final Event event;
+
+                name = userDatabase.getSqliteUser_data(ConstFirebase.USER_NAME);
+
                 event=new Event(eventKey, eventName, eventDescription, category, picImageUrlString, event_type,
                         venuStr, cityStr, addressStr, timeStamp, startDate, endDate,
                         startTime, endTime, payable, totalFee, currentUserId, totalSeats, countryName);
@@ -314,37 +321,24 @@ public class EditEventActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(EditEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
-                        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                name = snapshot.child(ConstFirebase.USER_NAME).getValue().toString();
                                 rootRef.getEventRef().child(eventKey).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(snapshot.child(ConstFirebase.participants).exists()){
-                                            rootRef.getEventRef().child(eventKey).child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    for(DataSnapshot snap : snapshot.getChildren()){
-                                                        if(!snap.getKey().equals(currentUserId)){
-                                                            Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has edited event "+eventName, eventName, "event", "");
-                                                            String notificationKey = rootRef.getNotificationRef().push().getKey();
+                                            for(DataSnapshot snap : snapshot.getChildren()){
+                                                if(!snap.getKey().equals(currentUserId)){
+                                                    Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has edited event "+eventName, eventName, "event", "");
+                                                    String notificationKey = rootRef.getNotificationRef().push().getKey();
 
-                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
-                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
-                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
-                                                            rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("editEvent");
+                                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
+                                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
+                                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(eventKey);
+                                                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("editEvent");
 
-
-                                                        }
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
 
                                                 }
-                                            });
+                                            }
+
                                         }
                                     }
 
@@ -353,13 +347,9 @@ public class EditEventActivity extends AppCompatActivity {
 
                                     }
                                 });
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+
 
                         finish();
                     }

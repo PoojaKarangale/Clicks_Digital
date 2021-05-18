@@ -44,7 +44,7 @@ import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHolder> {
     FirebaseDatabaseInstance rootRef;

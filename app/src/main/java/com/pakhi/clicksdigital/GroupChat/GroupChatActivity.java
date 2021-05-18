@@ -39,6 +39,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -238,7 +241,10 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 image_url[0] = uri.toString();
-                Picasso.get().load(uri).into(image_profile);
+                Glide.with(getApplicationContext())
+
+                        .load(uri)
+                        .transform(new CenterCrop(), new RoundedCorners(50)).into(image_profile);
 
             }
 
@@ -612,6 +618,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
+
                     // DisplayMessages(dataSnapshot);
                 }
             }

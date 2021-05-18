@@ -53,15 +53,14 @@
             android:orientation="vertical"
             android:background="@drawable/set_profile_back">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/profile_img"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="27dp"
                 android:src="@drawable/persone_profile"
-                app:civ_border_color="#1768E7"
-                app:civ_border_width="2dp"
+
                 android:layout_gravity="center_horizontal"
                 />
             <TextView

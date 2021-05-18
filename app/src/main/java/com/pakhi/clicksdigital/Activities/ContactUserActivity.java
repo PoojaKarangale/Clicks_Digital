@@ -18,6 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ContactUserActivity extends AppCompatActivity {
     //// fields for previous contact list
@@ -226,7 +229,13 @@ public class ContactUserActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //retrive user details
                         userImage[0]=dataSnapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
-                        Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
+                        //Picasso.get().load(userImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
+
+                        Glide.with(getApplicationContext())
+                                .load(userImage[0])
+                                .transform(new CenterCrop(), new RoundedCorners(50))
+                                .into(holder.profileImage);
+
                         String profileName=dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString();
                         String profileStatus=dataSnapshot.child(ConstFirebase.USER_BIO).getValue().toString();
 
@@ -315,7 +324,7 @@ public class ContactUserActivity extends AppCompatActivity {
 
     public static class ContactsViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
-        CircleImageView profileImage;
+        ImageView profileImage;
         ImageView       onlineIcon;
 
 

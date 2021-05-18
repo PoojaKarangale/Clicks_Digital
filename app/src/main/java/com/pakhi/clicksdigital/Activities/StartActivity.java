@@ -25,6 +25,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -88,7 +90,9 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 url=snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
-                Glide.with(getApplicationContext()).load(String.valueOf(url)).placeholder(R.drawable.nav_profile).into(profile);
+                Glide.with(getApplicationContext()).load(String.valueOf(url))
+                        .transform(new CenterCrop(), new RoundedCorners(50))
+            .placeholder(R.drawable.nav_profile).into(profile);
 
                 //Toast.makeText(getApplicationContext(), "url image ---- " + url, Toast.LENGTH_LONG).show();
                 Log.i("url --- ", url);

@@ -57,7 +57,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //  int i = 0;
@@ -1676,7 +1676,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public TextView no_of_likes, publisher_name, topic_text, urlTitle, urlDesc, topicUrlText, topicSearateURL,
                 topic_date_time, reply, no_of_replies, raisedImageText;
-        public CircleImageView receiverProfileImage;
+        //public CircleImageView receiverProfileImage;
         public ImageView like, urlImage, raisedImage;
         public LinearLayout topicLayoutUrl, raisedImageLayout;
 

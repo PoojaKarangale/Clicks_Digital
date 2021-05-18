@@ -29,6 +29,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -245,36 +247,8 @@ public class ProfileActivity extends AppCompatActivity {
                 .resize(120, 120)
                 .into(profile_image);*/
         Log.i("currentUserID", user_id);
-        UserRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if (snapshot.child(ConstFirebase.IMAGE_URL).exists()) {
-                    Glide.with(getApplicationContext())
-                            .load(snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString())
 
-                            .into(profile_image);
-
-                }
-                currentCompany.setText(snapshot.child("company").getValue().toString());
-                city.setText(snapshot.child("city").getValue().toString());
-                expectationsFromComm.setText(snapshot.child("expectations_from_us").getValue().toString());
-                expectationsFromUs.setText(snapshot.child("offer_to_community").getValue().toString());
-                bio.setText(snapshot.child("user_bio").getValue().toString());
-                profession.setText(snapshot.child("work_profession").getValue().toString());
-                if(snapshot.child("country").exists()){
-                    country.setText(snapshot.child("country").getValue().toString());
-                }
-                if(snapshot.child("referred_by").exists()){
-                    referredBy.setText(snapshot.child("referred_by").getValue().toString());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         /*UserRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -290,12 +264,32 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });*/
+
+
+
         user_name_heading.setText(user.getUser_name()+" "+user.getLast_name());
         user_name.setText(user.getUser_name()+" "+user.getLast_name());
         gender.setText(user.getGender());
 
+        Glide.with(getApplicationContext()).load(user.getImage_url()).
+                transform(new CenterCrop(), new RoundedCorners(50))
+                .into(profile_image);
 
-        //bio.setText(user.getUser_bio());
+        currentCompany.setText(user.getCompany());
+        city.setText(user.getCity());
+        expectationsFromComm.setText(user.getExpectations_from_us());
+        expectationsFromUs.setText(user.getOffer_to_community());
+        bio.setText(user.getUser_bio());
+        profession.setText(user.getWork_profession());
+
+        try {
+            country.setText(user.getCountry());
+            referredBy.setText(user.getReferal());
+
+        }catch (Exception e){
+
+        }
+
 
         if (user.getWork_profession().equals("")) {
             profession.setText("No Profession Provided");

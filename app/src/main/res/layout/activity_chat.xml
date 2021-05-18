@@ -30,7 +30,7 @@
                 android:layout_marginLeft="15dp"
                 android:src="@drawable/img_back_arrow" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/custom_profile_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

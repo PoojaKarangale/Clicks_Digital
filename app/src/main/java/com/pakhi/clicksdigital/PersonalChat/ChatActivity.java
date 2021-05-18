@@ -34,6 +34,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,7 +83,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,7 +107,7 @@ public class ChatActivity extends AppCompatActivity {
     private ScrollView messageScroll;
     private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID, messageSenderName;
     private TextView userName, userLastSeen;
-    private CircleImageView userImage;
+    private ImageView userImage;
 
     private ImageButton SendMessageButton;
     private EditText MessageInputText;
@@ -239,9 +242,10 @@ public class ChatActivity extends AppCompatActivity {
                     user = dataSnapshot.getValue(User.class);
                     messageReceiverName = user.getUser_name();
                     userName.setText(messageReceiverName);
-                    Picasso.get()
+                    Glide.with(getApplicationContext())
                             .load(user.getImage_url())
-                            .resize(120, 120)
+                            .transform(new CenterCrop(), new RoundedCorners(50))
+                            //.resize(120, 120)
                             .into(userImage);
                 }
             }
@@ -465,7 +469,7 @@ public class ChatActivity extends AppCompatActivity {
         back_btn = findViewById(R.id.back_btn);
         userName = (TextView) findViewById(R.id.custom_profile_name);
         userLastSeen = (TextView) findViewById(R.id.custom_user_last_seen);
-        userImage = (CircleImageView) findViewById(R.id.custom_profile_image);
+        userImage =  findViewById(R.id.custom_profile_image);
 
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_btn);
         MessageInputText = (EditText) findViewById(R.id.input_message);

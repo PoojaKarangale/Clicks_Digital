@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,7 @@ import com.pakhi.clicksdigital.R;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+//import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.ViewHolder> {
     private Context      mcontext;
@@ -48,7 +49,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView        displayName;
-        public CircleImageView image_profile;
+        public ImageView image_profile;
 
 
         public ViewHolder(@NonNull View itemView) {
