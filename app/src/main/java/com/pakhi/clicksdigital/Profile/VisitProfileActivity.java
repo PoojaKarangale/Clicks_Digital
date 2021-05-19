@@ -173,19 +173,6 @@ public class VisitProfileActivity extends AppCompatActivity {
                         }
                     }
 
-                    currentCompany.setText(dataSnapshot.child("company").getValue().toString());
-                    city.setText(dataSnapshot.child("city").getValue().toString());
-                    expectationsFromComm.setText(dataSnapshot.child("expectations_from_us").getValue().toString());
-                    expectationsFromUs.setText(dataSnapshot.child("offer_to_community").getValue().toString());
-                    bio.setText(dataSnapshot.child("user_bio").getValue().toString());
-                    profession.setText(dataSnapshot.child("work_profession").getValue().toString());
-
-                    if(dataSnapshot.child("country").exists()){
-                        country.setText(dataSnapshot.child("country").getValue().toString());
-                    }
-                    if(dataSnapshot.child("referred_by").exists()){
-                        referredBy.setText(dataSnapshot.child("referred_by").getValue().toString());
-                    }
 
                     if (user.getUser_type().equals("admin")) {
                         isProfileUserIsAdmin = true;
@@ -346,6 +333,21 @@ public class VisitProfileActivity extends AppCompatActivity {
         } else {
             experience.setText(user.getExperiences());
         }
+
+        currentCompany.setText(user.getCompany());
+        city.setText(user.getCity());
+        expectationsFromComm.setText(user.getExpectations_from_us());
+        expectationsFromUs.setText(user.getOffer_to_community());
+        bio.setText(user.getUser_bio());
+        profession.setText(user.getWork_profession());
+
+
+            country.setText(user.getCountry());
+
+            referredBy.setText(user.getReferal());
+
+
+
 
 
 

@@ -24,7 +24,7 @@
           android:layout_height="42dp"
           android:hint="Type the name of an event/ city..."
           android:background="@drawable/searc_bar"
-          android:layout_marginTop="20dp"
+          android:layout_marginTop="5dp"
           android:layout_marginHorizontal="15dp"/>
 
       <androidx.recyclerview.widget.RecyclerView
@@ -32,7 +32,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="@dimen/margine_sub"
-          android:layout_marginTop="20dp"/>
+          android:layout_marginTop="6dp"/>
 
     </LinearLayout>
 

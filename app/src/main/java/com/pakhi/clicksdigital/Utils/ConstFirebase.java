@@ -124,4 +124,19 @@ public class ConstFirebase {
     public static String notificationRecieverID="notificationRecieverID";
     public static String userIsIn="UserIsIn";
     public static String Blocked = "Blocked";
+    public static String country = "country";
+    public static String getReferral = "referred_by";
+
+
+    public static String expeactations = "expectations_from_us";
+    public static String expireince = "experiences";
+    public static String offerToComm="offer_to_community";
+    public static String speakerExp="speaker_experience";
+    public static String email="email";
+    public static String gender="gender";
+
+    public static String webLink="weblink";
+    public static String working="working";
+    //public static String last_name="last_name";
+    public static String company="company";
 }

@@ -81,4 +81,14 @@ public class Const {
 
     public static String position = "position";
     public static String fromRequest="fromRequest";
+    public static String image_url="image_url";
+    public static String checkPersonalOrGroup="checkPersonalOrGroup";
+    public static String messageSenderName="messageSenderName";
+    public static String typeOfMessageSelected="typeOfMessageSelected";
+    public static String selectedMessageId="selectedMessageId";
+    public static String someTextFromRaisedTopic="someTextFromRaisedTopic";
+    public static String personal="personal";
+    public static String grp="grp";
+    public static String replyingToMessage="replyingToMessage";
+    public static String flagOfGroup="flag";
 }

@@ -334,25 +334,25 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 speaker_experience, email_str, weblink_str, working, last_name_str, company_str, countryName, referred);
 
         final HashMap<String, String> userItems=new HashMap<>();
-        userItems.put(ConstFirebase.USER_ID, userid);
-        userItems.put(ConstFirebase.USER_NAME, full_name_str);
-        userItems.put(ConstFirebase.USER_BIO, bio_str);
-        userItems.put(ConstFirebase.IMAGE_URL, picImageUri.toString());
-        userItems.put(ConstFirebase.USER_TYPE, user_type);
-        userItems.put(ConstFirebase.CITY, city);
-        userItems.put(Const.expeactations, expectations_from_us);
-        userItems.put(Const.expireince, experiences);
-        userItems.put(Const.GENDER, gender);
-        userItems.put(Const.MO_NUMBER, number);
-        userItems.put(Const.offerToComm, offer_to_community);
-        userItems.put(Const.speakerExp, speaker_experience);
-        userItems.put(Const.email, email_str);
-        userItems.put(Const.webLink, weblink_str);
-        userItems.put(Const.working, working);
-        userItems.put(Const.last_name, last_name_str);
-        userItems.put(Const.company, company_str);
-        userItems.put("country", countryName);
-        userItems.put("referred_by", referred);
+        userItems.put(ConstFirebase.USER_ID, user.getUser_id());
+        userItems.put(ConstFirebase.USER_NAME, user.getUser_name());
+        userItems.put(ConstFirebase.USER_BIO, user.getUser_bio());
+        userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
+        userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
+        userItems.put(ConstFirebase.CITY, user.getCity());
+        userItems.put(ConstFirebase.expeactations, user.getExpectations_from_us());
+        userItems.put(ConstFirebase.expireince, user.getExperiences());
+        userItems.put(ConstFirebase.GENDER, user.getGender());
+        userItems.put(ConstFirebase.MO_NUMBER, user.getNumber());
+        userItems.put(ConstFirebase.offerToComm, user.getOffer_to_community());
+        userItems.put(ConstFirebase.speakerExp, user.getSpeaker_experience());
+        userItems.put(ConstFirebase.email, user.getUser_email());
+        userItems.put(ConstFirebase.webLink, user.getWeblink());
+        userItems.put(ConstFirebase.working, user.getWork_profession());
+        userItems.put(ConstFirebase.last_name, user.getLast_name());
+        userItems.put(ConstFirebase.company, user.getCompany());
+        userItems.put(ConstFirebase.country, user.getCountry());
+        userItems.put(ConstFirebase.getReferral, user.getReferal());
 
         if (isCertificatesAdded) {
 

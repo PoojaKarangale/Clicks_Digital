@@ -54,6 +54,7 @@ import com.pakhi.clicksdigital.APIService;
 import com.pakhi.clicksdigital.GroupChat.GroupChatActivity;
 import com.pakhi.clicksdigital.GroupChat.ImageText;
 import com.pakhi.clicksdigital.GroupChat.MessageAdapter;
+import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Notifications.Client;
@@ -70,6 +71,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
+import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -100,7 +102,7 @@ public class ChatActivity extends AppCompatActivity {
     PermissionsHandling permissions;
     ValueEventListener seenListener;
     DatabaseReference reference;
-    int i=0;
+    int checkIfTypeURL=0;
     boolean notify = false;
     SharedPreference pref;
     FirebaseDatabaseInstance rootRef;
@@ -292,28 +294,11 @@ public class ChatActivity extends AppCompatActivity {
                     typeOfSelectedMessage="";
                 } else {
 
-                    String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
-                    String separateUrl="";
-                    Pattern p;
-                    Matcher m = null;
-                    String[] words = messageText.split(" ");
-                    i=0;
-                    for (String word : words) {
-                        p = Pattern.compile(URL_REGEX);
-                        m = p.matcher(word);
-
-                        if(m.find()) {
-                            separateUrl=word;
-                            Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
-                            i=1;
-                            break;
-                        }
-
-                    }
+                    TypeAndSeparateURL typeAndSeparateURL=checkTypeAndSeparateURL(messageText);
                     MessageInputText.setText("");
-                    if(i==1){
+                    if(typeAndSeparateURL.typeURLOrNot==1){
                         //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
-                        SendMessage("url", messageText,separateUrl);
+                        SendMessage("url", messageText, typeAndSeparateURL.separateURL);
                     }else{
                         //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
                         SendMessage("text", messageText,"");
@@ -348,10 +333,10 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            typeOfSelectedMessage = intent.getStringExtra("typeOfSelectedMessage");
-            selectedMessageId = intent.getStringExtra("selectedMessageId");
-            replyingToMessage = intent.getBooleanExtra("replyingToMessage", false);
-            msg = (Message) intent.getSerializableExtra("message");
+            typeOfSelectedMessage = intent.getStringExtra(Const.typeOfMessageSelected);
+            selectedMessageId = intent.getStringExtra(Const.selectedMessageId);
+            replyingToMessage = intent.getBooleanExtra(Const.replyingToMessage, false);
+            msg = (Message) intent.getSerializableExtra(Const.message);
 
             replyMessageSenderName.setVisibility(View.GONE);
             replyOnImageLayout.setVisibility(View.GONE);
@@ -969,13 +954,13 @@ public class ChatActivity extends AppCompatActivity {
                         MessageInputText.setText("");
                         //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
                         Intent intent = new Intent(ChatActivity.this, ImageText.class);
-                        intent.putExtra("image", uri.toString());
-                        intent.putExtra("grp_id", messageReceiverID);
-                        intent.putExtra("check","personal");
-                        intent.putExtra("name", messageSenderName);
-                        intent.putExtra("typeOfSelectedMessage", typeOfSelectedMessage);
-                        intent.putExtra("selectedMessageId", selectedMessageId);
-                        intent.putExtra("someTextFromRaiseTopic","");
+                        intent.putExtra(Const.image_url, uri.toString());
+                        intent.putExtra(Const.group_id, messageReceiverID);
+                        intent.putExtra(Const.checkPersonalOrGroup,"personal");
+                        intent.putExtra(Const.messageSenderName, messageSenderName);
+                        intent.putExtra(Const.typeOfMessageSelected, typeOfSelectedMessage);
+                        intent.putExtra(Const.selectedMessageId, selectedMessageId);
+                        intent.putExtra(Const.someTextFromRaisedTopic,"");
                         startActivity(intent);
                         finish();
                         //SendMessage("image", uri.toString());
@@ -1002,5 +987,29 @@ public class ChatActivity extends AppCompatActivity {
         reference.removeEventListener(seenListener);
 
     }
+    TypeAndSeparateURL checkTypeAndSeparateURL(String message){
 
+
+        String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+        String separateURL="";
+        Pattern p;
+        Matcher m = null;
+        String[] words = message.split(" ");
+        checkIfTypeURL = 0;
+        for (String word : words) {
+            p = Pattern.compile(URL_REGEX);
+            m = p.matcher(word);
+
+            if (m.find()) {
+                separateURL=word;
+                Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
+                checkIfTypeURL = 1;
+                break;
+            }
+
+        }
+        TypeAndSeparateURL typeAndSeparateURL = new TypeAndSeparateURL(separateURL, checkIfTypeURL);
+        return typeAndSeparateURL;
+    }
 }
+

@@ -168,17 +168,19 @@ public class RegisterActivity extends AppCompatActivity {
         userItems.put(ConstFirebase.IMAGE_URL, user.getImage_url());
         userItems.put(ConstFirebase.USER_TYPE, user.getUser_type());
         userItems.put(ConstFirebase.CITY, user.getCity());
-        userItems.put(Const.expeactations, user.getExpectations_from_us());
-        userItems.put(Const.expireince, user.getExperiences());
-        userItems.put(Const.GENDER, user.getGender());
-        userItems.put(Const.MO_NUMBER, user.getNumber());
-        userItems.put(Const.offerToComm, user.getOffer_to_community());
-        userItems.put(Const.speakerExp, user.getSpeaker_experience());
-        userItems.put(Const.email, user.getUser_email());
-        userItems.put(Const.webLink, user.getWeblink());
-        userItems.put(Const.working, user.getWeblink());
-        userItems.put(Const.last_name, user.getLast_name());
-        userItems.put(Const.company, user.getCompany());
+        userItems.put(ConstFirebase.expeactations, user.getExpectations_from_us());
+        userItems.put(ConstFirebase.expireince, user.getExperiences());
+        userItems.put(ConstFirebase.GENDER, user.getGender());
+        userItems.put(ConstFirebase.MO_NUMBER, user.getNumber());
+        userItems.put(ConstFirebase.offerToComm, user.getOffer_to_community());
+        userItems.put(ConstFirebase.speakerExp, user.getSpeaker_experience());
+        userItems.put(ConstFirebase.email, user.getUser_email());
+        userItems.put(ConstFirebase.webLink, user.getWeblink());
+        userItems.put(ConstFirebase.working, user.getWork_profession());
+        userItems.put(ConstFirebase.last_name, user.getLast_name());
+        userItems.put(ConstFirebase.company, user.getCompany());
+        userItems.put(ConstFirebase.country, user.getCountry());
+        userItems.put(ConstFirebase.getReferral, user.getReferal());
         return userItems;
     }
 

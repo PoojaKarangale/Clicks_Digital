@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -65,6 +66,7 @@ import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.PaginationScrollListener;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
+import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -108,10 +110,10 @@ public class GroupChatActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private ProgressDialog progressDialog;
     private TextView group_name;
-    int i = 0;
+    int checkIfTypeIsURL = 0;
     String separateURL="";
     TextView withImage;
-    String j;
+    String popUpMenuFlag;
     String name="";
     boolean replyingToMessage=false;
     String typeOfSelectedMessage="";
@@ -271,28 +273,13 @@ public class GroupChatActivity extends AppCompatActivity {
                     typeOfSelectedMessage="";
                 } else {
 
-                    String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
-                    String separateURL="";
-                    Pattern p;
-                    Matcher m = null;
-                    String[] words = message.split(" ");
-                    i = 0;
-                    for (String word : words) {
-                        p = Pattern.compile(URL_REGEX);
-                        m = p.matcher(word);
 
-                        if (m.find()) {
-                            separateURL=word;
-                            Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
-                            i = 1;
-                            break;
-                        }
+                    TypeAndSeparateURL typeAndSeparateURL = checkTypeAndSeparateURL(message);
 
-                    }
                     userMessageInput.setText("");
-                    if (i == 1) {
+                    if (typeAndSeparateURL.typeURLOrNot == 1) {
                         //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
-                        SaveMessageInfoToDatabase("url", message,separateURL);
+                        SaveMessageInfoToDatabase("url", message,typeAndSeparateURL.separateURL);
                     } else {
                         //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
                         SaveMessageInfoToDatabase("text", message,"");
@@ -341,10 +328,10 @@ public class GroupChatActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            typeOfSelectedMessage = intent.getStringExtra("typeOfSelectedMessage");
-            selectedMessageId = intent.getStringExtra("selectedMessageId");
-            replyingToMessage = intent.getBooleanExtra("replyingToMessage", false);
-            msg = (Message) intent.getSerializableExtra("message");
+            typeOfSelectedMessage = intent.getStringExtra(Const.typeOfMessageSelected);
+            selectedMessageId = intent.getStringExtra(Const.selectedMessageId);
+            replyingToMessage = intent.getBooleanExtra(Const.replyingToMessage, false);
+            msg = (Message) intent.getSerializableExtra(Const.message);
 
             replyMessageSenderName.setVisibility(View.GONE);
             replyOnImageLayout.setVisibility(View.GONE);
@@ -450,28 +437,11 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String maaa=topic.getText().toString();
-                String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
-                Pattern p;
-                Matcher m = null;
 
-                String[] words = maaa.split(" ");
-                i = 0;
-                for (String word : words) {
-                    p = Pattern.compile(URL_REGEX);
-                    m = p.matcher(word);
-
-                    if (m.find()) {
-                        separateURL=word;
-                        Log.i("seperate Url ------", separateURL);
-                        //Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
-                        i = 1;
-                        break;
-                    }
-
-                }
+                TypeAndSeparateURL typeAndSeparateURL = checkTypeAndSeparateURL(maaa);
 
                 topic_str = topic.getText().toString();
-                SaveMessageInfoToDatabase("topic", topic_str, separateURL);
+                SaveMessageInfoToDatabase("topic", topic_str, typeAndSeparateURL.separateURL);
             }
         });
 
@@ -932,7 +902,7 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void popupMenuSettigns() {
-        j=String.valueOf(0);
+        popUpMenuFlag=String.valueOf(0);
         PopupMenu popup = new PopupMenu(GroupChatActivity.this, attach_file_btn);
         popup.getMenuInflater().inflate(R.menu.attach_file_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -944,7 +914,7 @@ public class GroupChatActivity extends AppCompatActivity {
     }
     private void popupMenuSettigns1() {
         //j=1;
-        j=String.valueOf(1);
+        popUpMenuFlag=String.valueOf(1);
         PopupMenu popup = new PopupMenu(GroupChatActivity.this, withImage );
         popup.getMenuInflater().inflate(R.menu.topic_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -1083,7 +1053,7 @@ public class GroupChatActivity extends AppCompatActivity {
               */
                 case REQUESTCODE:
                     imageUriGalary = data.getData();
-                    uploadImage(imageUriGalary, j);
+                    uploadImage(imageUriGalary, popUpMenuFlag);
                     break;
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -1092,7 +1062,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                     String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), imageBitmap, "Title", null);
                     imageUriCamera = Uri.parse(path);
-                    uploadImage(imageUriCamera,j);
+                    uploadImage(imageUriCamera,popUpMenuFlag);
                     break;
                 case PICK_PDF_CODE:
                     // docUri = data.getData();
@@ -1156,14 +1126,14 @@ public class GroupChatActivity extends AppCompatActivity {
                     public void onSuccess(final Uri uri) {
                         progressDialog.dismiss();
                         Intent intent = new Intent(GroupChatActivity.this, ImageText.class);
-                        intent.putExtra("image", uri.toString());
-                        intent.putExtra("grp_id", currentGroupId);
-                        intent.putExtra("check", "grp");
-                        intent.putExtra("name", "abc");
-                        intent.putExtra("flag", flag);
-                        intent.putExtra("typeOfSelectedMessage", typeOfSelectedMessage);
-                        intent.putExtra("selectedMessageId", selectedMessageId);
-                        intent.putExtra("someTextFromRaiseTopic", someTextFromRaiseTopic);
+                        intent.putExtra(Const.image_url, uri.toString());
+                        intent.putExtra(Const.group_id, currentGroupId);
+                        intent.putExtra(Const.checkPersonalOrGroup, "grp");
+                        intent.putExtra(Const.messageSenderName, "abc");
+                        intent.putExtra(Const.flagOfGroup, flag);
+                        intent.putExtra(Const.typeOfMessageSelected, typeOfSelectedMessage);
+                        intent.putExtra(Const.selectedMessageId, selectedMessageId);
+                        intent.putExtra(Const.someTextFromRaisedTopic, someTextFromRaiseTopic);
                         startActivity(intent);
                         finish();
                         //SaveMessageInfoToDatabase("image", uri.toString());
@@ -1238,4 +1208,29 @@ public class GroupChatActivity extends AppCompatActivity {
         rootRef.getUserRef().child(currentUserID).child(ConstFirebase.userIsIn).setValue("noWhere");
 
     }
+     TypeAndSeparateURL checkTypeAndSeparateURL(String message){
+
+
+         String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+         String separateURL="";
+         Pattern p;
+         Matcher m = null;
+         String[] words = message.split(" ");
+         checkIfTypeIsURL = 0;
+         for (String word : words) {
+             p = Pattern.compile(URL_REGEX);
+             m = p.matcher(word);
+
+             if (m.find()) {
+                 separateURL=word;
+                 Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
+                 checkIfTypeIsURL = 1;
+                 break;
+             }
+
+         }
+         TypeAndSeparateURL typeAndSeparateURL = new TypeAndSeparateURL(separateURL, checkIfTypeIsURL);
+        return typeAndSeparateURL;
+    }
 }
+

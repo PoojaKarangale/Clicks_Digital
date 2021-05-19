@@ -49,8 +49,8 @@ public class UserDatabase extends SQLiteOpenHelper {
                 + "working" + " TEXT,"
                 + "last_name" + " TEXT,"
                 + "company" + " TEXT,"
-                + "country" + "TEXT,"
-                + "referred_by" + "TEXT" +
+                + "country" + " TEXT,"
+                + "referred_by" + " TEXT" +
                 ")");
         // db.close();
     }
@@ -107,11 +107,11 @@ public class UserDatabase extends SQLiteOpenHelper {
         Cursor res = getAllData();
         User user = new User(res.getString(res.getColumnIndex(ConstFirebase.USER_ID)), res.getString(res.getColumnIndex(ConstFirebase.USER_NAME)),
                 res.getString(res.getColumnIndex(ConstFirebase.USER_BIO)), res.getString(res.getColumnIndex(ConstFirebase.IMAGE_URL)), res.getString(res.getColumnIndex(ConstFirebase.USER_TYPE)),
-                res.getString(res.getColumnIndex(ConstFirebase.CITY)), res.getString(res.getColumnIndex("expectations_from_us")),
-                res.getString(res.getColumnIndex("experiences")), res.getString(res.getColumnIndex("gender")), res.getString(res.getColumnIndex("number")),
-                res.getString(res.getColumnIndex("offer_to_community")), res.getString(res.getColumnIndex("speaker_experience")), res.getString(res.getColumnIndex("email")),
-                res.getString(res.getColumnIndex("weblink")), res.getString(res.getColumnIndex("working")), res.getString(res.getColumnIndex("last_name")),
-                res.getString(res.getColumnIndex("company")), res.getString(res.getColumnIndex("country")), res.getString(res.getColumnIndex("referred_by"))
+                res.getString(res.getColumnIndex(ConstFirebase.CITY)), res.getString(res.getColumnIndex(ConstFirebase.expeactations)),
+                res.getString(res.getColumnIndex(ConstFirebase.expireince)), res.getString(res.getColumnIndex(ConstFirebase.gender)), res.getString(res.getColumnIndex("number")),
+                res.getString(res.getColumnIndex(ConstFirebase.offerToComm)), res.getString(res.getColumnIndex(ConstFirebase.speakerExp)), res.getString(res.getColumnIndex("email")),
+                res.getString(res.getColumnIndex(ConstFirebase.webLink)), res.getString(res.getColumnIndex(ConstFirebase.working)), res.getString(res.getColumnIndex("last_name")),
+                res.getString(res.getColumnIndex(ConstFirebase.company)), res.getString(res.getColumnIndex(ConstFirebase.country)), res.getString(res.getColumnIndex(ConstFirebase.getReferral))
         );
         return user;
     }

@@ -65,14 +65,14 @@ public class ImageText extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_text);
-        imageUri=getIntent().getStringExtra("image");
-        currentGroupId=getIntent().getStringExtra("grp_id");
-        check=getIntent().getStringExtra("check");
-        messageSenderName=getIntent().getStringExtra("name");
+        imageUri=getIntent().getStringExtra(Const.image_url);
+        currentGroupId=getIntent().getStringExtra(Const.group_id);
+        check=getIntent().getStringExtra(Const.checkPersonalOrGroup);
+        messageSenderName=getIntent().getStringExtra(Const.messageSenderName);
         flag=getIntent().getStringExtra("flag");
-        typeOfSelectedMessage = getIntent().getStringExtra("typeOfSelectedMessage");
-        selectedMessageId = getIntent().getStringExtra("selectedMessageId");
-        someTextFromRaiseTopic = getIntent().getStringExtra("someTextFromRaiseTopic");
+        typeOfSelectedMessage = getIntent().getStringExtra(Const.typeOfMessageSelected);
+        selectedMessageId = getIntent().getStringExtra(Const.selectedMessageId);
+        someTextFromRaiseTopic = getIntent().getStringExtra(Const.someTextFromRaisedTopic);
 
         imgUri = Uri.parse(imageUri);
 
@@ -103,21 +103,21 @@ public class ImageText extends AppCompatActivity {
 
                 if(TextUtils.isEmpty(inp)){
                     inp="";
-                    if(check.equals("personal")){
+                    if(check.equals(Const.personal)){
                         SendMessage("image",imageUri,inp);
                         //goToParent();
 
-                    }else if(check.equals("grp")){
+                    }else if(check.equals(Const.grp)){
                         SaveMessageInfoToDatabase("image", imageUri, inp);
                         //goToParent();
                     }
 
                 }
                 else {
-                    if(check.equals("personal")){
+                    if(check.equals(Const.personal)){
                         SendMessage("image", imageUri, inp);
                         //goToParent();
-                    }else if(check.equals("grp")){
+                    }else if(check.equals(Const.grp)){
                         SaveMessageInfoToDatabase("image", imageUri, inp);
                         //goToParent();
                     }

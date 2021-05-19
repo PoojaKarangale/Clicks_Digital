@@ -35,7 +35,7 @@
                 android:fontFamily="@font/helvetica_bold"
                 android:textColor="@color/white"
                 android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
+
                 android:layout_marginLeft="10dp"/>
           </RelativeLayout>
 

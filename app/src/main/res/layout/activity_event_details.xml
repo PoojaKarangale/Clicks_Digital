@@ -148,6 +148,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Start Date and Time"
                                 android:textSize="9dp"
+                                android:textStyle="bold"
                                 android:textColor="#43B7FD"
                                 android:fontFamily="@font/segoe"/>
                             <TextView

@@ -36,6 +36,7 @@ import com.pakhi.clicksdigital.Fragment.ChatsFragment;
 import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
+import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
@@ -69,6 +70,7 @@ public class StartActivity extends AppCompatActivity {
     FirebaseDatabaseInstance rootRef;
     private ImageView profile;
     String url;
+    //UserDatabase userDatabase;
 
 
     @Override
@@ -86,24 +88,18 @@ public class StartActivity extends AppCompatActivity {
 
         userID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
         setupTabLayout();
-        rootRef.getUserRef().child(userID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                url=snapshot.child(ConstFirebase.IMAGE_URL).getValue().toString();
-                Glide.with(getApplicationContext()).load(String.valueOf(url))
-                        .transform(new CenterCrop(), new RoundedCorners(50))
-            .placeholder(R.drawable.nav_profile).into(profile);
 
-                //Toast.makeText(getApplicationContext(), "url image ---- " + url, Toast.LENGTH_LONG).show();
-                Log.i("url --- ", url);
-            }
-            //"https://firebasestorage.googleapis.com/v0/b/clicksdigital-ad067.appspot.com/o/User_Media%2FClhjzMSjPodgZbv7QxbrzCYKgCF3%2FPhotos%2FProfileImage%2Fprofile_image?alt=media&token=bf6deedd-2540-4cdb-88ae-1faa2d7e12ee"
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        UserDatabase userDatabase = new UserDatabase(StartActivity.this);
 
-            }
-        });
+        String imgUrl = userDatabase.getSqliteUser_data(ConstFirebase.IMAGE_URL);
+
         profile=findViewById(R.id.profile_activity);
+
+        Glide.with(getApplicationContext()).load(imgUrl)
+                .transform(new CenterCrop(), new RoundedCorners(50))
+                .placeholder(R.drawable.nav_profile).into(profile);
+
+
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override

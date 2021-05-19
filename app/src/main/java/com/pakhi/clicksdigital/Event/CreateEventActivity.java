@@ -58,6 +58,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
+import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -68,6 +69,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CreateEventActivity extends AppCompatActivity {
     static  int    PReqCode=1;
@@ -88,7 +91,6 @@ public class CreateEventActivity extends AppCompatActivity {
     private EditText fee_amount;
 
     private Uri  picImageUri=null;
-    private Chip onlineChip, offlineChip, bothChip, paidChip, unpaidChip;
     private Spinner        spinner;
     private ProgressDialog progressDialog;
     TextView textOverImage;
@@ -108,8 +110,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
     EditText country;
 
-    int colorBlue = Color.parseColor("#43B7FD");
-    int colorRed = Color.parseColor("#FF704D");
+    String separetURLForAddress="";
+
+    //int colorBlue = Color.parseColor("#43B7FD");
+    //int colorRed = Color.parseColor("#FF704D");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,9 +194,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
         if(startDate.compareTo(endDate)>0){
             Toast.makeText(CreateEventActivity.this, "Start date can't be greater than end date", Toast.LENGTH_SHORT).show();
-            abc=false;
+            //abc=false;
+            return false;
         }
-        return abc;
+        return true;
     }
 
 
@@ -363,6 +368,22 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     boolean validateEvent() {
+        boolean addressLinkFlag=true;
+        String addressLink = address.getText().toString();
+
+        if(!addressLink.equals("")){
+
+            TypeAndSeparateURL typeAndSeparateURL = checkIfURLIsEnteredInLink(addressLink);
+
+            if(typeAndSeparateURL.typeURLOrNot==1){
+                separetURLForAddress=typeAndSeparateURL.separateURL;
+                addressLinkFlag=true;
+            }else{
+                addressLinkFlag=false;
+            }
+        }
+
+
         boolean addressFlag=false, feeFlag=false, profileFlag=false;
         if (payable) {
             //check fee_amount
@@ -389,13 +410,42 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         }
 
-        if (addressFlag && feeFlag) {
+        if(!addressLinkFlag){
+            Toast.makeText(getApplicationContext(), "Please provide valid map/ meeting link", Toast.LENGTH_LONG).show();
+        }
+
+        if (addressFlag && feeFlag && addressLinkFlag)  {
             if (ValidateInput.field(event_name) && ValidateInput.field(description)) {
                 return true;
 
             }
         }
         return false;
+    }
+
+    private TypeAndSeparateURL checkIfURLIsEnteredInLink(String addressLink) {
+
+        String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+        String separateURL="";
+        Pattern p;
+        Matcher m = null;
+        String[] words = addressLink.split(" ");
+        int checkIfTypeIsURL = 0;
+        for (String word : words) {
+            p = Pattern.compile(URL_REGEX);
+            m = p.matcher(word);
+
+            if (m.find()) {
+                separateURL=word;
+                Toast.makeText(getApplicationContext(), "The String contains URL", Toast.LENGTH_LONG).show();
+                checkIfTypeIsURL = 1;
+                break;
+            }
+
+        }
+        TypeAndSeparateURL typeAndSeparateURL = new TypeAndSeparateURL(separateURL, checkIfTypeIsURL);
+        return typeAndSeparateURL;
+
     }
 
     private void createEvent() {
@@ -411,7 +461,7 @@ public class CreateEventActivity extends AppCompatActivity {
         venuStr=venu.getText().toString();
         String cityStr="";
         cityStr=city.getText().toString();
-        String addressStr=address.getText().toString();
+        String addressStr=separetURLForAddress;
 
         String startDate=choose_start_date.getText().toString();
         String endDate=choose_end_date.getText().toString();
@@ -590,7 +640,7 @@ public class CreateEventActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void chipActionHandled() {
+    /*private void chipActionHandled() {
         paidChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -650,7 +700,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 address.setVisibility(View.VISIBLE);
             }
         });
-    }
+    }*/
 
 
     private void settingDateAndTime() {
