@@ -57,7 +57,7 @@ public class Const {
     public static String speakerExp="speaker_experience";
     public static String email="email";
     public static String webLink="weblink";
-    public static String working="working";
+    public static String working="work_profession";
     public static String last_name="last_name";
     public static String company="company";
 

@@ -46,7 +46,7 @@ public class UserDatabase extends SQLiteOpenHelper {
                 + "speaker_experience" + " TEXT,"
                 + "email" + " TEXT,"
                 + "weblink" + " TEXT,"
-                + "working" + " TEXT,"
+                + "work_profession" + " TEXT,"
                 + "last_name" + " TEXT,"
                 + "company" + " TEXT,"
                 + "country" + " TEXT,"

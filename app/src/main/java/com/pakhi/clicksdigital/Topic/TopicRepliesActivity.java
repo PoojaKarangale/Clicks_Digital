@@ -473,7 +473,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
                     String n = snapshot.child(ConstFirebase.USER_NAME).getValue().toString()
                             +" " + snapshot.child(ConstFirebase.last_name).getValue().toString();
                     name.setText(n);
-                    String p = snapshot.child("work_profession").getValue().toString()
+                    String p = snapshot.child(ConstFirebase.working).getValue().toString()
                             +", "+snapshot.child("company").getValue().toString();
                     profession.setText(p);
 

@@ -139,7 +139,7 @@ public class ChatsFragment extends Fragment {
 
                                     final String retName=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_NAME).getValue().toString()
                                             +" "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.last_name).getValue().toString();
-                                    final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child("work_profession").getValue().toString()
+                                    final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.working).getValue().toString()
                                             +", "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child("company").getValue().toString();
 
                                     holder.userName.setText(retName);
