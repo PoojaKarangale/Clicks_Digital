@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
 public class GroupsFragment extends Fragment implements View.OnClickListener {
 
     String                   userID;
@@ -45,7 +44,6 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
     MyGroupsAdapter groupAdapter;
     private View                 groupFragmentView;
     private List<Group>          groups;
-    private List<Group>          groups1 = new ArrayList<>();
     private FloatingActionButton fab_create_group, fab_join_group;
     private RecyclerView      recyclerView;
     private DatabaseReference GroupRef, userGroupRef, UsersRef;
@@ -65,7 +63,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         UsersRef=rootRef.getUserRef();
 
         userID=pref.getData(SharedPreference.currentUserId, getContext());
-        userGroupRef=UsersRef.child(userID).child(ConstFirebase.groups1);
+        userGroupRef=UsersRef.child(userID).child(ConstFirebase.groups);
 
         initializeFields();
 
@@ -87,7 +85,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         });
 
         user_type=pref.getData(SharedPreference.user_type, getContext());
-        if (user_type.equals("admin")) {
+        if (user_type.equals(ConstFirebase.admin)) {
             fab_create_group.setVisibility(View.VISIBLE);
             fab_join_group.setVisibility(View.GONE);
 
@@ -132,8 +130,6 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
     public void RetrieveAndDisplayGroups() {
         Log.d("GroupFragments", "-------------" + userGroupRef);
 
-//        groups.clear();
-//        groupAdapter.notifyDataSetChanged();
         userGroupRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -141,7 +137,6 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                         String group_key=snapshot.getKey();
-                        //groupAdapter.notifyDataSetChanged();
                         groups.clear();
                         groupAdapter.notifyDataSetChanged();
                         GroupRef.child(group_key).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -163,7 +158,6 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
 
                                     groupAdapter.notifyDataSetChanged();
 
-
                                 }}
 
                             @Override
@@ -179,32 +173,17 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        /*Group gp;
-        for(int i=0;i<groups1.size()-1;i++){
-            for(int j=0;j<i-groups1.size()-1;j++){
-                if((groups1.get(j).getTimestamp())>(groups1.get(j+1).getTimestamp())){
-                    gp=groups1.get(j);
-                    groups1.set(j, groups1.get(j+1));
-                    groups1.set(j+1, gp);
-                }
-            }
-        }*/
-        //groups=groups1;
-        //groupAdapter.notifyDataSetChanged();
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_join_group:
+            case R.id.join_group_layout:
                 startActivity(new Intent(getContext(), JoinGroupActivity.class));
                 break;
             case R.id.fab_create_group:
                 startActivity(new Intent(getContext(), CreateNewGroupActivity.class));
-                break;
-            case R.id.join_group_layout:
-                startActivity(new Intent(getContext(), JoinGroupActivity.class));
                 break;
         }
     }

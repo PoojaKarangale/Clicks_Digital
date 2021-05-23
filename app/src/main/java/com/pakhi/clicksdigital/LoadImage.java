@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 //import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.squareup.picasso.Picasso;
 
 public class LoadImage extends AppCompatActivity {
@@ -22,7 +23,7 @@ public class LoadImage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_image);
         Toast.makeText(getApplicationContext(), "Loading Image", Toast.LENGTH_LONG).show();
-        String image= getIntent().getStringExtra("image_url");
+        String image= getIntent().getStringExtra(Const.IMAGE_URL);
         PhotoView photo = findViewById(R.id.load_image);
 
         /*Glide

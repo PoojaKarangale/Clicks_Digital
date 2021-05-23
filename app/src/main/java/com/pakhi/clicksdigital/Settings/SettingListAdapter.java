@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Adapter;
+package com.pakhi.clicksdigital.Settings;
 
 import android.content.Context;
 import android.view.LayoutInflater;

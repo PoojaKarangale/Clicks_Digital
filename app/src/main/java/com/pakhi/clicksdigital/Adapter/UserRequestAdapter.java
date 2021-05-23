@@ -195,7 +195,7 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
 
     private void addUserToGroup(String groupId, String userId) {
         rootRef.getGroupRef().child(groupId).child(ConstFirebase.users).child(userId).setValue("");
-        rootRef.getUserRef().child(userId).child(ConstFirebase.groups1).child(groupId).setValue("");
+        rootRef.getUserRef().child(userId).child(ConstFirebase.groups).child(groupId).setValue("");
         //databaseReference.child("User_requests").child("request_status").setValue("accepted");
     }
 

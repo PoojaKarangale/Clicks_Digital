@@ -91,8 +91,7 @@ public class FullScreenTopicAdapter extends PagerAdapter {
             }
         });
 
-        Glide
-                .with(this.context)
+        Glide.with(this.context)
                 .load(images.get(position)).transform(new CenterCrop(), new RoundedCorners(15))
                 .into(imageView);
 

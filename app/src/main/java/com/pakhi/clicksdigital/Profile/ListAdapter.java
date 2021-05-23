@@ -45,7 +45,6 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         // LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         View view=inflater.inflate(R.layout.item_list_view, null);
         ImageView row_image=view.findViewById(R.id.row_image);
         TextView row_title=view.findViewById(R.id.row_title);

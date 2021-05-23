@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Utils;
+package com.pakhi.clicksdigital.Notifications;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import com.pakhi.clicksdigital.Notifications.Sender;
 import com.pakhi.clicksdigital.Notifications.Token;
 import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,30 +36,10 @@ public class Notification {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Token token = snapshot.getValue(Token.class);
 
-                    //Intent resultIntent = new Intent(applicationContext, ChatActivity.class);
-                    //resultIntent.putExtra("visit_user_id", receiverID);
-                    //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-
                     Data data = new Data(messageSenderID, R.drawable.logo, body, title,
                             receiverID, type, topicId);
                   /*  Data data = new Data(messageSenderID, R.drawable.logo, body, title,
                             receiverID,resultIntent);*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     Sender sender = new Sender(data, token.getToken());
                     APIService apiService;

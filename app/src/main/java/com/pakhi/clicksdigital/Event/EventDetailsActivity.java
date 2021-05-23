@@ -6,14 +6,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Layout;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.pakhi.clicksdigital.R;
@@ -28,19 +26,16 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.PaymentGatewayFiles.PaymentActivity;
-import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 //import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
-import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.ToastClass;
 
@@ -182,7 +177,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void checkSeatsFull() {
-        rootRef.getEventRef().child(event.getEventId()).child("Participants").addValueEventListener(new ValueEventListener() {
+        rootRef.getEventRef().child(event.getEventId()).child(ConstFirebase.participants).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int count = (int) snapshot.getChildrenCount();
@@ -318,7 +313,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         } else {
             cost.setText(String.valueOf("Event Fee :  " + Html.fromHtml("<font  color = '#092859'><i>Free</i></font>")));
         }
-        if (event.getEventType().equals(Const.Online)) {
+        if (event.getEventType().equals(ConstFirebase.eventOnline)) {
             location_city.setText(event.getVenu());
             //txtLoc.setVisibility(View.GONE);
             //location.setVisibility(View.GONE);

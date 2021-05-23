@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.FragmentsInSetting;
+package com.pakhi.clicksdigital.Settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

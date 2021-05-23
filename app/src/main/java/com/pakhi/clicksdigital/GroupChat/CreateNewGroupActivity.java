@@ -25,53 +25,44 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Activities.StartActivity;
+import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 
 public class CreateNewGroupActivity extends AppCompatActivity {
-    static int PReqCode   =1;
-    static int REQUESTCODE=1;
-    Uri    picImageUri;
+    static int PReqCode = 1;
+    Uri picImageUri;
     String user_type, currentUserId;
-    String saveCurrentTime, saveCurrentDate;
-    SimpleDateFormat currentTime, currentDate;
-    Calendar                 calendar;
-    boolean                  isProfileSelected=false;
+    boolean isProfileSelected = false;
     FirebaseDatabaseInstance rootRef;
     private ImageView profile_img;
-    private EditText  display_name, description;
+    private EditText display_name, description;
     private FloatingActionButton done_btn;
-    private ProgressDialog       progressDialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_group);
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
-        SharedPreference pref=SharedPreference.getInstance();
-        user_type=pref.getData(SharedPreference.user_type, getApplicationContext());
-        currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        rootRef = FirebaseDatabaseInstance.getInstance();
+        SharedPreference pref = SharedPreference.getInstance();
+        user_type = pref.getData(SharedPreference.user_type, getApplicationContext());
+        currentUserId = pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
-        currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        currentTime=new SimpleDateFormat("hh:mm a");
-
-        profile_img=findViewById(R.id.profile_img);
-        done_btn=findViewById(R.id.done_btn);
-        display_name=findViewById(R.id.display_name);
-        description=findViewById(R.id.description);
+        profile_img = findViewById(R.id.profile_img);
+        done_btn = findViewById(R.id.done_btn);
+        display_name = findViewById(R.id.display_name);
+        description = findViewById(R.id.description);
         done_btn.setVisibility(View.VISIBLE);
 
-        progressDialog=new ProgressDialog(CreateNewGroupActivity.this);
+        progressDialog = new ProgressDialog(CreateNewGroupActivity.this);
         progressDialog.setMessage("Loading...");
 
         profile_img.setOnClickListener(new View.OnClickListener() {
@@ -88,83 +79,48 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         done_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String groupName=display_name.getText().toString().trim();
-                String description_str=description.getText().toString().trim();
+                String groupName = display_name.getText().toString().trim();
+                String description_str = description.getText().toString().trim();
                 if (TextUtils.isEmpty(groupName)) {
                     showToast("Group name cannot be empty");
                 } else {
                     if (progressDialog != null)
                         progressDialog.show();
-                    //createGroup();
                     updateGroupInfo(groupName, description_str);
-
                 }
             }
         });
 
     }
 
- /*   private void sendRequestToCreateGroup(final String groupName, final String description_str) {
-        final String userid = currentUserId;
-        final DatabaseReference reference = rootRef.getGroupRequests();
-        // final SimpleDateFormat sdf_date = new SimpleDateFormat("dd/mm/yyyy");
-
-        calendar = Calendar.getInstance();
-        saveCurrentDate = currentDate.format(calendar.getTime());
-        saveCurrentTime = currentTime.format(calendar.getTime());
-
-        String group_request_id = reference.push().getKey();
-        HashMap<String, Object> hashMap = new HashMap<>();
-
-        hashMap.put("group_name", groupName);
-        hashMap.put("description", description_str);
-        hashMap.put("group_request_id", group_request_id);
-        hashMap.put("date", saveCurrentDate);
-        hashMap.put("requesting_user", userid);
-        hashMap.put("request_status", "pending");
-
-        reference.child(group_request_id).setValue(hashMap);
-        goToActivity();
-
-    }
-*/
-
     private void updateGroupInfo(final String groupName, final String description_str) {
-        // final String userid = currentUserId;
-
-        final DatabaseReference reference=rootRef.getGroupRef();
-        final String groupid=reference.push().getKey();
-
-        calendar=Calendar.getInstance();
-        saveCurrentDate=currentDate.format(calendar.getTime());
-        saveCurrentTime=currentTime.format(calendar.getTime());
-
+        final DatabaseReference reference = rootRef.getGroupRef();
+        final String groupid = reference.push().getKey();
         createGroup(groupid);
 
-        HashMap<String, Object> hashMap=new HashMap<>();
-
-        hashMap.put(Const.group_name, groupName);
-        hashMap.put(Const.desc, description_str);
-        hashMap.put(Const.grpid, groupid);
-        hashMap.put(Const.uid, currentUserId);
-        hashMap.put(Const.date, saveCurrentDate);
-        hashMap.put(Const.time, saveCurrentTime);
-
+      /*  HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put(ConstFirebase.GROUP_NAME, groupName);
+        hashMap.put(ConstFirebase.description, description_str);
+        hashMap.put(ConstFirebase.groupId, groupid);
+        hashMap.put(ConstFirebase.userID, currentUserId);
+        hashMap.put(ConstFirebase.timestamp, calendar.getTimeInMillis()/1000L);
         if (isProfileSelected)
-            hashMap.put(Const.IMAGE_URL, picImageUri.toString());
+            hashMap.put(ConstFirebase.IMAGE_URL, picImageUri.toString());
         else
-            hashMap.put(Const.IMAGE_URL, "default_profile");
+            hashMap.put(ConstFirebase.IMAGE_URL, "default_profile");*/
 
-        reference.child(groupid).setValue(hashMap);
-
+        Calendar calendar = Calendar.getInstance();
+        Long timestamp = calendar.getTimeInMillis() / 1000L;
+        Group group = new Group(groupid, groupName, description_str, currentUserId, picImageUri.toString(), timestamp);
+        reference.child(groupid).setValue(group);
         addAdminToTheGroup(currentUserId, groupid);
     }
 
     private void addAdminToTheGroup(String userid, String groupid) {
         DatabaseReference groupRef, userRef;
-        groupRef=rootRef.getGroupRef().child(groupid).child(ConstFirebase.users).child(userid);
+        groupRef = rootRef.getGroupRef().child(groupid).child(ConstFirebase.users).child(userid);
         groupRef.setValue("");
-        userRef=rootRef.getUserRef().child(userid).child(ConstFirebase.groups1).child(groupid);
+        userRef = rootRef.getUserRef().child(userid).child(ConstFirebase.groups).child(groupid);
         userRef.setValue("");
 //        setting group admin
         rootRef.getGroupRef().child(groupid).child(ConstFirebase.admins).child(userid).setValue("");
@@ -192,21 +148,15 @@ public class CreateNewGroupActivity extends AppCompatActivity {
 
     private void updateUI() {
         progressDialog.dismiss();
-        Intent homeActivity=new Intent(getApplicationContext(), StartActivity.class);
+        Intent homeActivity = new Intent(getApplicationContext(), StartActivity.class);
         startActivity(homeActivity);
         finish();
     }
 
-    String getFileExtention(Uri uri) {
-        ContentResolver contentResolver=getContentResolver();
-        MimeTypeMap mime=MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
-
     private void createGroup(String groupid) {
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.grpPhotos).child(ConstFirebase.profGrp);
+        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.groupPhotos).child(ConstFirebase.groupProfile);
 
-        final StorageReference imgPath=sReference.child(groupid ); //+ "." + getFileExtention(picImageUri)
+        final StorageReference imgPath = sReference.child(groupid); //+ "." + getFileExtention(picImageUri)
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -215,10 +165,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                 imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-
-                        //  Log.d("createNewGroupActivity","-----before----pic img uri-----"+picImageUri.toString());
-                        picImageUri=uri;
-                        // Log.d("createNewGroupActivity","----after-----pic img uri-----"+picImageUri.toString());
+                        picImageUri = uri;
                         showToast("new group created");
                         updateUI();
                     }
@@ -239,42 +186,15 @@ public class CreateNewGroupActivity extends AppCompatActivity {
             switch (requestCode) {
 
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                    CropImage.ActivityResult result=CropImage.getActivityResult(data);
-                    picImageUri=result.getUri();
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    picImageUri = result.getUri();
                     profile_img.setImageURI(picImageUri);
-                    isProfileSelected=true;
+                    isProfileSelected = true;
                     break;
 
                 default:
                     Toast.makeText(this, "nothing is selected", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //updateUserStatus("online");
-    }
-
-    private void updateUserStatus(String state) {
-        String saveCurrentTime, saveCurrentDate;
-
-        Calendar calendar=Calendar.getInstance();
-
-        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate=currentDate.format(calendar.getTime());
-
-        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        saveCurrentTime=currentTime.format(calendar.getTime());
-
-        HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put(Const.time, saveCurrentTime);
-        onlineStateMap.put(Const.date, saveCurrentDate);
-        onlineStateMap.put(Const.state, state);
-
-        rootRef.getUserRef().child(currentUserId).child(ConstFirebase.userState)
-                .updateChildren(onlineStateMap);
-
     }
 }

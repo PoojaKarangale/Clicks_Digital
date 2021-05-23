@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transperent_grey"
+    tools:context=".Fragment.InternetCheckFragment"
+    android:clickable="true"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/set_profile_blue"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:padding="32dp">
+
+        <ImageView
+            android:id="@+id/image_in_internet"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/internet_image" />
+
+        <TextView
+            android:id="@+id/internet_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_in_internet"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/helvetica_bold"
+            android:gravity="center_horizontal"
+            android:text="No Internet Connection"
+            android:textSize="@dimen/dimen_16dp" />
+    </LinearLayout>
+</FrameLayout>

@@ -97,7 +97,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mcontext, LoadImage.class);
-                        intent.putExtra("image_url", image_url );
+                        intent.putExtra(Const.IMAGE_URL, image_url );
                         mcontext.startActivity(intent);
                     }
                 });

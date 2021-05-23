@@ -88,7 +88,7 @@ public class FindFriendsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        updateUserStatus("online");
+
         searchEvents("");
     }
 
@@ -125,25 +125,6 @@ public class FindFriendsActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUserStatus(String state) {
-        String saveCurrentTime, saveCurrentDate;
-
-        Calendar calendar=Calendar.getInstance();
-
-        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate=currentDate.format(calendar.getTime());
-
-        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        saveCurrentTime=currentTime.format(calendar.getTime());
-
-        HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put(Const.time, saveCurrentTime);
-        onlineStateMap.put(Const.date, saveCurrentDate);
-        onlineStateMap.put(Const.state, state);
-
-        UsersRef.child(currentUserId).child(ConstFirebase.userState)
-                .updateChildren(onlineStateMap);
-    }
 
 
     @Override

@@ -43,28 +43,28 @@ import java.util.ArrayList;
 
 class ImageViewPagerAdapter extends PagerAdapter {
     android.content.Context context;
-    ArrayList<String>       images;
-    ArrayList<String>       eventName;
-    ArrayList<String>       uploader;
-    LayoutInflater          mLayoutInflater;
+    ArrayList<String> images;
+    ArrayList<String> eventName;
+    ArrayList<String> uploader;
+    LayoutInflater mLayoutInflater;
     FirebaseDatabaseInstance rootRef;
-    private boolean doNotifyDataSetChangedOnce=false;
+    private boolean doNotifyDataSetChangedOnce = false;
 
     public ImageViewPagerAdapter(android.content.Context context, ArrayList<String> images, ArrayList<String> eventName, ArrayList<String> uploader) {
-        this.context=context;
-        this.images=images;
-        this.eventName=eventName;
-        this.uploader=uploader;
+        this.context = context;
+        this.images = images;
+        this.eventName = eventName;
+        this.uploader = uploader;
         //  mLayoutInflater=(LayoutInflater) context.getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
-        mLayoutInflater=LayoutInflater.from(context);
+        mLayoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-            if (doNotifyDataSetChangedOnce) {
-                doNotifyDataSetChangedOnce = false;
-                notifyDataSetChanged();
-            }
+        if (doNotifyDataSetChangedOnce) {
+            doNotifyDataSetChangedOnce = false;
+            notifyDataSetChanged();
+        }
         return images.size();
     }
 
@@ -76,17 +76,17 @@ class ImageViewPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull final ViewGroup container, final int position) {
-        View itemView=mLayoutInflater.inflate(R.layout.slider_image_home, container, false);
+        View itemView = mLayoutInflater.inflate(R.layout.slider_image_home, container, false);
 
-        ImageView imageView=itemView.findViewById(R.id.imageViewMain);
-        TextView nameOfEvent=itemView.findViewById(R.id.name_of_event);
+        ImageView imageView = itemView.findViewById(R.id.imageViewMain);
+        TextView nameOfEvent = itemView.findViewById(R.id.name_of_event);
         final TextView upload = itemView.findViewById(R.id.upload_value);
         nameOfEvent.setText(eventName.get(position));
         rootRef = FirebaseDatabaseInstance.getInstance();
         rootRef.getUserRef().child(uploader.get(position)).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                upload.setText(snapshot.child(ConstFirebase.USER_NAME).getValue().toString()+" "+snapshot.child(ConstFirebase.last_name).getValue().toString());
+                upload.setText(snapshot.child(ConstFirebase.USER_NAME).getValue().toString() + " " + snapshot.child(ConstFirebase.last_name).getValue().toString());
                 //Log.i("snap ----", snapshot.child("user_name").getValue().toString());
             }
 

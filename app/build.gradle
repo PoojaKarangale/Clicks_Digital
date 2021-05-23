@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.pakhi.clicksdigital"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -23,7 +23,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
@@ -42,15 +41,15 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:6.0.2'
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
 
-    /*   implementation 'com.google.firebase:firebase-auth:20.0.1'
+    /*implementation 'com.google.firebase:firebase-auth:20.0.1'
     implementation 'com.google.firebase:firebase-core:18.0.0'
     implementation 'com.google.firebase:firebase-database:19.6.0'
     implementation 'com.google.fireba  se:firebase-storage:19.2.1'
     implementation 'com.firebaseui:firebase-ui-database:6.0.2'
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
-*/
+    */
 
-    //payUmoney 
+    //payUmoney
     implementation 'com.payumoney.core:payumoney-sdk:7.6.0'
     implementation 'com.payumoney.sdkui:plug-n-play:1.6.0'
     // retrofit library
@@ -90,7 +89,7 @@ dependencies {
 
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
-    compile 'com.github.chathuralakmal:AndroidImagePopup:1.2.2'
+    implementation 'com.github.chathuralakmal:AndroidImagePopup:1.2.2'
 
 
 }

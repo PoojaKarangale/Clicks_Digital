@@ -82,6 +82,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
             loading_bar.setVisibility(View.VISIBLE);
             btn_verify.setVisibility(View.INVISIBLE);
             resend_otp.setVisibility(View.VISIBLE);
+            Log.e("PHONEVERIFY","----------- error : "+e.getMessage());
             showToast("Please check your INTERNET connection and click RESEND OTP\n" + e.getMessage());
 
         }
@@ -105,8 +106,8 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
 
-        number = getIntent().getStringExtra(Const.MO_NUMBER);
-        previousActivity = getIntent().getStringExtra(ConstFirebase.prevActivity);
+        number = getIntent().getStringExtra(Const.number);
+        previousActivity = getIntent().getStringExtra(Const.PreviousActivity);
         String phoneNumberWithoutSpecialChar = number.replaceAll("[ -()/]", "");
         pref = SharedPreference.getInstance();
         rootRef = FirebaseDatabaseInstance.getInstance();
@@ -116,7 +117,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
         initializingFields();
         Log.d("phoneVerify", " ----------------------" + phoneNumberWithoutSpecialChar + "----------" + number);
         verify_number.setText("Verifying " + number);
-        sendVerificationCode(number);
+        sendVerificationCode(phoneNumberWithoutSpecialChar);
         initializeListeners();
     }
 
@@ -176,6 +177,7 @@ public class PhoneVerify extends AppCompatActivity implements View.OnClickListen
                             resend_otp.setVisibility(View.VISIBLE);
 
                             showToast("Please check your INTERNET connection and click RESEND OTP\n" + task.getException().getMessage());
+
                            /* Toast.makeText(PhoneVerify.this, "Please check your INTERNET connection and click RESEND OTP", Toast.LENGTH_SHORT).show();
                             Toast.makeText(PhoneVerify.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();*/
                         }

@@ -10,26 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 public class JoinGroupActivity extends AppCompatActivity implements View.OnClickListener {
@@ -118,7 +112,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                 for (final DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                     Log.d("SEARCH GROUP","--------------"+snapshot1.getKey()+" "+snapshot1.getValue());
 
-                       rootRef.getUserRef().child(current_user_id).child(ConstFirebase.groups1).child(snapshot1.getKey()).addValueEventListener(new ValueEventListener() {
+                       rootRef.getUserRef().child(current_user_id).child(ConstFirebase.groups).child(snapshot1.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Log.d("GROUPS","----------snapshot"+snapshot.getValue());
@@ -151,28 +145,9 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
     protected void onStart() {
         super.onStart();
         //  searchGroups("");
-        // updateUserStatus("online");
-    }
-
-    private void updateUserStatus(String state) {
-        String saveCurrentTime, saveCurrentDate;
-
-        Calendar calendar=Calendar.getInstance();
-
-        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate=currentDate.format(calendar.getTime());
-
-        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        saveCurrentTime=currentTime.format(calendar.getTime());
-
-        HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put(Const.time, saveCurrentTime);
-        onlineStateMap.put(Const.date, saveCurrentDate);
-        onlineStateMap.put(Const.state, state);
-        usersRef.child(current_user_id).child(ConstFirebase.userState)
-                .updateChildren(onlineStateMap);
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -195,12 +170,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                 case "readGroups":
                     // readGroup();
                     break;
-                case "online":
-                    updateUserStatus("online");
-                    break;
-                case "offline":
-                    updateUserStatus("offline");
-                    break;
+
             }*/
             return "";
         }

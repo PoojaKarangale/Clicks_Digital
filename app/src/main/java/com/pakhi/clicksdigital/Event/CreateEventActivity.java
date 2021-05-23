@@ -56,7 +56,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.pakhi.clicksdigital.Utils.ValidateInput;
@@ -87,19 +87,18 @@ public class CreateEventActivity extends AppCompatActivity {
     private ImageButton gallery;
     private Button      submit_btn, calculateTotal;
     private LinearLayout fee_layout;
-    private EditText event_name, description, venu, city, address, noOfSeats;
+    private EditText event_name, description, venue, city, address, noOfSeats;
     private EditText fee_amount;
 
     private Uri  picImageUri=null;
+
     private Spinner        spinner;
     private ProgressDialog progressDialog;
     TextView textOverImage;
 
     private DatabaseReference userRef, eventRef /*,eventCategory*/ ;
     private FirebaseDatabaseInstance rootRef;
-    //String[] listOfCat;
-    //String[] listOfCat1;
-    int i =0;
+
     Date startDate, endDate;
     ArrayList<String> listOfCat = new ArrayList<>();
     ArrayList<String> listOfCat1 = new ArrayList<>();
@@ -111,9 +110,6 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText country;
 
     String separetURLForAddress="";
-
-    //int colorBlue = Color.parseColor("#43B7FD");
-    //int colorRed = Color.parseColor("#FF704D");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,11 +131,8 @@ public class CreateEventActivity extends AppCompatActivity {
         progressDialog=new ProgressDialog(CreateEventActivity.this);
         progressDialog.setMessage("Loading...");
 
-        //getCitySelected();
         settingDateAndTime();
         spinnerImplementationForTopic();
-        //chipActionHandled();
-        // calculateEventFee();
 
         event_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,15 +160,10 @@ public class CreateEventActivity extends AppCompatActivity {
                             progressDialog.show();
                             createEventStorage();
                         }
-
                     }
-
-
                 } else {
                     Toast.makeText(CreateEventActivity.this, "Select event picture", Toast.LENGTH_SHORT).show();
                 }
-
-                // createEvent();
             }
         });
 
@@ -188,21 +176,16 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private boolean validateDate() {
-        boolean abc=true;
-//        String startDate=choose_start_date.getText().toString();
-//        String endDate=choose_end_date.getText().toString();
 
         if(startDate.compareTo(endDate)>0){
             Toast.makeText(CreateEventActivity.this, "Start date can't be greater than end date", Toast.LENGTH_SHORT).show();
-            //abc=false;
             return false;
         }
         return true;
     }
 
-
     private void setCategories() {
-        userRef.child(currentUserId).child(ConstFirebase.groups1).addValueEventListener(new ValueEventListener() {
+        userRef.child(currentUserId).child(ConstFirebase.groups).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snap:snapshot.getChildren()){
@@ -210,8 +193,6 @@ public class CreateEventActivity extends AppCompatActivity {
                     listOfCat.add(snap.getKey());
                     Log.i("Length of listCat-----",String.valueOf(listOfCat.size()));
                     setFinal(snap.getKey());
-
-
                 }
             }
 
@@ -221,8 +202,6 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
         Log.i("Length of listCat-----",String.valueOf(listOfCat.size()));
-
-
     }
 
     private void setFinal(String val) {
@@ -240,7 +219,6 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
             });
         }
-
 
     private void initializeFields() {
         textOverImage = findViewById(R.id.text_over_image);
@@ -261,7 +239,7 @@ public class CreateEventActivity extends AppCompatActivity {
         payumoney_amount=findViewById(R.id.payumoney_amount);
 
 
-        venu=findViewById(R.id.venu);
+        venue=findViewById(R.id.venu);
         city=findViewById(R.id.city);
         country=findViewById(R.id.country_loc);
         address=findViewById(R.id.address);
@@ -396,14 +374,14 @@ public class CreateEventActivity extends AppCompatActivity {
             feeFlag=true;
         }
 
-        if (event_type.equals(Const.Both) || event_type.equals(Const.Offline)) {
-            if (ValidateInput.field(venu) || ValidateInput.field(city) || ValidateInput.field(address)) {
+        if (event_type.equals(ConstFirebase.Both) || event_type.equals(ConstFirebase.eventOffline)) {
+            if (ValidateInput.field(venue) || ValidateInput.field(city) || ValidateInput.field(address)) {
                 addressFlag=true;
             } else {
                 addressFlag=false;
             }
         } else {
-            if (ValidateInput.field(venu)) {
+            if (ValidateInput.field(venue)) {
                 addressFlag=true;
             } else {
                 addressFlag=false;
@@ -457,8 +435,8 @@ public class CreateEventActivity extends AppCompatActivity {
         final String eventName=event_name.getText().toString();
         String eventDescription=description.getText().toString();
 
-        String venuStr="";
-        venuStr=venu.getText().toString();
+        String venueStr="";
+        venueStr=venue.getText().toString();
         String cityStr="";
         cityStr=city.getText().toString();
         String addressStr=separetURLForAddress;
@@ -474,7 +452,7 @@ public class CreateEventActivity extends AppCompatActivity {
         Log.i("countryName", countryName);
         Event event;
         event=new Event(eventKey, eventName, eventDescription, category,
-                picImageUrlString, event_type, venuStr, cityStr, addressStr, timeStamp,
+                picImageUrlString, event_type, venueStr, cityStr, addressStr, timeStamp,
                 startDate, endDate, startTime, endTime, payable, totalFee, currentUserId, totalSeats, countryName);
 
         eventRef.child(eventKey).child(ConstFirebase.EventDetails).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -501,31 +479,6 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-       /* if(event.getEventType().equals(ConstFirebase.eventOnline)){
-          eventRef.child(ConstFirebase.eventOnline).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
-              @Override
-              public void onSuccess(Void aVoid) {
-                  Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
-                  progressDialog.dismiss();
-                  finish();
-              }
-          });
-      }
-        else {
-          eventRef.child(ConstFirebase.eventOffline).child(eventKey).child("EventDetails").setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
-              @Override
-              public void onSuccess(Void aVoid) {
-                  Toast.makeText(CreateEventActivity.this, "new event created", Toast.LENGTH_SHORT).show();
-                  progressDialog.dismiss();
-                  finish();
-              }
-          });
-
-      }*/
-
     }
 
     private void send(final String name, final String eventKey, final String eventName) {
@@ -534,7 +487,7 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snap : snapshot.getChildren()){
                     if(snap.child(ConstFirebase.USER_DETAILS).exists()){
-                        if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userID).getValue().toString())){
+                        if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_ID).getValue().toString())){
                             Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
                             String notificationKey = rootRef.getNotificationRef().push().getKey();
 
@@ -581,7 +534,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private void spinnerImplementationForTopic() {
         spinner=findViewById(R.id.event_cat_spinner);
-      //  final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
+        //final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
         //final String[] countries=getResources().getStringArray(R.array.array_categories);
 
         //final String[] countries=listOfCat1;
@@ -777,7 +730,6 @@ public class CreateEventActivity extends AppCompatActivity {
                             endDate=cal.getTime();
                         }
 
-                        //dayOfMonth + "-" + (monthOfYear + 1) + "-" + year
                         if (start)
                             selectedStartDate=fieldToTimestamp(year, (monthOfYear), dayOfMonth);
                     }
@@ -841,22 +793,19 @@ public class CreateEventActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.online:
                 if(checked){
-                    event_type = Const.Online;
-                    venu.setVisibility(View.VISIBLE);
+                    event_type = ConstFirebase.eventOnline;
+                    venue.setVisibility(View.VISIBLE);
                     city.setVisibility(View.GONE);
                     citylayout.setVisibility(View.GONE);
                     //address.setVisibility(View.GONE);
                     countryLayout.setVisibility(View.GONE);
-
-
-
                 }
 
                 break;
             case R.id.offline:
                 if(checked){
-                    event_type=Const.offline;
-                    venu.setVisibility(View.VISIBLE);
+                    event_type=ConstFirebase.onlineStatus;
+                    venue.setVisibility(View.VISIBLE);
                     city.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);
                     citylayout.setVisibility(View.VISIBLE);
@@ -868,22 +817,12 @@ public class CreateEventActivity extends AppCompatActivity {
                 break;
             case R.id.offline_and_online:
                 if(checked){
-                    event_type = "Both";
-                    venu.setVisibility(View.VISIBLE);
+                    event_type =ConstFirebase.eventBoth;
+                    venue.setVisibility(View.VISIBLE);
                     city.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);
                     citylayout.setVisibility(View.VISIBLE);
                     countryLayout.setVisibility(View.VISIBLE);
-
-                    /*linklayout.setBackgroundResource(R.drawable.set_profile_red);
-                    seatLayout.setBackgroundResource(R.drawable.set_profile_blue);
-
-                    linkCard.setCardBackgroundColor(colorRed);
-
-
-                    seatCard.setCardBackgroundColor(colorBlue);*/
-
-
                 }
 
                 break;

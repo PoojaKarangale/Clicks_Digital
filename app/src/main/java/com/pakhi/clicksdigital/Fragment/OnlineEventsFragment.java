@@ -143,54 +143,6 @@ public class OnlineEventsFragment extends Fragment {
 
             }
         });
-        eventRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-
-                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-
-                        Timestamp ts = new Timestamp(event.getTimeStamp());
-                        Date eventDate = new Date(ts.getTime());
-                        if (eventDate.before(twoMonthAgo)) {
-                            dataSnapshot.getRef().removeValue();
-                        }
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        eventRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-
-                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-
-                        Timestamp ts = new Timestamp(event.getTimeStamp());
-                        Date eventDate = new Date(ts.getTime());
-                        if (eventDate.before(twoMonthAgo)) {
-                            dataSnapshot.getRef().removeValue();
-                        }
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-
-            }
-        });
 
     }
 
@@ -201,40 +153,8 @@ public class OnlineEventsFragment extends Fragment {
         final Date current = new Date(ts.getTime());
 
         //Query query = eventRef.orderByChild("event_type").equalTo(ConstFirebase.eventOnline);
-        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                events.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        Timestamp ts = new Timestamp(event.getTimeStamp());
-                        Date eventDate = new Date(ts.getTime());
-                        if (!eventDate.before(current)) {
-                            if (event.getEventName().toLowerCase().contains(s)
-                                    || event.getDescription().toLowerCase().contains(s)
-                                    || event.getCategory().toLowerCase().contains(s)
-                            ) {
-                                if(event.getEventType().equals(ConstFirebase.eventOnline)){
-
-                                    events.add(event);
-
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //eventAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+//.orderByChild("timeStamp")
+        eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
@@ -243,13 +163,12 @@ public class OnlineEventsFragment extends Fragment {
                         Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
                         Timestamp ts = new Timestamp(event.getTimeStamp());
                         Date eventDate = new Date(ts.getTime());
-                        if (!eventDate.before(current)) {
-                            if (event.getEventName().toLowerCase().contains(s)
-                                    || event.getDescription().toLowerCase().contains(s)
-                                    || event.getCategory().toLowerCase().contains(s)
-                            ) {
-                                if(event.getEventType().equals("Both")){
-
+                        if (event.getEventType().equals(ConstFirebase.eventOnline) || event.getEventType().equals(ConstFirebase.Both)) {
+                            if (!eventDate.before(current)) {
+                                if (event.getEventName().toLowerCase().contains(s)
+                                        || event.getDescription().toLowerCase().contains(s)
+                                        || event.getCategory().toLowerCase().contains(s)
+                                ) {
                                     events.add(event);
                                 }
                             }

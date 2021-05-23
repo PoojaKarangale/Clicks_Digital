@@ -1,22 +1,14 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.Settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.pakhi.clicksdigital.Adapter.SettingListAdapter;
-import com.pakhi.clicksdigital.FragmentsInSetting.AppInfoFragmentReplacementActivity;
-import com.pakhi.clicksdigital.FragmentsInSetting.ChangeMyNumberFragmentReplacementActivity;
-import com.pakhi.clicksdigital.FragmentsInSetting.ContactusFragmentReplacementActivity;
-import com.pakhi.clicksdigital.FragmentsInSetting.NotificationFragmentReplaceActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 
@@ -104,10 +96,6 @@ public class SettingActivity extends AppCompatActivity {
                         //fragment=new AppInfoFragment();
                         startActivity(new Intent(SettingActivity.this, AppInfoFragmentReplacementActivity.class));
                         break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
                 }
                 //listView.setOnItemClickListener(null);
 
@@ -116,16 +104,6 @@ public class SettingActivity extends AppCompatActivity {
 
     }
 
-    private void updatePage(Fragment fragment) {
-        FragmentTransaction transaction=getSupportFragmentManager()
-                .beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.add(R.id.fragmentContainer, fragment, "TAG_FRAGMENT");
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.commit();
-        Log.d("TESTINGSTART", "-----------frag count------" + getSupportFragmentManager().getBackStackEntryCount());
-
-    }
 
     private void initializingFields() {
         listView=findViewById(R.id.list_view);

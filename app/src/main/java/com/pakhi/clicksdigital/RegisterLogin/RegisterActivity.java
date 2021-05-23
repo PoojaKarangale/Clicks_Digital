@@ -76,8 +76,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void sendUserToPhoneVerify() {
         Intent i=new Intent(RegisterActivity.this, PhoneVerify.class);
-        i.putExtra(Const.MO_NUMBER, number);
-        i.putExtra(Const.prevActivity, ConstFirebase.registerActivity);
+        i.putExtra(Const.number, number);
+        i.putExtra(Const.PreviousActivity, ConstFirebase.registerActivity);
         startActivity(i);
     }
 
@@ -204,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void SendUserToSetProfileActivity() {
         Intent intent=new Intent(RegisterActivity.this, SetProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(ConstFirebase.PreviousActivity, "RegisterActivity");
+        intent.putExtra(Const.PreviousActivity, "RegisterActivity");
         startActivity(intent);
         finish();
     }

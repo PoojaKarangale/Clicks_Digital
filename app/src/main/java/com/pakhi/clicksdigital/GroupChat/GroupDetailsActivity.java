@@ -73,7 +73,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_details);
 
         //group_image_url=getIntent().getStringExtra("image_url");
-        group_name_str = getIntent().getStringExtra(Const.group_name);
+        group_name_str = getIntent().getStringExtra(Const.groupName);
         currentGroupId = getIntent().getStringExtra(Const.group_id);
 
         pref = SharedPreference.getInstance();
@@ -90,7 +90,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         //seting group info
         // Picasso.get().load(group_image_url).placeholder(R.drawable.default_profile_for_groups).into(app_bar_image);
 
-        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.grpPhotos).child(ConstFirebase.profGrp);
+        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.groupPhotos).child(ConstFirebase.groupProfile);
         final StorageReference imgPath = sReference.child(currentGroupId); //+ "." + getFileExtention(picImageUri)
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -102,7 +102,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
         });
 
-        final String[] date = new String[1];
+
         final String[] group_creater_id = new String[1];
 
         GroupRef.child(currentGroupId).addValueEventListener(new ValueEventListener() {
@@ -118,25 +118,8 @@ public class GroupDetailsActivity extends AppCompatActivity {
                 Picasso.get().load(group.getImage_url())
                         .placeholder(R.drawable.default_profile_for_groups)
                         .into(app_bar_image);
-
-                date[0] = group.getDate();
-
                 group_creater_id[0] = group.getUid_creater();
 
-             /*   UsersRef.child(group_creater_id[0])
-                        .child(Const.USER_DETAILS)
-                        .child(Const.USER_NAME)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                group_info.setText("Created by " + dataSnapshot.getValue().toString() + ", on " + date[0]);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });*/
             }
 
             @Override
@@ -206,7 +189,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
     public void setGroupName(View view) {
         GroupRef.child(currentGroupId)
-                .child(ConstFirebase.group_name)
+                .child(ConstFirebase.GROUP_NAME)
                 .setValue(get_group_name.getText().toString())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -222,7 +205,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
     public void setDescription(View view) {
         GroupRef.child(currentGroupId)
-                .child(Const.desc)
+                .child(ConstFirebase.description)
                 .setValue(get_description.getText().toString())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -311,7 +294,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
     }
 
     private void uploadImage(final Uri imageUri) {
-        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child("Group_photos").child("Group_profile");
+        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.groupPhotos).child(ConstFirebase.groupProfile);
         final StorageReference imgPath = sReference.child(System.currentTimeMillis() + "." + getFileExtention(imageUri));
 
         imgPath.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -351,7 +334,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         groupMembersRef.child(uid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                UsersRef.child(uid).child(ConstFirebase.groups1).child(currentGroupId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                UsersRef.child(uid).child(ConstFirebase.groups).child(currentGroupId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         exit_group.setEnabled(false);

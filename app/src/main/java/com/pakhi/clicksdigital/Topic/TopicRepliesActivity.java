@@ -1,29 +1,22 @@
 package com.pakhi.clicksdigital.Topic;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,13 +37,12 @@ import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -97,7 +89,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
         rootRef.getGroupRef().child(topic.getTo()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                grpName = snapshot.child(ConstFirebase.group_name).getValue().toString();
+                grpName = snapshot.child(ConstFirebase.GROUP_NAME).getValue().toString();
             }
 
             @Override
@@ -153,20 +145,6 @@ public class TopicRepliesActivity extends AppCompatActivity {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(topic_reply, InputMethodManager.SHOW_IMPLICIT);
 
-                // Notification.sendPersonalNotifiaction(currentUserId, );
-                /*Bundle bundle=new Bundle();
-                bundle.putSerializable(Const.message, (Serializable) topic);
-
-                ReplyFragment fragment=new ReplyFragment();
-                fragment.setArguments(bundle);
-
-                AppCompatActivity activity=(AppCompatActivity) v.getContext();
-                FragmentTransaction transaction=activity.getSupportFragmentManager()
-                        .beginTransaction();
-                // transaction.addToBackStack(null);
-                transaction.add(R.id.fragmentContainer, fragment, "TAG_FRAGMENT");
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.commit();*/
             }
         });
         replyButton.setOnClickListener(new View.OnClickListener() {
@@ -192,20 +170,14 @@ public class TopicRepliesActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for(DataSnapshot snap : snapshot.getChildren()){
                             if(notify&& !snap.getKey().equals(currentUserId)){
-
-
                                 Notification.sendPersonalNotifiaction(topic.getTo(), snap.getKey(), nameOfSender+" has replied to Dialog topic: "+topic.getMessage().substring(0, 12)+"...", /*title*/ grpName  , "topic", topic.getMessageID());
                                 //rootRef.getNotificationRefTopicReply().child(snap.getKey()).child(topic.getMessageID()).setValue("");
                                 String notificationKey = rootRef.getNotificationRef().push().getKey();
-
                                 rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(topic.getFrom());
                                 rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserId);
                                 rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(topic.getMessageID());
-                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("topicReply");
-
-
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue(ConstFirebase.topicReply);
                             }
-
                         }
                         notify=false;
                     }
@@ -302,7 +274,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
                 rootRef.getGroupRef().child(topic.getTo()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        grpName[0]=snapshot.child(ConstFirebase.group_name).getValue().toString();
+                        grpName[0]=snapshot.child(ConstFirebase.GROUP_NAME).getValue().toString();
                     }
 
                     @Override
@@ -349,7 +321,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
         String replykEY=replyRef.child(topic.getMessageID()).push().getKey();
 
         Message reply1=new Message(currentUserId, reply,
-                type, topic.getTo(), replykEY, currentTime, currentDate);
+                type, topic.getTo(), replykEY, currentTime, currentDate,calForDate.getTimeInMillis()/1000L,false,"","","");
 
         replyRef.child(topic.getMessageID()).child(replykEY).setValue(reply1).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -457,7 +429,7 @@ public class TopicRepliesActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(TopicRepliesActivity.this, LoadImage.class);
-                intent.putExtra("image_url", topic.getMessage());
+                intent.putExtra(Const.IMAGE_URL, topic.getMessage());
                 startActivity(intent);
             }
         });
@@ -585,14 +557,10 @@ public class TopicRepliesActivity extends AppCompatActivity {
                  /*description = doc.select("meta[name=description]").get(0).attr("content");
                 Log.i("Value of desc - ", description);
 */
-
-
                 if (!doc.select("meta[property=og:image]").get(0).attr("content").isEmpty()) {
                     imageUrl = doc.select("meta[property=og:image]").get(0).attr("content");
                     Log.i("Image URL - ", imageUrl);
                 }
-
-
             } catch (Exception e) {
                 //description="";
                 e.printStackTrace();

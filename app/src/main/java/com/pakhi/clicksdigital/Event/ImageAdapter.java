@@ -18,6 +18,7 @@ import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.Image;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 
 
@@ -62,7 +63,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 intent.putExtra("BUNDLE",args);
                 context.startActivity(intent);*/
                 Intent intent = new Intent(context, FullGalaryView.class);
-                intent.putExtra("position", position);
+                intent.putExtra(ConstFirebase.position, position);
                 intent.putExtra(Const.event, event);
                 context.startActivity(intent);
                 //EnlargedImage.enlargeImage(images.get(position).getImage_url(), v.getContext());

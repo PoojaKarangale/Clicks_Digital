@@ -76,7 +76,6 @@ public class UserRequestActivity extends AppCompatActivity {
         }
         userRequestAdapter.notifyDataSetChanged();
       }
-
       @Override
       public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -84,50 +83,9 @@ public class UserRequestActivity extends AppCompatActivity {
     });
   }
 
-  /*  private void showRequestingUsers() {
-        DatabaseReference reference=rootRef.getUserRequestsRef();
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user_requests.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User_request userRequest=snapshot.getValue(User_request.class);
-                    user_requests.add(userRequest);
-                }
-                userRequestAdapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }*/
-
   @Override
   protected void onStart() {
     super.onStart();
-    updateUserStatus(Const.online);
-  }
-
-  private void updateUserStatus(String state) {
-    String saveCurrentTime, saveCurrentDate;
-
-    Calendar calendar=Calendar.getInstance();
-
-    SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-    saveCurrentDate=currentDate.format(calendar.getTime());
-
-    SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-    saveCurrentTime=currentTime.format(calendar.getTime());
-
-    HashMap<String, Object> onlineStateMap=new HashMap<>();
-    onlineStateMap.put(Const.time, saveCurrentTime);
-    onlineStateMap.put(Const.date, saveCurrentDate);
-    onlineStateMap.put(Const.state, state);
-    SharedPreference pref=SharedPreference.getInstance();
-    String currentUserId=pref.getData(SharedPreference.currentUserId, getApplicationContext());
-
-    rootRef.getUserRef().child(currentUserId).child(ConstFirebase.userState)
-            .updateChildren(onlineStateMap);
 
   }
 }

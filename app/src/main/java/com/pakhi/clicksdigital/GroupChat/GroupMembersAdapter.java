@@ -171,7 +171,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
     private void removeMemberFromGroup(final String visit_user_id) {
         groupRef.child(groupid).child(ConstFirebase.users).child(visit_user_id).removeValue();
-        userRef.child(visit_user_id).child(ConstFirebase.groups1).child(groupid).removeValue();
+        userRef.child(visit_user_id).child(ConstFirebase.groups).child(groupid).removeValue();
         groupRef.child(groupid).child(ConstFirebase.admins).child(visit_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

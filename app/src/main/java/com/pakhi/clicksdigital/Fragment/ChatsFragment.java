@@ -140,20 +140,20 @@ public class ChatsFragment extends Fragment {
                                     final String retName=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_NAME).getValue().toString()
                                             +" "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.last_name).getValue().toString();
                                     final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.working).getValue().toString()
-                                            +", "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child("company").getValue().toString();
+                                            +", "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.company).getValue().toString();
 
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText(retStatus);
 
-                                    if (dataSnapshot.child(ConstFirebase.userState).hasChild(Const.state)) {
-                                        String state=dataSnapshot.child(ConstFirebase.userState).child(Const.state).getValue().toString();
-                                        String date=dataSnapshot.child(ConstFirebase.userState).child(Const.date).getValue().toString();
-                                        String time=dataSnapshot.child(ConstFirebase.userState).child(Const.time).getValue().toString();
+                                    if (dataSnapshot.child(ConstFirebase.userState).hasChild(ConstFirebase.state)) {
+                                        String state=dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.state).getValue().toString();
+                                        String date=dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.date).getValue().toString();
+                                        String time=dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.time).getValue().toString();
 
-                                        if (state.equals(Const.online)) {
+                                        if (state.equals(ConstFirebase.onlineStatus)) {
                                             // holder.userStatus.setText("online");
                                             holder.online_status.setVisibility(View.VISIBLE);
-                                        } else if (state.equals(Const.offline)) {
+                                        } else if (state.equals(ConstFirebase.onlineStatus)) {
                                             holder.userStatus.setText("Last Seen: " + date + " " + time);
                                         }
                                     } else {
@@ -207,7 +207,7 @@ public class ChatsFragment extends Fragment {
                                     @Override
                                     public void onClick(View v) {
                                         Intent intent = new Intent(getContext(), LoadImage.class);
-                                        intent.putExtra("image_url", retImage[0]);
+                                        intent.putExtra(Const.IMAGE_URL, retImage[0]);
                                         startActivity(intent);
                                     }
                                 });
@@ -232,7 +232,7 @@ public class ChatsFragment extends Fragment {
     }
 
     private void updateToken(String token) {
-        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Tokens");
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference(ConstFirebase.tokens);
         Token token1=new Token(token);
         reference.child(mAuth.getUid()).setValue(token1);
     }

@@ -27,9 +27,9 @@ public class UserStateStatus {
         saveCurrentTime=currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put(Const.time, saveCurrentTime);
-        onlineStateMap.put(Const.date, saveCurrentDate);
-        onlineStateMap.put(Const.state, state);
+        onlineStateMap.put(ConstFirebase.time, saveCurrentTime);
+        onlineStateMap.put(ConstFirebase.date, saveCurrentDate);
+        onlineStateMap.put(ConstFirebase.state, state);
 
         rootRef.getUserRef().child(userId).child(ConstFirebase.userState)
                 .updateChildren(onlineStateMap);

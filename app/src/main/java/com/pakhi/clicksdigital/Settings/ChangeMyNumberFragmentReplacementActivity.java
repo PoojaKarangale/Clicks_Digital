@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.FragmentsInSetting;
+package com.pakhi.clicksdigital.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,7 +12,6 @@ import android.widget.EditText;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.RegisterLogin.PhoneVerify;
 import com.pakhi.clicksdigital.Utils.Const;
-import com.pakhi.clicksdigital.Utils.ConstFirebase;
 
 public class ChangeMyNumberFragmentReplacementActivity extends AppCompatActivity {
     String number;
@@ -44,8 +43,8 @@ public class ChangeMyNumberFragmentReplacementActivity extends AppCompatActivity
     }
     private void sendUserToPhoneVerify() {
         Intent i=new Intent(ChangeMyNumberFragmentReplacementActivity.this, PhoneVerify.class);
-        i.putExtra(Const.MO_NUMBER, number);
-        i.putExtra(Const.previousActivity, "changeNumber");
+        i.putExtra(Const.number, number);
+        i.putExtra(Const.PreviousActivity, "changeNumber");
         startActivity(i);
     }
 

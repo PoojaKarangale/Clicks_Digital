@@ -1,17 +1,21 @@
 package com.pakhi.clicksdigital.Activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +32,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -36,11 +39,13 @@ import com.pakhi.clicksdigital.Fragment.ChatsFragment;
 import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
+import com.pakhi.clicksdigital.Fragment.InternetCheckFragment;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
+import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
-import com.pakhi.clicksdigital.Utils.Const;
+import com.pakhi.clicksdigital.Settings.SettingActivity;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
@@ -48,83 +53,224 @@ import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.UserStateStatus;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-    static int REQUEST_CODE=1;
-    ViewPager                viewPager;
-    ViewPagerAdapter         viewPagerAdapter;
-    EventsFragment           eventsFragment;
-    GroupsFragment           groupsFragment;
-    HomeFragment             homeFragment;
-    ChatsFragment            chatsFragment;
-    Toolbar                  toolbar;
-    TabLayout                tabLayout;
-    PermissionsHandling      permissions;
-    String                   user_type;
-    String                   userID;
+    static int REQUEST_CODE = 1;
+    ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
+    EventsFragment eventsFragment;
+    GroupsFragment groupsFragment;
+    HomeFragment homeFragment;
+    ChatsFragment chatsFragment;
+    Toolbar toolbar;
+    TabLayout tabLayout;
+    PermissionsHandling permissions;
+    String user_type;
+    String userID;
     FirebaseDatabaseInstance rootRef;
     private ImageView profile;
-    String url;
-    //UserDatabase userDatabase;
 
+    // to check if we are connected to Network
+    boolean isConnected = true;
+    // to check if we are monitoring Network
+    private boolean monitoringConnectivity = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
+        checkConnectivity();
 
-        permissions=new PermissionsHandling(StartActivity.this);
+        rootRef = FirebaseDatabaseInstance.getInstance();
+
+        permissions = new PermissionsHandling(StartActivity.this);
         requestForPremission();
 
-        SharedPreference pref=SharedPreference.getInstance();
-        user_type=pref.getData(SharedPreference.user_type, getApplicationContext());
+        SharedPreference pref = SharedPreference.getInstance();
+        user_type = pref.getData(SharedPreference.user_type, getApplicationContext());
 
-        userID=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        userID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
         setupTabLayout();
-
+        putDataIntoHashMap();
         UserDatabase userDatabase = new UserDatabase(StartActivity.this);
 
         String imgUrl = userDatabase.getSqliteUser_data(ConstFirebase.IMAGE_URL);
 
-        profile=findViewById(R.id.profile_activity);
+        profile = findViewById(R.id.profile_activity);
 
         Glide.with(getApplicationContext()).load(imgUrl)
                 .transform(new CenterCrop(), new RoundedCorners(50))
                 .placeholder(R.drawable.nav_profile).into(profile);
 
 
-
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent=new Intent(StartActivity.this, ProfileActivity.class);
+                Intent profileIntent = new Intent(StartActivity.this, ProfileActivity.class);
                 startActivity(profileIntent);
             }
         });
     }
 
-    private void setupTabLayout() {
-        homeFragment=new HomeFragment();
-        eventsFragment=new EventsFragment();
-        groupsFragment=new GroupsFragment();
-        chatsFragment=new ChatsFragment();
+    String TAG_InternetChecks = "InternetIssueFrag";
 
-        tabLayout=findViewById(R.id.tab_layout);
-        toolbar=findViewById(R.id.toolbar_start);
+    public void removeFragment(String TAG) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG);
+        if (fragment != null) {
+            // fragment exist
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
+    }
+
+    public void addFragment(String TAG) {
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.internetCheckFrame, new InternetCheckFragment(), TAG)
+                .commit();
+
+    }
+
+    private void checkConnectivity() {
+        //removeFragment(TAG_InternetChecks);
+        // here we are getting the connectivity service from connectivity manager
+        final ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+
+        // Getting network Info
+        // give Network Access Permission in Manifest
+        final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        monitoringConnectivity = true;
+        connectivityManager.registerNetworkCallback(
+                new NetworkRequest.Builder()
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .build(), connectivityCallback);
+
+        // isConnected is a boolean variable
+        // here we check if network is connected or is getting connected
+        isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+
+        if (!isConnected) {
+            // SHOW ANY ACTION YOU WANT TO SHOW
+            // WHEN WE ARE NOT CONNECTED TO INTERNET/NETWORK
+            Toast.makeText(getApplicationContext(), "internet not available", Toast.LENGTH_SHORT).show();
+            addFragment(TAG_InternetChecks);
+            // if Network is not connected we will register a network callback to  monitor network
+            connectivityManager.registerNetworkCallback(
+                    new NetworkRequest.Builder()
+                            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            .build(), connectivityCallback);
+            monitoringConnectivity = true;
+        }
+    }
+
+    private ConnectivityManager.NetworkCallback connectivityCallback
+            = new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(Network network) {
+            isConnected = true;
+            //Toast.makeText(getApplicationContext(), "internet available", Toast.LENGTH_SHORT).show();
+            removeFragment(TAG_InternetChecks);
+        }
+
+        @Override
+        public void onLost(Network network) {
+            isConnected = false;
+            Toast.makeText(getApplicationContext(), "internet not available", Toast.LENGTH_SHORT).show();
+            addFragment(TAG_InternetChecks);
+
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkConnectivity();
+    }
+
+    @Override
+    protected void onPause() {
+        // if network is being moniterd then we will unregister the network callback
+        //
+        //
+        // Toast.makeText(getApplicationContext(), "on pause", Toast.LENGTH_SHORT).show();
+        if (monitoringConnectivity) {
+            final ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            connectivityManager.unregisterNetworkCallback(connectivityCallback);
+            monitoringConnectivity = false;
+        }
+        super.onPause();
+    }
+
+    private void putDataIntoHashMap() {
+        final User[] user = {new User()};
+        final HashMap<String, String> userItems1;
+        rootRef.getUserRef().child(userID).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    user[0] = snapshot.getValue(User.class);
+                    final HashMap<String, String> userItems = new HashMap<>();
+
+                    userItems.put(ConstFirebase.USER_ID, user[0].getUser_id());
+                    userItems.put(ConstFirebase.USER_NAME, user[0].getUser_name());
+                    userItems.put(ConstFirebase.USER_BIO, user[0].getUser_id());
+                    userItems.put(ConstFirebase.IMAGE_URL, user[0].getImage_url());
+                    userItems.put(ConstFirebase.USER_TYPE, user[0].getUser_type());
+                    userItems.put(ConstFirebase.CITY, user[0].getCity());
+                    userItems.put(ConstFirebase.expeactations, user[0].getExpectations_from_us());
+                    userItems.put(ConstFirebase.expireince, user[0].getExperiences());
+                    userItems.put(ConstFirebase.GENDER, user[0].getGender());
+                    userItems.put(ConstFirebase.MO_NUMBER, user[0].getNumber());
+                    userItems.put(ConstFirebase.offerToComm, user[0].getOffer_to_community());
+                    userItems.put(ConstFirebase.speakerExp, user[0].getSpeaker_experience());
+                    userItems.put(ConstFirebase.email, user[0].getUser_email());
+                    userItems.put(ConstFirebase.webLink, user[0].getWeblink());
+                    userItems.put(ConstFirebase.working, user[0].getWork_profession());
+                    userItems.put(ConstFirebase.last_name, user[0].getLast_name());
+                    userItems.put(ConstFirebase.company, user[0].getCompany());
+                    userItems.put(ConstFirebase.country, user[0].getCountry());
+                    userItems.put(ConstFirebase.getReferral, user[0].getReferal());
+
+                    //HashMap<String, String> userItems = putDataIntoHashMap();
+                    UserDatabase db = new UserDatabase(getApplicationContext());
+                    SQLiteDatabase sqlDb = db.getWritableDatabase();
+                    db.onUpgrade(sqlDb, 1, 2);
+                    db.insertData(userItems);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    private void setupTabLayout() {
+        homeFragment = new HomeFragment();
+        eventsFragment = new EventsFragment();
+        groupsFragment = new GroupsFragment();
+        chatsFragment = new ChatsFragment();
+
+        tabLayout = findViewById(R.id.tab_layout);
+        toolbar = findViewById(R.id.toolbar_start);
 
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
 
-        viewPager=findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
 
-        viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager(), 0);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
         viewPagerAdapter.addFragment(homeFragment, "");//Home
         viewPagerAdapter.addFragment(groupsFragment, "");//Groups
         viewPagerAdapter.addFragment(chatsFragment, "");//Chat
@@ -147,14 +293,14 @@ public class StartActivity extends AppCompatActivity {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         super.onTabSelected(tab);
-                        int tabIconColor=ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
+                        int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
                         tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
                     }
 
                     @Override
                     public void onTabUnselected(TabLayout.Tab tab) {
                         super.onTabUnselected(tab);
-                        int tabIconColor=ContextCompat.getColor(getApplicationContext(), R.color.white);
+                        int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.white);
                         tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
                     }
 
@@ -174,9 +320,9 @@ public class StartActivity extends AppCompatActivity {
         //super.onBackPressed();
         //finish();
 
-        if(tabLayout.getSelectedTabPosition()!=0){
+        if (tabLayout.getSelectedTabPosition() != 0) {
             tabLayout.getTabAt(0).select();
-        }else {
+        } else {
             finish();
         }
 
@@ -188,6 +334,7 @@ public class StartActivity extends AppCompatActivity {
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(homeIntent);
         finish();*/
+
         //System.exit(0);
         /*moveTaskToBack(true);
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -218,11 +365,11 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        if(!user_type.equals("admin")){
+        if (!user_type.equals("admin")) {
 
             getMenuInflater().inflate(R.menu.options_menu, menu);
             menu.getItem(1).setVisible(false);
-        }else {
+        } else {
             getMenuInflater().inflate(R.menu.options_menu, menu);
         }
 
@@ -264,18 +411,17 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("ACTIVITYSTATE","START"+getClass().getName());
-        UserStateStatus.setUserStatus(userID,Const.online);
+        Log.d("ACTIVITYSTATE", "START" + getClass().getName());
+        UserStateStatus.setUserStatus(userID, ConstFirebase.onlineStatus);
 
         rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
             ArrayList<String> myList = new ArrayList<>();
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap : snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     myList.add(snap.getKey());
                 }
-                //setFile(myList);
             }
 
             @Override
@@ -286,10 +432,11 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void setFile(ArrayList<String> myList) {
-        for(String str : myList){
+        for (String str : myList) {
             try {
                 rootRef.getUserRef().child(str).child("groups").removeValue();
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -298,42 +445,10 @@ public class StartActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        Log.d("ACTIVITYSTATE","DESTROY"+getClass().getName());
-        UserStateStatus.setUserStatus(userID,Const.offline);
+        Log.d("ACTIVITYSTATE", "DESTROY" + getClass().getName());
+        UserStateStatus.setUserStatus(userID, ConstFirebase.onlineStatus);
         System.exit(0);
     }
-
-    private void VerifyUserExistance() {
-    /*    String currentUserID = mAuth.getCurrentUser().getUid();
-         rootRef.getUserRef().child(currentUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.child(Const.USER_NAME).exists())) {
-                    //Toast.makeText(StartActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
-                } else {
-                    SendUserToSetProfileActivity();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });*/
-    }
-
- /*   private void updateUserStatus(String state) {
-        String saveCurrentTime, saveCurrentDate;
-        Calendar calendar=Calendar.getInstance();
-        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate=currentDate.format(calendar.getTime());
-        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        saveCurrentTime=currentTime.format(calendar.getTime());
-        HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put(Const.time, saveCurrentTime);
-        onlineStateMap.put(Const.date, saveCurrentDate);
-        onlineStateMap.put(Const.state, state);
-        rootRef.getUserRef().child(userID).child(ConstFirebase.userState)
-                .updateChildren(onlineStateMap);
-    }*/
 
     void requestForPremission() {
         //checking for permissions
@@ -368,8 +483,8 @@ public class StartActivity extends AppCompatActivity {
 
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-        List<Fragment> fragments    =new ArrayList<>();
-        List<String>   fragmentTitle=new ArrayList<>();
+        List<Fragment> fragments = new ArrayList<>();
+        List<String> fragmentTitle = new ArrayList<>();
 
         ViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);

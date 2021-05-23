@@ -2,6 +2,7 @@ package com.pakhi.clicksdigital.Fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +35,14 @@ import java.util.List;
 
 public class OfflineEventsFragment extends Fragment {
     FirebaseDatabaseInstance rootRef;
-    UserDatabase             db;
-    User                     user;
-    String                   city;
-    private View              view;
+
+    User user;
+    String city;
+    private View view;
     private DatabaseReference eventRef;
-    private EventAdapter      eventAdapter;
-    private List<Event>       events;
-    private RecyclerView      events_recycler;
+    private EventAdapter eventAdapter;
+    private List<Event> events;
+    private RecyclerView events_recycler;
 
     public OfflineEventsFragment() {
     }
@@ -49,44 +50,36 @@ public class OfflineEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_offline_events, container, false);
+        view = inflater.inflate(R.layout.fragment_offline_events, container, false);
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
-        eventRef=rootRef.getEventRef();
+        rootRef = FirebaseDatabaseInstance.getInstance();
+        eventRef = rootRef.getEventRef();
 
-        events_recycler=view.findViewById(R.id.events_recycler);
+        events_recycler = view.findViewById(R.id.events_recycler);
         events_recycler.setHasFixedSize(true);
         events_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        events=new ArrayList<>();
+        events = new ArrayList<>();
 
-        eventAdapter=new EventAdapter(getContext(), events);
+        eventAdapter = new EventAdapter(getContext(), events);
         events_recycler.setAdapter(eventAdapter);
 
         readUserData();
         //RetrieveAndDisplayEvents();
-        SearchView searchView=view.findViewById(R.id.search_bar);
+        SearchView searchView = view.findViewById(R.id.search_bar);
         showEvents(city);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query.equals("")) {
-                    showEvents(city);
-                } else {
-                    searchEvents(query.toString().trim().toLowerCase());
-                }
-
+            public boolean onQueryTextSubmit(String newText) {
+                newText = newText.equals("") ? city : newText;
+                searchEvents(newText.trim().toLowerCase());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.equals("")) {
-                    showEvents(city);
-                } else {
-                    searchEvents(newText.toString().trim().toLowerCase());
-                }
-
+                newText = newText.equals("") ? city : newText;
+                searchEvents(newText.trim().toLowerCase());
                 return false;
             }
         });
@@ -95,67 +88,32 @@ public class OfflineEventsFragment extends Fragment {
     }
 
     private void searchEvents(final String s) {
-        final Calendar calendar=Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         //  calendar.add(Calendar.DAY_OF_MONTH,1);
-        Timestamp ts=new Timestamp(calendar.getTimeInMillis() / 1000L);
+        Timestamp ts = new Timestamp(calendar.getTimeInMillis() / 1000L);
+        final Date current = calendar.getTime();
 
-        final Date current=calendar.getTime();
-
-        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                events.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        Timestamp ts=new Timestamp(event.getTimeStamp());
-                        Date eventDate=new Date(ts.getTime());
-                        if (!eventDate.before(current)) {
-                            if (event.getEventName().toLowerCase().contains(s)
-                                    || event.getDescription().toLowerCase().contains(s)
-                                    || event.getCategory().toLowerCase().contains(s)
-                                    || event.getAddress().toLowerCase().contains(s)
-                                    || event.getCity().toLowerCase().contains(s)
-                                    || event.getVenu().toLowerCase().contains(s)
-                            ) {
-                                if(event.getEventType().equals(ConstFirebase.eventOffline)){
-                                    events.add(event);
-                                }
-
-                            }
-                        }
-                    }
-                }
-                //eventAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+        /*.orderByChild("timeStamp")*/
+        eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //  events.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        Timestamp ts=new Timestamp(event.getTimeStamp());
-                        Date eventDate=new Date(ts.getTime());
+                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        Timestamp ts = new Timestamp(event.getTimeStamp());
+                        Date eventDate = new Date(ts.getTime());
                         if (!eventDate.before(current)) {
-                            if (event.getEventName().toLowerCase().contains(s)
-                                    || event.getDescription().toLowerCase().contains(s)
-                                    || event.getCategory().toLowerCase().contains(s)
-                                    || event.getAddress().toLowerCase().contains(s)
-                                    || event.getCity().toLowerCase().contains(s)
-                                    || event.getVenu().toLowerCase().contains(s)
-                            ) {
-                                if(event.getEventType().equals(ConstFirebase.Both)){
+                            if (event.getEventType().equals(ConstFirebase.eventOffline) || event.getEventType().equals(ConstFirebase.Both)) {
+                                if (event.getEventName().toLowerCase().contains(s)
+                                        || event.getDescription().toLowerCase().contains(s)
+                                        || event.getCategory().toLowerCase().contains(s)
+                                        || event.getAddress().toLowerCase().contains(s)
+                                        || event.getCity().toLowerCase().contains(s)
+                                        || event.getVenu().toLowerCase().contains(s)
+                                ) {
                                     events.add(event);
                                 }
-
                             }
                         }
                     }
@@ -173,12 +131,6 @@ public class OfflineEventsFragment extends Fragment {
 
             }
         });
-
-       /* Collections.sort(events, new Comparator<Event>() {
-            public int compare(Event o1, Event o2) {
-                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
-            }
-        });*/
     }
 
     private void showEvents(final String s) {
@@ -188,43 +140,16 @@ public class OfflineEventsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 events.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                    if (event.getCity().toLowerCase().contains(s)
-                            || event.getAddress().toLowerCase().contains(s)
-                            || event.getVenu().toLowerCase().contains(s)
-                            || event.getDescription().toLowerCase().contains(s)
-                    ) {
-                        if (event.getEventType().equals(ConstFirebase.eventOffline)){
-
-                            events.add(event);
-                        }
-                    }
-                }
-                //eventAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //  events.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
-                        Event event=dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        if (event.getCity().toLowerCase().contains(s)
-                                || event.getAddress().toLowerCase().contains(s)
-                                || event.getVenu().toLowerCase().contains(s)
-                                || event.getDescription().toLowerCase().contains(s)
-                        ) {
-                            if (event.getEventType().equals(ConstFirebase.Both)){
-
+                        Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
+                        Log.d("OFFLINE_EVENTS_CITY", "event : " + event.getCity());
+                        if (event.getEventType().equals(ConstFirebase.eventOffline) || event.getEventType().equals(ConstFirebase.Both)) {
+                            if (event.getCity().toLowerCase().contains(s)
+                                    || event.getAddress().toLowerCase().contains(s)
+                                    || event.getVenu().toLowerCase().contains(s)
+                                    || event.getDescription().toLowerCase().contains(s)
+                            ) {
                                 events.add(event);
-
                             }
                         }
                     }
@@ -235,6 +160,7 @@ public class OfflineEventsFragment extends Fragment {
                     }
                 });
                 eventAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -243,17 +169,12 @@ public class OfflineEventsFragment extends Fragment {
             }
         });
 
-       /* Collections.sort(events, new Comparator<Event>() {
-            public int compare(Event o1, Event o2) {
-                return o1.getTimeStamp().compareTo(o2.getTimeStamp());
-            }
-        });*/
-        // Collections.sort(events);
     }
 
     private void readUserData() {
-        db=new UserDatabase(getContext());
-        city=db.getSqliteUser_data(ConstFirebase.CITY);
+        UserDatabase db = new UserDatabase(getContext());
+        city = db.getSqliteUser_data(ConstFirebase.CITY);
+        Log.d("OFFLINE_EVENTS_CITY", "city : " + city);
     }
 
     @Override

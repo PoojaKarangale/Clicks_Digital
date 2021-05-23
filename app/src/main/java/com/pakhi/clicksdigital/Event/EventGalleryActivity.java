@@ -1,8 +1,6 @@
 package com.pakhi.clicksdigital.Event;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,27 +11,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -42,18 +31,15 @@ import com.pakhi.clicksdigital.Model.Image;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
-import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class EventGalleryActivity extends AppCompatActivity {
@@ -256,10 +242,10 @@ public class EventGalleryActivity extends AppCompatActivity {
 
                                 String notificationKey = rootRef.getNotificationRef().push().getKey();
 
-                                rootRef.getNotificationRef().child(notificationKey).child("to").setValue(snap.getKey());
-                                rootRef.getNotificationRef().child(notificationKey).child("from").setValue(messageSenderID);
-                                rootRef.getNotificationRef().child(notificationKey).child("go").setValue(event.getEventId());
-                                rootRef.getNotificationRef().child(notificationKey).child("type").setValue("eventPhoto");
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.to).setValue(snap.getKey());
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.from).setValue(messageSenderID);
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.go).setValue(event.getEventId());
+                                rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.type).setValue(ConstFirebase.eventPhoto);
 
                             }
                         }

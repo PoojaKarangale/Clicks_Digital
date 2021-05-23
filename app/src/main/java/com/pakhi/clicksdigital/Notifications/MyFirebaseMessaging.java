@@ -142,13 +142,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             if(type.equals("chat")){
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 Log.i("userPersonal -----", user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.groupId, user);
+                resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("topic")){
@@ -183,7 +183,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("request")){
                 resultIntent=new Intent(getApplicationContext(), ProfileUserRequest.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.putExtra(Const.fromRequest, "req");
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
@@ -305,12 +305,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             if(type.equals("chat")){
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.groupId, user);
+                resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("topic")){
@@ -339,7 +339,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             else if(type.equals("request")){
                 resultIntent=new Intent(getApplicationContext(), ProfileUserRequest.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.putExtra(Const.fromRequest, "req");
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
@@ -526,12 +526,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             if(type.equals("chat")){
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.groupId, user);
+                resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("topic")){
@@ -558,7 +558,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
             else if(type.equals("request")){
                 resultIntent=new Intent(getApplicationContext(), ProfileUserRequest.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.putExtra(Const.fromRequest, "req");
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
@@ -690,12 +690,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             if(type.equals("chat")){
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
-                resultIntent.putExtra(ConstFirebase.groupId, user);
+                resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("topic")){
@@ -724,7 +724,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             else if(type.equals("request")){
                 resultIntent=new Intent(getApplicationContext(), ProfileUserRequest.class);
-                resultIntent.putExtra(ConstFirebase.visitUser, user);
+                resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.putExtra(Const.fromRequest, "req");
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }

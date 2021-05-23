@@ -65,18 +65,16 @@ import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    static int PReqCode=1;
-    Uri          picImageUri=null;
-    Button       edit_profile;
+    static int PReqCode = 1;
+    Uri picImageUri = null;
+    Button edit_profile;
 
-    private String    user_id;
-    private ListView  listView;
+    private String user_id;
+    private ListView listView;
     private ImageView profile_image;
-    private TextView  user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
-    private User              user;
+    private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
+    private User user;
     private DatabaseReference UserRef;
-    //    private int[] imagesForListView = {R.drawable.find_friends, R.drawable.my_friends, R.drawable.chat_requests};
-    //    private String[] titleForListView = {"Find Friends", "My Friends", " Chat Requests"};
     FirebaseDatabaseInstance rootRef;
     private TextView designation, currentCompany, city, expectationsFromComm;
     private TextView expectationsFromUs;
@@ -90,11 +88,11 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        rootRef=FirebaseDatabaseInstance.getInstance();
-        SharedPreference pref=SharedPreference.getInstance();
+        rootRef = FirebaseDatabaseInstance.getInstance();
+        SharedPreference pref = SharedPreference.getInstance();
 
-        UserRef=rootRef.getUserRef();
-        user_id=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        UserRef = rootRef.getUserRef();
+        user_id = pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
         certificateList = findViewById(R.id.certificates_list);
         certifiText = findViewById(R.id.certifications);
@@ -114,9 +112,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                CharSequence options[]={"View Photo", "Change Photo"};
+                CharSequence options[] = {"View Photo", "Change Photo"};
 
-                AlertDialog.Builder builder=new AlertDialog.Builder(v.getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 // builder.setTitle("");
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
@@ -138,59 +136,13 @@ public class ProfileActivity extends AppCompatActivity {
         edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            /*    Intent intent = new Intent(ProfileActivity.this, SetProfileActivity.class);
-                intent.putExtra("PreviousActivity", "ProfileActivity");
-                startActivity(intent);*/
-                Intent intent=new Intent(ProfileActivity.this, EditProfile.class);
+                Intent intent = new Intent(ProfileActivity.this, EditProfile.class);
                 intent.putExtra(Const.User, user);
-                //intent.putExtra("gender", "Male");
                 startActivity(intent);
                 finish();
-
-
             }
         });
 
-    /*    listAdapter = new ListAdapter(this, titleForListView, imagesForListView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        sendUserToFindFriendsActivity();
-                        break;
-                    case 1:
-                        sendUserToContactActivity();
-                        break;
-                    case 2:
-                        sendUserToConnectionRequestsActivity();
-                        break;
-                }
-            }
-        });
-        listView.setOnTouchListener(new ListView.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-
-                // Handle ListView touch events.
-                v.onTouchEvent(event);
-                return true;
-            }
-        });
-
-        listView.setAdapter(listAdapter);*/
     }
 
     private void changeProfile() {
@@ -226,49 +178,22 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void viewProfile(String image_url) {
         Intent intent = new Intent(ProfileActivity.this, LoadImage.class);
-        intent.putExtra("image_url", image_url);
+        intent.putExtra(Const.IMAGE_URL, image_url);
         startActivity(intent);
         //EnlargedImage.enlargeImage(image_url,getApplicationContext());
     }
 
     private void getUserFromDb() {
-        UserDatabase db=new UserDatabase(this);
+        UserDatabase db = new UserDatabase(this);
         user = db.getSqliteUser();
     }
 
     private void loadData() {
-        /*  Picasso.get()
-                .load(user.getImage_url())
-                .resize(120, 120)
-                .into(profile_image);
-        */
-        /*   Picasso.get()
-                .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
-                .resize(120, 120)
-                .into(profile_image);*/
+
         Log.i("currentUserID", user_id);
 
-
-        /*UserRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                currentCompany.setText(snapshot.child("company").getValue().toString());
-                city.setText(snapshot.child("city").getValue().toString());
-                exp_from_us.setText(snapshot.child("expectations_from_us").getValue().toString());
-                expectationsFromComm.setText(snapshot.child("offer_to_community").getValue().toString());
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-
-
-
-        user_name_heading.setText(user.getUser_name()+" "+user.getLast_name());
-        user_name.setText(user.getUser_name()+" "+user.getLast_name());
+        user_name_heading.setText(user.getUser_name() + " " + user.getLast_name());
+        user_name.setText(user.getUser_name() + " " + user.getLast_name());
         gender.setText(user.getGender());
 
         Glide.with(getApplicationContext()).load(user.getImage_url()).
@@ -286,7 +211,7 @@ public class ProfileActivity extends AppCompatActivity {
             country.setText(user.getCountry());
             referredBy.setText(user.getReferal());
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -323,7 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void socialMediaHandles() {
-        ImageView linkedin=findViewById(R.id.iv_user_linkedin);
+        ImageView linkedin = findViewById(R.id.iv_user_linkedin);
 
         //opening the linkedin link
         linkedin.setOnClickListener(new View.OnClickListener() {
@@ -339,10 +264,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadCertification() {
-        final List<Certificates> certificates=new ArrayList<Certificates>();
+        final List<Certificates> certificates = new ArrayList<Certificates>();
         //Loading the data
 
-        DatabaseReference databaseReference=UserRef.child(user_id).child("certificate");
+        DatabaseReference databaseReference = UserRef.child(user_id).child("certificate");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -367,75 +292,49 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void addCertificationData(final List<Certificates> certificates) {
-        ImageView certi_1=findViewById(R.id.certi_1);
+        ImageView certi_1 = findViewById(R.id.certi_1);
 
-                if (certificates == null) {
-                    //Toast.makeText(ProfileActivity.this, "No Certificates Provided", Toast.LENGTH_SHORT).show();
-                    certificateList.setVisibility(View.GONE);
-                    certifiText.setText("No certificate provided");
+        if (certificates == null) {
+            certificateList.setVisibility(View.GONE);
+            certifiText.setText("No certificate provided");
 
-                } else {
-                    /*Bundle bundle=new Bundle();
-                    bundle.putSerializable("certificates", (Serializable) certificates);
-                    ShowCertificatesFragment gmapFragment=new ShowCertificatesFragment();
+        } else {
 
-                    gmapFragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, gmapFragment).commit();
-                   /* Uri uri = Uri.parse(certificates.get(0)); // missing 'http://' will cause crashed
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);*/
+            LinearLayout certificationLayout = findViewById(R.id.certification_layout);
+            certificationLayout.setVisibility(View.GONE);
 
-                    LinearLayout certificationLayout = findViewById(R.id.certification_layout);
-                    certificationLayout.setVisibility(View.GONE);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+            certificateList.setLayoutManager(linearLayoutManager);
 
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    certificateList.setLayoutManager(linearLayoutManager);
-
-
-                    myAdapter = new MyAdapter(certificates);
-                    certificateList.setAdapter(myAdapter);
-
-
-                }
+            myAdapter = new MyAdapter(certificates);
+            certificateList.setAdapter(myAdapter);
+        }
     }
 
-
-
     private void contactInfo() {
-        ImageView email=findViewById(R.id.iv_user_email);
+        ImageView email = findViewById(R.id.iv_user_email);
 
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + user.getUser_email()));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + user.getUser_email()));
                 startActivity(intent);
             }
         });
-
-        /*
-        number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:" + user.getNumber()));
-                startActivity(callIntent);
-            }
-        });
-        */
     }
 
     private void initializeMsgRequestFields() {
 
-        profile_image=findViewById(R.id.profile_img);
-        user_name_heading=findViewById(R.id.tv_user_name_heading);
-        user_name=findViewById(R.id.tv_user_name);
-        gender=findViewById(R.id.tv_gender);
-        profession=findViewById(R.id.tv_profession);
-        bio=findViewById(R.id.tv_user_bio);
-        speaker_experience=findViewById(R.id.tv_speaker_experience);
-        experience=findViewById(R.id.tv_experiences);
-        edit_profile=findViewById(R.id.edit_profile);
-        listView=findViewById(R.id.list_view);
+        profile_image = findViewById(R.id.profile_img);
+        user_name_heading = findViewById(R.id.tv_user_name_heading);
+        user_name = findViewById(R.id.tv_user_name);
+        gender = findViewById(R.id.tv_gender);
+        profession = findViewById(R.id.tv_profession);
+        bio = findViewById(R.id.tv_user_bio);
+        speaker_experience = findViewById(R.id.tv_speaker_experience);
+        experience = findViewById(R.id.tv_experiences);
+        edit_profile = findViewById(R.id.edit_profile);
+        listView = findViewById(R.id.list_view);
 
         //designation = findViewById(R.id.designation);
         currentCompany = findViewById(R.id.current_company);
@@ -450,40 +349,12 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // updateUserStatus("online");
-    }
-
-    private void updateUserStatus(String state) {
-        String saveCurrentTime, saveCurrentDate;
-
-        Calendar calendar=Calendar.getInstance();
-
-        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate=currentDate.format(calendar.getTime());
-
-        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
-        saveCurrentTime=currentTime.format(calendar.getTime());
-
-        HashMap<String, Object> onlineStateMap=new HashMap<>();
-        onlineStateMap.put(Const.time, saveCurrentTime);
-        onlineStateMap.put(Const.date, saveCurrentDate);
-        onlineStateMap.put(Const.state, state);
-
-        UserRef.child(user_id).child(ConstFirebase.userState)
-                .updateChildren(onlineStateMap);
-
-    }
-
-    String getFileExtention(Uri uri) {
-        ContentResolver contentResolver=getContentResolver();
-        MimeTypeMap mime=MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
     private void createUserProfile() {
 
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.USER_MEDIA_PATH).child(user_id).child(ConstFirebase.PHOTOS).child(ConstFirebase.PROFILE_IMAGE);
-        final StorageReference imgPath=sReference.child("profile_image");
+        StorageReference sReference = FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.USER_MEDIA_PATH).child(user_id).child(ConstFirebase.PHOTOS).child(ConstFirebase.PROFILE_IMAGE);
+        final StorageReference imgPath = sReference.child(ConstFirebase.PROFILE_IMAGE);
 
         imgPath.putFile(picImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -493,12 +364,12 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(final Uri uri) {
 
-                        picImageUri=uri;
-                        UserProfileChangeRequest profileUpdate=new UserProfileChangeRequest.Builder()
+                        picImageUri = uri;
+                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                                 .setPhotoUri(uri)
                                 .build();
 
-                        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         user.updateProfile(profileUpdate)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -526,8 +397,8 @@ public class ProfileActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                    CropImage.ActivityResult result=CropImage.getActivityResult(data);
-                    picImageUri=result.getUri();
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    picImageUri = result.getUri();
                     profile_image.setImageURI(picImageUri);
                     createUserProfile();
                     break;

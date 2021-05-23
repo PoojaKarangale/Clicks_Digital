@@ -25,7 +25,7 @@ public class UserDatabase extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "current_user";
 
     public UserDatabase(@Nullable Context context) {
-        super(context, TABLE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 1);
         SQLiteDatabase db = this.getWritableDatabase();
     }
 
@@ -108,9 +108,9 @@ public class UserDatabase extends SQLiteOpenHelper {
         User user = new User(res.getString(res.getColumnIndex(ConstFirebase.USER_ID)), res.getString(res.getColumnIndex(ConstFirebase.USER_NAME)),
                 res.getString(res.getColumnIndex(ConstFirebase.USER_BIO)), res.getString(res.getColumnIndex(ConstFirebase.IMAGE_URL)), res.getString(res.getColumnIndex(ConstFirebase.USER_TYPE)),
                 res.getString(res.getColumnIndex(ConstFirebase.CITY)), res.getString(res.getColumnIndex(ConstFirebase.expeactations)),
-                res.getString(res.getColumnIndex(ConstFirebase.expireince)), res.getString(res.getColumnIndex(ConstFirebase.gender)), res.getString(res.getColumnIndex("number")),
-                res.getString(res.getColumnIndex(ConstFirebase.offerToComm)), res.getString(res.getColumnIndex(ConstFirebase.speakerExp)), res.getString(res.getColumnIndex("email")),
-                res.getString(res.getColumnIndex(ConstFirebase.webLink)), res.getString(res.getColumnIndex(ConstFirebase.working)), res.getString(res.getColumnIndex("last_name")),
+                res.getString(res.getColumnIndex(ConstFirebase.expireince)), res.getString(res.getColumnIndex(ConstFirebase.GENDER)), res.getString(res.getColumnIndex(ConstFirebase.number)),
+                res.getString(res.getColumnIndex(ConstFirebase.offerToComm)), res.getString(res.getColumnIndex(ConstFirebase.speakerExp)), res.getString(res.getColumnIndex(ConstFirebase.email)),
+                res.getString(res.getColumnIndex(ConstFirebase.webLink)), res.getString(res.getColumnIndex(ConstFirebase.working)), res.getString(res.getColumnIndex(ConstFirebase.last_name)),
                 res.getString(res.getColumnIndex(ConstFirebase.company)), res.getString(res.getColumnIndex(ConstFirebase.country)), res.getString(res.getColumnIndex(ConstFirebase.getReferral))
         );
         return user;
@@ -118,7 +118,9 @@ public class UserDatabase extends SQLiteOpenHelper {
 
     public String getSqliteUser_data(String COL_KEY) {
         Cursor res = getAllData();
-        return res.getString(res.getColumnIndex(COL_KEY));
+        if (res.getCount() > 0)
+            return res.getString(res.getColumnIndex(COL_KEY));
+        return "";
     }
 
     public boolean insertData(HashMap<String, String> userItems) {
@@ -129,7 +131,7 @@ public class UserDatabase extends SQLiteOpenHelper {
         }
         long result = db.insert(TABLE_NAME, null, contentValues);
         Log.d("TESTINGUSERDB", "----------------- result long " + result);
-        //  db.close();
+
         if (result == -1) return false;
         return true;
     }
@@ -152,5 +154,4 @@ public class UserDatabase extends SQLiteOpenHelper {
             return false;
         }
     }
-
 }

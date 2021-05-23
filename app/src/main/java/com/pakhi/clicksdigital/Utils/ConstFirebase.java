@@ -13,7 +13,8 @@ public class ConstFirebase {
     public static String events          ="Events";
     public static String eventName       ="name";
     public static String eventDate       ="date";
-    public static String eventDescription="description";
+    public static String description="description";
+
     public static String eventcategory   ="category";
 
     public static String eventCategory="EventCategory";
@@ -28,12 +29,18 @@ public class ConstFirebase {
     public static String eventDetails="EventDetails";
     public static String eventOffline="Offline";
     public static String eventOnline ="Online";
+    public static String eventBoth ="both";
+    public static String onlineStatus ="online";
+
+
     public static String participants="Participants";
     public static String    replyRef = "TopicReply";
+    public static String    topicReply = "topicReply";
     public static String    topicLikesRef = "TopicLikes";
     public static String    replyLikesRef = "ReplyLikes";
     public  static String topic = "Topic";
     public  static String slider = "Slider";
+
 
     // new members from Const
 
@@ -56,35 +63,43 @@ public class ConstFirebase {
     public final static String WEBLINK         ="weblink";
     public final static String GENDER          ="gender";
     public static final String APPROVED_REQUESTS  ="Approved_requests";
-    final static        int    PICK_PDF_CODE   =2342;
-    public static       String prevActivity    ="previousActivity";
+    //public static       String prevActivity    ="previousActivity";
     public static       String registerActivity="RegisterActivity";
-    public static       String groupId         ="groupId";
-    public static       String groupName       ="groupName";
+    //public static       String groupId         ="groupId";
+    public final static String group_id = "group_id";
+
     public static       String personalChat    ="PersonalChat";
     public static       String isPhoneVerified ="true";
     public static       String profileSet      ="true";
 
+    public static String expeactations = "expectations_from_us";
+    public static String expireince = "experiences";
+    public static String offerToComm = "offer_to_community";
+    public static String speakerExp = "speaker_experience";
+    public static String email = "email";
+    public static String webLink = "weblink";
+    public static String working = "work_profession";
+    public static String last_name = "last_name";
+    public static String company = "company";
 
 
-
-    // new names of putExtra
+    public final static String message = "message";
     public final static String certificate = "certificate";
-    public final static String visitUser = "visit_user_id";
+    // new names of putExtra
+ /*
+
     public final static String userID = "user_id";
     public final static String message = "message";
     public final static String event = "event";
     public final static String organiser = "organiser";
     public final static String Event = "Event";
-    public final static String previousActivity = "previousActivity";
-    public final static String PreviousActivity = "PreviousActivity";
 
     public final static String group_id = "group_id";
     public final static String group_name = "group_name";
     public final static String current_group_id = "current_group_id";
     public final static String User = "User";
     public final static String visit_user_name = "visit_user_name";
-    public final static String userdata = "userdata";
+    public final static String userdata = "userdata";*/
 
     // today
 
@@ -94,8 +109,9 @@ public class ConstFirebase {
     public static       String state           ="state";
     public static       String date            ="date";
     public static       String time            ="time";
-    public static       String last_name       ="last_name";
-    public static       String groups1      ="groups";
+    public static       String timestamp            ="timestamp";
+
+
     public static       String EventDetails      ="EventDetails";
     public static       String startMonth      ="startMonth";
     public static       String endMonth      ="endMonth";
@@ -110,10 +126,11 @@ public class ConstFirebase {
     public static String sender="sender";
     public static String Both="Both";
     public static String admins="admins";
-    public static String grpPhotos="Group_photos";
-    public static String profGrp="Group_profile";
+    public static String admin="admin";
+    public static String user="user";
+    public static String groupPhotos="Group_photos";
+    public static String groupProfile="Group_profile";
     public static String userType="user_type";
-    public static String group_users = "Users";
 
     public static String NotificationsTopicLike = "NotificationsTopicLike";
     public static String NotificationsTopicReply = "NotificationsTopicReply";
@@ -122,21 +139,21 @@ public class ConstFirebase {
     public static String goToNotificationId="goToNotificationId";
     public static String typeOfNotification="type";
     public static String notificationRecieverID="notificationRecieverID";
+    public static String getNotification="getNotification";
+    public static String noOfMessages="noOfMessages";
     public static String userIsIn="UserIsIn";
     public static String Blocked = "Blocked";
     public static String country = "country";
     public static String getReferral = "referred_by";
 
+    public static String eventPhoto = "eventPhoto";
+    public static String to = "to";
+    public static String from = "from";
+    public static String go = "go";
+    public static String type = "type";
+    public static String position = "position";
+    public static String profileRequest = "profileRequest";
 
-    public static String expeactations = "expectations_from_us";
-    public static String expireince = "experiences";
-    public static String offerToComm="offer_to_community";
-    public static String speakerExp="speaker_experience";
-    public static String email="email";
-    public static String gender="gender";
+   // public static String working="work_profession";
 
-    public static String webLink="weblink";
-    public static String working="work_profession";
-    //public static String last_name="last_name";
-    public static String company="company";
 }

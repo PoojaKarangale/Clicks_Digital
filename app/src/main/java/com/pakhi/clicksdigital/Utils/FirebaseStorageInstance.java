@@ -9,7 +9,7 @@ public class FirebaseStorageInstance {
     StorageReference groupProfileRef;
 
     public StorageReference getGroupProfileRef() {
-        return rootRef.child("Group_photos").child("Group_profile");
+        return rootRef.child(ConstFirebase.groupPhotos).child(ConstFirebase.groupProfile);
     }
 
     private FirebaseStorageInstance() {

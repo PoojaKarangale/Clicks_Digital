@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.NestedScrollView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,32 +49,24 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.pakhi.clicksdigital.APIService;
-import com.pakhi.clicksdigital.GroupChat.GroupChatActivity;
 import com.pakhi.clicksdigital.GroupChat.ImageText;
 import com.pakhi.clicksdigital.GroupChat.MessageAdapter;
 import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
-import com.pakhi.clicksdigital.Notifications.Client;
-import com.pakhi.clicksdigital.Notifications.Data;
-import com.pakhi.clicksdigital.Notifications.MyResponse;
-import com.pakhi.clicksdigital.Notifications.Sender;
-import com.pakhi.clicksdigital.Notifications.Token;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.security.acl.Group;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -86,9 +77,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class ChatActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -155,6 +144,8 @@ public class ChatActivity extends AppCompatActivity {
     String lastKey="";
     private String prevKey="";
     int currentPage=1;
+
+    Long timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -481,6 +472,8 @@ public class ChatActivity extends AppCompatActivity {
 
         SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
         saveCurrentTime = currentTime.format(calendar.getTime());
+        timestamp = calendar.getTimeInMillis()/1000L;
+
     }
 
     private void seenMessage() {
@@ -510,14 +503,14 @@ public class ChatActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child("userState").hasChild("state")) {
-                            String state = dataSnapshot.child("userState").child("state").getValue().toString();
-                            String date = dataSnapshot.child("userState").child("date").getValue().toString();
-                            String time = dataSnapshot.child("userState").child("time").getValue().toString();
+                        if (dataSnapshot.child(ConstFirebase.userState).hasChild(ConstFirebase.state)) {
+                            String state = dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.state).getValue().toString();
+                            String date = dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.date).getValue().toString();
+                            String time = dataSnapshot.child(ConstFirebase.userState).child(ConstFirebase.time).getValue().toString();
 
-                            if (state.equals("online")) {
-                                userLastSeen.setText("online");
-                            } else if (state.equals("offline")) {
+                            if (state.equals(ConstFirebase.onlineStatus)) {
+                                userLastSeen.setText(ConstFirebase.onlineStatus);
+                            } else {
                                 userLastSeen.setText("Last Seen: " + date + " " + time);
                             }
                         } else {
@@ -536,7 +529,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
-        updateUserStatus("online");
+
         messagesList.clear();
         messageAdapter.notifyDataSetChanged();
 
@@ -681,7 +674,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void SendMessage(String messageType, String message, String separteURL) {
@@ -699,12 +691,11 @@ public class ChatActivity extends AppCompatActivity {
         /* Map messageTextBody = new HashMap();*/
 
         Message message1 = new Message(messageSenderID, message,
-                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate, false, separteURL,
+                messageType, messageReceiverID, messagePushID, saveCurrentTime, saveCurrentDate,timestamp,false, separteURL,
                 selectedMessageId, typeOfSelectedMessage);
 
-        /*  messageTextBody.put("from", messageSenderID);
+        /* messageTextBody.put("from", messageSenderID);
         messageTextBody.put("to", messageReceiverID);
-
         messageTextBody.put("messageID", messagePushID);
         messageTextBody.put("time", saveCurrentTime);
         messageTextBody.put("date", saveCurrentDate);
@@ -746,25 +737,6 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void updateUserStatus(String state) {
-        String saveCurrentTime, saveCurrentDate;
-
-        Calendar calendar = Calendar.getInstance();
-
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calendar.getTime());
-
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        saveCurrentTime = currentTime.format(calendar.getTime());
-
-        HashMap<String, Object> onlineStateMap = new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
-
-        rootRef.getUserRef().child(messageSenderID).child("userState")
-                .updateChildren(onlineStateMap);
-    }
 
     private void popupMenuSettigns() {
         PopupMenu popup = new PopupMenu(ChatActivity.this, attach_file_btn);
@@ -954,7 +926,7 @@ public class ChatActivity extends AppCompatActivity {
                         MessageInputText.setText("");
                         //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
                         Intent intent = new Intent(ChatActivity.this, ImageText.class);
-                        intent.putExtra(Const.image_url, uri.toString());
+                        intent.putExtra(Const.IMAGE_URL, uri.toString());
                         intent.putExtra(Const.group_id, messageReceiverID);
                         intent.putExtra(Const.checkPersonalOrGroup,"personal");
                         intent.putExtra(Const.messageSenderName, messageSenderName);
@@ -964,7 +936,6 @@ public class ChatActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         //SendMessage("image", uri.toString());
-
                     }
                 });
 

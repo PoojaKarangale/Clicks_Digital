@@ -41,7 +41,7 @@ import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 
@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -103,7 +104,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 viewHolder = new MessageViewHolderOther(viewChatOther);
                 break;
             case VIEW_TYPE_TOPIC:
-                View viewChatTopic = layoutInflater.inflate(R.layout.group_topic_layout, viewGroup, false);
+                View viewChatTopic = layoutInflater.inflate(R.layout.custom_group_topic_layout, viewGroup, false);
                 viewHolder = new TopicViewHolder(viewChatTopic);
                 break;
         }
@@ -118,20 +119,36 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         message = userMessagesList.get(position);
         final String fromUserID = message.getFrom();
 
+        boolean isNewGroup = false;
+        long previousTs = 0;
+        if(position >= 1){
+            Message previousMessage = userMessagesList.get(position-1);
+            previousTs = previousMessage.getTimestamp();
+        }
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTimeInMillis(message.getTimestamp()*1000);
+        cal2.setTimeInMillis(previousTs*1000);
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+
+        if (!sameDay) {
+            isNewGroup = true;
+        }
+
         if (TextUtils.equals(userMessagesList.get(position).getType(), "topic")) {
-            configureTopicViewHolder((TopicViewHolder) messageViewHolder, position, message);
+            configureTopicViewHolder((TopicViewHolder) messageViewHolder, position, message,isNewGroup);
         } else if (TextUtils.equals(fromUserID, currentUserId)
         ) {
-            configureMessageViewHolder((MessageViewHolder) messageViewHolder, position, message);
+            configureMessageViewHolder((MessageViewHolder) messageViewHolder, position, message,isNewGroup);
         } else {
-            configureMessageViewHolderOther((MessageViewHolderOther) messageViewHolder, position, message);
+            configureMessageViewHolderOther((MessageViewHolderOther) messageViewHolder, position, message,isNewGroup);
         }
 
         messageViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 CharSequence options[];
-
 
                 switch (chatType) {
                     case "PersonalChat":
@@ -190,13 +207,28 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-    private void configureMessageViewHolder(final MessageViewHolder messageViewHolder, int position, final Message message) {
+    private void configureMessageViewHolder(final MessageViewHolder messageViewHolder, int position, final Message message, boolean isNewGroup) {
         messageViewHolder.senderMessageText.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.senderLayoutPdf.setVisibility(View.GONE);
         messageViewHolder.senderLayoutUrl.setVisibility(View.GONE);
-
+        messageViewHolder.headerTimeTextLayout.setVisibility(View.GONE);
         messageViewHolder.senderDate.setText(message.getTime() + " - " + message.getDate());
+
+        if (isNewGroup){
+
+            //set date time header
+            messageViewHolder.headerTimeTextLayout.removeAllViews();
+            TextView dateView = new TextView(context);
+            dateView.setText(message.getDate());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            //params.gravity = Gravity.CENTER_HORIZONTAL;
+            dateView.setLayoutParams(params);
+            messageViewHolder.headerTimeTextLayout.setVisibility(View.VISIBLE);
+            messageViewHolder.headerTimeTextLayout.addView(dateView);
+
+        }
 
         switch (message.getType()) {
             case "text":
@@ -344,7 +376,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onClick(View v) {
                 //enlargeImage(String.valueOf(message.getMessage()), v);
                 Intent intent = new Intent(context, LoadImage.class);
-                intent.putExtra("image_url", message.getMessage());
+                intent.putExtra(Const.IMAGE_URL, message.getMessage());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -363,13 +395,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void configurePDFTypeReply(final MessageViewHolder messageViewHolder, Message message) {
 
+
+
         if(chatType.equals("GroupChat")){
             rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
                         Message msg = snapshot.getValue(Message.class);
-                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        writeReplyMessage(snapshot.child(ConstFirebase.type).getValue().toString(), msg, messageViewHolder);
                         messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
                         messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.VISIBLE);
 
@@ -390,7 +424,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if(snapshot.exists()){
 
                         Message msg = snapshot.getValue(Message.class);
-                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        writeReplyMessage(snapshot.child(ConstFirebase.type).getValue().toString(), msg, messageViewHolder);
                         messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
                         messageViewHolder.replyOnPDFLayoutSender.setVisibility(View.VISIBLE);
 
@@ -407,9 +441,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         messageViewHolder.replyOnURLLayoutSender.setVisibility(View.GONE);
         messageViewHolder.replyOnImageLayoutSender.setVisibility(View.GONE);
 
+
+
+
     }
 
     private void configureURLTypeReply(final MessageViewHolder messageViewHolder, Message message) {
+
+
+        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
+        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.VISIBLE);
+
 
         if(chatType.equals("GroupChat")){
             rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
@@ -417,10 +459,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
                         Message msg = snapshot.getValue(Message.class);
-                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
-                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
-                        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.VISIBLE);
-
+                        writeReplyMessage(snapshot.child(ConstFirebase.type).getValue().toString(), msg, messageViewHolder);
                     }
 
                 }
@@ -436,12 +475,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
-
                         Message msg = snapshot.getValue(Message.class);
-                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
-                        messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
-                        messageViewHolder.replyOnURLLayoutSender.setVisibility(View.VISIBLE);
-
+                        writeReplyMessage(snapshot.child(ConstFirebase.type).getValue().toString(), msg, messageViewHolder);
                     }
                 }
 
@@ -459,13 +494,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void configureImageTypeReply(final MessageViewHolder messageViewHolder, Message message) {
 
+
         if(chatType.equals("GroupChat")){
             rootRef.getGroupChatRef().child(message.getTo()).child(message.getSelectedMessageId()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
                         Message msg = snapshot.getValue(Message.class);
-                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        writeReplyMessage(snapshot.child(ConstFirebase.type).getValue().toString(), msg, messageViewHolder);
                         messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
                         messageViewHolder.replyOnImageLayoutSender.setVisibility(View.VISIBLE);
 
@@ -486,7 +522,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if(snapshot.exists()){
 
                         Message msg = snapshot.getValue(Message.class);
-                        writeReplyMessage(snapshot.child("type").getValue().toString(), msg, messageViewHolder);
+                        writeReplyMessage(snapshot.child(ConstFirebase.type).getValue().toString(), msg, messageViewHolder);
                         messageViewHolder.onLongClickOnMessageSender.setVisibility(View.VISIBLE);
                         messageViewHolder.replyOnImageLayoutSender.setVisibility(View.VISIBLE);
 
@@ -851,7 +887,25 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    private void configureMessageViewHolderOther(final MessageViewHolderOther messageViewHolder, final int position, final Message message) {
+    private void configureMessageViewHolderOther(final MessageViewHolderOther messageViewHolder, final int position, final Message message, boolean isNewGroup) {
+
+        messageViewHolder.headerTimeTextLayout.setVisibility(View.GONE);
+        if (isNewGroup){
+
+            //set date time header
+            messageViewHolder.headerTimeTextLayout.removeAllViews();
+            TextView dateView = new TextView(context);
+            dateView.setText(message.getDate());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            //params.gravity = Gravity.CENTER_HORIZONTAL;
+            dateView.setLayoutParams(params);
+            messageViewHolder.headerTimeTextLayout.setVisibility(View.VISIBLE);
+            messageViewHolder.headerTimeTextLayout.addView(dateView);
+
+        }
+
+
         messageViewHolder.receiverMessageText.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
         messageViewHolder.receiverLayoutPdf.setVisibility(View.GONE);
@@ -860,7 +914,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         messageViewHolder.LayoutUrl.setVisibility(View.GONE);
 
-        usersRef = rootRef.getUserRef().child(message.getFrom()).child(Const.USER_DETAILS);
+        usersRef = rootRef.getUserRef().child(message.getFrom()).child(ConstFirebase.USER_DETAILS);
 
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -870,7 +924,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     messageViewHolder.recMain.setBackgroundResource(R.drawable.receiver_messages_layout);
 
                 }
-                String receiverName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                String receiverName = dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString();
                 messageViewHolder.receiver_name.setText(receiverName);
             }
 
@@ -1035,7 +1089,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             public void onClick(View v) {
                 //enlargeImage(String.valueOf(message.getMessage()), v);
                 Intent intent = new Intent(context, LoadImage.class);
-                intent.putExtra("image_url", message.getMessage());
+                intent.putExtra(Const.IMAGE_URL, message.getMessage());
                 context.startActivity(intent);
             }
         });
@@ -1074,8 +1128,24 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-    private void configureTopicViewHolder(final TopicViewHolder messageViewHolder, int position, final Message message) {
-        usersRef = rootRef.getUserRef().child(message.getFrom()).child(Const.USER_DETAILS);
+    private void configureTopicViewHolder(final TopicViewHolder messageViewHolder, int position, final Message message, boolean isNewGroup) {
+
+        messageViewHolder.headerTimeTextLayout.setVisibility(View.GONE);
+        if (isNewGroup){
+
+        //set date time header
+            messageViewHolder.headerTimeTextLayout.removeAllViews();
+        TextView dateView = new TextView(context);
+        dateView.setText(message.getDate());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        //params.gravity = Gravity.CENTER_HORIZONTAL;
+        dateView.setLayoutParams(params);
+        messageViewHolder.headerTimeTextLayout.setVisibility(View.VISIBLE);
+        messageViewHolder.headerTimeTextLayout.addView(dateView);
+
+        }
+        usersRef = rootRef.getUserRef().child(message.getFrom()).child(ConstFirebase.USER_DETAILS);
         messageViewHolder.topicLayoutUrl.setVisibility(View.GONE);
         messageViewHolder.topic_text.setVisibility(View.GONE);
         messageViewHolder.raisedImageLayout.setVisibility(View.GONE);
@@ -1153,10 +1223,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(ConstFirebase.userID).getValue().toString().equals(currentUserId)){
+                if(dataSnapshot.child(ConstFirebase.USER_ID).getValue().toString().equals(currentUserId)){
                     messageViewHolder.publisher_name.setText("You");
                 }else{
-                    String receiverName = dataSnapshot.child(Const.USER_NAME).getValue().toString();
+                    String receiverName = dataSnapshot.child(ConstFirebase.USER_NAME).getValue().toString();
                     messageViewHolder.publisher_name.setText(receiverName);
                 }
 
@@ -1254,7 +1324,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 rootRef.getGroupRef().child(message.getTo()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        grpName[0]=snapshot.child(ConstFirebase.group_name).getValue().toString();
+                        grpName[0]=snapshot.child(ConstFirebase.GROUP_NAME).getValue().toString();
                     }
 
                     @Override
@@ -1286,14 +1356,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             rootRef.getNotificationRef().child(notificationKey).child("go").setValue(message.getMessageID());
             rootRef.getNotificationRef().child(notificationKey).child("type").setValue("topicLike");
 
-
             //rootRef.getNotificationRefTopicLike().child(message.getFrom()).child(message.getMessageID()).setValue("");
         }
-
     }
 
-
     private void openPdf(Uri uri, View v) {
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(uri, "application/pdf");
@@ -1307,7 +1375,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         // this will redirect user to browser downloads and will download the pdf
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         v.getContext().startActivity(intent); */
-
     }
 
     private void enlargeImage(String s, View v) {
@@ -1357,7 +1424,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     }
-    private void forwardMessage(View v, int position) {
+   /* private void forwardMessage(View v, int position) {
         Toast.makeText(v.getContext(), "This feature is yet to implement", Toast.LENGTH_LONG).show();
         Message msg = userMessagesList.get(position);
         msg.setFrom(currentUserId);
@@ -1367,7 +1434,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 context.startActivity(intent);
 
 
-    }
+    }*/
 
     private void deleteMessage(View v, int position, String deleteScope) {
         switch (chatType) {
@@ -1508,7 +1575,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView senderMessageText, senderDate, isSeen, urlTitle, urlDesc, senderUrlText, senderImageText, senderSeparateURL;
         public ImageView messageSenderPicture, urlImage;
         public LinearLayout senderLayoutPdf, senderLayoutUrl, senderImageLayout;
-        public LinearLayout senderMain;
+        public LinearLayout senderMain,headerTimeTextLayout;
 
 
 
@@ -1580,7 +1647,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             replyOnURLTitleSender=itemView.findViewById(R.id.reply_url_title_sender);
             replyOnURLTextSender=itemView.findViewById(R.id.reply_url_text_sender);
 
-
+            headerTimeTextLayout = itemView.findViewById(R.id.HeaderDateTime);
 
         }
     }
@@ -1590,7 +1657,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public ImageView messageReceiverPicture, download_image_receiver,
                 download_pdf_receiver, urlImage;
-        LinearLayout receiverLayoutPdf, receiverLayoutImage, LayoutUrl, mainRecImageLayout;
+        LinearLayout receiverLayoutPdf, receiverLayoutImage, LayoutUrl, mainRecImageLayout,headerTimeTextLayout;
 
         //replyOnClickHeader
         LinearLayout onLongClickOnMessageReceiver, replyHeaderReceiver;
@@ -1665,7 +1732,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             replyOnURLTitleReceiver=itemView.findViewById(R.id.reply_url_title_receiver);
             replyOnURLTextReceiver=itemView.findViewById(R.id.reply_url_text_receiver);
 
-
+            headerTimeTextLayout = itemView.findViewById(R.id.HeaderDateTime);
 
 
 
@@ -1678,7 +1745,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 topic_date_time, reply, no_of_replies, raisedImageText;
         //public CircleImageView receiverProfileImage;
         public ImageView like, urlImage, raisedImage;
-        public LinearLayout topicLayoutUrl, raisedImageLayout;
+        public LinearLayout topicLayoutUrl, raisedImageLayout,headerTimeTextLayout;
 
         //replyOnClickHeader
         LinearLayout onLongClickOnMessageTopic, replyHeaderTopic;
@@ -1724,7 +1791,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             raisedImageLayout = itemView.findViewById(R.id.raised_image_layout);
             raisedImage = itemView.findViewById(R.id.raised_image);
             raisedImageText = itemView.findViewById(R.id.raised_image_text);
-
+            headerTimeTextLayout = itemView.findViewById(R.id.HeaderDateTime);
         }
     }
 
@@ -1833,7 +1900,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else ((MessageViewHolder) output.viewHolder).urlImage.setVisibility(View.GONE);
 
     }
-
 
 }
 

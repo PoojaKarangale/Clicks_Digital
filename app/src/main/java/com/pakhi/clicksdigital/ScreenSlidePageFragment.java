@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ScreenSlidePageFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()){
-                    all.add(snap.child("URL").getValue().toString());
+                    all.add(snap.child(ConstFirebase.url).getValue().toString());
                 }
             }
 

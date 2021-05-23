@@ -53,11 +53,9 @@ public class OnBoardingAdapter extends PagerAdapter {
         headingText.setText(heading[position]);
         subTitleText.setText(subTitle[position]);
 
-
         ViewPager vp = (ViewPager) container;
         vp.addView(view, 0);
         return view;
-
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.pakhi.clicksdigital.Utils;
 
 public class Const {
 
-    public static final String LAST_NAME        ="last_name";
+  /*  public static final String LAST_NAME        ="last_name";
     public static final String USER_DETAILS    ="DETAILS";
     public final static String USER_NAME       ="user_name";
     public final static String USER_EMAIL      ="user_email";
@@ -22,46 +22,45 @@ public class Const {
     public static final String APPROVED_REQUESTS  ="Approved_requests";
     public static       String prevActivity    ="previousActivity";
     public static       String registerActivity="RegisterActivity";
-    public static       String groupId         ="groupId";
-    public static       String groupName       ="groupName";
+
+    public static String group_name = "group_name";
     public static       String personalChat    ="PersonalChat";
     public static       String isPhoneVerified ="true";
-    public static       String profileSet      ="true";
-
+    public static       String profileSet      ="true";*/
 
     // new
-    public static       String date      ="date";
-    public static       String time      ="time";
-    public static       String state     ="state";
-    public static       String offline   ="offline";
-    public static       String online    ="online";
-    public static       String Notifications      ="Notifications";
-    public static       String Change_number      ="Change number";
-    public static       String Contact_us      ="Contact us";
-    public static       String About      ="About";
-    public static       String Groups      ="Groups";
-    public static       String Both      ="Both";
-    public static       String Offline      ="Offline";
-    public static String       Online     = "Online";
-    public static String group_name="group_name";
+/*    public static String date = "date";
+    public static String time = "time";
+    public static String state = "state";
+    public static String offline = "offline";
+    public static String online = "online";
+
+    public static String Groups = "Groups";
+    public static String Both = "Both";
+    public static String Offline = "Offline";
+    public static String Online = "Online";
+
     public static String desc = "description";
-    public static String grpid="groupid";
-    public static String uid="uid_creater";
+    public static String grpid = "groupid";
+    public static String uid = "uid_creater";*/
 
     // intents
+    public static String profileSet = "true";
+    public static String isPhoneVerified = "true";
     public final static String message = "message";
-
-    public static String expeactations = "expectations_from_us";
+   /* public static String expeactations = "expectations_from_us";
     public static String expireince = "experiences";
     public static String offerToComm="offer_to_community";
     public static String speakerExp="speaker_experience";
     public static String email="email";
     public static String webLink="weblink";
-    public static String working="work_profession";
+    public static String working="working";
     public static String last_name="last_name";
-    public static String company="company";
+    public static String company="company"; */
 
     // new names of putExtra
+    public static final String IMAGE_URL = "image_url";
+    public static String number = "number";
     public final static String certificate = "certificate";
     public final static String visitUser = "visit_user_id";
     public final static String userID = "user_id";
@@ -69,7 +68,6 @@ public class Const {
     public final static String event = "event";
     public final static String organiser = "organiser";
     public final static String Event = "Event";
-    public final static String previousActivity = "previousActivity";
     public final static String PreviousActivity = "PreviousActivity";
 
     public final static String group_id = "group_id";
@@ -80,15 +78,30 @@ public class Const {
     public final static String userdata = "userdata";
 
     public static String position = "position";
-    public static String fromRequest="fromRequest";
-    public static String image_url="image_url";
-    public static String checkPersonalOrGroup="checkPersonalOrGroup";
-    public static String messageSenderName="messageSenderName";
-    public static String typeOfMessageSelected="typeOfMessageSelected";
-    public static String selectedMessageId="selectedMessageId";
-    public static String someTextFromRaisedTopic="someTextFromRaisedTopic";
-    public static String personal="personal";
-    public static String grp="grp";
-    public static String replyingToMessage="replyingToMessage";
-    public static String flagOfGroup="flag";
+    public static String fromRequest = "fromRequest";
+
+    //title for settings
+    public static String Notifications = "Notifications";
+    public static String Change_number = "Change number";
+    public static String Contact_us = "Contact us";
+    public static String About = "About";
+
+    public static String Offline = "Offline";
+    public static String Online = "Online";
+
+    public static String groupName = "groupName";
+
+
+    public static String selectedMessageId = "selectedMessageId";
+
+
+    public static String checkPersonalOrGroup = "checkPersonalOrGroup";
+    public static String messageSenderName = "messageSenderName";
+    public static String typeOfMessageSelected = "typeOfMessageSelected";
+
+    public static String someTextFromRaisedTopic = "someTextFromRaisedTopic";
+    public static String personal = "personal";
+    public static String group = "group";
+    public static String replyingToMessage = "replyingToMessage";
+    public static String flagOfGroup = "flag";
 }

@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Activities;
+package com.pakhi.clicksdigital.Profile;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -21,17 +21,14 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Model.Certificates;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
-import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class AddNewCertificateActivity extends AppCompatActivity {
     final static int PICK_PDF_CODE=2342;

@@ -5,82 +5,97 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E8F0FD"
-    tools:context=".Activities.StartActivity">
+    tools:context=".Activities.StartActivity"
 
-  <androidx.appcompat.widget.Toolbar
-      android:id="@+id/toolbar_start"
-      android:layout_width="match_parent"
-      android:layout_height="40dp"
-      android:background="#8BB4F3"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:title="@string/app_name"
-      app:titleTextColor="@color/black">
+    >
 
-    <RelativeLayout
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_start"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="40dp"
+        android:background="#8BB4F3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/app_name"
+        app:titleTextColor="@color/black">
 
-      <ImageView
-          android:layout_width="47dp"
-          android:layout_height="47dp"
-          android:layout_alignParentStart="true"
-          android:layout_centerVertical="true"
-          android:src="@drawable/logo" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-      <ImageView
-          android:id="@+id/profile_activity"
-          android:layout_width="21dp"
-          android:layout_height="20dp"
-          android:layout_alignParentEnd="true"
-          android:layout_centerVertical="true"
-          android:layout_marginEnd="7dp"
-          />
+            <ImageView
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/logo" />
+
+            <ImageView
+                android:id="@+id/profile_activity"
+                android:layout_width="21dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/persone_profile" />
 
 
-    </RelativeLayout>
-  </androidx.appcompat.widget.Toolbar>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@+id/toolbar_start"
-      android:orientation="vertical"
-      app:layout_constraintTop_toBottomOf="@id/toolbar_start"
-      android:background="@color/white">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#E8F0FD">
-
-      <com.google.android.material.tabs.TabLayout
-          android:id="@+id/tab_layout"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:background="@drawable/action_bar_start"
-          android:fillViewport="true"
-          app:tabGravity="fill"
-          app:tabIndicatorColor="@color/transparent"
-          app:tabIndicatorHeight="1dp"
-          app:tabMode="fixed"
-
-          >
-
-      </com.google.android.material.tabs.TabLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:layout_constraintVertical_weight="1"
-        android:background="#E8F0FD"
+        android:layout_below="@+id/toolbar_start"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_start">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#E8F0FD">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/action_bar_start"
+                android:fillViewport="true"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/transparent"
+                app:tabIndicatorHeight="1dp"
+                app:tabMode="fixed">
+
+            </com.google.android.material.tabs.TabLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#E8F0FD"
+            android:scrollbars="vertical"
+            app:layout_constraintVertical_weight="1">
+
+        </androidx.viewpager.widget.ViewPager>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/internetCheckFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         >
 
-    </androidx.viewpager.widget.ViewPager>
-  </LinearLayout>
+    </FrameLayout>
+
+    <!--<include
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        layout="@layout/internet_layout" />-->
+
 </RelativeLayout>

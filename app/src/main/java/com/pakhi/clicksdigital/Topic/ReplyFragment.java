@@ -95,7 +95,7 @@ public class ReplyFragment extends Fragment {
         String replykEY=replyRef.child(message.getMessageID()).push().getKey();
 
         Message reply1=new Message(currentUserID, reply,
-                type, message.getTo(), replykEY, currentTime, currentDate);
+                type, message.getTo(), replykEY, currentTime, currentDate,calForDate.getTimeInMillis()/1000L,false,"","","");
 
         replyRef.child(message.getMessageID()).child(replykEY).setValue(reply1).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

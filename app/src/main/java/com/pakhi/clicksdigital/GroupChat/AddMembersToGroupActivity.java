@@ -58,7 +58,7 @@ public class AddMembersToGroupActivity extends AppCompatActivity {
                 for (User user : allUsers) {
                     if (user.getSelected()) {
                         groupRef.child(groupId).child(ConstFirebase.users).child(user.getUser_id()).setValue("");
-                        userRef.child(user.getUser_id()).child(ConstFirebase.groups1).child(groupId).setValue("");
+                        userRef.child(user.getUser_id()).child(ConstFirebase.groups).child(groupId).setValue("");
                         user.setSelected(false);
                     }
                 }

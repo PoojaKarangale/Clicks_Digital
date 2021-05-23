@@ -24,12 +24,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Context;
-import com.pakhi.clicksdigital.Adapter.HomePageTopicAdapter;
+import com.pakhi.clicksdigital.Topic.HomePageTopicAdapter;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.lang.reflect.Field;
@@ -57,8 +57,7 @@ public class HomeFragment extends Fragment {
 
     ArrayList<String> uploader = new ArrayList<>();
     ArrayList<String> eventName = new ArrayList<>();
-    DatabaseReference sliderRef;
-    Context context;
+
     String userName;
     ArrayList<String> listAdmins = new ArrayList<>();
     boolean notify = false;
@@ -135,7 +134,7 @@ public class HomeFragment extends Fragment {
 
                         String type = snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString();
                         Log.i("type -", type);
-                        if(type.equals("admin")){
+                        if(type.equals(ConstFirebase.admin)){
                             listAdmins.add(snap.getKey());
                         }
                     }
@@ -162,8 +161,7 @@ public class HomeFragment extends Fragment {
                     rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(listAdmins.get(j));
                     rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationFrom).setValue(currentUserID);
                     rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.goToNotificationId).setValue(currentUserID);
-                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue("profileRequest");
-
+                    rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.typeOfNotification).setValue(ConstFirebase.profileRequest);
 
                 }
                 notify=false;
@@ -197,7 +195,7 @@ public class HomeFragment extends Fragment {
                                 Date topicDate = null;
                                 SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy");
                                 try {
-                                    topicDate = formatter.parse(snapshot.child("date").getValue().toString());
+                                    topicDate = formatter.parse(snapshot.child(ConstFirebase.date).getValue().toString());
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
@@ -253,7 +251,7 @@ public class HomeFragment extends Fragment {
                 topicAdapter.notifyDataSetChanged();
                 for (final DataSnapshot topicSnap : snapshot.getChildren()) {
                     final String groupId = (String) topicSnap.getValue();
-                    rootRef.getUserRef().child(currentUserID).child(ConstFirebase.groups1).child(groupId).addValueEventListener(new ValueEventListener() {
+                    rootRef.getUserRef().child(currentUserID).child(ConstFirebase.groups).child(groupId).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,7 +30,7 @@ import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +64,7 @@ public class ImageText extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_text);
-        imageUri=getIntent().getStringExtra(Const.image_url);
+        imageUri=getIntent().getStringExtra(Const.IMAGE_URL);
         currentGroupId=getIntent().getStringExtra(Const.group_id);
         check=getIntent().getStringExtra(Const.checkPersonalOrGroup);
         messageSenderName=getIntent().getStringExtra(Const.messageSenderName);
@@ -107,7 +106,7 @@ public class ImageText extends AppCompatActivity {
                         SendMessage("image",imageUri,inp);
                         //goToParent();
 
-                    }else if(check.equals(Const.grp)){
+                    }else if(check.equals(Const.group)){
                         SaveMessageInfoToDatabase("image", imageUri, inp);
                         //goToParent();
                     }
@@ -117,7 +116,7 @@ public class ImageText extends AppCompatActivity {
                     if(check.equals(Const.personal)){
                         SendMessage("image", imageUri, inp);
                         //goToParent();
-                    }else if(check.equals(Const.grp)){
+                    }else if(check.equals(Const.group)){
                         SaveMessageInfoToDatabase("image", imageUri, inp);
                         //goToParent();
                     }
@@ -150,7 +149,7 @@ public class ImageText extends AppCompatActivity {
     }
     private void goToParentGrp(){
         Intent intent = new Intent(ImageText.this, GroupChatActivity.class);
-        intent.putExtra(ConstFirebase.groupId, currentGroupId);
+        intent.putExtra(Const.group_id, currentGroupId);
         startActivity(intent);
         finish();
     }public void notificationBhejo(final String message, final String messageKey){
@@ -159,7 +158,7 @@ public class ImageText extends AppCompatActivity {
         rootRef.getGroupRef().child(currentGroupId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                grpName[0] =snapshot.child(ConstFirebase.group_name).getValue().toString();
+                grpName[0] =snapshot.child(ConstFirebase.GROUP_NAME).getValue().toString();
             }
 
             @Override
@@ -212,9 +211,9 @@ public class ImageText extends AppCompatActivity {
         Log.i("SUBSTRING --------- ",message.substring(94,113));
         if(flag.equals("1")){
             Message message1 = new Message(currentUserID, message,
-                    "topic", currentGroupId, messagekEY, currentTime, currentDate, timestamp, inp);
+                    "topic", currentGroupId, messagekEY, currentTime, currentDate, timestamp,false,inp,"","");
             groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
-            rootRef.getGroupRef().child(currentGroupId).child("timestamp").setValue(timestamp);
+            rootRef.getGroupRef().child(currentGroupId).child(ConstFirebase.timestamp).setValue(timestamp);
 
             DatabaseReference topicRef = rootRef.getTopicRef();
             topicRef.child(messagekEY).setValue(currentGroupId);
@@ -226,8 +225,8 @@ public class ImageText extends AppCompatActivity {
 
         else {
             Message message1 = new Message(currentUserID, message,
-                    messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp, inp, selectedMessageId, typeOfSelectedMessage);
-            rootRef.getGroupRef().child(currentGroupId).child("timestamp").setValue(timestamp);
+                    messageType, currentGroupId, messagekEY, currentTime, currentDate, timestamp,false, inp, selectedMessageId, typeOfSelectedMessage);
+            rootRef.getGroupRef().child(currentGroupId).child(ConstFirebase.timestamp).setValue(timestamp);
             groupChatRefForCurrentGroup.child(messagekEY).setValue(message1);
             notificationBhejo(message, messagekEY);
 
@@ -300,7 +299,7 @@ public class ImageText extends AppCompatActivity {
         //"https://firebasestorage.googleapis.com/v0/b/clicksdigital-ad067.appspot.com/o/Group_photos%2F-MTRZMoFEivrWqxUFJp0%2Fphotos%2F1613250342248.jpg?alt=media&token=6727c447-396d-4a07-a7b7-bbb5b87ed4a8"
 
         Message message1 = new Message(currentUserID, message,
-                messageType, currentGroupId, messagePushID, currentTime, currentDate, false, inp, selectedMessageId, typeOfSelectedMessage);
+                messageType, currentGroupId, messagePushID, currentTime, currentDate, calForDate.getTimeInMillis()/1000L,false, inp, selectedMessageId, typeOfSelectedMessage);
 
 
 

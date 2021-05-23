@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.Adapter;
+package com.pakhi.clicksdigital.Topic;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,15 +26,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.GroupChat.MessageAdapter;
 import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Profile.VisitProfileActivity;
-import com.pakhi.clicksdigital.Topic.TopicRepliesActivity;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
-import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
@@ -119,7 +114,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mcontext, LoadImage.class);
-                        intent.putExtra("image_url", m.getMessage());
+                        intent.putExtra(Const.IMAGE_URL, m.getMessage());
                         mcontext.startActivity(intent);
                     }
                 });
@@ -339,20 +334,6 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
                 Glide.with(mcontext).load(output.imageUrl).transform(new CenterCrop(), new RoundedCorners(10)).into((output.viewHolder).urlImage);
                 //Picasso.get().load(output.imageUrl).into((output.viewHolder).urlImage);
             } else (output.viewHolder).urlImage.setVisibility(View.GONE);
-
-
-            //output.viewHolder.separateURLText.setText(output.);
-            /*switch (output.view_type) {
-                case VIEW_TYPE_ME:
-                    setupSelfUrlMessage(output);
-                    break;
-                case VIEW_TYPE_OTHER:
-                    setupOtherUrlMessage(output);
-                    break;
-                case VIEW_TYPE_TOPIC:
-                    setupTopicUrlMessage(output);
-                    break;
-            }*/
 
         }
 

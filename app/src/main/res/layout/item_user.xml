@@ -7,8 +7,6 @@
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="21dp"
     android:background="@drawable/user_list"
-
-
     >
     <RelativeLayout
         android:layout_width="match_parent"

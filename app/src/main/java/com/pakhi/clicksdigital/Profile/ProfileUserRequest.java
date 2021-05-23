@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -35,16 +33,12 @@ import com.pakhi.clicksdigital.PersonalChat.ChatActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
-import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ProfileUserRequest extends AppCompatActivity {
 
@@ -78,9 +72,8 @@ public class ProfileUserRequest extends AppCompatActivity {
 
         rootRef = FirebaseDatabaseInstance.getInstance();
         userRef = rootRef.getUserRef();
-        user_id = getIntent().getStringExtra(ConstFirebase.visitUser);
+        user_id = getIntent().getStringExtra(Const.visitUser);
         req = getIntent().getStringExtra(Const.fromRequest);
-
 
         userRefAppCan = rootRef.getApprovedUserRef();
 
@@ -101,7 +94,6 @@ public class ProfileUserRequest extends AppCompatActivity {
                         ACCEPTED=true;
                         break;
                     }
-
                 }
                 if(!ACCEPTED){
                     acceptLayout.setVisibility(View.VISIBLE);
@@ -129,9 +121,9 @@ public class ProfileUserRequest extends AppCompatActivity {
                             .resize(120, 120)
                             .into(profile_image);
 
-                    if (user.getUser_type().equals("admin")) {
+                    if (user.getUser_type().equals(ConstFirebase.admin)) {
                         isProfileUserIsAdmin = true;
-                        if (currentUser.getUser_type().equals("admin")) {
+                        if (currentUser.getUser_type().equals(ConstFirebase.admin)) {
                             isVisterIsAdmin = true;
                         }
 
@@ -155,9 +147,7 @@ public class ProfileUserRequest extends AppCompatActivity {
                         referredBy.setText(dataSnapshot.child("referred_by").getValue().toString());
                     }
                     loadData();
-
                 }
-
             }
 
             @Override
@@ -165,27 +155,6 @@ public class ProfileUserRequest extends AppCompatActivity {
 
             }
         });
-
-          /*  if (currentUser.getUser_type().equals("admin")) {
-            isVisterIsAdmin=true;
-        }
-
-        Log.d("USERTYPE","(out) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
-
-        if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
-            // make him admin btn set visible
-            make_admin.setVisibility(View.VISIBLE);
-            Log.d("USERTYPE","(out of datachange)(in if) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
-
-        } else {
-            Log.d("USERTYPE","(out of datachange)(in else) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
-
-            make_admin.setVisibility(View.GONE);
-        }
-
-        if (isVisterIsAdmin && isProfileUserIsAdmin) {
-            removeAdmin.setVisibility(View.VISIBLE);
-        }*/
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -436,13 +405,13 @@ public class ProfileUserRequest extends AppCompatActivity {
 
     private void viewProfile(String image_url) {
         Intent intent = new Intent(ProfileUserRequest.this, LoadImage.class);
-        intent.putExtra("image_url", image_url);
+        intent.putExtra(Const.IMAGE_URL, image_url);
         startActivity(intent);
     }
 
     public void makeAdmin(final View view) {
         DatabaseReference databaseReference = userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
-        databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
+        databaseReference.setValue(ConstFirebase.admin).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 make_admin.setVisibility(View.GONE);
@@ -454,7 +423,7 @@ public class ProfileUserRequest extends AppCompatActivity {
 
     public void removeAdmin(final View view) {
         DatabaseReference databaseReference = userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
-        databaseReference.setValue("user").addOnSuccessListener(new OnSuccessListener<Void>() {
+        databaseReference.setValue(ConstFirebase.user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 make_admin.setVisibility(View.VISIBLE);

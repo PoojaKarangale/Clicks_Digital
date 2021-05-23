@@ -15,11 +15,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "693260952324-jagjmdmlra6dct1iscl1jeakrpmjolu6.apps.googleusercontent.com",
+          "client_id": "693260952324-1r2363dc8vl5or5fh6ir98t1ncubbm3l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.pakhi.clicksdigital",
-            "certificate_hash": "12264535a18309db8fa971010bc19481578afa7c"
+            "certificate_hash": "e4b824132e2b3d37b2947783fe19964ccf199240"
+          }
+        },
+        {
+          "client_id": "693260952324-546rrhoor19iuaentoe6g28h4na7bfj2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakhi.clicksdigital",
+            "certificate_hash": "47df9d2ed6b0c7f3ba8df4424a2940efb4c10c4a"
+          }
+        },
+        {
+          "client_id": "693260952324-7k0pa0sc4h7itinag3vlmu0t0qbpnuk9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakhi.clicksdigital",
+            "certificate_hash": "fc02967a7dbe282a68f14a9e40f06e7be075db26"
           }
         },
         {
@@ -28,6 +44,22 @@
           "android_info": {
             "package_name": "com.pakhi.clicksdigital",
             "certificate_hash": "34f6592296e1d29f3f306eed434890e6ebc385b4"
+          }
+        },
+        {
+          "client_id": "693260952324-btr7o66ifg88ffvc57nlj6suj5fi1g0m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakhi.clicksdigital",
+            "certificate_hash": "c0b52d299ae40e823114e9706dd33292a8593df8"
+          }
+        },
+        {
+          "client_id": "693260952324-jagjmdmlra6dct1iscl1jeakrpmjolu6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pakhi.clicksdigital",
+            "certificate_hash": "12264535a18309db8fa971010bc19481578afa7c"
           }
         },
         {

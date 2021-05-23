@@ -1,4 +1,4 @@
-package com.pakhi.clicksdigital.FragmentsInSetting;
+package com.pakhi.clicksdigital.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +14,10 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.pakhi.clicksdigital.Adapter.HomePageTopicAdapter;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
-import com.pakhi.clicksdigital.Utils.Notification;
+import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.util.ArrayList;

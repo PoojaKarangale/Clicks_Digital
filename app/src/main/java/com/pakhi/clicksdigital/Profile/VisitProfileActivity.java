@@ -55,7 +55,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     private Button make_admin, removeAdmin, message_btn;
     private DatabaseReference userRef, ChatRequestRef, ContactsRef;
     Button cancel, accept;
-    String req="normal";
+
     LinearLayout acceptLayout;
     private TextView designation, currentCompany, city, expectationsFromComm;
     private TextView expectationsFromUs;
@@ -82,7 +82,7 @@ public class VisitProfileActivity extends AppCompatActivity {
         user_id = getIntent().getStringExtra(Const.visitUser);
         //req = getIntent().getStringExtra(Const.fromRequest);
 
-        pref=SharedPreference.getInstance();
+        pref = SharedPreference.getInstance();
         currentUserID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
 
         nestedScrollView = findViewById(R.id.nestedScrollView2);
@@ -91,19 +91,14 @@ public class VisitProfileActivity extends AppCompatActivity {
         certificateLayout = findViewById(R.id.certification_layout);
         certfiText = findViewById(R.id.certifications);
         certificateList = findViewById(R.id.certificates_list);
-
-
-
         rootRef.getBlockRef().child(user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    if(snapshot.child(currentUserID).exists()){
+                if (snapshot.exists()) {
+                    if (snapshot.child(currentUserID).exists()) {
                         nestedScrollView.setVisibility(View.GONE);
                         layout.setVisibility(View.VISIBLE);
                     }
-
-
                 }
             }
 
@@ -112,12 +107,13 @@ public class VisitProfileActivity extends AppCompatActivity {
 
             }
         });
-
-
         getCurrentUserFromDb();
 
         initializeMsgRequestFields();
 
+        if (currentUser.getUser_type().equals("admin")) {
+            isVisterIsAdmin = true;
+        }
 
         userRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
@@ -129,15 +125,10 @@ public class VisitProfileActivity extends AppCompatActivity {
                             .into(profile_image);
 
                     if (user.getUser_type().equals("admin")) {
-
                         isProfileUserIsAdmin = true;
+                    }
 
-                        if (currentUser.getUser_type().equals("admin")) {
-
-                            isVisterIsAdmin = true;
-
-                        }
-
+                    if (isProfileUserIsAdmin) {
                         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
                             // make him admin btn set visible
                             Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
@@ -151,13 +142,7 @@ public class VisitProfileActivity extends AppCompatActivity {
                         if (isVisterIsAdmin && isProfileUserIsAdmin) {
                             removeAdmin.setVisibility(View.VISIBLE);
                         }
-                    }else {
-                        if (currentUser.getUser_type().equals("admin")) {
-
-                            isVisterIsAdmin = true;
-
-                        }
-
+                    } else {
                         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
                             // make him admin btn set visible
                             Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
@@ -207,27 +192,6 @@ public class VisitProfileActivity extends AppCompatActivity {
             }
         });
 
-          /*  if (currentUser.getUser_type().equals("admin")) {
-            isVisterIsAdmin=true;
-        }
-
-        Log.d("USERTYPE","(out) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
-
-        if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
-            // make him admin btn set visible
-            make_admin.setVisibility(View.VISIBLE);
-            Log.d("USERTYPE","(out of datachange)(in if) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
-
-        } else {
-            Log.d("USERTYPE","(out of datachange)(in else) isProfileUserIsAdmin : "+isProfileUserIsAdmin+" isVisterIsAdmin : "+isVisterIsAdmin);
-
-            make_admin.setVisibility(View.GONE);
-        }
-
-        if (isVisterIsAdmin && isProfileUserIsAdmin) {
-            removeAdmin.setVisibility(View.VISIBLE);
-        }*/
-
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -256,8 +220,8 @@ public class VisitProfileActivity extends AppCompatActivity {
     }
 
     private void getCurrentUserFromDb() {
-        UserDatabase db=new UserDatabase(this);
-        user = db.getSqliteUser();
+        UserDatabase db = new UserDatabase(this);
+        currentUser = db.getSqliteUser();
     }
 
     private void initializeMsgRequestFields() {
@@ -462,14 +426,14 @@ public class VisitProfileActivity extends AppCompatActivity {
 
     private void viewProfile(String image_url) {
         Intent intent = new Intent(VisitProfileActivity.this, LoadImage.class);
-        intent.putExtra("image_url", image_url);
+        intent.putExtra(Const.IMAGE_URL, image_url);
         startActivity(intent);
 
     }
 
     public void makeAdmin(final View view) {
         DatabaseReference databaseReference = userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType);
-        databaseReference.setValue("admin").addOnSuccessListener(new OnSuccessListener<Void>() {
+        databaseReference.setValue(ConstFirebase.admin).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 make_admin.setVisibility(View.GONE);

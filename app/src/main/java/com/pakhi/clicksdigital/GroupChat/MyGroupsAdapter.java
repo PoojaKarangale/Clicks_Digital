@@ -85,7 +85,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
                 .into(holder.image_profile);
         */
         final String[] image_url=new String[1];
-        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.grpPhotos).child(ConstFirebase.profGrp);
+        StorageReference sReference=FirebaseStorageInstance.getInstance().getRootRef().child(ConstFirebase.groupPhotos).child(ConstFirebase.groupProfile);
         final StorageReference imgPath=sReference.child(group.getGroupid() ); //+ "." + getFileExtention(picImageUri)
         imgPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -130,7 +130,7 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mcontext, LoadImage.class);
-                        intent.putExtra("image_url", image_url[0] );
+                        intent.putExtra(Const.IMAGE_URL, image_url[0] );
                         mcontext.startActivity(intent);
                     }
                 });
@@ -140,14 +140,11 @@ public class MyGroupsAdapter extends RecyclerView.Adapter<MyGroupsAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent groupChatActivity=new Intent(mcontext, GroupChatActivity.class);
                 groupChatActivity.putExtra(Const.groupName, group.getGroup_name());
                 Log.d("joinGroupAdapter", "----group na------------------------" + group.getGroup_name());
-
-                groupChatActivity.putExtra(Const.groupId, group.getGroupid());
+                groupChatActivity.putExtra(Const.group_id, group.getGroupid());
                 mcontext.startActivity(groupChatActivity);
-
             }
         });
     }
