@@ -148,7 +148,21 @@ public class StartActivity extends AppCompatActivity {
                 .transform(new CenterCrop(), new RoundedCorners(50))
                 .placeholder(R.drawable.nav_profile).into(profile);
 
+/*rootRef.getUserRef().addValueEventListener(new ValueEventListener() {
+    @Override
+    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+            if (dataSnapshot.child(ConstFirebase.USER_DETAILS).exists()){
+                rootRef.getUserRef().child(dataSnapshot.getKey()).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.webLink).setValue("https://www.linkedin.com/in/aditchouhan/");
+            }
+        }
+    }
 
+    @Override
+    public void onCancelled(@NonNull DatabaseError error) {
+
+    }
+});*/
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -386,7 +400,7 @@ public class StartActivity extends AppCompatActivity {
                     userItems.put(ConstFirebase.expeactations, user[0].getExpectations_from_us());
                     userItems.put(ConstFirebase.expireince, user[0].getExperiences());
                     userItems.put(ConstFirebase.GENDER, user[0].getGender());
-                    userItems.put(ConstFirebase.MO_NUMBER, user[0].getNumber());
+                    userItems.put(ConstFirebase.number, user[0].getNumber());
                     userItems.put(ConstFirebase.offerToComm, user[0].getOffer_to_community());
                     userItems.put(ConstFirebase.speakerExp, user[0].getSpeaker_experience());
                     userItems.put(ConstFirebase.email, user[0].getUser_email());
