@@ -488,7 +488,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 for(DataSnapshot snap : snapshot.getChildren()){
                     if(snap.child(ConstFirebase.USER_DETAILS).exists()){
                         if(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.userType).getValue().toString().equals("admin")&& !currentUserId.equals(snap.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.USER_ID).getValue().toString())){
-                            Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
+                            //Notification.sendPersonalNotifiaction(eventKey, snap.getKey(), name+" has created new event "+eventName, "New Event", "event", "");
                             String notificationKey = rootRef.getNotificationRef().push().getKey();
 
                             rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(snap.getKey());
@@ -535,13 +535,13 @@ public class CreateEventActivity extends AppCompatActivity {
     private void spinnerImplementationForTopic() {
         spinner=findViewById(R.id.event_cat_spinner);
         //final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
-        //final String[] countries=getResources().getStringArray(R.array.array_categories);
+        final String[] countries=getResources().getStringArray(R.array.array_categories);
 
         //final String[] countries=listOfCat1;
 
 
 
-        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(CreateEventActivity.this,android.R.layout.simple_spinner_item,android.R.id.text1, listOfCat1);
+        final ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,android.R.id.text1, countries);
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
@@ -804,7 +804,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 break;
             case R.id.offline:
                 if(checked){
-                    event_type=ConstFirebase.onlineStatus;
+                    event_type=ConstFirebase.eventOffline;
                     venue.setVisibility(View.VISIBLE);
                     city.setVisibility(View.VISIBLE);
                     address.setVisibility(View.VISIBLE);

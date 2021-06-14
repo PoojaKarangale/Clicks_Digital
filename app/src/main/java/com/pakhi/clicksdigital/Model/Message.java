@@ -29,7 +29,7 @@ public class Message implements Serializable, Comparable<Message> {
         this.messageID=messageID;
         this.time=time;
         this.date=date;
-        this.timestamp=timestamp;
+         this.timestamp=timestamp;
         this.extra=extra;
         this.selectedMessageId = selectedMessageId;
         this.typeOfSelectedMessage = typeOfSelectedMessage;

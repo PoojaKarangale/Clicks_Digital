@@ -99,6 +99,8 @@ public class UserDatabase extends SQLiteOpenHelper {
         //db.close();
         //if (res != null && res.getCount() > 0) {
             res.moveToFirst();
+
+
         //}
         return res;
     }
@@ -130,6 +132,7 @@ public class UserDatabase extends SQLiteOpenHelper {
             contentValues.put(m.getKey(), m.getValue());
         }
         long result = db.insert(TABLE_NAME, null, contentValues);
+
         Log.d("TESTINGUSERDB", "----------------- result long " + result);
 
         if (result == -1) return false;

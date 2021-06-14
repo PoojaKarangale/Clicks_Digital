@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -218,13 +219,16 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         ImageView profileImage;
         TextView userStatus, userName, is_admin;
+        CoordinatorLayout coordinatorLayout;
         // ImageView online_status;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            coordinatorLayout=itemView.findViewById(R.id.coordinate_background);
+            coordinatorLayout.setBackgroundResource(R.drawable.finalle_blue);
             profileImage = itemView.findViewById(R.id.image_profile);
             userStatus = itemView.findViewById(R.id.user_status);
             //online_status = itemView.findViewById(R.id.user_online_status);

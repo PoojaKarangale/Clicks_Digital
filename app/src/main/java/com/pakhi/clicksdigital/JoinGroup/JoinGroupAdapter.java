@@ -21,14 +21,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
+import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -40,6 +43,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
     //AsyncOperation task = new AsyncOperation();
     private Context mcontext;
     private List<Group> groups;
+    int ifSelectedAnyGroup=0;
 
     public JoinGroupAdapter(Context mcontext, List<Group> groups) {
         this.mcontext = mcontext;
@@ -133,6 +137,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             public void onClick(View v) {
                 addUserToGroup(group.getGroupid(), current_user_id);
                 holder.join_btn.setVisibility(View.GONE);
+                //if()
             }
         });
     }
@@ -142,6 +147,12 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
         rootRef.getUserRef().child(userId).child(ConstFirebase.groups).child(groupId).child(ConstFirebase.getNotification).setValue(true);
         rootRef.getUserRef().child(userId).child(ConstFirebase.groups).child(groupId).child(ConstFirebase.noOfMessages).setValue(0);
 
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put(Const.grpOrUserID, groupId);
+        hmap.put(Const.number,"0");
+        hmap.put(Const.mute, "false");
+        NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(mcontext);
+        notificationCountDatabase.insertData(hmap);
     }
 
 

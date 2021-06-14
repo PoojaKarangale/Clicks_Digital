@@ -18,6 +18,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
+import com.google.android.material.tabs.TabLayout.Tab;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,12 +44,15 @@ import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
 import com.pakhi.clicksdigital.Fragment.InternetCheckFragment;
+import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
+import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Settings.SettingActivity;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
@@ -72,7 +79,8 @@ public class StartActivity extends AppCompatActivity {
     String userID;
     FirebaseDatabaseInstance rootRef;
     private ImageView profile;
-
+    ArrayList<String> groupsOfUsers = new ArrayList<>();
+    ArrayList<String> friendsOfUser = new ArrayList<>();
     // to check if we are connected to Network
     boolean isConnected = true;
     // to check if we are monitoring Network
@@ -96,6 +104,40 @@ public class StartActivity extends AppCompatActivity {
         userID = pref.getData(SharedPreference.currentUserId, getApplicationContext());
         setupTabLayout();
         putDataIntoHashMap();
+        setupBadgeCount();
+
+        try{
+            NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(StartActivity.this);
+
+                SQLiteDatabase db = notificationCountDatabase.getWritableDatabase();
+                notificationCountDatabase.onUpgrade(db,0,1);
+                if(!notificationCountDatabase.checkTableIfExists()){
+                    insertDataIntoNotificationTable();
+                    insertDataIntoNotificationTableForFriends();
+                }
+
+
+
+
+        }catch (Exception e){}
+        /*NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(StartActivity.this);
+        Log.i("came here", "here");
+        //SQLiteDatabase db = notificationCountDatabase.getReadableDatabase();
+        String grpName = notificationCountDatabase.getSqliteUser_data(Const.grpOrUserID,"-MTRZMoFEivrWqxUFJp0");
+        String grpMsgs = notificationCountDatabase.getSqliteUser_data(Const.grpOrUserID,"-MTRZMoFEivrWqxUFJp0");
+        String grpMute = notificationCountDatabase.getSqliteUser_data(Const.grpOrUserID,"-MTRZMoFEivrWqxUFJp0");
+
+
+        Log.i("grpName---", grpName);
+        Log.i("grpMsg---",grpMsgs);
+        Log.i("grpMute", grpMute);*/
+        //NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(StartActivity.this);
+
+
+            //notificationCountDatabase.onUpgrade(db,0,1);
+            //notificationCountDatabase.onCreate(db);
+
+
         UserDatabase userDatabase = new UserDatabase(StartActivity.this);
 
         String imgUrl = userDatabase.getSqliteUser_data(ConstFirebase.IMAGE_URL);
@@ -114,6 +156,121 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(profileIntent);
             }
         });
+    }
+
+    public void setupBadgeCount() {
+        final int[] grpNotifications = {0};
+        final NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+        rootRef.getUserRef().child(userID).child(ConstFirebase.groups).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String num = notificationCountDatabase.getSqliteUser_data(Const.number, snap.getKey());
+                     if((num.equals("0") )){
+
+                    }
+                    else {
+                        ++grpNotifications[0];
+                    }
+                }
+                BadgeDrawable badgeDrawable = tabLayout.getTabAt(1).getOrCreateBadge();
+                if(!(grpNotifications[0]==0)){
+                    badgeDrawable.setVisible(true);
+                    badgeDrawable.setNumber(grpNotifications[0]);
+                }else {
+                    badgeDrawable.setVisible(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
+        final int[] personamNotifications = {0};
+        rootRef.getMessagesListRef().child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String num = notificationCountDatabase.getSqliteUser_data(Const.number, snap.getKey());
+                     if((num.equals("0") )){
+
+                    }
+                    else {
+                        ++personamNotifications[0];
+                    }
+                }
+                BadgeDrawable badgeDrawable = tabLayout.getTabAt(2).getOrCreateBadge();
+                if(!(personamNotifications[0] ==0)){    badgeDrawable.setVisible(true);
+                    badgeDrawable.setNumber(personamNotifications[0]);
+                }
+                else {
+                    badgeDrawable.setVisible(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void insertDataIntoNotificationTableForFriends() {
+        friendsOfUser.clear();
+        rootRef.getMessagesListRef().child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.clear();
+                    for(DataSnapshot snap : snapshot.getChildren()){
+                        hashMap.put(Const.grpOrUserID, snap.getKey());
+                        hashMap.put(Const.number,"0");
+                        hashMap.put(Const.mute,"false");
+                        notificationCountDatabase.insertData(hashMap);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void insertDataIntoNotificationTable() {
+        groupsOfUsers.clear();
+        rootRef.getUserRef().child(userID).child(ConstFirebase.groups).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                //groupsOfUsers.add(snapshot.);
+                if(snapshot.exists()){
+                    NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(StartActivity.this);
+                    HashMap<String, String> hmap = new HashMap<>();
+                    hmap.clear();
+                    for(DataSnapshot key : snapshot.getChildren()){
+                        hmap.put(Const.grpOrUserID, key.getKey());
+                        hmap.put(Const.number,"0");
+                        hmap.put(Const.mute,"false");
+                        notificationCountDatabase.insertData(hmap);
+
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     String TAG_InternetChecks = "InternetIssueFrag";
@@ -222,7 +379,7 @@ public class StartActivity extends AppCompatActivity {
 
                     userItems.put(ConstFirebase.USER_ID, user[0].getUser_id());
                     userItems.put(ConstFirebase.USER_NAME, user[0].getUser_name());
-                    userItems.put(ConstFirebase.USER_BIO, user[0].getUser_id());
+                    userItems.put(ConstFirebase.USER_BIO, user[0].getUser_bio());
                     userItems.put(ConstFirebase.IMAGE_URL, user[0].getImage_url());
                     userItems.put(ConstFirebase.USER_TYPE, user[0].getUser_type());
                     userItems.put(ConstFirebase.CITY, user[0].getCity());
@@ -429,6 +586,12 @@ public class StartActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setupBadgeCount();
     }
 
     private void setFile(ArrayList<String> myList) {

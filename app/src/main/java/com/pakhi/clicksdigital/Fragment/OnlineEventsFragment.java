@@ -1,6 +1,7 @@
 package com.pakhi.clicksdigital.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +164,9 @@ public class OnlineEventsFragment extends Fragment {
                         Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
                         Timestamp ts = new Timestamp(event.getTimeStamp());
                         Date eventDate = new Date(ts.getTime());
-                        if (event.getEventType().equals(ConstFirebase.eventOnline) || event.getEventType().equals(ConstFirebase.Both)) {
+                        Log.i("beforeEventType--", event.getEventType());
+                        if (event.getEventType().equals(ConstFirebase.eventOnline) || event.getEventType().equals(ConstFirebase.eventBoth)) {
+                            Log.i("eventType--", event.getEventType());
                             if (!eventDate.before(current)) {
                                 if (event.getEventName().toLowerCase().contains(s)
                                         || event.getDescription().toLowerCase().contains(s)

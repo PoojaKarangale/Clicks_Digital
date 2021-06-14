@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +38,7 @@ import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Notifications.Notification;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,9 +119,9 @@ public class ProfileUserRequest extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     user = dataSnapshot.getValue(User.class);
-                    Picasso.get()
+                    Glide.with(getApplicationContext())
                             .load(user.getImage_url())
-                            .resize(120, 120)
+                            .apply(RequestOptions.circleCropTransform())
                             .into(profile_image);
 
                     if (user.getUser_type().equals(ConstFirebase.admin)) {

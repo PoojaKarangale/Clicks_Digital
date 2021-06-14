@@ -157,6 +157,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="End Date and Time"
                                 android:textSize="9dp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/segoe"
                                 android:textColor="#43B7FD"/>
 
 
@@ -606,6 +608,7 @@
                             android:textSize="@dimen/fifteen"
                             android:textStyle="bold"
                             android:autoLink="all"
+                            android:textColorLink="@color/blue"
                             android:layout_marginBottom="3dp"
                             />
 

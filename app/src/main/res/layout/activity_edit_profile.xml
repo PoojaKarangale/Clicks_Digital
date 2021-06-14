@@ -972,7 +972,7 @@
                     <Button
                         android:id="@+id/add_more_certificate"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/bg_rounded_white"
@@ -995,12 +995,13 @@
                 <Button
                     android:id="@+id/done_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/back_round_button"
                     android:backgroundTint="#1768E7"
                     android:gravity="center"
                     android:text="Submit"
+                    android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/button" />
 

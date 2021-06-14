@@ -815,9 +815,9 @@
 
                     android:id="@+id/message_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/cb_rectangle_round"
+                    android:background="@drawable/join_butt"
                     android:backgroundTint="@color/blue"
                     android:gravity="center"
                     android:text="Message"
@@ -829,7 +829,7 @@
                 <Button
                     android:id="@+id/block_contact"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:background="@drawable/back_round_button"
                     android:backgroundTint="#FF704D"
@@ -843,12 +843,12 @@
                     android:fontFamily="@font/segoe"
                     android:visibility="gone"
                     android:layout_marginBottom="20dp"
-                    android:padding="10dp"/>
+                    />
 
                 <Button
                     android:id="@+id/unblock_contact"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:background="@drawable/back_round_button"
                     android:backgroundTint="#088208"
@@ -862,7 +862,7 @@
                     android:fontFamily="@font/segoe"
                     android:visibility="gone"
                     android:layout_marginBottom="20dp"
-                    android:padding="10dp"/>
+                    />
 
 
                 <LinearLayout
@@ -876,7 +876,7 @@
                     <TextView
 
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:text="Accept User Request"/>
                     <Button
                         android:id="@+id/request_accept_btn"

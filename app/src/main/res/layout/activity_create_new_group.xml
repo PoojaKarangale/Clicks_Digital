@@ -4,17 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E8F0FD"
     tools:context=".GroupChat.CreateNewGroupActivity">
 
   <androidx.appcompat.widget.Toolbar
       android:id="@+id/toolbar_create_group"
       android:layout_width="match_parent"
       android:layout_height="56dp"
-      android:background="@color/colorPrimary">
+      android:background="@drawable/action_bar_start">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
       <ImageView
           android:id="@+id/back_btn"
@@ -46,7 +48,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/toolbar_create_group"
-      android:background="@color/white"
+      android:background="#E8F0FD"
       android:gravity="center"
       android:orientation="vertical">
 
@@ -189,6 +191,7 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/main_layout"
       android:layout_alignParentEnd="true"
+      android:backgroundTint="#8BB4F3"
       android:layout_marginTop="-28dp"
       android:layout_marginEnd="16dp"
       android:contentDescription="submit"

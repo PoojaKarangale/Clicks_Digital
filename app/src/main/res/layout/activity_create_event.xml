@@ -13,7 +13,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <RelativeLayout
@@ -132,27 +131,34 @@
 
                     </LinearLayout>
                 </LinearLayout>
-                <TextView
-                    android:id="@+id/textView4"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:fontFamily="@font/segoe"
-                    android:textStyle="bold"
-                    android:text="Event Category"
-                    android:textColor="#1768E7"
-                    android:textSize="@dimen/fifteen"
-                    />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="13dp"
+                        android:fontFamily="@font/segoe"
+                        android:textStyle="bold"
+                        android:text="Event Category"
+                        android:textColor="#1768E7"
+                        android:textSize="@dimen/fifteen"
+                        />
 
-                <Spinner
-                    android:id="@+id/event_cat_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dialog"
-                    app:layout_constraintStart_toEndOf="@+id/textView4"
-                    app:layout_constraintTop_toTopOf="@+id/textView4"
-                    tools:listheader=""
-                    />
+                    <Spinner
+                        android:id="@+id/event_cat_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dialog"
+                        android:layout_marginTop="13dp"
+                        android:layout_marginLeft="5dp"
+
+                        tools:listheader=""
+                        />
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -595,11 +601,12 @@
 
 
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/dateTimeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
 
@@ -607,9 +614,7 @@
                         android:id="@+id/dateLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
                         android:padding="17dp"
                         android:background="@drawable/blue_border"
 
@@ -699,16 +704,14 @@
 
 
                     <RelativeLayout
+                        android:layout_below="@+id/dateLayout"
                         android:id="@+id/time_layout"
                         android:background="@drawable/red_border"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margine_sub"
                         android:padding="17dp"
-                        android:layout_marginRight="10dp"
-
+                        android:layout_gravity="center_horizontal"
                         >
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -791,7 +794,7 @@
 
                     </RelativeLayout>
 
-                </RelativeLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/event_payable_text"
@@ -800,6 +803,7 @@
                     android:layout_marginTop="@dimen/margine_main"
                     android:fontFamily="@font/lato"
                     android:text="Event Fee"
+                    android:textStyle="bold"
                     android:textColor="#1768E7"
                     android:textSize="@dimen/title2"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1030,38 +1034,47 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/info_pay_fee"
                         android:layout_marginTop="10dp"
-                        android:background="@color/white"
+                        android:background="#E8F0FD"
                         android:elevation="10dp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
+
                         android:text="Calculate Total Fee"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/button" />
-
-                    <TextView
-                        android:id="@+id/total_fee_txt"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/calculateTotal"
-                        android:layout_marginTop="@dimen/margine_sub"
-                        android:text="Total Fee"
-                        android:fontFamily="@font/segoe"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/title2" />
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:id="@+id/total_fee_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/calculateTotal"
+                            android:layout_marginTop="@dimen/margine_sub"
+                            android:text="Total Fee"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/segoe"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/title2" />
 
-                    <TextView
-                        android:id="@+id/total_fee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/calculateTotal"
-                        android:layout_marginStart="@dimen/margine_sub"
-                        android:layout_marginTop="@dimen/margine_sub"
-                        android:layout_toEndOf="@+id/total_fee_txt"
-                        android:text="0"
-                        android:fontFamily="@font/segoe"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/title1" />
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/total_fee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/calculateTotal"
+
+                            android:layout_marginTop="@dimen/margine_sub"
+                            android:layout_toEndOf="@+id/total_fee_txt"
+                            android:text="0"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="10dp"
+                            android:fontFamily="@font/segoe"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/title1" />
+
+
+                    </LinearLayout>
+                                    </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1075,13 +1088,14 @@
                     <Button
                         android:id="@+id/submit_btn"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/rectangle_box"
+                        android:layout_height="35dp"
+                        android:background="@drawable/join_butt"
                         android:backgroundTint="@color/colorPrimary"
                         android:gravity="center"
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"
                         android:text="Launch Event"
+                        android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/button"
                         app:layout_constraintEnd_toEndOf="parent"

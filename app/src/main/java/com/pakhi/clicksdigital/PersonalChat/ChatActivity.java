@@ -51,6 +51,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.GroupChat.ImageText;
 import com.pakhi.clicksdigital.GroupChat.MessageAdapter;
+import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
@@ -162,6 +163,9 @@ public class ChatActivity extends AppCompatActivity {
         progressDialog.setMessage("Uploading...");
 
         messageReceiverID = getIntent().getExtras().get(Const.visitUser).toString();
+
+
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("custom-message"));
         IntializeControllers();
@@ -268,40 +272,89 @@ public class ChatActivity extends AppCompatActivity {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rootRef.getUserRef().child(messageSenderID).child(ConstFirebase.userIsIn).setValue("NoWhere");
                 finish();
             }
         });
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                notify = true;
-                onLongClickOnMessage.setVisibility(View.GONE);
+                rootRef.getMessagesListRef().child(messageSenderID).child(messageReceiverID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                        if(!snapshot.exists()){
+                            NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+                            HashMap<String,String> hashMap = new HashMap<>();
+                            hashMap.put(Const.grpOrUserID, messageReceiverID);
+                            hashMap.put(Const.number, "0");
+                            hashMap.put(Const.mute, "false");
+                            notificationCountDatabase.insertData(hashMap);
+                            Toast.makeText(getApplicationContext(), "New Contact", Toast.LENGTH_LONG).show();
 
-                String messageText = MessageInputText.getText().toString();
+                            notify = true;
+                            onLongClickOnMessage.setVisibility(View.GONE);
 
-                if (TextUtils.isEmpty(messageText)) {
-                    showToast("first write your message...");
-                    selectedMessageId="";
-                    typeOfSelectedMessage="";
-                } else {
+                            String messageText = MessageInputText.getText().toString();
 
-                    TypeAndSeparateURL typeAndSeparateURL=checkTypeAndSeparateURL(messageText);
-                    MessageInputText.setText("");
-                    if(typeAndSeparateURL.typeURLOrNot==1){
-                        //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
-                        SendMessage("url", messageText, typeAndSeparateURL.separateURL);
-                    }else{
-                        //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
-                        SendMessage("text", messageText,"");
+                            if (TextUtils.isEmpty(messageText)) {
+                                showToast("first write your message...");
+                                selectedMessageId="";
+                                typeOfSelectedMessage="";
+                            } else {
+
+                                TypeAndSeparateURL typeAndSeparateURL=checkTypeAndSeparateURL(messageText);
+                                MessageInputText.setText("");
+                                if(typeAndSeparateURL.typeURLOrNot==1){
+                                    //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
+                                    SendMessage("url", messageText, typeAndSeparateURL.separateURL);
+                                }else{
+                                    //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
+                                    SendMessage("text", messageText,"");
+                                }
+
+                            }
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "Old Contact", Toast.LENGTH_LONG).show();
+
+                            notify = true;
+                            onLongClickOnMessage.setVisibility(View.GONE);
+
+                            String messageText = MessageInputText.getText().toString();
+
+                            if (TextUtils.isEmpty(messageText)) {
+                                showToast("first write your message...");
+                                selectedMessageId="";
+                                typeOfSelectedMessage="";
+                            } else {
+
+                                TypeAndSeparateURL typeAndSeparateURL=checkTypeAndSeparateURL(messageText);
+                                MessageInputText.setText("");
+                                if(typeAndSeparateURL.typeURLOrNot==1){
+                                    //Toast.makeText(getApplicationContext(), "URL type", Toast.LENGTH_LONG).show();
+                                    SendMessage("url", messageText, typeAndSeparateURL.separateURL);
+                                }else{
+                                    //Toast.makeText(getApplicationContext(), "Text type", Toast.LENGTH_LONG).show();
+                                    SendMessage("text", messageText,"");
+                                }
+
+                            }
+                        }
                     }
 
-                }
+                    @Override
+                    public void onCancelled(@NonNull  DatabaseError error) {
+
+                    }
+                });
+
                /* if (TextUtils.isEmpty(messageText)) {
                     showToast("first write your message...");
                 } else {
                     MessageInputText.setText("");
                     SendMessage("text", messageText);
                 }*/
+
             }
         });
 
@@ -526,9 +579,16 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        rootRef.getUserRef().child(messageSenderID).child(ConstFirebase.userIsIn).setValue("NoWhere");
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         //messageScroll.fullScroll(ScrollView.FOCUS_DOWN);
+        rootRef.getUserRef().child(messageSenderID).child(ConstFirebase.userIsIn).setValue(messageReceiverID);
 
         messagesList.clear();
         messageAdapter.notifyDataSetChanged();
@@ -951,10 +1011,12 @@ public class ChatActivity extends AppCompatActivity {
         Toast.makeText(ChatActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 
+
+
     @Override
     protected void onPause() {
         super.onPause();
-
+        rootRef.getUserRef().child(messageSenderID).child(ConstFirebase.userIsIn).setValue("NoWhere");
         reference.removeEventListener(seenListener);
 
     }

@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +28,9 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,16 +54,21 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.pakhi.clicksdigital.Activities.UserRequestActivity;
+import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
+import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Model.Message;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Settings.SettingActivity;
 import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
 import com.pakhi.clicksdigital.Notifications.Notification;
 import com.pakhi.clicksdigital.Utils.PermissionsHandling;
+import com.pakhi.clicksdigital.Utils.ShareApp;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.pakhi.clicksdigital.Utils.TypeAndSeparateURL;
 import com.squareup.picasso.Picasso;
@@ -109,6 +118,8 @@ public class GroupChatActivity extends AppCompatActivity {
     String selectedMessageId = "";
     Message msg;
     int currentPage = 1;
+    Button muteButton, unmuteButton;
+    ImageView muteMenu;
 
     //replyOnClickHeader
     LinearLayout onLongClickOnMessage, replyHeader;
@@ -139,7 +150,34 @@ public class GroupChatActivity extends AppCompatActivity {
     String lastKey = "";
     private String prevKey = "";
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+            NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+            String mutOrNot = notificationCountDatabase.getSqliteUser_data(Const.mute, currentGroupId);
 
+            if(mutOrNot.equals("true")){
+                getMenuInflater().inflate(R.menu.options_menu_group, menu);
+                menu.getItem(0).setVisible(false);
+            }else {
+                getMenuInflater().inflate(R.menu.options_menu_group, menu);
+                menu.getItem(1).setVisible(false);
+            }
+
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+
+
+
+        return true;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +186,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("custom-message"));
+
+
+
 
 
         //currentGroupName=getIntent().getExtras().get("groupName").toString();
@@ -176,6 +217,7 @@ public class GroupChatActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
 
+
         getUserFromDb();
         GetUserInfo();
         /*replyCross.setOnClickListener(new View.OnClickListener() {
@@ -201,6 +243,14 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
         InitializeFields();
+
+        muteMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popUpMenuForMute();
+            }
+        });
+
         //currentGroupName = "Name Here";
         // group_name.setText(currentGroupName);
 
@@ -301,6 +351,29 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void popUpMenuForMute() {
+        PopupMenu popup = new PopupMenu(GroupChatActivity.this, muteMenu);
+
+        NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+
+        String muteOrUnmute = notificationCountDatabase.getSqliteUser_data(Const.mute, currentGroupId);
+
+        if(muteOrUnmute.equals("true")){
+            popup.getMenuInflater().inflate(R.menu.options_menu_group_2, popup.getMenu());
+        }else {
+            popup.getMenuInflater().inflate(R.menu.options_menu_group, popup.getMenu());
+        }
+
+
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                return menuItemClicked(item);
+            }
+        });
+        popup.show();
     }
 
 
@@ -581,6 +654,9 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void InitializeFields() {
+        muteButton = findViewById(R.id.mute);
+        unmuteButton = findViewById(R.id.unmute);
+        muteMenu = findViewById(R.id.menu_bar_mute);
         //Reply header
         onLongClickOnMessage = findViewById(R.id.reply_layout_long_click);
         replyHeader = findViewById(R.id.reply_header_and_cross);
@@ -698,38 +774,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     }
 
-    private void checkPresence(final String userID) {
-        rootRef.getUserRef().child(userID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child(ConstFirebase.userIsIn).exists()) {
-                    String valueOfPresence = snapshot.child(ConstFirebase.userIsIn).getValue().toString();
-                    if (!valueOfPresence.equals(currentGroupId)) {
-                        rootRef.getUserRef().child(userID).child("groups").child(currentGroupId).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    String numberOfMessages = snapshot.child("noOfMessages").getValue().toString();
-                                    Log.i("no of message", numberOfMessages);
-                                    setNumberOfMessages(numberOfMessages);
-                                }
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     private void setNumberOfMessages(String numberOfMessages) {
         int number = Integer.parseInt(numberOfMessages);
@@ -741,7 +786,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    if (!snap.getKey().equals(currentUserID)) {
+                    if (!snap.getKey().equals(currentUserID) && snap.getValue().toString().equals("")) {
                         Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name + ": has sent a file", /*title*/ currentGroupName, "grpChat", "");
                     }
                 }
@@ -760,7 +805,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    if (!snap.getKey().equals(currentUserID)) {
+                    if (!snap.getKey().equals(currentUserID) && snap.getValue().toString().equals("")) {
                         Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name + ": has raised a Dialog Topic " + message, /*title*/ currentGroupName, "topic", messageKey);
                     }
                 }
@@ -784,6 +829,7 @@ public class GroupChatActivity extends AppCompatActivity {
         popUpMenuFlag=String.valueOf(0);
         PopupMenu popup = new PopupMenu(GroupChatActivity.this, attach_file_btn);
         popup.getMenuInflater().inflate(R.menu.attach_file_menu, popup.getMenu());
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 return menuItemClicked(item);
@@ -815,6 +861,33 @@ public class GroupChatActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.doc_file_menu) {
             openFileGetDoc();
+        }
+        if (item.getItemId() == R.id.mute) {
+            GroupIdRef.child("Users").child(currentUserID).setValue("mute");
+            NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+            HashMap<String, String> hmap = new HashMap<>();
+            hmap.put(Const.grpOrUserID, currentGroupId);
+            //Log.i("before adding msg --", notificationCountDatabase.getSqliteUser_data(Const.number,user));
+            hmap.put(Const.number, String.valueOf(Integer.parseInt(notificationCountDatabase.getSqliteUser_data(Const.number, currentGroupId))));
+            hmap.put(Const.mute, "true");
+            notificationCountDatabase.updateDataNotification(hmap);
+        }
+
+        if (item.getItemId() == R.id.un_mute) {
+            GroupIdRef.child("Users").child(currentUserID).setValue("");
+            NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+            HashMap<String, String> hmap = new HashMap<>();
+            hmap.put(Const.grpOrUserID, currentGroupId);
+            //Log.i("before adding msg --", notificationCountDatabase.getSqliteUser_data(Const.number,user));
+            hmap.put(Const.number, String.valueOf(Integer.parseInt(notificationCountDatabase.getSqliteUser_data(Const.number, currentGroupId))));
+            hmap.put(Const.mute, "false");
+            notificationCountDatabase.updateDataNotification(hmap);
+        }
+
+        if (item.getItemId() == R.id.exit) {
+            GroupIdRef.child("Users").child(currentUserID).removeValue();
+            rootRef.getUserRef().child(currentUserID).child(ConstFirebase.groups).child(currentGroupId).removeValue();
+            finish();
         }
         return true;
     }
@@ -996,11 +1069,12 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    if (notify && !snap.getKey().equals(currentUserID)) {
+                    Log.i("userID", snap.getValue().toString());
+                    if (notify && (!snap.getKey().equals(currentUserID)) && (snap.getValue().toString().equals("")) ) {
                         Log.i("TOPIC TYPE", String.valueOf(IS_TYPE_TOPIC));
 
 
-                        checkPresence(snap.getKey());
+                        //checkPresence(snap.getKey());
                         Notification.sendPersonalNotifiaction(currentGroupId, snap.getKey(), name + ": " + message, /*title*/ currentGroupName, "grpChat", "");
                     }
                 }

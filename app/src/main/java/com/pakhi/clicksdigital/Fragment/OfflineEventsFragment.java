@@ -67,7 +67,7 @@ public class OfflineEventsFragment extends Fragment {
         readUserData();
         //RetrieveAndDisplayEvents();
         SearchView searchView = view.findViewById(R.id.search_bar);
-        showEvents(city);
+        showEvents(city.toLowerCase());
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String newText) {
@@ -104,7 +104,8 @@ public class OfflineEventsFragment extends Fragment {
                         Timestamp ts = new Timestamp(event.getTimeStamp());
                         Date eventDate = new Date(ts.getTime());
                         if (!eventDate.before(current)) {
-                            if (event.getEventType().equals(ConstFirebase.eventOffline) || event.getEventType().equals(ConstFirebase.Both)) {
+                            if (event.getEventType().equals(ConstFirebase.eventOffline) || event.getEventType().equals(ConstFirebase.eventBoth)) {
+                                Log.i("eventType--", event.getEventType());
                                 if (event.getEventName().toLowerCase().contains(s)
                                         || event.getDescription().toLowerCase().contains(s)
                                         || event.getCategory().toLowerCase().contains(s)
@@ -134,7 +135,7 @@ public class OfflineEventsFragment extends Fragment {
     }
 
     private void showEvents(final String s) {
-
+        Log.i("my city--", s);
         eventRef.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -142,8 +143,8 @@ public class OfflineEventsFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
                         Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);
-                        Log.d("OFFLINE_EVENTS_CITY", "event : " + event.getCity());
-                        if (event.getEventType().equals(ConstFirebase.eventOffline) || event.getEventType().equals(ConstFirebase.Both)) {
+                        Log.i("OFFLINE_EVENTS_CITY" , event.getCity());
+                        if (event.getEventType().equals(ConstFirebase.eventOffline) || event.getEventType().equals(ConstFirebase.eventBoth)) {
                             if (event.getCity().toLowerCase().contains(s)
                                     || event.getAddress().toLowerCase().contains(s)
                                     || event.getVenu().toLowerCase().contains(s)

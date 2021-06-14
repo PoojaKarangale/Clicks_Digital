@@ -50,6 +50,17 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
     FirebaseDatabaseInstance rootRef;
     SharedPreference pref;
     String currentUserID;
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     public HomePageTopicAdapter(Context mcontext, List<Message> trendingTopis) {
         this.mcontext=mcontext;
         this.trendingTopis=trendingTopis;
@@ -66,6 +77,7 @@ public class HomePageTopicAdapter extends RecyclerView.Adapter<HomePageTopicAdap
 
     @Override
     public void onBindViewHolder(@NonNull final HomePageTopicAdapter.HomePageTopivViewHolder holder, int position) {
+
         final Message m=trendingTopis.get(position);
 
         //holder.topicText.setText(m.getMessage());

@@ -13,7 +13,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:id="@+id/img"
-        android:src="@drawable/wdc_temp_logo" />
+        android:src="@drawable/wdc_final_white" />
 
 
     <androidx.cardview.widget.CardView

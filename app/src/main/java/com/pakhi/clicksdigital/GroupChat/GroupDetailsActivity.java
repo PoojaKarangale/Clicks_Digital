@@ -23,6 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -96,7 +99,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
 
-                Picasso.get().load(uri).into(app_bar_image);
+                Glide.with(getApplicationContext()).load(uri).transform(new CenterCrop(), new RoundedCorners(15)).into(app_bar_image);
 
             }
 

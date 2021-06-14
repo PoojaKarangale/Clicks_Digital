@@ -27,6 +27,8 @@ import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.Event.EventDetailsActivity;
 import com.pakhi.clicksdigital.Event.EventParticipantsActivity;
 import com.pakhi.clicksdigital.GroupChat.GroupChatActivity;
+import com.pakhi.clicksdigital.GroupChat.MyGroupsAdapter;
+import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Model.Event;
 import com.pakhi.clicksdigital.Model.Message;
@@ -40,6 +42,7 @@ import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.SharedPreference;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -141,12 +144,18 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
 
             if(type.equals("chat")){
+
+                localFriendsDatabase(user);
+
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
                 resultIntent.putExtra(Const.visitUser, user);
                 Log.i("userPersonal -----", user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
+
+                localDatabaseNotification(user);
+
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
                 resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -304,11 +313,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
 
             if(type.equals("chat")){
+                localFriendsDatabase(user);
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
                 resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
+                localDatabaseNotification(user);
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
                 resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -451,6 +462,79 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         }
     }
 
+    private void localFriendsDatabase(final String user) {
+        FirebaseDatabaseInstance rootRef = FirebaseDatabaseInstance.getInstance();
+        SharedPreference pref=SharedPreference.getInstance();
+        String currentUser=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+
+        rootRef.getUserRef().child(currentUser).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                if(!snapshot.child("UserIsIn").getValue().toString().equals(user)){
+                    NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(MyFirebaseMessaging.this);
+
+                    if((notificationCountDatabase.getSqliteUser_data(Const.grpOrUserID, user) == null)){
+                        Log.i("New Contact",user);
+                        HashMap<String, String> hmap = new HashMap<>();
+                        hmap.put(Const.grpOrUserID, user);
+                        Log.i("before adding msg --", notificationCountDatabase.getSqliteUser_data(Const.number,user));
+                        hmap.put(Const.number, "1");
+                        hmap.put(Const.mute, "false");
+                        notificationCountDatabase.insertData(hmap);
+
+
+                    }else {
+                        Log.i("Old Contact", user);
+                        HashMap<String, String> hmap = new HashMap<>();
+                        hmap.put(Const.grpOrUserID, user);
+                        Log.i("before adding msg --", notificationCountDatabase.getSqliteUser_data(Const.number,user));
+                        hmap.put(Const.number, String.valueOf(Integer.parseInt(notificationCountDatabase.getSqliteUser_data(Const.number, user))+1));
+                        hmap.put(Const.mute, notificationCountDatabase.getSqliteUser_data(Const.mute, user));
+                        notificationCountDatabase.updateDataNotification(hmap);
+
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    private void localDatabaseNotification(final String user) {
+        FirebaseDatabaseInstance rootRef = FirebaseDatabaseInstance.getInstance();
+        SharedPreference pref=SharedPreference.getInstance();
+        String currentUser=pref.getData(SharedPreference.currentUserId, getApplicationContext());
+        rootRef.getUserRef().child(currentUser).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                if(!snapshot.child("UserIsIn").getValue().toString().equals(user)){
+                    NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(MyFirebaseMessaging.this);
+                    HashMap<String, String> hmap = new HashMap<>();
+                    hmap.put(Const.grpOrUserID, user);
+                    Log.i("before adding msg --", notificationCountDatabase.getSqliteUser_data(Const.number,user));
+                    hmap.put(Const.number, String.valueOf(Integer.parseInt(notificationCountDatabase.getSqliteUser_data(Const.number, user))+1));
+                    hmap.put(Const.mute, notificationCountDatabase.getSqliteUser_data(Const.mute, user));
+                    notificationCountDatabase.updateDataNotification(hmap);
+                    MyGroupsAdapter myGroupsAdapter = new MyGroupsAdapter();
+                    myGroupsAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
+
+    }
+
     private void makeNotiBackOreo(Intent resultIntent, String body, String icon, String title) {
         PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),
                 0 /* Request code */, resultIntent,
@@ -525,11 +609,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             String topicId = remoteMessage.getData().get("topicId");
 
             if(type.equals("chat")){
+                localFriendsDatabase(user);
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
                 resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
+                localDatabaseNotification(user);
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
                 resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -689,11 +775,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
 
             if(type.equals("chat")){
+                localFriendsDatabase(user);
                 resultIntent=new Intent(getApplicationContext(), ChatActivity.class);
                 resultIntent.putExtra(Const.visitUser, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             else if(type.equals("grpChat")){
+                localDatabaseNotification(user);
                 resultIntent=new Intent(getApplicationContext(), GroupChatActivity.class);
                 resultIntent.putExtra(Const.group_id, user);
                 resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

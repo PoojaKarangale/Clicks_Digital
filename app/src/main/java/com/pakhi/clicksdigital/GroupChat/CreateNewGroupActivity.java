@@ -25,8 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.pakhi.clicksdigital.Activities.StartActivity;
+import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
+import com.pakhi.clicksdigital.Utils.Const;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.pakhi.clicksdigital.Utils.FirebaseStorageInstance;
@@ -34,6 +36,7 @@ import com.pakhi.clicksdigital.Utils.SharedPreference;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class CreateNewGroupActivity extends AppCompatActivity {
     static int PReqCode = 1;
@@ -124,6 +127,12 @@ public class CreateNewGroupActivity extends AppCompatActivity {
         userRef.setValue("");
 //        setting group admin
         rootRef.getGroupRef().child(groupid).child(ConstFirebase.admins).child(userid).setValue("");
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put(Const.grpOrUserID, groupid);
+        hmap.put(Const.number,"0");
+        hmap.put(Const.mute, "false");
+        NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getApplicationContext());
+        notificationCountDatabase.insertData(hmap);
     }
 
     private void openGallery() {
@@ -170,6 +179,7 @@ public class CreateNewGroupActivity extends AppCompatActivity {
                         updateUI();
                     }
                 });
+
             }
         });
     }

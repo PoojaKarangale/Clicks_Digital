@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -122,6 +123,7 @@ public class VisitProfileActivity extends AppCompatActivity {
                     user = dataSnapshot.getValue(User.class);
                     Glide.with(getApplicationContext())
                             .load(user.getImage_url())
+                            .apply(RequestOptions.circleCropTransform())
                             .into(profile_image);
 
                     if (user.getUser_type().equals("admin")) {

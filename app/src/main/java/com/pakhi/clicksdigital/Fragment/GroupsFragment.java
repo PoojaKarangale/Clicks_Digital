@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
     MyGroupsAdapter groupAdapter;
     private View                 groupFragmentView;
     private List<Group>          groups;
-    private FloatingActionButton fab_create_group, fab_join_group;
+    private Button fab_create_group, fab_join_group;
     private RecyclerView      recyclerView;
     private DatabaseReference GroupRef, userGroupRef, UsersRef;
 
@@ -138,7 +139,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
 
                         String group_key=snapshot.getKey();
                         groups.clear();
-                        groupAdapter.notifyDataSetChanged();
+                        //groupAdapter.notifyDataSetChanged();
                         GroupRef.child(group_key).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -146,7 +147,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                                     Group group=dataSnapshot.getValue(Group.class);
 
                                     groups.add(group);
-                                    Collections.sort(groups, new Comparator<Group>() {
+                                    /*Collections.sort(groups, new Comparator<Group>() {
                                         @Override
                                         public int compare(Group o1, Group o2) {
                                             if(o1.getTimestamp()<o2.getTimestamp()){
@@ -154,7 +155,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
                                             }
                                             else return -1;
                                         }
-                                    });
+                                    });*/
 
                                     groupAdapter.notifyDataSetChanged();
 
@@ -181,9 +182,12 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
             case R.id.fab_join_group:
             case R.id.join_group_layout:
                 startActivity(new Intent(getContext(), JoinGroupActivity.class));
+                groups.clear();
+                join_group_layout.setVisibility(View.GONE);
                 break;
             case R.id.fab_create_group:
                 startActivity(new Intent(getContext(), CreateNewGroupActivity.class));
+                groups.clear();
                 break;
         }
     }

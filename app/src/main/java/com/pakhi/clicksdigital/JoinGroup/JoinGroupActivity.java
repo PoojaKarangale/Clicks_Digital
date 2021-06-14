@@ -1,11 +1,13 @@
 package com.pakhi.clicksdigital.JoinGroup;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.Model.Group;
 import com.pakhi.clicksdigital.R;
 import com.pakhi.clicksdigital.Utils.ConstFirebase;
@@ -108,7 +111,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
         rootRef.getGroupRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                //groupAdapter.notifyDataSetChanged();
                 for (final DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                     Log.d("SEARCH GROUP","--------------"+snapshot1.getKey()+" "+snapshot1.getValue());
 
@@ -121,7 +124,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                                 if(group.getGroup_name().toLowerCase().contains(s))
                                 groups.add(group);
                             }
-                            groupAdapter.notifyDataSetChanged();
+                            //groupAdapter.notifyDataSetChanged();
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -131,7 +134,7 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
                    /* Group group=snapshot1.getValue(Group.class);
                     groups.add(group);*/
                 }
-                //groupAdapter.notifyDataSetChanged();
+                groupAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -153,6 +156,9 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.close:
+                Intent intent = new Intent(JoinGroupActivity.this, StartActivity.class);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "You have joined new Dialog communities, do check in groups section", Toast.LENGTH_LONG).show();
                 finish();
                 break;
         }

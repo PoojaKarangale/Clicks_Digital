@@ -92,7 +92,7 @@ public class EditEventActivity extends AppCompatActivity {
     CardView linkCard, seatCard;
 
     EditText country;
-    UserDatabase userDatabase = new UserDatabase(this);
+    UserDatabase userDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class EditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
 
         event = (Event) getIntent().getSerializableExtra(Const.event);
-
+        userDatabase = new UserDatabase(getApplicationContext());
         rootRef = FirebaseDatabaseInstance.getInstance();
         eventRef = rootRef.getEventRef();
         initializeFields();

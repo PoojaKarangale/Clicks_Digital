@@ -73,6 +73,9 @@ public class ImageText extends AppCompatActivity {
         selectedMessageId = getIntent().getStringExtra(Const.selectedMessageId);
         someTextFromRaiseTopic = getIntent().getStringExtra(Const.someTextFromRaisedTopic);
 
+        Log.i("flag--", flag);
+        Log.i("check--", check);
+
         imgUri = Uri.parse(imageUri);
 
         textImage = findViewById(R.id.input_group_text);
@@ -103,22 +106,26 @@ public class ImageText extends AppCompatActivity {
                 if(TextUtils.isEmpty(inp)){
                     inp="";
                     if(check.equals(Const.personal)){
+                        Log.i("TriggerPer", inp);
                         SendMessage("image",imageUri,inp);
                         //goToParent();
 
-                    }else if(check.equals(Const.group)){
+                    }else if(check.equals("grp")){
+                        Log.i("TriggerGrp", inp);
                         SaveMessageInfoToDatabase("image", imageUri, inp);
-                        //goToParent();
+                        //goToParentGrp();
                     }
 
                 }
                 else {
                     if(check.equals(Const.personal)){
+                        Log.i("TriggerPer", inp);
                         SendMessage("image", imageUri, inp);
                         //goToParent();
-                    }else if(check.equals(Const.group)){
+                    }else if(check.equals("grp")){
+                        Log.i("TriggerGrp", inp);
                         SaveMessageInfoToDatabase("image", imageUri, inp);
-                        //goToParent();
+                        //goToParentGrp();
                     }
 
                     //SaveMessageInfoToDatabase("image", imageUri, inp);
@@ -192,7 +199,7 @@ public class ImageText extends AppCompatActivity {
     }
 
     private void SaveMessageInfoToDatabase(String messageType, String message, String inp) {
-
+        Log.i("SaveGrp", inp);
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, yyyy");
         currentDate = currentDateFormat.format(calForDate.getTime());

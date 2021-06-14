@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
-            android:src="@drawable/wdc_temp_logo" />
+            android:src="@drawable/wdc_final_white" />
 
         <!--<RelativeLayout
             android:layout_width="match_parent"

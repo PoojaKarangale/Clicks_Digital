@@ -110,7 +110,10 @@ public class FindFriendsActivity extends AppCompatActivity {
                                     || user.getExperiences().toLowerCase().contains(s)
                                     || user.getUser_bio().toLowerCase().contains(s)
                             ) {
-                                userList.add(user);
+                                if(!(user.getUser_id().equals(currentUserId))){
+                                    userList.add(user);
+                                }
+
                             }
                         }
                     }

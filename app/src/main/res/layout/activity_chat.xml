@@ -60,9 +60,9 @@
                 android:layout_alignStart="@+id/custom_profile_name"
                 android:layout_marginTop="3dp"
                 android:text="Last Seen"
-                android:textColor="@color/white"
+                android:textColor="#1768E7"
                 android:textSize="@dimen/fourteen"
-                android:textStyle="bold" />
+                 />
 
         </RelativeLayout>
         <!--  <androidx.appcompat.widget.Toolbar

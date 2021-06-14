@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <color android:color="#0C3474"/>
+        <color android:color="#8BB4F3"/>
     </item>
     <item>
         <bitmap
-            android:src="@drawable/wdc_temp_logo"
+            android:src="@drawable/final_app_logo"
             android:tileMode="disabled"
             android:gravity="center"
             />

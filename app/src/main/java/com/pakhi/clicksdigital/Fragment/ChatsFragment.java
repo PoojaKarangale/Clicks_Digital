@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.pakhi.clicksdigital.Activities.FindFriendsActivity;
+import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Notifications.Token;
@@ -46,6 +49,8 @@ import com.pakhi.clicksdigital.Utils.ConstFirebase;
 import com.pakhi.clicksdigital.Utils.EnlargedImage;
 import com.pakhi.clicksdigital.Utils.FirebaseDatabaseInstance;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -113,7 +118,7 @@ public class ChatsFragment extends Fragment {
         imagePopup.setImageOnClickClose(true);
         // Optional
 
-        FirebaseRecyclerOptions<User> options=
+        final FirebaseRecyclerOptions<User> options=
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(ChatsRef, User.class)
                         .build();
@@ -124,6 +129,17 @@ public class ChatsFragment extends Fragment {
                     protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull User model) {
                         final String usersIDs=getRef(position).getKey();
                         final String[] retImage={"default_image"};
+                        final NotificationCountDatabase notificationCountDatabase = new NotificationCountDatabase(getContext());
+                        String numberOfUnreadMessages = notificationCountDatabase.getSqliteUser_data(Const.number, usersIDs);
+
+                        if(!numberOfUnreadMessages.equals("")){
+                            if(!(Integer.parseInt(numberOfUnreadMessages)==0)){
+                                holder.cardView.setVisibility(View.VISIBLE);
+                                holder.counterText.setText(numberOfUnreadMessages);
+                            }else{
+                                holder.cardView.setVisibility(View.GONE);
+                            }
+                        }
 
                         UsersRef.child(usersIDs).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -152,7 +168,7 @@ public class ChatsFragment extends Fragment {
 
                                         if (state.equals(ConstFirebase.onlineStatus)) {
                                             // holder.userStatus.setText("online");
-                                            holder.online_status.setVisibility(View.VISIBLE);
+                                            //holder.online_status.setVisibility(View.VISIBLE);
                                         } else if (state.equals(ConstFirebase.onlineStatus)) {
                                             holder.userStatus.setText("Last Seen: " + date + " " + time);
                                         }
@@ -163,6 +179,19 @@ public class ChatsFragment extends Fragment {
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
+
+                                            HashMap<String,String> hmap = new HashMap<>();
+                                            hmap.put(Const.grpOrUserID, usersIDs);
+                                            hmap.put(Const.number,"0");
+                                            String valOfMute = notificationCountDatabase.getSqliteUser_data(Const.mute, usersIDs);
+                                            if(valOfMute.equals("false")){
+                                                hmap.put(Const.mute, "false");
+                                            }else {
+                                                hmap.put(Const.mute, "true");
+                                            }
+                                            notificationCountDatabase.updateDataNotification(hmap);
+                                            notifyDataSetChanged();
+
                                             Intent chatIntent=new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra(Const.visitUser, usersIDs);
                                             chatIntent.putExtra(Const.visit_user_name, retName);
@@ -240,15 +269,23 @@ public class ChatsFragment extends Fragment {
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage;
         TextView        userStatus, userName;
-        ImageView online_status;
+        //ImageView online_status;
+        LinearLayout counterLayout;
+        TextView counterText;
+        CardView cardView;
+
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             profileImage=itemView.findViewById(R.id.image_profile);
             userStatus=itemView.findViewById(R.id.user_status);
-            online_status=itemView.findViewById(R.id.user_online_status);
-            online_status.setVisibility(View.GONE);
+            //online_status=itemView.findViewById(R.id.user_online_status);
+            counterLayout=itemView.findViewById(R.id.counter_layout);
+            counterText=itemView.findViewById(R.id.unread_counter);
+            cardView=itemView.findViewById(R.id.notifCountCard);
+
+            //online_status.setVisibility(View.GONE);
 
             userName=itemView.findViewById(R.id.display_name);
             userStatus.setVisibility(View.VISIBLE);

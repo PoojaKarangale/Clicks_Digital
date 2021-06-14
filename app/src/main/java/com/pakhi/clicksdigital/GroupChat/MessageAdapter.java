@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -221,10 +222,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             messageViewHolder.headerTimeTextLayout.removeAllViews();
             TextView dateView = new TextView(context);
             dateView.setText(message.getDate());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT+6,
+                    LinearLayout.LayoutParams.WRAP_CONTENT+4);
             //params.gravity = Gravity.CENTER_HORIZONTAL;
+
             dateView.setLayoutParams(params);
+            dateView.setTextSize(8);
+            //dateView.getCompoundDrawablePadding();
+            dateView.setBackgroundColor(Color.parseColor("#E8F0FD"));
+            dateView.setTextColor(Color.BLUE);
             messageViewHolder.headerTimeTextLayout.setVisibility(View.VISIBLE);
             messageViewHolder.headerTimeTextLayout.addView(dateView);
 

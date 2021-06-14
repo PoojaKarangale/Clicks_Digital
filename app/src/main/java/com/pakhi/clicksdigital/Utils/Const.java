@@ -104,4 +104,6 @@ public class Const {
     public static String group = "group";
     public static String replyingToMessage = "replyingToMessage";
     public static String flagOfGroup = "flag";
+    public static String grpOrUserID="grpOrUserID";
+    public static String mute = "mute";
 }
