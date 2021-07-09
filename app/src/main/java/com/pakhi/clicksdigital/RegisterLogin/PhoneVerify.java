@@ -1,6 +1,5 @@
 package com.pakhi.clicksdigital.RegisterLogin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;

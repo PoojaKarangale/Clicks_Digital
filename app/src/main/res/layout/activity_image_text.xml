@@ -80,7 +80,7 @@
             android:gravity="top|start"
             android:hint="Type message here..."
             android:backgroundTint="#43B7FD"
-            android:inputType="text|textMultiLine"
+            android:inputType="text|textMultiLine|textCapSentences"
             android:lines="8"
             android:maxLines="10"
             android:minLines="1"
@@ -88,7 +88,7 @@
             android:scrollbars="vertical"
             android:scrollHorizontally="false"
             android:singleLine="false"
-            android:textSize="12dp" />
+            android:textSize="15dp" />
 
 
         <ImageButton

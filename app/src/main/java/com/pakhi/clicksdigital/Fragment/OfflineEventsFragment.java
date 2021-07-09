@@ -1,6 +1,5 @@
 package com.pakhi.clicksdigital.Fragment;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,7 +96,8 @@ public class OfflineEventsFragment extends Fragment {
         eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //  events.clear();
+                events.clear();
+                eventAdapter.notifyDataSetChanged();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
                         Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);

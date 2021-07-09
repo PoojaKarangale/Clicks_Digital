@@ -28,6 +28,10 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    //api('com.paypal.retail:here-sdk-debug:2.0.0.201801@aar'){transitive=true}
+
+   // api("com.paypal.retail:here-sdk-debug:2.0.0.201801@aar") { transitive = true }
+
     //implementation 'com.github.rahimlis:badgedtablayout:v1.2'
     //implementation 'com.paypal.sdk:paypal-android-sdk:2.14.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'

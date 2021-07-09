@@ -110,6 +110,7 @@
         android:background="@drawable/chat_doodle_back"
 
 
+
         ><androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_message"
         android:layout_width="match_parent"
@@ -119,6 +120,8 @@
             android:id="@+id/private_messages_list_of_users"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+
 
             >
 
@@ -299,10 +302,10 @@
             android:layout_marginEnd="0dp"
             android:layout_toStartOf="@+id/attach_file_btn"
             android:fontFamily="@font/lato"
-            android:hint="type message here..."
+            android:hint="Type message here..."
             android:maxLines="5"
             android:minLines="1"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:singleLine="false"
             android:padding="15dp"
             android:textSize="@dimen/fifteen"

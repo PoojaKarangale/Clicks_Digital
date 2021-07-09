@@ -14,6 +14,9 @@
   <item
       android:id="@+id/share_app"
       android:title="Share Dialog App" />
+  <item
+    android:id="@+id/contact"
+    android:title="Contact Us"/>
 
 
 </menu>

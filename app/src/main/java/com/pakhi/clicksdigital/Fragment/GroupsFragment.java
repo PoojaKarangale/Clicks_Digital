@@ -128,6 +128,18 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         fab_join_group=groupFragmentView.findViewById(R.id.fab_join_group);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        groups.clear();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //RetrieveAndDisplayGroups();
+    }
+
     public void RetrieveAndDisplayGroups() {
         Log.d("GroupFragments", "-------------" + userGroupRef);
 
@@ -159,7 +171,8 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
 
                                     groupAdapter.notifyDataSetChanged();
 
-                                }}
+                                }
+                            }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {

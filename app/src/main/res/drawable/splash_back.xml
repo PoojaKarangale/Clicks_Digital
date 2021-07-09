@@ -8,6 +8,7 @@
             android:src="@drawable/final_app_logo"
             android:tileMode="disabled"
             android:gravity="center"
+
             />
     </item>
 </layer-list>

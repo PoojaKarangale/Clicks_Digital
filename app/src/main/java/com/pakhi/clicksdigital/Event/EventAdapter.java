@@ -75,7 +75,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public EventAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_event, parent, false);
         rootRef = FirebaseDatabaseInstance.getInstance();
@@ -83,11 +83,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         pref = SharedPreference.getInstance();
         currentUid = pref.getData(SharedPreference.currentUserId, view.getContext());
-        return new EventAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final EventAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Event event = events.get(position);
 
         String createrId = event.getCreater_id();
@@ -137,7 +137,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         }
 
         if (event.isPayable()) {
-            holder.event_fee.setText(String.valueOf("INR " + event.getTotalFee()) + "/-");
+            holder.event_fee.setText(String.valueOf( "Rs "+event.getTotalFee()));
         } else {
             holder.event_fee.setText("Free");
         }

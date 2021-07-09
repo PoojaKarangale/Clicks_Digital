@@ -20,8 +20,8 @@
 
       <ImageView
           android:id="@+id/back_btn"
-          android:layout_width="28dp"
-          android:layout_height="28dp"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
           android:layout_alignParentStart="true"
           android:layout_centerVertical="true"
           android:src="@drawable/back" />
@@ -34,8 +34,8 @@
           android:text="New Group"
           android:layout_marginStart="@dimen/margine_sub"
           android:textColor="@color/white"
-          android:fontFamily="@font/lato"
-          android:textSize="@dimen/heading"
+          android:fontFamily="@font/segoe"
+          android:textSize="16dp"
           android:textStyle="bold" />
 
     </RelativeLayout>

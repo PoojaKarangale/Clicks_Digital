@@ -10,6 +10,7 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,8 +20,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
-import com.google.android.material.tabs.TabLayout.Tab;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,7 +46,6 @@ import com.pakhi.clicksdigital.Fragment.InternetCheckFragment;
 import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
-import com.pakhi.clicksdigital.LoadImage;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.ProfileActivity;
 import com.pakhi.clicksdigital.R;
@@ -575,9 +573,35 @@ public class StartActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Since you are not admin, you don't have access to this part of the app", Toast.LENGTH_LONG).show();
             }
         }
+        if(item.getItemId()==R.id.contact){
+            boolean installed = appInstalledorNot("com.whatsapp", getApplicationContext());
+            String num = "+917972509846";
+            String string = "Hi, \nI have a query. \nPlease help me.";
+            if (installed) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://api.whatsapp.com/send?phone="+num+"&text="+string));
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), "WhatsApp is not installed in your device! Please install WhatsApp and then Contact Us!", Toast.LENGTH_LONG).show();
+            }
+
+        }
 
         return true;
     }
+    public static boolean appInstalledorNot(String url, Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        boolean app_installed;
+        try {
+            packageManager.getPackageInfo(url, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+            e.printStackTrace();
+        }
+        return app_installed;
+    }
+
 
     @Override
     protected void onStart() {
@@ -591,7 +615,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    myList.add(snap.getKey());
+                     myList.add(snap.getKey());
                 }
             }
 

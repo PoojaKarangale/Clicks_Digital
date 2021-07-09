@@ -107,11 +107,12 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
        /* Query query=rootRef.getGroupRef().orderByChild(Const.GROUP_NAME)
                 .startAt(s)
                 .endAt(s + "\uf8ff");*/
-        groups.clear();
+
         rootRef.getGroupRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //groupAdapter.notifyDataSetChanged();
+                groups.clear();
+                groupAdapter.notifyDataSetChanged();
                 for (final DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                     Log.d("SEARCH GROUP","--------------"+snapshot1.getKey()+" "+snapshot1.getValue());
 
@@ -147,10 +148,21 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onStart() {
         super.onStart();
-        //  searchGroups("");
+          //searchGroups("");
+          //setUpRecycleView();
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+        Intent intent = new Intent(JoinGroupActivity.this, StartActivity.class);
+        startActivity(intent);
+        Toast.makeText(getApplicationContext(), "You have joined new Dialog communities, do check in groups section", Toast.LENGTH_LONG).show();
+        finish();
+
+    }
 
     @Override
     public void onClick(View v) {

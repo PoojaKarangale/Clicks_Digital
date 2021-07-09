@@ -1036,7 +1036,7 @@
                         android:layout_marginTop="10dp"
                         android:background="#E8F0FD"
                         android:elevation="10dp"
-
+                        android:textAllCaps="false"
                         android:text="Calculate Total Fee"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/button" />
@@ -1050,8 +1050,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/calculateTotal"
-                            android:layout_marginTop="@dimen/margine_sub"
-                            android:text="Total Fee"
+                            android:layout_marginTop="10dp"
+                            android:text="Total Fee:"
                             android:textStyle="bold"
                             android:fontFamily="@font/segoe"
                             android:textColor="@color/colorPrimary"
@@ -1063,7 +1063,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/calculateTotal"
 
-                            android:layout_marginTop="@dimen/margine_sub"
+                            android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/total_fee_txt"
                             android:text="0"
                             android:textStyle="bold"

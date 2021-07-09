@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.pakhi.clicksdigital.Event.EventAdapter;
 import com.pakhi.clicksdigital.Model.Event;
@@ -158,7 +157,8 @@ public class OnlineEventsFragment extends Fragment {
         eventRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //  events.clear();
+                 events.clear();
+                eventAdapter.notifyDataSetChanged();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.child(ConstFirebase.eventDetails).exists()) {
                         Event event = dataSnapshot.child(ConstFirebase.eventDetails).getValue(Event.class);

@@ -33,14 +33,14 @@
         android:fontFamily="@font/lato"
         android:gravity="top|start"
         android:hint="Raise Discussion Topic Here.."
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textCapSentences"
         android:lines="8"
         android:maxLength="300"
         android:maxLines="10"
         android:minLines="4"
         android:padding="15dp"
         android:scrollbars="vertical"
-        android:textSize="12dp"
+        android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -62,7 +62,7 @@
             android:textStyle="bold"
             android:textColor="#8BB4F3"
             android:textAllCaps="true"
-            android:textSize="12dp"
+            android:textSize="14dp"
             android:layout_marginLeft="5dp"
 
             />

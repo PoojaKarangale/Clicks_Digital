@@ -28,7 +28,7 @@
             android:text="Join Group"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:textSize="@dimen/heading" />
+            android:textSize="16dp" />
 
 
         <ImageView

@@ -43,6 +43,8 @@ import com.pakhi.clicksdigital.Utils.ToastClass;
 import java.util.Calendar;
 import java.util.Locale;
 
+
+
 public class EventDetailsActivity extends AppCompatActivity {
     private String currentUserId;
     TextView organiserBio;
@@ -67,6 +69,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     TextView time_date_text2;
 
     TextView country;
+    public static final int PAYPAL_REQUEST_CODE = 7171;
+    //private static String CONFIG_ENV = PayP
 
     public static String timestampToDateString(long timestamp) {
        /* SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");

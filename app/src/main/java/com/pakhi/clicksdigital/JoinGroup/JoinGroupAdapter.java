@@ -137,6 +137,7 @@ public class JoinGroupAdapter extends RecyclerView.Adapter<JoinGroupAdapter.View
             public void onClick(View v) {
                 addUserToGroup(group.getGroupid(), current_user_id);
                 holder.join_btn.setVisibility(View.GONE);
+                notifyDataSetChanged();
                 //if()
             }
         });

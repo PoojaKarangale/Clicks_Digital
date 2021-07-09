@@ -29,7 +29,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Event Participants"
+                android:text="Participants"
                 android:layout_toEndOf="@+id/back_"
                 android:textSize="@dimen/sixteen"
                 android:fontFamily="@font/helvetica_bold"

@@ -18,7 +18,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.hbb20.CountryCodePicker;
 import com.pakhi.clicksdigital.Activities.StartActivity;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
-import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
 import com.pakhi.clicksdigital.Model.User;
 import com.pakhi.clicksdigital.Profile.SetProfileActivity;
 import com.pakhi.clicksdigital.R;
