@@ -246,7 +246,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
 
         user=new User(userid, full_name_str, bio_str, imageUrl_string, user_type, city,
                 expectations_from_us, experiences, gender, number, offer_to_community,
-                speaker_experience, email_str, weblink_str, working, last_name_str, company_str, countryName, referal,timestamp);
+                speaker_experience, email_str, weblink_str, working, last_name_str, company_str, countryName, referal, "no");
 
         userItems=putDataIntoHashMap(user);
         if (isCertificatesAdded) {
@@ -317,6 +317,7 @@ public class SetProfileActivity extends AppCompatActivity implements View.OnClic
         userItems.put(ConstFirebase.company, user.getCompany());
         userItems.put(ConstFirebase.country, user.getCountry());
         userItems.put(ConstFirebase.getReferral, user.getReferal());
+        userItems.put(ConstFirebase.getBlueTick, user.getBlueTick());
 
        // userItems.put("profile_verification", user.getVerificationRequest());
         return userItems;

@@ -3,6 +3,9 @@
     <item
         android:id="@+id/un_mute"
         android:title="Un-mute Notifications"/>
+    <item
+        android:id="@+id/un_mute_topic"
+        android:title="Un-mute Topic Notifications"/>
 
     <item
         android:id="@+id/exit"

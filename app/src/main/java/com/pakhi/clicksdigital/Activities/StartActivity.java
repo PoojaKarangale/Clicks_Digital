@@ -43,6 +43,7 @@ import com.pakhi.clicksdigital.Fragment.EventsFragment;
 import com.pakhi.clicksdigital.Fragment.GroupsFragment;
 import com.pakhi.clicksdigital.Fragment.HomeFragment;
 import com.pakhi.clicksdigital.Fragment.InternetCheckFragment;
+import com.pakhi.clicksdigital.Fragment.JobFragment;
 import com.pakhi.clicksdigital.HelperClasses.NotificationCountDatabase;
 import com.pakhi.clicksdigital.HelperClasses.UserDatabase;
 import com.pakhi.clicksdigital.JoinGroup.JoinGroupActivity;
@@ -67,6 +68,7 @@ public class StartActivity extends AppCompatActivity {
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
     EventsFragment eventsFragment;
+    JobFragment jobFragment;
     GroupsFragment groupsFragment;
     HomeFragment homeFragment;
     ChatsFragment chatsFragment;
@@ -445,6 +447,7 @@ public class StartActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(chatsFragment, "");//Chat
         viewPagerAdapter.addFragment(eventsFragment, "");//Events
 
+
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -453,6 +456,7 @@ public class StartActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.people);
         tabLayout.getTabAt(2).setIcon(R.drawable.chat);
         tabLayout.getTabAt(3).setIcon(R.drawable.event);
+
         tabLayout.setTabTextColors(getResources().getColor(R.color.colorPrimary), getResources().getColor(R.color.white));
         // tabLayout.setSelectedTabIndicator(0);
         //tabLayout.getTabAt(0).select();

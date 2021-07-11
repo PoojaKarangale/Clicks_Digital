@@ -11,6 +11,6 @@
 
     <item
         android:id="@+id/share_app"
-        android:title="Share me" />
+        android:title="Invite" />
 
 </menu>

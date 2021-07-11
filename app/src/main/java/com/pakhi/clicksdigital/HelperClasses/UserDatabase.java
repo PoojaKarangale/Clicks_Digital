@@ -50,7 +50,8 @@ public class UserDatabase extends SQLiteOpenHelper {
                 + "last_name" + " TEXT,"
                 + "company" + " TEXT,"
                 + "country" + " TEXT,"
-                + "referred_by" + " TEXT" +
+                + "referred_by" + " TEXT,"
+                + ConstFirebase.getBlueTick + " TEXT"+
                 ")");
         // db.close();
     }
@@ -114,6 +115,7 @@ public class UserDatabase extends SQLiteOpenHelper {
                 res.getString(res.getColumnIndex(ConstFirebase.offerToComm)), res.getString(res.getColumnIndex(ConstFirebase.speakerExp)), res.getString(res.getColumnIndex(ConstFirebase.email)),
                 res.getString(res.getColumnIndex(ConstFirebase.webLink)), res.getString(res.getColumnIndex(ConstFirebase.working)), res.getString(res.getColumnIndex(ConstFirebase.last_name)),
                 res.getString(res.getColumnIndex(ConstFirebase.company)), res.getString(res.getColumnIndex(ConstFirebase.country)), res.getString(res.getColumnIndex(ConstFirebase.getReferral))
+              , res.getString(res.getColumnIndex(ConstFirebase.getBlueTick))
         );
         return user;
     }

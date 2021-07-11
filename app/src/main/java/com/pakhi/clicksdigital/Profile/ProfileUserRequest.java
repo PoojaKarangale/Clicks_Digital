@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -79,6 +80,9 @@ public class ProfileUserRequest extends AppCompatActivity {
         req = getIntent().getStringExtra(Const.fromRequest);
 
         userRefAppCan = rootRef.getApprovedUserRef();
+
+        UserDatabase db = new UserDatabase(this);
+        currentUser = db.getSqliteUser();
 
         acceptMessage = findViewById(R.id.accept_message);
         acceptLayout = findViewById(R.id.accept_layout);

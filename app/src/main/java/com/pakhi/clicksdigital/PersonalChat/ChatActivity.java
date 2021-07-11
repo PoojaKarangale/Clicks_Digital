@@ -237,7 +237,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     user = dataSnapshot.getValue(User.class);
-                    messageReceiverName = user.getUser_name();
+                    messageReceiverName = user.getUser_name()+" "+user.getLast_name();
                     userName.setText(messageReceiverName);
                     Glide.with(getApplicationContext())
                             .load(user.getImage_url())

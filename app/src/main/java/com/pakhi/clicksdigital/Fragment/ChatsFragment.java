@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,6 +159,12 @@ public class ChatsFragment extends Fragment {
                                     final String retStatus=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.working).getValue().toString()
                                             +", "+dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.company).getValue().toString();
 
+                                    final String retVerified=dataSnapshot.child(ConstFirebase.USER_DETAILS).child(ConstFirebase.getBlueTick).getValue().toString();
+                                    Log.i("visible---", retVerified);
+                                    if(retVerified.equals("yes")){
+                                        holder.verified.setVisibility(View.VISIBLE);
+                                    }
+
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText(retStatus);
 
@@ -267,7 +274,7 @@ public class ChatsFragment extends Fragment {
     }
 
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {
-        ImageView profileImage;
+        ImageView profileImage, verified;
         TextView        userStatus, userName;
         //ImageView online_status;
         LinearLayout counterLayout;
@@ -284,6 +291,7 @@ public class ChatsFragment extends Fragment {
             counterLayout=itemView.findViewById(R.id.counter_layout);
             counterText=itemView.findViewById(R.id.unread_counter);
             cardView=itemView.findViewById(R.id.notifCountCard);
+            verified=itemView.findViewById(R.id.display_verify);
 
             //online_status.setVisibility(View.GONE);
 

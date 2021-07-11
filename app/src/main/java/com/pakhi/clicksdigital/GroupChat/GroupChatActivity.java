@@ -158,10 +158,12 @@ public class GroupChatActivity extends AppCompatActivity {
 
             if(mutOrNot.equals("true")){
                 getMenuInflater().inflate(R.menu.options_menu_group, menu);
-                menu.getItem(0).setVisible(false);
+                //menu.getItem(0).setVisible(false);
+                menu.findItem(R.id.mute).setVisible(false);
             }else {
                 getMenuInflater().inflate(R.menu.options_menu_group, menu);
-                menu.getItem(1).setVisible(false);
+                //menu.getItem(1).setVisible(false);
+                menu.findItem(R.id.un_mute).setVisible(false);
             }
 
 
@@ -243,7 +245,7 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
         InitializeFields();
-
+        //muteMenu.setVisibility(View.GONE);
         muteMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -361,7 +363,9 @@ public class GroupChatActivity extends AppCompatActivity {
         String muteOrUnmute = notificationCountDatabase.getSqliteUser_data(Const.mute, currentGroupId);
 
         if(muteOrUnmute.equals("true")){
+
             popup.getMenuInflater().inflate(R.menu.options_menu_group_2, popup.getMenu());
+            //popup.
         }else {
             popup.getMenuInflater().inflate(R.menu.options_menu_group, popup.getMenu());
         }

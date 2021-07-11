@@ -4,6 +4,9 @@
     android:id="@+id/mute"
     android:title="Mute Notifications"/>
 
+<item
+    android:id="@+id/mute_topic"
+    android:title="Mute Topic Notifications"/>
     <item
         android:id="@+id/exit"
         android:title="Exit Group"/>

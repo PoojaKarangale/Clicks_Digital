@@ -58,6 +58,9 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
     public void onBindViewHolder(@NonNull FindFriendViewHolder holder, int position) {
 
         final User user=userList.get(position);
+        if(user.getBlueTick().equals("yes")){
+            holder.verified.setVisibility(View.VISIBLE);
+        }
 
         holder.userName.setText(user.getUser_name() + " " + user.getLast_name());
         holder.userStatus.setText(user.getUser_bio());
@@ -132,7 +135,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
 
     public static class FindFriendViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
-        ImageView profile_image;
+        ImageView profile_image, verified;
         ImageView       chat_with_friend;
 
         public FindFriendViewHolder(@NonNull View itemView) {
@@ -141,6 +144,7 @@ public class FindFriendsAdapter extends RecyclerView.Adapter<FindFriendsAdapter.
             userName=itemView.findViewById(R.id.display_name);
             userStatus=itemView.findViewById(R.id.user_status);
             chat_with_friend=itemView.findViewById(R.id.chat_with_friend);
+            verified = itemView.findViewById(R.id.display_verify);
 
             chat_with_friend.setVisibility(View.VISIBLE);
             userName.setTextColor(Color.BLACK);

@@ -45,6 +45,17 @@
             android:textSize="@dimen/sixteen"
             android:textStyle="bold" />
 
+        <ImageView
+            android:layout_marginTop="14dp"
+            android:id="@+id/display_verify"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/display_name"
+            android:src="@drawable/ic_baseline_cloud_done_24"
+            android:visibility="gone"
+             />
+
         <TextView
             android:id="@+id/user_status"
             android:layout_width="match_parent"

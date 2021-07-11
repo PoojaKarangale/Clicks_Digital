@@ -49,7 +49,7 @@ public class VisitProfileActivity extends AppCompatActivity {
 
     FirebaseDatabaseInstance rootRef;
     private String user_id;
-    private ImageView profile_image;
+    private ImageView profile_image, verified;
     private TextView user_name_heading, user_name, gender, profession, bio, speaker_experience, experience;
     private User user, currentUser;
     private String receiverUserID, senderUserID, Current_State;
@@ -64,7 +64,7 @@ public class VisitProfileActivity extends AppCompatActivity {
     String currentUserID;
     SharedPreference pref;
 
-    Button block, unblock;
+    Button block, unblock, veri, unveri_btn;
     NestedScrollView nestedScrollView;
     RecyclerView certificateList;
     TextView certfiText;
@@ -115,6 +115,22 @@ public class VisitProfileActivity extends AppCompatActivity {
         if (currentUser.getUser_type().equals("admin")) {
             isVisterIsAdmin = true;
         }
+        veri.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.getBlueTick).setValue("yes");
+                veri.setVisibility(View.GONE);
+                unveri_btn.setVisibility(View.VISIBLE);
+            }
+        });
+        unveri_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userRef.child(user_id).child(ConstFirebase.USER_DETAILS).child(ConstFirebase.getBlueTick).setValue("no");
+                unveri_btn.setVisibility(View.GONE);
+                veri.setVisibility(View.VISIBLE);
+            }
+        });
 
         userRef.child(user_id).child(ConstFirebase.USER_DETAILS).addValueEventListener(new ValueEventListener() {
             @Override
@@ -125,6 +141,9 @@ public class VisitProfileActivity extends AppCompatActivity {
                             .load(user.getImage_url())
                             .apply(RequestOptions.circleCropTransform())
                             .into(profile_image);
+                    if(user.getBlueTick().equals("yes")){
+                        verified.setVisibility(View.VISIBLE);
+                    }
 
                     if (user.getUser_type().equals("admin")) {
                         isProfileUserIsAdmin = true;
@@ -135,6 +154,12 @@ public class VisitProfileActivity extends AppCompatActivity {
                             // make him admin btn set visible
                             Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
                             make_admin.setVisibility(View.VISIBLE);
+                            if(user.getBlueTick().equals("no")){
+                                veri.setVisibility(View.VISIBLE);
+                            }else {
+                                unveri_btn.setVisibility(View.VISIBLE);
+                            }
+
 
                         } else {
 
@@ -149,7 +174,11 @@ public class VisitProfileActivity extends AppCompatActivity {
                             // make him admin btn set visible
                             Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
                             make_admin.setVisibility(View.VISIBLE);
-
+                            if(user.getBlueTick().equals("no")){
+                                veri.setVisibility(View.VISIBLE);
+                            }else {
+                                unveri_btn.setVisibility(View.VISIBLE);
+                            }
                         } else {
 
                             make_admin.setVisibility(View.GONE);
@@ -165,12 +194,18 @@ public class VisitProfileActivity extends AppCompatActivity {
                         isProfileUserIsAdmin = true;
                         if (currentUser.getUser_type().equals("admin")) {
                             isVisterIsAdmin = true;
+                            if(user.getBlueTick().equals("no")){
+                                veri.setVisibility(View.VISIBLE);
+                            }else {
+                                unveri_btn.setVisibility(View.VISIBLE);
+                            }
                         }
 
                         if (isVisterIsAdmin && (!isProfileUserIsAdmin)) {
                             // make him admin btn set visible
                             Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
                             make_admin.setVisibility(View.VISIBLE);
+
 
                         } else {
                             Log.i("userProfile", String.valueOf(isProfileUserIsAdmin));
@@ -265,7 +300,9 @@ public class VisitProfileActivity extends AppCompatActivity {
 
         country = findViewById(R.id.country_user);
         referredBy = findViewById(R.id.tv_referred_by);
-
+        verified = findViewById(R.id.verified);
+        veri = findViewById(R.id.verify_btn);
+        unveri_btn = findViewById(R.id.un_verify_btn);
 
 
     }

@@ -153,7 +153,9 @@ public class ConstFirebase {
     public static String type = "type";
     public static String position = "position";
     public static String profileRequest = "profileRequest";
+    public static String getBlueTick = "blueTick";
+    public static String muteTopics = "MuteTopics";
 
-   // public static String working="work_profession";
+    // public static String working="work_profession";
 
 }

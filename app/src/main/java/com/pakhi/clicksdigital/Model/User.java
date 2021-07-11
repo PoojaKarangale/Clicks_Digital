@@ -17,7 +17,7 @@ public class User implements Serializable {
     private String  expectations_from_us, experiences, gender, number, offer_to_community,
             speaker_experience, user_bio, user_email, user_name, user_type, weblink, work_profession;
 
-    private String country, referral;
+    private String country, referral, blueTick;
     Long timestamp;
 
     public User() {
@@ -36,7 +36,7 @@ public class User implements Serializable {
                 String user_type, String city, String expectations_from_us, String experiences,
                 String gender, String number, String offer_to_community, String speaker_experience,
                 String user_email, String weblink, String work_profession, String last_name, String company,
-                String country, String referral) {
+                String country, String referral, String blueTick) {
         this.image_url=image_url;
         this.user_id=userid;
         this.city=city;
@@ -56,12 +56,13 @@ public class User implements Serializable {
         this.company=company;
         this.country=country;
         this.referral=referral;
+        this.blueTick=blueTick;
     }
     public User(String userid, String full_name_str, String bio_str, String image_url,
                 String user_type, String city, String expectations_from_us, String experiences,
                 String gender, String number, String offer_to_community, String speaker_experience,
                 String user_email, String weblink, String work_profession, String last_name, String company,
-                String country, String referral, Long timestamp) {
+                String country, String referral, Long timestamp, String blueTick) {
         this.image_url=image_url;
         this.user_id=userid;
         this.city=city;
@@ -82,6 +83,7 @@ public class User implements Serializable {
         this.country=country;
         this.referral=referral;
         this.timestamp = timestamp;
+        this.blueTick=blueTick;
     }
 /*    public User(String userid, String full_name_str, String bio_str, String image_url,
                 String user_type, String city, String expectations_from_us, String experiences,
@@ -279,6 +281,10 @@ public class User implements Serializable {
 
     public void setWork_profession(String work_profession) {
         this.work_profession=work_profession;
+    }
+
+    public String getBlueTick() {
+        return blueTick;
     }
 
    /* public String getVerificationRequest() {

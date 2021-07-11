@@ -64,7 +64,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
         UsersRef=rootRef.getUserRef();
 
         userID=pref.getData(SharedPreference.currentUserId, getContext());
-        userGroupRef=UsersRef.child(userID).child(ConstFirebase.groups);
+        userGroupRef=UsersRef.child(userID).child("Groups");
 
         initializeFields();
 
@@ -72,7 +72,7 @@ public class GroupsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-
+                    join_group_layout.setVisibility(View.GONE);
                 } else {
                     join_group_layout.setVisibility(View.VISIBLE);
                     fab_join_group.setVisibility(View.GONE);

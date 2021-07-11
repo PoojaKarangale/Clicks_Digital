@@ -67,7 +67,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     ArrayList<Certificates>  certificates;
     boolean                  isCertificatesAdded=false;
     StorageReference         mStorageReference;
-    User                     user;
+    User                     users;
     //UserDatabase             db;
     SharedPreference         pref;
     EditText                 weblink;
@@ -94,7 +94,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
 
         Intent intent=getIntent();
-        user=(User) intent.getSerializableExtra(Const.userdata);
+        users=(User) intent.getSerializableExtra(Const.userdata);
         //gender = intent.getStringExtra("gender");
         //user_type=user.getUser_type();
         pref=SharedPreference.getInstance();
@@ -178,7 +178,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
     private void readUserData() {
         UserDatabase db=new UserDatabase(this);
-        user = db.getSqliteUser();
+        users = db.getSqliteUser();
     }
 
     private void loadData() {
@@ -207,7 +207,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 .resize(120, 120).placeholder(R.drawable.persone_profile)
                 .into(profile_img);*/
 
-      if(user.getGender().equals("Male")){
+      if(users.getGender().equals("Male")){
           male.setChecked(true);
           gender="Male";
       }
@@ -219,24 +219,24 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
         picImageUri=firebaseAuth.getCurrentUser().getPhotoUrl();
 
-        Glide.with(getApplicationContext()).load(user.getImage_url())
+        Glide.with(getApplicationContext()).load(users.getImage_url())
                 .apply(RequestOptions.circleCropTransform())
                 .into(profile_img);
 
-        full_name.setText(user.getUser_name());
-        email.setText(user.getUser_email());
-        weblink.setText(user.getWeblink());
-        bio.setText(user.getUser_bio());
-        get_expectations_from_us.setText(user.getExpectations_from_us());
-        get_experiences.setText(user.getExperiences());
-        get_working.setText(user.getWork_profession());
-        get_speaker_experience.setText(user.getSpeaker_experience());
-        get_offer_to_community.setText(user.getOffer_to_community());
-        get_city.setText(user.getCity());
-        last_name.setText(user.getLast_name());
-        company.setText(user.getCompany());
-        country.setText(user.getCountry());
-        referredBy.setText(user.getReferal());
+        full_name.setText(users.getUser_name());
+        email.setText(users.getUser_email());
+        weblink.setText(users.getWeblink());
+        bio.setText(users.getUser_bio());
+        get_expectations_from_us.setText(users.getExpectations_from_us());
+        get_experiences.setText(users.getExperiences());
+        get_working.setText(users.getWork_profession());
+        get_speaker_experience.setText(users.getSpeaker_experience());
+        get_offer_to_community.setText(users.getOffer_to_community());
+        get_city.setText(users.getCity());
+        last_name.setText(users.getLast_name());
+        company.setText(users.getCompany());
+        country.setText(users.getCountry());
+        referredBy.setText(users.getReferal());
 
     }
 
@@ -269,7 +269,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         String bio_str=bio.getText().toString().trim();
         String weblink_str=weblink.getText().toString().trim();
-        user_type=user.getUser_type();
+        user_type=users.getUser_type();
 
         String countryName = country.getText().toString().trim();
         String referred = referredBy.getText().toString().trim();
@@ -277,7 +277,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         final DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
 
         final User user=new User(userid, full_name_str, bio_str, picImageUri.toString(), user_type, city, expectations_from_us, experiences, gender, number, offer_to_community,
-                speaker_experience, email_str, weblink_str, working, last_name_str, company_str, countryName, referred);
+                speaker_experience, email_str, weblink_str, working, last_name_str, company_str, countryName, referred, users.getBlueTick());
 
         final HashMap<String, String> userItems=new HashMap<>();
         userItems.put(ConstFirebase.USER_ID, user.getUser_id());
@@ -299,6 +299,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         userItems.put(ConstFirebase.company, user.getCompany());
         userItems.put(ConstFirebase.country, user.getCountry());
         userItems.put(ConstFirebase.getReferral, user.getReferal());
+        userItems.put(ConstFirebase.getBlueTick, user.getBlueTick());
 
         if (isCertificatesAdded) {
 

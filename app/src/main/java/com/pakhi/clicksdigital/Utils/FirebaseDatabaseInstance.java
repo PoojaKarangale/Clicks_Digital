@@ -134,4 +134,8 @@ public class FirebaseDatabaseInstance {
     public DatabaseReference getBlockRef() {
         return rootRef.child(ConstFirebase.Blocked);
     }
+
+    public DatabaseReference getTopicMuteRef() {
+        return  rootRef.child(ConstFirebase.muteTopics);
+    }
 }
