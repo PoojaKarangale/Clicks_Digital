@@ -63,6 +63,14 @@ public class JoinGroupActivity extends AppCompatActivity implements View.OnClick
 
         SearchView searchView=findViewById(R.id.search_bar);
         searchGroups("");
+        //searchGroups("");
+        if(!searchView.isFocused()) {
+            searchView.clearFocus();
+        }
+        searchView.onActionViewExpanded(); //new Added line
+        searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint("Search Here");
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

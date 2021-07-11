@@ -170,7 +170,10 @@ public class TopicRepliesActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for(DataSnapshot snap : snapshot.getChildren()){
                             if(notify&& !snap.getKey().equals(currentUserId)){
-                                Notification.sendPersonalNotifiaction(topic.getTo(), snap.getKey(), nameOfSender+" has replied to Dialog topic: "+topic.getMessage().substring(0, 12)+"...", /*title*/ grpName  , "topic", topic.getMessageID());
+                                String topicHeader = "";
+                                if (topic.getMessage().length() > 12 ){topicHeader = topic.getMessage().substring(0, 12); }
+                                else {topicHeader = topic.getMessage();}
+                                Notification.sendPersonalNotifiaction(topic.getTo(), snap.getKey(), nameOfSender+" has replied to Dialog topic: "+topicHeader+"...", /*title*/ grpName  , "topic", topic.getMessageID());
                                 //rootRef.getNotificationRefTopicReply().child(snap.getKey()).child(topic.getMessageID()).setValue("");
                                 String notificationKey = rootRef.getNotificationRef().push().getKey();
                                 rootRef.getNotificationRef().child(notificationKey).child(ConstFirebase.notificationRecieverID).setValue(topic.getFrom());
